@@ -1,0 +1,122 @@
+﻿@model Softpark.Models.FichaVisitaDomiciliarChild
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>FichaVisitaDomiciliarChild</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.turno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.turno)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.numProntuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.numProntuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cnsCidadao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cnsCidadao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dtNascimento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dtNascimento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.sexo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sexo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.statusVisitaCompartilhadaOutroProfissional)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.statusVisitaCompartilhadaOutroProfissional)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.desfecho)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.desfecho)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.microarea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.microarea)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.stForaArea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.stForaArea)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tipoDeImovel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tipoDeImovel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.pesoAcompanhamentoNutricional)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.pesoAcompanhamentoNutricional)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.alturaAcompanhamentoNutricional)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.alturaAcompanhamentoNutricional)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FichaVisitaDomiciliarMaster.uuidFicha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FichaVisitaDomiciliarMaster.uuidFicha)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.childId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

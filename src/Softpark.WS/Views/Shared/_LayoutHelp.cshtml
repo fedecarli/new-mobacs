@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="SIGSM - Sistema de Gestão de Saúde Municipal" />
+    <meta name="author" content="Felipe Freitas @("@Softpark")" />
+    <link rel="icon" href="@Url.Content("~/img/favicon.ico")" />
+    <title>SIGSM SAÚDE</title>
+    @Styles.Render("~/Content/site")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <br />
+    <br />
+    <br />
+    <div id="wrapper">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Softpark - eSUS Mobile Web API", "Index", "Help", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+            </div>
+        </div>
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Softpark</p>
+            </footer>
+        </div>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+</body>
+</html>

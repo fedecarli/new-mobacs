@@ -1,0 +1,147 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.ComponentModel;
+using Softpark.Models;
+using System;
+using Softpark.WS.Validators;
+using Softpark.Infrastructure.Extras;
+
+namespace Softpark.WS.ViewModels
+{
+    /// <summary>
+    /// FichaVisitaDomiciliarChild DTO
+    /// </summary>
+    /// <remarks>
+    /// http://esusab.github.io/integracao/docs/dicionario-fvd.html
+    /// </remarks>
+    [DataContract(Name = nameof(FichaVisitaDomiciliarChild))]
+    public class FichaVisitaDomiciliarChildCadastroViewModel
+    {
+        /// <summary>
+        /// Token da transmissão
+        /// </summary>
+        [Required]
+        [DataMember(Name = nameof(OrigemVisita.token))]
+        public Guid token { get; set; }
+
+        /// <summary>
+        /// Turno da visita
+        /// </summary>
+        [Required]
+        [DataMember(Name = nameof(turno))]
+        [RegularExpression(@"^([123])$", ErrorMessage = "O campo turno espera pelos valores 1, 2 ou 3.")]
+        [Range(1, 3, ErrorMessage = "O campo turno espera pelos valores 1, 2 ou 3.")]
+        public long turno { get; set; }
+
+        /// <summary>
+        /// Número do prontuário
+        /// </summary>
+        [RegularExpression(@"^([a-zA-Z0-9]*)$", ErrorMessage = "O campo numProntuario aceita somente letras e números.")]
+        [StringLength(30, MinimumLength = 0, ErrorMessage = "O campo numProntuario deve ter entre 0 e 30 caracteres.")]
+        [DataMember(Name = nameof(numProntuario))]
+        public string numProntuario { get; set; }
+
+        /// <summary>
+        /// Cns do Cidadão
+        /// </summary>
+        [RegularExpression(@"^([12789])([0-9]+)$", ErrorMessage = "O campo cnsCidadao deve iniciar com 1, 2, 7, 8 ou 9 e deve conter somente números.")]
+        [StringLength(15, MinimumLength = 15, ErrorMessage = "O campo cnsCidadao deve ter exatamente 15 caracteres")]
+        [DataMember(Name = nameof(cnsCidadao))]
+        [CnsValidation(true, ErrorMessage = "CNS inválido")]
+        public string cnsCidadao { get; set; }
+
+        /// <summary>
+        /// Data de Nascimento
+        /// </summary>
+        [DataMember(Name = nameof(dtNascimento))]
+        [CustomValidation(typeof(Epoch), nameof(Epoch.ValidateESUSDate), ErrorMessage = "Data de nascimento inválida.")]
+        public long? dtNascimento { get; set; }
+
+        /// <summary>
+        /// Sexo do cidadão
+        /// </summary>
+        [DataMember(Name = nameof(sexo))]
+        [RegularExpression(@"^([014])$", ErrorMessage = "O campo sexo espera pelos valores 0, 1 ou 4.")]
+        [DefaultValue(4)]
+        public long sexo { get; set; }
+
+        /// <summary>
+        /// Motivos da visita
+        /// </summary>
+        [DataMember(Name = nameof(motivosVisita))]
+        [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
+        public ISet<long> motivosVisita { get; set; } = new HashSet<long>();
+
+        /// <summary>
+        /// Desfecho da visita
+        /// </summary>
+        [DataMember(Name = nameof(desfecho))]
+        [Required]
+        [Range(1, 3, ErrorMessage = "O campo desfecho espera pelos valores 1, 2 ou 3.")]
+        public long desfecho { get; set; }
+
+        /// <summary>
+        /// Micro área do atendimento
+        /// </summary>
+        [DataMember(Name = nameof(microarea))]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "O campo microarea deve ter exatamente 2 digitos.")]
+        public string microarea { get; set; }
+
+        /// <summary>
+        /// Fora de área
+        /// </summary>
+        [DataMember(Name = nameof(stForaArea))]
+        public bool stForaArea { get; set; }
+
+        /// <summary>
+        /// Tipo de imóvel da visita
+        /// </summary>
+        [DataMember(Name = nameof(tipoDeImovel))]
+        [Required]
+        [RegularExpression(@"^([1-9]|1[012]|99)$", ErrorMessage = "O campo tipoDeImovel espera um tipo válido. Consulte http://esusab.github.io/integracao/docs/dicionario/dicionario.html#tipodeimovel.")]
+        public long tipoDeImovel { get; set; }
+
+        /// <summary>
+        /// Peso do paciente
+        /// </summary>
+        [DataMember(Name = nameof(pesoAcompanhamentoNutricional))]
+        [Range(0.5, 500, ErrorMessage = "O campo pesoAcompanhamentoNutricional deve ter entre 0.5 e 500 Kg.")]
+        [DefaultValue(null)]
+        public double? pesoAcompanhamentoNutricional { get; set; } = null;
+
+        /// <summary>
+        /// Altura do paciente
+        /// </summary>
+        [DataMember(Name = nameof(alturaAcompanhamentoNutricional))]
+        [Range(20, 250, ErrorMessage = "O campo alturaAcompanhamentoNutricional deve ter entre 20 e 250 cm.")]
+        [DefaultValue(null)]
+        public double? alturaAcompanhamentoNutricional { get; set; } = null;
+
+        /// <summary>
+        /// Visita compartilhada
+        /// </summary>
+        [DataMember(Name = nameof(statusVisitaCompartilhadaOutroProfissional))]
+        public bool statusVisitaCompartilhadaOutroProfissional { get; set; }
+
+        internal FichaVisitaDomiciliarChild ToModel()
+        {
+            var fvdc = DomainContainer.Current.FichaVisitaDomiciliarChild.Create();
+            
+            fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
+            fvdc.cnsCidadao = cnsCidadao;
+            fvdc.desfecho = desfecho;
+            fvdc.dtNascimento = dtNascimento;
+            fvdc.microarea = microarea;
+            fvdc.numProntuario = numProntuario;
+            fvdc.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional == null || pesoAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(pesoAcompanhamentoNutricional);
+            fvdc.sexo = sexo;
+            fvdc.statusVisitaCompartilhadaOutroProfissional = statusVisitaCompartilhadaOutroProfissional;
+            fvdc.stForaArea = stForaArea;
+            fvdc.tipoDeImovel = tipoDeImovel;
+            fvdc.turno = turno;
+            
+            return fvdc;
+        }
+    }
+}
