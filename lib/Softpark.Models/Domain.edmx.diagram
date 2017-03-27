@@ -987,6 +987,22 @@
         <AssociationConnector Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita" />
         <AssociationConnector Association="Domain.ASSMED_SistemaPrograma" />
         <AssociationConnector Association="Domain.AssRelSeletor" />
+        <EntityTypeShape EntityType="Domain.ProAtendimentos_Listagem" Width="1.5" PointX="13.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_ATENDIMENTO_DOMICILIAR" Width="1.5" PointX="15.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_ATENDIMENTO_INDIVIDUAL" Width="1.5" PointX="17.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_ATENDIMENTO_ODONTOLOGICO" Width="1.5" PointX="19.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_ATIVIDADE_COLETIVA" Width="1.5" PointX="26.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO" Width="1.5" PointX="28.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_COMP_FAMILIAR" Width="1.5" PointX="30.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_DOMICILIO" Width="1.5" PointX="32.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_GRUPO" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_INDIVIDUAIS" Width="1.5" PointX="33.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Domain.VW_MARCADORES_CONSUMO_ALIMENTAR" Width="1.5" PointX="35.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_PROCEDIMENTO" Width="1.5" PointX="37.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.Vw_Relatorios_AtendimentoCredenciado" Width="1.5" PointX="39.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.Vw_Relatorios_BPA" Width="1.5" PointX="41.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_USUARIO" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.VW_VISITA_DOMICILIAR" Width="1.5" PointX="43.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

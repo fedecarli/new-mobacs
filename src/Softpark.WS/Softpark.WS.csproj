@@ -396,6 +396,7 @@
     <Compile Include="Controllers\Api\DatabaseSupplyController.cs" />
     <Compile Include="Controllers\Api\odata\FichaVisitaDomiciliarChildController.cs" />
     <Compile Include="Controllers\Api\odata\FichaVisitaDomiciliarMasterController.cs" />
+    <Compile Include="Controllers\Api\odata\IndividuoController.cs" />
     <Compile Include="Controllers\Api\odata\SIGSM_MotivoVisitaController.cs" />
     <Compile Include="Controllers\Api\odata\UnicaLotacaoTransportsController.cs" />
     <Compile Include="Controllers\Api\ProcessosController.cs" />

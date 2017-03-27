@@ -37,6 +37,7 @@ namespace Softpark.WS
         {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<VW_Profissional>("Profissional").EntityType.Property(x => x.INE).IsOptional();
+            builder.EntitySet<VW_INDIVIDUAIS>("Individuo");
             builder.EntitySet<AnimalNoDomicilio>("AnimalNoDomicilio");
             builder.EntitySet<CadastroDomiciliar>("CadastroDomiciliar");
             builder.EntitySet<CadastroIndividual>("CadastroIndividual");

@@ -11,8 +11,7 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class CadastroDomiciliar
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,7 +21,6 @@ namespace Softpark.Models
             this.FamiliaRow = new HashSet<FamiliaRow>();
         }
     
-        [Key]
         public System.Guid id { get; set; }
         public Nullable<System.Guid> condicaoMoradia { get; set; }
         public Nullable<System.Guid> enderecoLocalPermanencia { get; set; }

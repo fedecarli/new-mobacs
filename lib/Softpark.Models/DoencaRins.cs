@@ -11,13 +11,10 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class DoencaRins
     {
-        [Key]
         public int id_tp_doenca_rins { get; set; }
-        [Key]
         public System.Guid id_condicao_de_saude { get; set; }
     
         public virtual CondicoesDeSaude CondicoesDeSaude { get; set; }

@@ -12,18 +12,15 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SIGSM_Visita_Domiciliar_Profissional
+    public partial class VW_COMP_FAMILIAR
     {
-        public int id { get; set; }
-        public int id_visita_domiciliar { get; set; }
-        public decimal id_profissional { get; set; }
-        public string cbo { get; set; }
+        public int PK { get; set; }
+        public int id_composicao_familiar { get; set; }
+        public int codigo_pessoa { get; set; }
+        public string nome { get; set; }
+        public string dtnasc { get; set; }
+        public Nullable<int> id_grau_parentesco { get; set; }
+        public string grau_parentesco { get; set; }
         public int num_contrato { get; set; }
-        public string codibge_munic_nasc { get; set; }
-        public string cnes { get; set; }
-        public string ine { get; set; }
-    
-        public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
-        public virtual SIGSM_Visita_Domiciliar SIGSM_Visita_Domiciliar { get; set; }
     }
 }

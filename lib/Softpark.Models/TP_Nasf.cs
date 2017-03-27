@@ -11,11 +11,9 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class TP_Nasf
     {
-        [Key]
         public int id_tp_nasf { get; set; }
         public string descricao { get; set; }
         public string nome_id { get; set; }

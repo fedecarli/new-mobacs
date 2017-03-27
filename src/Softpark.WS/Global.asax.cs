@@ -19,10 +19,13 @@ namespace Softpark.WS
     {
         protected void Application_Start()
         {
+            var ptBR = CultureInfo.GetCultureInfo("pt-BR");
+            var custom = new CultureInfo(CultureInfo.InvariantCulture.LCID, true) { DateTimeFormat = ptBR.DateTimeFormat, NumberFormat = ptBR.NumberFormat };
+
             CultureInfo.DefaultThreadCurrentCulture =
             CultureInfo.DefaultThreadCurrentUICulture =
             Thread.CurrentThread.CurrentUICulture =
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("pt-BR");
+            Thread.CurrentThread.CurrentCulture = custom;
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);

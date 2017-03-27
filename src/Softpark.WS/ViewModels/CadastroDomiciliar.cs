@@ -76,6 +76,7 @@ namespace Softpark.WS.ViewModels
         {
             var fr = DomainContainer.Current.FamiliaRow.Create();
 
+            fr.id = Guid.NewGuid();
             fr.dataNascimentoResponsavel = dataNascimentoResponsavel;
             fr.numeroCnsResponsavel = numeroCnsResponsavel;
             fr.numeroMembrosFamilia = numeroMembrosFamilia;
@@ -103,6 +104,7 @@ namespace Softpark.WS.ViewModels
         {
             var ip = DomainContainer.Current.InstituicaoPermanencia.Create();
 
+            ip.id = Guid.NewGuid();
             ip.nomeInstituicaoPermanencia = nomeInstituicaoPermanencia;
             ip.stOutrosProfissionaisVinculados = stOutrosProfissionaisVinculados;
             ip.nomeResponsavelTecnico = nomeResponsavelTecnico;
@@ -137,6 +139,7 @@ namespace Softpark.WS.ViewModels
         {
             var elp = DomainContainer.Current.EnderecoLocalPermanencia.Create();
 
+            elp.id = Guid.NewGuid();
             elp.bairro = bairro;
             elp.cep = cep;
             elp.codigoIbgeMunicipio = codigoIbgeMunicipio;
@@ -178,6 +181,7 @@ namespace Softpark.WS.ViewModels
         {
             var cm = DomainContainer.Current.CondicaoMoradia.Create();
 
+            cm.id = Guid.NewGuid();
             cm.abastecimentoAgua = abastecimentoAgua;
             cm.areaProducaoRural = areaProducaoRural;
             cm.destinoLixo = destinoLixo;

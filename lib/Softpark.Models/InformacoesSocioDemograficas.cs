@@ -11,8 +11,7 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class InformacoesSocioDemograficas
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,7 +22,6 @@ namespace Softpark.Models
             this.ResponsavelPorCrianca = new HashSet<ResponsavelPorCrianca>();
         }
     
-        [Key]
         public System.Guid id { get; set; }
         public Nullable<int> grauInstrucaoCidadao { get; set; }
         public string ocupacaoCodigoCbo2002 { get; set; }

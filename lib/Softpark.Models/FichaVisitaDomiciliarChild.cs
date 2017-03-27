@@ -11,8 +11,7 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class FichaVisitaDomiciliarChild
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,7 +20,6 @@ namespace Softpark.Models
             this.SIGSM_MotivoVisita = new HashSet<SIGSM_MotivoVisita>();
         }
     
-        [Key]
         public long childId { get; set; }
         public string uuidFicha { get; set; }
         public long turno { get; set; }

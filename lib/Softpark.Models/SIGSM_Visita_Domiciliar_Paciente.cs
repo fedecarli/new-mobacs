@@ -11,11 +11,9 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class SIGSM_Visita_Domiciliar_Paciente
     {
-        [Key]
         public int id { get; set; }
         public int id_visita_domiciliar { get; set; }
         public decimal id_paciente { get; set; }

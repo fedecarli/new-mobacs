@@ -7173,18 +7173,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Setores_Cotas' 
           <Property Name="numero" Type="int" />
           <Property Name="nome" Type="varchar" MaxLength="80" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Atendimento_Odontologico_Paciente_Condutas' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SIGSM_Atendimento_Odontologico_Paciente_Condutas">
-          <Property Name="id" Type="bigint" />
-          <Property Name="conduta" Type="int" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Atendimento_Odontologico_Paciente_vigilancias' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SIGSM_Atendimento_Odontologico_Paciente_vigilancias">
-          <Property Name="id" Type="bigint" />
-          <Property Name="vigilancia" Type="int" />
-        </EntityType>-->
         <EntityType Name="SIGSM_Atendimento_Odontologico_Procedimentos">
           <Key>
             <PropertyRef Name="id" />
@@ -7746,6 +7734,8 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' doe
           <Property Name="cbo" Type="nchar" MaxLength="10" />
           <Property Name="num_contrato" Type="int" Nullable="false" />
           <Property Name="codibge_munic_nasc" Type="char" MaxLength="7" />
+          <Property Name="cnes" Type="nchar" MaxLength="7" />
+          <Property Name="ine" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendimento_Odontologico' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -7867,56 +7857,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendime
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TABLETEMP_ATU_CRED' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="TABLETEMP_ATU_CRED">
-          <Property Name="Codigo" Type="int" />
-          <Property Name="CodCred" Type="int" />
-          <Property Name="NOME" Type="nvarchar" MaxLength="200" />
-          <Property Name="CPF" Type="char" MaxLength="14" />
-          <Property Name="CNS" Type="varchar" MaxLength="50" />
-          <Property Name="DTNASC" Type="datetime" />
-          <Property Name="SEXO" Type="char" MaxLength="1" />
-          <Property Name="CNES" Type="char" MaxLength="7" />
-          <Property Name="INE" Type="varchar" MaxLength="10" />
-          <Property Name="CodProfTab" Type="char" MaxLength="10" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TABLETEMP_ATU_CRED_RPT' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="TABLETEMP_ATU_CRED_RPT">
-          <Property Name="Codigo" Type="int" />
-          <Property Name="CodCred" Type="int" />
-          <Property Name="NOME" Type="nvarchar" MaxLength="200" />
-          <Property Name="CPF" Type="char" MaxLength="14" />
-          <Property Name="CNS" Type="varchar" MaxLength="50" />
-          <Property Name="DTNASC" Type="datetime" />
-          <Property Name="SEXO" Type="char" MaxLength="1" />
-          <Property Name="CNES" Type="char" MaxLength="7" />
-          <Property Name="INE" Type="varchar" MaxLength="10" />
-          <Property Name="CodProfTab" Type="char" MaxLength="10" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TABLETEMP_ATU_INE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="TABLETEMP_ATU_INE">
-          <Property Name="NumContrato" Type="int" />
-          <Property Name="CodSetor" Type="int" />
-          <Property Name="Numero" Type="varchar" MaxLength="10" />
-          <Property Name="Descricao" Type="nvarchar" MaxLength="100" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TABLETEMP_ATU_UNI' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="TABLETEMP_ATU_UNI">
-          <Property Name="CodSetor" Type="int" />
-          <Property Name="DesSetor" Type="varchar" MaxLength="60" />
-          <Property Name="Cnes" Type="char" MaxLength="7" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TABLETEMP_ATU_UNI_RPT' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="TABLETEMP_ATU_UNI_RPT">
-          <Property Name="CodSetor" Type="int" />
-          <Property Name="DesSetor" Type="varchar" MaxLength="60" />
-          <Property Name="Cnes" Type="char" MaxLength="7" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_CidadaoSocial' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TB_CidadaoSocial">
           <Key>
@@ -7946,16 +7886,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_CidadaoSocia
           <Property Name="cd_TipoTelefone" Type="int" />
           <Property Name="Estado Cívil" Type="varchar" MaxLength="15" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.tb_grupo' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="tb_grupo">
-          <Property Name="Coluna 0" Type="varchar" MaxLength="50" />
-          <Property Name="Coluna 1" Type="varchar" MaxLength="50" />
-          <Property Name="Coluna 2" Type="varchar" MaxLength="50" />
-          <Property Name="Coluna 3" Type="varchar" MaxLength="50" />
-          <Property Name="Coluna 4" Type="varchar" MaxLength="50" />
-          <Property Name="Coluna 5" Type="varchar" MaxLength="50" />
-        </EntityType>-->
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_MS_TIPO_LOGRADOURO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TB_MS_TIPO_LOGRADOURO">
@@ -8571,26 +8501,323 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Nasf' does n
           <Property Name="CodANP" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_Profissional' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="VW_Profissional">
-          <Property Name="id" Type="bigint" />
-          <Property Name="CNS" Type="varchar" MaxLength="50" />
-          <Property Name="Nome" Type="varchar" MaxLength="100" />
-          <Property Name="CBO" Type="char" MaxLength="10" />
-          <Property Name="Profissao" Type="varchar" MaxLength="120" />
-          <Property Name="CNES" Type="char" MaxLength="7" />
-          <Property Name="Unidade" Type="varchar" MaxLength="60" />
-          <Property Name="INE" Type="nvarchar" MaxLength="10" />
-          <Property Name="Equipe" Type="nvarchar" MaxLength="100" />
-        </EntityType>-->
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ProAtendimentos_Listagem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ProAtendimentos_Listagem">
+          <Key>
+            <PropertyRef Name="A_ID" />
+          </Key>
+          <Property Name="A_Status" Type="varchar" MaxLength="356" />
+          <Property Name="A_ID_Status" Type="int" />
+          <Property Name="A_ID" Type="int" Nullable="false" />
+          <Property Name="A_DataHora" Type="datetime" />
+          <Property Name="A_ID_Setor" Type="int" />
+          <Property Name="Paciente" Type="varchar" MaxLength="100" />
+          <Property Name="IDProfissional" Type="int" />
+          <Property Name="Profissional" Type="varchar" MaxLength="100" />
+          <Property Name="TpServicos" Type="nvarchar(max)" />
+          <Property Name="IDsTpServicos" Type="nvarchar(max)" />
+        </EntityType>
         <!--Errors Found During Generation:
-warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_Unidade' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="VW_Unidade">
-          <Property Name="id" Type="bigint" />
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_DOMICILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_ATENDIMENTO_DOMICILIAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="bigint" Nullable="false" />
+          <Property Name="ficha_ID" Type="bigint" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_INDIVIDUAL' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_ATENDIMENTO_INDIVIDUAL">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="bigint" Nullable="false" />
+          <Property Name="ficha_ID" Type="bigint" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_ODONTOLOGICO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_ATENDIMENTO_ODONTOLOGICO">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Digitador_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="bigint" Nullable="false" />
+          <Property Name="ficha_ID" Type="bigint" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" Nullable="false" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATIVIDADE_COLETIVA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_ATIVIDADE_COLETIVA">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Digitador_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="bigint" Nullable="false" />
+          <Property Name="ficha_ID" Type="bigint" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" Nullable="false" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="int" Nullable="false" />
+          <Property Name="ficha_ID" Type="int" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_COMP_FAMILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_COMP_FAMILIAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="id_composicao_familiar" />
+            <PropertyRef Name="codigo_pessoa" />
+            <PropertyRef Name="num_contrato" />
+          </Key>
+          <Property Name="PK" Type="int" Nullable="false" />
+          <Property Name="id_composicao_familiar" Type="int" Nullable="false" />
+          <Property Name="codigo_pessoa" Type="int" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="100" />
+          <Property Name="dtnasc" Type="char" MaxLength="10" />
+          <Property Name="id_grau_parentesco" Type="int" />
+          <Property Name="grau_parentesco" Type="nvarchar" MaxLength="150" />
+          <Property Name="num_contrato" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_DOMICILIO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_DOMICILIO">
+          <Key>
+            <PropertyRef Name="ativo" />
+          </Key>
+          <Property Name="PK" Type="nvarchar" MaxLength="61" />
+          <Property Name="endereco" Type="nvarchar" MaxLength="873" />
+          <Property Name="complemento" Type="nvarchar" MaxLength="100" />
+          <Property Name="fone" Type="nvarchar" MaxLength="16" />
+          <Property Name="prof" Type="nvarchar" MaxLength="200" />
+          <Property Name="prof_sus" Type="nvarchar" MaxLength="50" />
+          <Property Name="data" Type="varchar" MaxLength="10" />
+          <Property Name="num_contrato" Type="int" />
+          <Property Name="ativo" Type="varchar" MaxLength="7" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_GRUPO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_GRUPO">
+          <Key>
+            <PropertyRef Name="ID_GRUPO" />
+            <PropertyRef Name="NIVELHIER_DESC" />
+            <PropertyRef Name="ATIVO" />
+          </Key>
+          <Property Name="ID_GRUPO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRICAO" Type="nvarchar" MaxLength="100" />
+          <Property Name="SISTEMA" Type="nvarchar(max)" />
+          <Property Name="NIVELHIER_DESC" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="ATIVO" Type="varchar" MaxLength="7" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_INDIVIDUAIS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_INDIVIDUAIS">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="PK" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ID" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="NOME" Type="varchar" MaxLength="100" />
+          <Property Name="DTNASC" Type="char" MaxLength="10" />
+          <Property Name="NOMEMAE" Type="varchar" MaxLength="100" />
+          <Property Name="CNS" Type="varchar" MaxLength="50" />
+          <Property Name="MUNNASC" Type="nvarchar" MaxLength="200" />
+          <Property Name="DOCUMENTOS" Type="nvarchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_MARCADORES_CONSUMO_ALIMENTAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_MARCADORES_CONSUMO_ALIMENTAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="bigint" Nullable="false" />
+          <Property Name="ficha_ID" Type="bigint" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_PROCEDIMENTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_PROCEDIMENTO">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Digitador_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="bigint" Nullable="false" />
+          <Property Name="ficha_ID" Type="bigint" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" Nullable="false" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Vw_Relatorios_AtendimentoCredenciado' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Vw_Relatorios_AtendimentoCredenciado">
+          <Key>
+            <PropertyRef Name="NumAtend" />
+            <PropertyRef Name="NumContrato" />
+            <PropertyRef Name="CodCred" />
+            <PropertyRef Name="CodSetor" />
+          </Key>
+          <Property Name="NumAtend" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="DataAtend" Type="datetime" />
+          <Property Name="HoraAtend" Type="char" MaxLength="5" />
+          <Property Name="NumProntuario" Type="varchar" MaxLength="15" />
+          <Property Name="NumContrato" Type="int" Nullable="false" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" />
+          <Property Name="DtNasc" Type="datetime" />
           <Property Name="CNES" Type="char" MaxLength="7" />
-          <Property Name="Descricao" Type="varchar" MaxLength="60" />
-          <Property Name="Observacao" Type="varchar" MaxLength="100" />
-        </EntityType>-->
+          <Property Name="CodCred" Type="int" Nullable="false" />
+          <Property Name="CodSetor" Type="int" Nullable="false" />
+          <Property Name="DesSetor" Type="varchar" MaxLength="60" />
+          <Property Name="NomeMedico" Type="varchar" MaxLength="100" />
+          <Property Name="Numero" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Vw_Relatorios_BPA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Vw_Relatorios_BPA">
+          <Key>
+            <PropertyRef Name="NumAtend" />
+            <PropertyRef Name="CodSetor" />
+            <PropertyRef Name="CodCred" />
+          </Key>
+          <Property Name="DataAtend" Type="datetime" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="NomeMedico" Type="varchar" MaxLength="100" />
+          <Property Name="NomePAciente" Type="varchar" MaxLength="100" />
+          <Property Name="CNES" Type="char" MaxLength="7" />
+          <Property Name="NumAtend" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="CBO" Type="char" MaxLength="6" />
+          <Property Name="DtNasc" Type="datetime" />
+          <Property Name="DesSetor" Type="varchar" MaxLength="60" />
+          <Property Name="CodCID" Type="char" MaxLength="5" />
+          <Property Name="DesProcTab" Type="varchar" MaxLength="200" />
+          <Property Name="CodSetor" Type="int" Nullable="false" />
+          <Property Name="CodCred" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_USUARIO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_USUARIO">
+          <Key>
+            <PropertyRef Name="CodUsu" />
+            <PropertyRef Name="email" />
+            <PropertyRef Name="ativo" />
+          </Key>
+          <Property Name="PK" Type="nvarchar" MaxLength="61" />
+          <Property Name="CodUsu" Type="int" Nullable="false" />
+          <Property Name="Login" Type="varchar" MaxLength="80" />
+          <Property Name="Nome" Type="varchar" MaxLength="30" />
+          <Property Name="email" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="ativo" Type="varchar" MaxLength="7" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_VISITA_DOMICILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_VISITA_DOMICILIAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="int" Nullable="false" />
+          <Property Name="ficha_ID" Type="int" Nullable="false" />
+          <Property Name="DATA" Type="varchar" MaxLength="10" />
+          <Property Name="Profissional_ID" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Digitador_ID" Type="int" />
+          <Property Name="Digitador_nome" Type="varchar" MaxLength="100" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="Status_Nome" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="Unidade_CNES" Type="int" />
+          <Property Name="Unidade_ID" Type="int" />
+          <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
+        </EntityType>
         <Association Name="FK__ACADEMIA_FichaTr__1F2E9E6D">
           <End Role="ACADEMIA_Objetivos" Type="Self.ACADEMIA_Objetivos" Multiplicity="0..1" />
           <End Role="ACADEMIA_FichaTreino" Type="Self.ACADEMIA_FichaTreino" Multiplicity="*" />
@@ -16254,6 +16481,239 @@ Endereço],
     [TP_Nasf].[nome_id] AS [nome_id]
     FROM [dbo].[TP_Nasf] AS [TP_Nasf]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="ProAtendimentos_Listagem" EntityType="Self.ProAtendimentos_Listagem" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ProAtendimentos_Listagem].[A_Status] AS [A_Status], 
+    [ProAtendimentos_Listagem].[A_ID_Status] AS [A_ID_Status], 
+    [ProAtendimentos_Listagem].[A_ID] AS [A_ID], 
+    [ProAtendimentos_Listagem].[A_DataHora] AS [A_DataHora], 
+    [ProAtendimentos_Listagem].[A_ID_Setor] AS [A_ID_Setor], 
+    [ProAtendimentos_Listagem].[Paciente] AS [Paciente], 
+    [ProAtendimentos_Listagem].[IDProfissional] AS [IDProfissional], 
+    [ProAtendimentos_Listagem].[Profissional] AS [Profissional], 
+    [ProAtendimentos_Listagem].[TpServicos] AS [TpServicos], 
+    [ProAtendimentos_Listagem].[IDsTpServicos] AS [IDsTpServicos]
+    FROM [dbo].[ProAtendimentos_Listagem] AS [ProAtendimentos_Listagem]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_ATENDIMENTO_DOMICILIAR" EntityType="Self.VW_ATENDIMENTO_DOMICILIAR" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_ATENDIMENTO_DOMICILIAR].[PK] AS [PK], 
+    [VW_ATENDIMENTO_DOMICILIAR].[ficha_ID] AS [ficha_ID], 
+    [VW_ATENDIMENTO_DOMICILIAR].[DATA] AS [DATA], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Profissional_ID] AS [Profissional_ID], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Profissional_nome] AS [Profissional_nome], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Digitador_ID] AS [Digitador_ID], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Digitador_nome] AS [Digitador_nome], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Status_ID] AS [Status_ID], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Status_Nome] AS [Status_Nome], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_ATENDIMENTO_DOMICILIAR].[Unidade_ID] AS [Unidade_ID], 
+    [VW_ATENDIMENTO_DOMICILIAR].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_ATENDIMENTO_DOMICILIAR] AS [VW_ATENDIMENTO_DOMICILIAR]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_ATENDIMENTO_INDIVIDUAL" EntityType="Self.VW_ATENDIMENTO_INDIVIDUAL" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_ATENDIMENTO_INDIVIDUAL].[PK] AS [PK], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[ficha_ID] AS [ficha_ID], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[DATA] AS [DATA], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Profissional_ID] AS [Profissional_ID], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Profissional_nome] AS [Profissional_nome], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Digitador_ID] AS [Digitador_ID], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Digitador_nome] AS [Digitador_nome], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Status_ID] AS [Status_ID], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Status_Nome] AS [Status_Nome], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[Unidade_ID] AS [Unidade_ID], 
+    [VW_ATENDIMENTO_INDIVIDUAL].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_ATENDIMENTO_INDIVIDUAL] AS [VW_ATENDIMENTO_INDIVIDUAL]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_ATENDIMENTO_ODONTOLOGICO" EntityType="Self.VW_ATENDIMENTO_ODONTOLOGICO" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[PK] AS [PK], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[ficha_ID] AS [ficha_ID], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[DATA] AS [DATA], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Profissional_ID] AS [Profissional_ID], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Profissional_nome] AS [Profissional_nome], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Digitador_ID] AS [Digitador_ID], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Digitador_nome] AS [Digitador_nome], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Status_ID] AS [Status_ID], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Status_Nome] AS [Status_Nome], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[Unidade_ID] AS [Unidade_ID], 
+    [VW_ATENDIMENTO_ODONTOLOGICO].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_ATENDIMENTO_ODONTOLOGICO] AS [VW_ATENDIMENTO_ODONTOLOGICO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_ATIVIDADE_COLETIVA" EntityType="Self.VW_ATIVIDADE_COLETIVA" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_ATIVIDADE_COLETIVA].[PK] AS [PK], 
+    [VW_ATIVIDADE_COLETIVA].[ficha_ID] AS [ficha_ID], 
+    [VW_ATIVIDADE_COLETIVA].[DATA] AS [DATA], 
+    [VW_ATIVIDADE_COLETIVA].[Profissional_ID] AS [Profissional_ID], 
+    [VW_ATIVIDADE_COLETIVA].[Profissional_nome] AS [Profissional_nome], 
+    [VW_ATIVIDADE_COLETIVA].[Digitador_ID] AS [Digitador_ID], 
+    [VW_ATIVIDADE_COLETIVA].[Digitador_nome] AS [Digitador_nome], 
+    [VW_ATIVIDADE_COLETIVA].[Status_ID] AS [Status_ID], 
+    [VW_ATIVIDADE_COLETIVA].[Status_Nome] AS [Status_Nome], 
+    [VW_ATIVIDADE_COLETIVA].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_ATIVIDADE_COLETIVA].[Unidade_ID] AS [Unidade_ID], 
+    [VW_ATIVIDADE_COLETIVA].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_ATIVIDADE_COLETIVA] AS [VW_ATIVIDADE_COLETIVA]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO" EntityType="Self.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[PK] AS [PK], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[ficha_ID] AS [ficha_ID], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[DATA] AS [DATA], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Profissional_ID] AS [Profissional_ID], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Profissional_nome] AS [Profissional_nome], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Digitador_ID] AS [Digitador_ID], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Digitador_nome] AS [Digitador_nome], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Status_ID] AS [Status_ID], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Status_Nome] AS [Status_Nome], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[Unidade_ID] AS [Unidade_ID], 
+    [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO] AS [VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_COMP_FAMILIAR" EntityType="Self.VW_COMP_FAMILIAR" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_COMP_FAMILIAR].[PK] AS [PK], 
+    [VW_COMP_FAMILIAR].[id_composicao_familiar] AS [id_composicao_familiar], 
+    [VW_COMP_FAMILIAR].[codigo_pessoa] AS [codigo_pessoa], 
+    [VW_COMP_FAMILIAR].[nome] AS [nome], 
+    [VW_COMP_FAMILIAR].[dtnasc] AS [dtnasc], 
+    [VW_COMP_FAMILIAR].[id_grau_parentesco] AS [id_grau_parentesco], 
+    [VW_COMP_FAMILIAR].[grau_parentesco] AS [grau_parentesco], 
+    [VW_COMP_FAMILIAR].[num_contrato] AS [num_contrato]
+    FROM [dbo].[VW_COMP_FAMILIAR] AS [VW_COMP_FAMILIAR]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_DOMICILIO" EntityType="Self.VW_DOMICILIO" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_DOMICILIO].[PK] AS [PK], 
+    [VW_DOMICILIO].[endereco] AS [endereco], 
+    [VW_DOMICILIO].[complemento] AS [complemento], 
+    [VW_DOMICILIO].[fone] AS [fone], 
+    [VW_DOMICILIO].[prof] AS [prof], 
+    [VW_DOMICILIO].[prof_sus] AS [prof_sus], 
+    [VW_DOMICILIO].[data] AS [data], 
+    [VW_DOMICILIO].[num_contrato] AS [num_contrato], 
+    [VW_DOMICILIO].[ativo] AS [ativo]
+    FROM [dbo].[VW_DOMICILIO] AS [VW_DOMICILIO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_GRUPO" EntityType="Self.VW_GRUPO" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_GRUPO].[ID_GRUPO] AS [ID_GRUPO], 
+    [VW_GRUPO].[DESCRICAO] AS [DESCRICAO], 
+    [VW_GRUPO].[SISTEMA] AS [SISTEMA], 
+    [VW_GRUPO].[NIVELHIER_DESC] AS [NIVELHIER_DESC], 
+    [VW_GRUPO].[ATIVO] AS [ATIVO]
+    FROM [dbo].[VW_GRUPO] AS [VW_GRUPO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_INDIVIDUAIS" EntityType="Self.VW_INDIVIDUAIS" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_INDIVIDUAIS].[PK] AS [PK], 
+    [VW_INDIVIDUAIS].[ID] AS [ID], 
+    [VW_INDIVIDUAIS].[NOME] AS [NOME], 
+    [VW_INDIVIDUAIS].[DTNASC] AS [DTNASC], 
+    [VW_INDIVIDUAIS].[NOMEMAE] AS [NOMEMAE], 
+    [VW_INDIVIDUAIS].[CNS] AS [CNS], 
+    [VW_INDIVIDUAIS].[MUNNASC] AS [MUNNASC], 
+    [VW_INDIVIDUAIS].[DOCUMENTOS] AS [DOCUMENTOS]
+    FROM [dbo].[VW_INDIVIDUAIS] AS [VW_INDIVIDUAIS]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_MARCADORES_CONSUMO_ALIMENTAR" EntityType="Self.VW_MARCADORES_CONSUMO_ALIMENTAR" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[PK] AS [PK], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[ficha_ID] AS [ficha_ID], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[DATA] AS [DATA], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Profissional_ID] AS [Profissional_ID], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Profissional_nome] AS [Profissional_nome], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Digitador_ID] AS [Digitador_ID], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Digitador_nome] AS [Digitador_nome], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Status_ID] AS [Status_ID], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Status_Nome] AS [Status_Nome], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[Unidade_ID] AS [Unidade_ID], 
+    [VW_MARCADORES_CONSUMO_ALIMENTAR].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_MARCADORES_CONSUMO_ALIMENTAR] AS [VW_MARCADORES_CONSUMO_ALIMENTAR]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_PROCEDIMENTO" EntityType="Self.VW_PROCEDIMENTO" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_PROCEDIMENTO].[PK] AS [PK], 
+    [VW_PROCEDIMENTO].[ficha_ID] AS [ficha_ID], 
+    [VW_PROCEDIMENTO].[DATA] AS [DATA], 
+    [VW_PROCEDIMENTO].[Profissional_ID] AS [Profissional_ID], 
+    [VW_PROCEDIMENTO].[Profissional_nome] AS [Profissional_nome], 
+    [VW_PROCEDIMENTO].[Digitador_ID] AS [Digitador_ID], 
+    [VW_PROCEDIMENTO].[Digitador_nome] AS [Digitador_nome], 
+    [VW_PROCEDIMENTO].[Status_ID] AS [Status_ID], 
+    [VW_PROCEDIMENTO].[Status_Nome] AS [Status_Nome], 
+    [VW_PROCEDIMENTO].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_PROCEDIMENTO].[Unidade_ID] AS [Unidade_ID], 
+    [VW_PROCEDIMENTO].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_PROCEDIMENTO] AS [VW_PROCEDIMENTO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Vw_Relatorios_AtendimentoCredenciado" EntityType="Self.Vw_Relatorios_AtendimentoCredenciado" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Vw_Relatorios_AtendimentoCredenciado].[NumAtend] AS [NumAtend], 
+    [Vw_Relatorios_AtendimentoCredenciado].[DataAtend] AS [DataAtend], 
+    [Vw_Relatorios_AtendimentoCredenciado].[HoraAtend] AS [HoraAtend], 
+    [Vw_Relatorios_AtendimentoCredenciado].[NumProntuario] AS [NumProntuario], 
+    [Vw_Relatorios_AtendimentoCredenciado].[NumContrato] AS [NumContrato], 
+    [Vw_Relatorios_AtendimentoCredenciado].[Codigo] AS [Codigo], 
+    [Vw_Relatorios_AtendimentoCredenciado].[Nome] AS [Nome], 
+    [Vw_Relatorios_AtendimentoCredenciado].[DtNasc] AS [DtNasc], 
+    [Vw_Relatorios_AtendimentoCredenciado].[CNES] AS [CNES], 
+    [Vw_Relatorios_AtendimentoCredenciado].[CodCred] AS [CodCred], 
+    [Vw_Relatorios_AtendimentoCredenciado].[CodSetor] AS [CodSetor], 
+    [Vw_Relatorios_AtendimentoCredenciado].[DesSetor] AS [DesSetor], 
+    [Vw_Relatorios_AtendimentoCredenciado].[NomeMedico] AS [NomeMedico], 
+    [Vw_Relatorios_AtendimentoCredenciado].[Numero] AS [Numero]
+    FROM [dbo].[Vw_Relatorios_AtendimentoCredenciado] AS [Vw_Relatorios_AtendimentoCredenciado]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Vw_Relatorios_BPA" EntityType="Self.Vw_Relatorios_BPA" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Vw_Relatorios_BPA].[DataAtend] AS [DataAtend], 
+    [Vw_Relatorios_BPA].[Codigo] AS [Codigo], 
+    [Vw_Relatorios_BPA].[NomeMedico] AS [NomeMedico], 
+    [Vw_Relatorios_BPA].[NomePAciente] AS [NomePAciente], 
+    [Vw_Relatorios_BPA].[CNES] AS [CNES], 
+    [Vw_Relatorios_BPA].[NumAtend] AS [NumAtend], 
+    [Vw_Relatorios_BPA].[CBO] AS [CBO], 
+    [Vw_Relatorios_BPA].[DtNasc] AS [DtNasc], 
+    [Vw_Relatorios_BPA].[DesSetor] AS [DesSetor], 
+    [Vw_Relatorios_BPA].[CodCID] AS [CodCID], 
+    [Vw_Relatorios_BPA].[DesProcTab] AS [DesProcTab], 
+    [Vw_Relatorios_BPA].[CodSetor] AS [CodSetor], 
+    [Vw_Relatorios_BPA].[CodCred] AS [CodCred]
+    FROM [dbo].[Vw_Relatorios_BPA] AS [Vw_Relatorios_BPA]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_USUARIO" EntityType="Self.VW_USUARIO" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_USUARIO].[PK] AS [PK], 
+    [VW_USUARIO].[CodUsu] AS [CodUsu], 
+    [VW_USUARIO].[Login] AS [Login], 
+    [VW_USUARIO].[Nome] AS [Nome], 
+    [VW_USUARIO].[email] AS [email], 
+    [VW_USUARIO].[ativo] AS [ativo]
+    FROM [dbo].[VW_USUARIO] AS [VW_USUARIO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_VISITA_DOMICILIAR" EntityType="Self.VW_VISITA_DOMICILIAR" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VW_VISITA_DOMICILIAR].[PK] AS [PK], 
+    [VW_VISITA_DOMICILIAR].[ficha_ID] AS [ficha_ID], 
+    [VW_VISITA_DOMICILIAR].[DATA] AS [DATA], 
+    [VW_VISITA_DOMICILIAR].[Profissional_ID] AS [Profissional_ID], 
+    [VW_VISITA_DOMICILIAR].[Profissional_nome] AS [Profissional_nome], 
+    [VW_VISITA_DOMICILIAR].[Digitador_ID] AS [Digitador_ID], 
+    [VW_VISITA_DOMICILIAR].[Digitador_nome] AS [Digitador_nome], 
+    [VW_VISITA_DOMICILIAR].[Status_ID] AS [Status_ID], 
+    [VW_VISITA_DOMICILIAR].[Status_Nome] AS [Status_Nome], 
+    [VW_VISITA_DOMICILIAR].[Unidade_CNES] AS [Unidade_CNES], 
+    [VW_VISITA_DOMICILIAR].[Unidade_ID] AS [Unidade_ID], 
+    [VW_VISITA_DOMICILIAR].[GUID_ESUS] AS [GUID_ESUS]
+    FROM [dbo].[VW_VISITA_DOMICILIAR] AS [VW_VISITA_DOMICILIAR]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__ACADEMIA_FichaTr__1F2E9E6D" Association="Self.FK__ACADEMIA_FichaTr__1F2E9E6D">
             <End Role="ACADEMIA_Objetivos" EntitySet="ACADEMIA_Objetivos" />
             <End Role="ACADEMIA_FichaTreino" EntitySet="ACADEMIA_FichaTreino" />
@@ -20453,6 +20913,22 @@ Endereço],
             <End Role="AssRel" EntitySet="AssRel" />
             <End Role="Seletor" EntitySet="Seletor" />
           </AssociationSet>
+          <EntitySet Name="ProAtendimentos_Listagem" EntityType="Domain.ProAtendimentos_Listagem" />
+          <EntitySet Name="VW_ATENDIMENTO_DOMICILIAR" EntityType="Domain.VW_ATENDIMENTO_DOMICILIAR" />
+          <EntitySet Name="VW_ATENDIMENTO_INDIVIDUAL" EntityType="Domain.VW_ATENDIMENTO_INDIVIDUAL" />
+          <EntitySet Name="VW_ATENDIMENTO_ODONTOLOGICO" EntityType="Domain.VW_ATENDIMENTO_ODONTOLOGICO" />
+          <EntitySet Name="VW_ATIVIDADE_COLETIVA" EntityType="Domain.VW_ATIVIDADE_COLETIVA" />
+          <EntitySet Name="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO" EntityType="Domain.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO" />
+          <EntitySet Name="VW_COMP_FAMILIAR" EntityType="Domain.VW_COMP_FAMILIAR" />
+          <EntitySet Name="VW_DOMICILIO" EntityType="Domain.VW_DOMICILIO" />
+          <EntitySet Name="VW_GRUPO" EntityType="Domain.VW_GRUPO" />
+          <EntitySet Name="VW_INDIVIDUAIS" EntityType="Domain.VW_INDIVIDUAIS" />
+          <EntitySet Name="VW_MARCADORES_CONSUMO_ALIMENTAR" EntityType="Domain.VW_MARCADORES_CONSUMO_ALIMENTAR" />
+          <EntitySet Name="VW_PROCEDIMENTO" EntityType="Domain.VW_PROCEDIMENTO" />
+          <EntitySet Name="Vw_Relatorios_AtendimentoCredenciado" EntityType="Domain.Vw_Relatorios_AtendimentoCredenciado" />
+          <EntitySet Name="Vw_Relatorios_BPA" EntityType="Domain.Vw_Relatorios_BPA" />
+          <EntitySet Name="VW_USUARIO" EntityType="Domain.VW_USUARIO" />
+          <EntitySet Name="VW_VISITA_DOMICILIAR" EntityType="Domain.VW_VISITA_DOMICILIAR" />
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
           <Key>
@@ -28458,6 +28934,8 @@ Endereço],
           <Property Name="codibge_munic_nasc" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro" FromRole="SIGSM_Visita_Domiciliar_Profissional" ToRole="ASSMED_Cadastro" />
           <NavigationProperty Name="SIGSM_Visita_Domiciliar" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar" FromRole="SIGSM_Visita_Domiciliar_Profissional" ToRole="SIGSM_Visita_Domiciliar" />
+          <Property Name="cnes" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
+          <Property Name="ine" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SituacaoFamiliar">
           <Key>
@@ -36167,6 +36645,292 @@ Endereço],
           <End Type="Domain.AssRel" Role="AssRel" Multiplicity="*" />
           <End Type="Domain.Seletor" Role="Seletor" Multiplicity="*" />
         </Association>
+        <EntityType Name="ProAtendimentos_Listagem">
+          <Key>
+            <PropertyRef Name="A_ID" />
+          </Key>
+          <Property Name="A_Status" Type="String" MaxLength="356" FixedLength="false" Unicode="false" />
+          <Property Name="A_ID_Status" Type="Int32" />
+          <Property Name="A_ID" Type="Int32" Nullable="false" />
+          <Property Name="A_DataHora" Type="DateTime" Precision="3" />
+          <Property Name="A_ID_Setor" Type="Int32" />
+          <Property Name="Paciente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IDProfissional" Type="Int32" />
+          <Property Name="Profissional" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TpServicos" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IDsTpServicos" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="VW_ATENDIMENTO_DOMICILIAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int64" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int64" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_ATENDIMENTO_INDIVIDUAL">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int64" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int64" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_ATENDIMENTO_ODONTOLOGICO">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Digitador_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int64" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int64" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" Nullable="false" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_ATIVIDADE_COLETIVA">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Digitador_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int64" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int64" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" Nullable="false" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int32" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_COMP_FAMILIAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="id_composicao_familiar" />
+            <PropertyRef Name="codigo_pessoa" />
+            <PropertyRef Name="num_contrato" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" />
+          <Property Name="id_composicao_familiar" Type="Int32" Nullable="false" />
+          <Property Name="codigo_pessoa" Type="Int32" Nullable="false" />
+          <Property Name="nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="dtnasc" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="id_grau_parentesco" Type="Int32" />
+          <Property Name="grau_parentesco" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="num_contrato" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VW_DOMICILIO">
+          <Key>
+            <PropertyRef Name="ativo" />
+          </Key>
+          <Property Name="PK" Type="String" MaxLength="61" FixedLength="false" Unicode="true" />
+          <Property Name="endereco" Type="String" MaxLength="873" FixedLength="false" Unicode="true" />
+          <Property Name="complemento" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="fone" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="prof" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="prof_sus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="data" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="num_contrato" Type="Int32" />
+          <Property Name="ativo" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_GRUPO">
+          <Key>
+            <PropertyRef Name="ID_GRUPO" />
+            <PropertyRef Name="NIVELHIER_DESC" />
+            <PropertyRef Name="ATIVO" />
+          </Key>
+          <Property Name="ID_GRUPO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRICAO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SISTEMA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NIVELHIER_DESC" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="ATIVO" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_INDIVIDUAIS">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="PK" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="NOME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DTNASC" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="NOMEMAE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CNS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MUNNASC" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DOCUMENTOS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="VW_MARCADORES_CONSUMO_ALIMENTAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int64" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int64" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_PROCEDIMENTO">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Digitador_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int64" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int64" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" Nullable="false" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Vw_Relatorios_AtendimentoCredenciado">
+          <Key>
+            <PropertyRef Name="NumAtend" />
+            <PropertyRef Name="NumContrato" />
+            <PropertyRef Name="CodCred" />
+            <PropertyRef Name="CodSetor" />
+          </Key>
+          <Property Name="NumAtend" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="DataAtend" Type="DateTime" Precision="3" />
+          <Property Name="HoraAtend" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="NumProntuario" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="NumContrato" Type="Int32" Nullable="false" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DtNasc" Type="DateTime" Precision="3" />
+          <Property Name="CNES" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
+          <Property Name="CodCred" Type="Int32" Nullable="false" />
+          <Property Name="CodSetor" Type="Int32" Nullable="false" />
+          <Property Name="DesSetor" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="NomeMedico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Numero" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Vw_Relatorios_BPA">
+          <Key>
+            <PropertyRef Name="NumAtend" />
+            <PropertyRef Name="CodSetor" />
+            <PropertyRef Name="CodCred" />
+          </Key>
+          <Property Name="DataAtend" Type="DateTime" Precision="3" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="NomeMedico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NomePAciente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CNES" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
+          <Property Name="NumAtend" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="CBO" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="DtNasc" Type="DateTime" Precision="3" />
+          <Property Name="DesSetor" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="CodCID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="DesProcTab" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CodSetor" Type="Int32" Nullable="false" />
+          <Property Name="CodCred" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VW_USUARIO">
+          <Key>
+            <PropertyRef Name="CodUsu" />
+            <PropertyRef Name="email" />
+            <PropertyRef Name="ativo" />
+          </Key>
+          <Property Name="PK" Type="String" MaxLength="61" FixedLength="false" Unicode="true" />
+          <Property Name="CodUsu" Type="Int32" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Nome" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="ativo" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VW_VISITA_DOMICILIAR">
+          <Key>
+            <PropertyRef Name="PK" />
+            <PropertyRef Name="ficha_ID" />
+            <PropertyRef Name="Status_ID" />
+            <PropertyRef Name="Status_Nome" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" />
+          <Property Name="ficha_ID" Type="Int32" Nullable="false" />
+          <Property Name="DATA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Profissional_ID" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Profissional_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Digitador_ID" Type="Int32" />
+          <Property Name="Digitador_nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="Status_Nome" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="Unidade_CNES" Type="Int32" />
+          <Property Name="Unidade_ID" Type="Int32" />
+          <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -43075,6 +43839,8 @@ Endereço],
           <EntitySetMapping Name="SIGSM_Visita_Domiciliar_Profissional">
             <EntityTypeMapping TypeName="Domain.SIGSM_Visita_Domiciliar_Profissional">
               <MappingFragment StoreEntitySet="SIGSM_Visita_Domiciliar_Profissional">
+                <ScalarProperty Name="ine" ColumnName="ine" />
+                <ScalarProperty Name="cnes" ColumnName="cnes" />
                 <ScalarProperty Name="codibge_munic_nasc" ColumnName="codibge_munic_nasc" />
                 <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
                 <ScalarProperty Name="cbo" ColumnName="cbo" />
@@ -44423,6 +45189,271 @@ Endereço],
               <ScalarProperty Name="NumRel" ColumnName="NumRel" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ProAtendimentos_Listagem">
+            <EntityTypeMapping TypeName="Domain.ProAtendimentos_Listagem">
+              <MappingFragment StoreEntitySet="ProAtendimentos_Listagem">
+                <ScalarProperty Name="IDsTpServicos" ColumnName="IDsTpServicos" />
+                <ScalarProperty Name="TpServicos" ColumnName="TpServicos" />
+                <ScalarProperty Name="Profissional" ColumnName="Profissional" />
+                <ScalarProperty Name="IDProfissional" ColumnName="IDProfissional" />
+                <ScalarProperty Name="Paciente" ColumnName="Paciente" />
+                <ScalarProperty Name="A_ID_Setor" ColumnName="A_ID_Setor" />
+                <ScalarProperty Name="A_DataHora" ColumnName="A_DataHora" />
+                <ScalarProperty Name="A_ID" ColumnName="A_ID" />
+                <ScalarProperty Name="A_ID_Status" ColumnName="A_ID_Status" />
+                <ScalarProperty Name="A_Status" ColumnName="A_Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_ATENDIMENTO_DOMICILIAR">
+            <EntityTypeMapping TypeName="Domain.VW_ATENDIMENTO_DOMICILIAR">
+              <MappingFragment StoreEntitySet="VW_ATENDIMENTO_DOMICILIAR">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_ATENDIMENTO_INDIVIDUAL">
+            <EntityTypeMapping TypeName="Domain.VW_ATENDIMENTO_INDIVIDUAL">
+              <MappingFragment StoreEntitySet="VW_ATENDIMENTO_INDIVIDUAL">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_ATENDIMENTO_ODONTOLOGICO">
+            <EntityTypeMapping TypeName="Domain.VW_ATENDIMENTO_ODONTOLOGICO">
+              <MappingFragment StoreEntitySet="VW_ATENDIMENTO_ODONTOLOGICO">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_ATIVIDADE_COLETIVA">
+            <EntityTypeMapping TypeName="Domain.VW_ATIVIDADE_COLETIVA">
+              <MappingFragment StoreEntitySet="VW_ATIVIDADE_COLETIVA">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO">
+            <EntityTypeMapping TypeName="Domain.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO">
+              <MappingFragment StoreEntitySet="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_COMP_FAMILIAR">
+            <EntityTypeMapping TypeName="Domain.VW_COMP_FAMILIAR">
+              <MappingFragment StoreEntitySet="VW_COMP_FAMILIAR">
+                <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
+                <ScalarProperty Name="grau_parentesco" ColumnName="grau_parentesco" />
+                <ScalarProperty Name="id_grau_parentesco" ColumnName="id_grau_parentesco" />
+                <ScalarProperty Name="dtnasc" ColumnName="dtnasc" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="codigo_pessoa" ColumnName="codigo_pessoa" />
+                <ScalarProperty Name="id_composicao_familiar" ColumnName="id_composicao_familiar" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_DOMICILIO">
+            <EntityTypeMapping TypeName="Domain.VW_DOMICILIO">
+              <MappingFragment StoreEntitySet="VW_DOMICILIO">
+                <ScalarProperty Name="ativo" ColumnName="ativo" />
+                <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
+                <ScalarProperty Name="data" ColumnName="data" />
+                <ScalarProperty Name="prof_sus" ColumnName="prof_sus" />
+                <ScalarProperty Name="prof" ColumnName="prof" />
+                <ScalarProperty Name="fone" ColumnName="fone" />
+                <ScalarProperty Name="complemento" ColumnName="complemento" />
+                <ScalarProperty Name="endereco" ColumnName="endereco" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_GRUPO">
+            <EntityTypeMapping TypeName="Domain.VW_GRUPO">
+              <MappingFragment StoreEntitySet="VW_GRUPO">
+                <ScalarProperty Name="ATIVO" ColumnName="ATIVO" />
+                <ScalarProperty Name="NIVELHIER_DESC" ColumnName="NIVELHIER_DESC" />
+                <ScalarProperty Name="SISTEMA" ColumnName="SISTEMA" />
+                <ScalarProperty Name="DESCRICAO" ColumnName="DESCRICAO" />
+                <ScalarProperty Name="ID_GRUPO" ColumnName="ID_GRUPO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_INDIVIDUAIS">
+            <EntityTypeMapping TypeName="Domain.VW_INDIVIDUAIS">
+              <MappingFragment StoreEntitySet="VW_INDIVIDUAIS">
+                <ScalarProperty Name="DOCUMENTOS" ColumnName="DOCUMENTOS" />
+                <ScalarProperty Name="MUNNASC" ColumnName="MUNNASC" />
+                <ScalarProperty Name="CNS" ColumnName="CNS" />
+                <ScalarProperty Name="NOMEMAE" ColumnName="NOMEMAE" />
+                <ScalarProperty Name="DTNASC" ColumnName="DTNASC" />
+                <ScalarProperty Name="NOME" ColumnName="NOME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_MARCADORES_CONSUMO_ALIMENTAR">
+            <EntityTypeMapping TypeName="Domain.VW_MARCADORES_CONSUMO_ALIMENTAR">
+              <MappingFragment StoreEntitySet="VW_MARCADORES_CONSUMO_ALIMENTAR">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_PROCEDIMENTO">
+            <EntityTypeMapping TypeName="Domain.VW_PROCEDIMENTO">
+              <MappingFragment StoreEntitySet="VW_PROCEDIMENTO">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vw_Relatorios_AtendimentoCredenciado">
+            <EntityTypeMapping TypeName="Domain.Vw_Relatorios_AtendimentoCredenciado">
+              <MappingFragment StoreEntitySet="Vw_Relatorios_AtendimentoCredenciado">
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="NomeMedico" ColumnName="NomeMedico" />
+                <ScalarProperty Name="DesSetor" ColumnName="DesSetor" />
+                <ScalarProperty Name="CodSetor" ColumnName="CodSetor" />
+                <ScalarProperty Name="CodCred" ColumnName="CodCred" />
+                <ScalarProperty Name="CNES" ColumnName="CNES" />
+                <ScalarProperty Name="DtNasc" ColumnName="DtNasc" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
+                <ScalarProperty Name="NumProntuario" ColumnName="NumProntuario" />
+                <ScalarProperty Name="HoraAtend" ColumnName="HoraAtend" />
+                <ScalarProperty Name="DataAtend" ColumnName="DataAtend" />
+                <ScalarProperty Name="NumAtend" ColumnName="NumAtend" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vw_Relatorios_BPA">
+            <EntityTypeMapping TypeName="Domain.Vw_Relatorios_BPA">
+              <MappingFragment StoreEntitySet="Vw_Relatorios_BPA">
+                <ScalarProperty Name="CodCred" ColumnName="CodCred" />
+                <ScalarProperty Name="CodSetor" ColumnName="CodSetor" />
+                <ScalarProperty Name="DesProcTab" ColumnName="DesProcTab" />
+                <ScalarProperty Name="CodCID" ColumnName="CodCID" />
+                <ScalarProperty Name="DesSetor" ColumnName="DesSetor" />
+                <ScalarProperty Name="DtNasc" ColumnName="DtNasc" />
+                <ScalarProperty Name="CBO" ColumnName="CBO" />
+                <ScalarProperty Name="NumAtend" ColumnName="NumAtend" />
+                <ScalarProperty Name="CNES" ColumnName="CNES" />
+                <ScalarProperty Name="NomePAciente" ColumnName="NomePAciente" />
+                <ScalarProperty Name="NomeMedico" ColumnName="NomeMedico" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="DataAtend" ColumnName="DataAtend" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_USUARIO">
+            <EntityTypeMapping TypeName="Domain.VW_USUARIO">
+              <MappingFragment StoreEntitySet="VW_USUARIO">
+                <ScalarProperty Name="ativo" ColumnName="ativo" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_VISITA_DOMICILIAR">
+            <EntityTypeMapping TypeName="Domain.VW_VISITA_DOMICILIAR">
+              <MappingFragment StoreEntitySet="VW_VISITA_DOMICILIAR">
+                <ScalarProperty Name="GUID_ESUS" ColumnName="GUID_ESUS" />
+                <ScalarProperty Name="Unidade_ID" ColumnName="Unidade_ID" />
+                <ScalarProperty Name="Unidade_CNES" ColumnName="Unidade_CNES" />
+                <ScalarProperty Name="Status_Nome" ColumnName="Status_Nome" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Digitador_nome" ColumnName="Digitador_nome" />
+                <ScalarProperty Name="Digitador_ID" ColumnName="Digitador_ID" />
+                <ScalarProperty Name="Profissional_nome" ColumnName="Profissional_nome" />
+                <ScalarProperty Name="Profissional_ID" ColumnName="Profissional_ID" />
+                <ScalarProperty Name="DATA" ColumnName="DATA" />
+                <ScalarProperty Name="ficha_ID" ColumnName="ficha_ID" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

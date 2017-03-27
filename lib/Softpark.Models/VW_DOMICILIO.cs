@@ -12,11 +12,16 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class AnimalNoDomicilio
+    public partial class VW_DOMICILIO
     {
-        public System.Guid id_cadastro_domiciliar { get; set; }
-        public int id_tp_animal { get; set; }
-    
-        public virtual CadastroDomiciliar CadastroDomiciliar { get; set; }
+        public string PK { get; set; }
+        public string endereco { get; set; }
+        public string complemento { get; set; }
+        public string fone { get; set; }
+        public string prof { get; set; }
+        public string prof_sus { get; set; }
+        public string data { get; set; }
+        public Nullable<int> num_contrato { get; set; }
+        public string ativo { get; set; }
     }
 }

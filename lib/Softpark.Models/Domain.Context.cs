@@ -32,7 +32,6 @@ namespace Softpark.Models
         public virtual DbSet<CadastroIndividual> CadastroIndividual { get; set; }
         public virtual DbSet<CondicaoMoradia> CondicaoMoradia { get; set; }
         public virtual DbSet<CondicoesDeSaude> CondicoesDeSaude { get; set; }
-        
         public virtual DbSet<DeficienciasCidadao> DeficienciasCidadao { get; set; }
         public virtual DbSet<DoencaCardiaca> DoencaCardiaca { get; set; }
         public virtual DbSet<DoencaRespiratoria> DoencaRespiratoria { get; set; }
@@ -554,6 +553,22 @@ namespace Softpark.Models
         public virtual DbSet<TipoLogradouro> TipoLogradouro { get; set; }
         public virtual DbSet<TP_Conduta> TP_Conduta { get; set; }
         public virtual DbSet<TP_Nasf> TP_Nasf { get; set; }
+        public virtual DbSet<ProAtendimentos_Listagem> ProAtendimentos_Listagem { get; set; }
+        public virtual DbSet<VW_ATENDIMENTO_DOMICILIAR> VW_ATENDIMENTO_DOMICILIAR { get; set; }
+        public virtual DbSet<VW_ATENDIMENTO_INDIVIDUAL> VW_ATENDIMENTO_INDIVIDUAL { get; set; }
+        public virtual DbSet<VW_ATENDIMENTO_ODONTOLOGICO> VW_ATENDIMENTO_ODONTOLOGICO { get; set; }
+        public virtual DbSet<VW_ATIVIDADE_COLETIVA> VW_ATIVIDADE_COLETIVA { get; set; }
+        public virtual DbSet<VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO> VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO { get; set; }
+        public virtual DbSet<VW_COMP_FAMILIAR> VW_COMP_FAMILIAR { get; set; }
+        public virtual DbSet<VW_DOMICILIO> VW_DOMICILIO { get; set; }
+        public virtual DbSet<VW_GRUPO> VW_GRUPO { get; set; }
+        public virtual DbSet<VW_INDIVIDUAIS> VW_INDIVIDUAIS { get; set; }
+        public virtual DbSet<VW_MARCADORES_CONSUMO_ALIMENTAR> VW_MARCADORES_CONSUMO_ALIMENTAR { get; set; }
+        public virtual DbSet<VW_PROCEDIMENTO> VW_PROCEDIMENTO { get; set; }
+        public virtual DbSet<Vw_Relatorios_AtendimentoCredenciado> Vw_Relatorios_AtendimentoCredenciado { get; set; }
+        public virtual DbSet<Vw_Relatorios_BPA> Vw_Relatorios_BPA { get; set; }
+        public virtual DbSet<VW_USUARIO> VW_USUARIO { get; set; }
+        public virtual DbSet<VW_VISITA_DOMICILIAR> VW_VISITA_DOMICILIAR { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

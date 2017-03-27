@@ -11,8 +11,7 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class SIGSM_Visita_Domiciliar
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,7 +21,6 @@ namespace Softpark.Models
             this.SIGSM_Visita_Domiciliar_Profissional = new HashSet<SIGSM_Visita_Domiciliar_Profissional>();
         }
     
-        [Key]
         public int id { get; set; }
         public int digitado_por { get; set; }
         public Nullable<int> conferido_por { get; set; }

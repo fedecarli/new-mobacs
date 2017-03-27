@@ -1278,6 +1278,9 @@
     <Compile Include="ProAtendimentos_EI_TpServico.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ProAtendimentos_Listagem.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ProAtendimentos_Status.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -1661,7 +1664,52 @@
     <Compile Include="UnicaLotacaoTransport.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_ATENDIMENTO_DOMICILIAR.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_ATENDIMENTO_INDIVIDUAL.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_ATENDIMENTO_ODONTOLOGICO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_ATIVIDADE_COLETIVA.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_COMP_FAMILIAR.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_DOMICILIO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_GRUPO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_INDIVIDUAIS.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_MARCADORES_CONSUMO_ALIMENTAR.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_PROCEDIMENTO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="VW_Profissional.cs" />
+    <Compile Include="Vw_Relatorios_AtendimentoCredenciado.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Vw_Relatorios_BPA.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_USUARIO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_VISITA_DOMICILIAR.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -11,8 +11,7 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class CondicoesDeSaude
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -24,7 +23,6 @@ namespace Softpark.Models
             this.DoencaRins = new HashSet<DoencaRins>();
         }
     
-        [Key]
         public System.Guid id { get; set; }
         public string descricaoCausaInternacaoEm12Meses { get; set; }
         public string descricaoOutraCondicao1 { get; set; }

@@ -11,13 +11,10 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class DeficienciasCidadao
     {
-        [Key]
         public System.Guid id_informacoes_socio_demograficas { get; set; }
-        [Key]
         public int id_tp_deficiencia_cidadao { get; set; }
     
         public virtual InformacoesSocioDemograficas InformacoesSocioDemograficas { get; set; }

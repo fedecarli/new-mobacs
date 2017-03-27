@@ -11,11 +11,9 @@ namespace Softpark.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class CadastroIndividual
     {
-        [Key]
         public System.Guid id { get; set; }
         public Nullable<System.Guid> condicoesDeSaude { get; set; }
         public Nullable<System.Guid> emSituacaoDeRua { get; set; }
