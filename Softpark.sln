@@ -38,10 +38,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SIGSM", "http://localhost/S
 		SlnRelativePath = "..\..\..\..\..\inetpub\wwwroot\SIGSM\"
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{C1222C44-06A5-45DB-8064-AB7881180BF2}"
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DatabaseIntegration", "integration\DatabaseIntegration\DatabaseIntegration.sqlproj", "{2C4EA3B3-3C42-498D-9557-B49CAB9BDB65}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,9 +71,6 @@ Global
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Santana|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C4EA3B3-3C42-498D-9557-B49CAB9BDB65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C4EA3B3-3C42-498D-9557-B49CAB9BDB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C4EA3B3-3C42-498D-9557-B49CAB9BDB65}.Santana|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +81,5 @@ Global
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A} = {33F4AD7F-D10D-4139-85EF-5188FF5AE42B}
-		{2C4EA3B3-3C42-498D-9557-B49CAB9BDB65} = {C1222C44-06A5-45DB-8064-AB7881180BF2}
 	EndGlobalSection
 EndGlobal

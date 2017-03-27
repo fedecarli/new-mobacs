@@ -1730,6 +1730,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="changes\VW_INDIVIDUAIS.sql" />
+    <Content Include="changes\VW_Profissional.sql" />
     <Content Include="Domain.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Domain.Context.cs</LastGenOutput>
