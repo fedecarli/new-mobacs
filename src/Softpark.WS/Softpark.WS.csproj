@@ -406,6 +406,7 @@
     <Compile Include="Controllers\FichaVisitaDomiciliarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SwashbuckleMVCController.cs" />
+    <Compile Include="Controllers\TemplatesController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Helpers\ModalHelper.cs" />
@@ -850,6 +851,7 @@
     <Content Include="Views\Shared\Common\_Cabecalho.cshtml" />
     <Content Include="Views\SwashbuckleMVC\Index.cshtml" />
     <Content Include="Views\DataTables\Index.cshtml" />
+    <Content Include="Views\Templates\Cabecalho.cshtml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

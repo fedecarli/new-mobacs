@@ -88,7 +88,8 @@ namespace Softpark.Models
                            vinc.CNESLocal,
                            setor.DesSetor,
                            INE = ine != null ? ine.Numero : "",
-                           Descricao = ine != null ? ine.Descricao : ""
+                           Descricao = ine != null ? ine.Descricao : "",
+                           cad.CodUsu
                        } into g
                        select new VW_Profissional
                        {
@@ -99,7 +100,8 @@ namespace Softpark.Models
                            CNES = g.Key.CNESLocal.Trim(),
                            Unidade = g.Key.DesSetor.Trim(),
                            INE = g.Key.INE.Trim(),
-                           Equipe = g.Key.Descricao.Trim()
+                           Equipe = g.Key.Descricao.Trim(),
+                           CodUsuario = g.Key.CodUsu
                        };
             }
         }
