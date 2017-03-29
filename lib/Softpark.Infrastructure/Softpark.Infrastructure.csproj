@@ -60,6 +60,7 @@
     <Compile Include="Extensions\Epoch.cs" />
     <Compile Include="Extensions\IEnumerable.cs" />
     <Compile Include="Extensions\ISet.cs" />
+    <Compile Include="Extensions\String.cs" />
     <Compile Include="IDTO.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
