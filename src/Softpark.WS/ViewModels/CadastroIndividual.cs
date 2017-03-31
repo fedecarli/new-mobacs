@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
-    public class CadastroIndividualViewModelCollection : List<CadastroIndividualViewModel>
+    public class CadastroIndividualViewModelCollection : List<GetCadastroIndividualViewModel>
     {
         public static implicit operator CadastroIndividualViewModelCollection(CadastroIndividual[] models)
         {
@@ -97,12 +97,11 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
-        private void ApplyModel(CadastroIndividual model)
+        internal void ApplyModel(CadastroIndividual model)
         {
             if (model == null) return;
-
-            var db = DomainContainer.Current;
             
+            token = model.UnicaLotacaoTransport.token??Guid.Empty;
             condicoesDeSaude = model.CondicoesDeSaude1;
             emSituacaoDeRua = model.EmSituacaoDeRua1;
             fichaAtualizada = model.fichaAtualizada;
@@ -111,6 +110,24 @@ namespace Softpark.WS.ViewModels
             statusTermoRecusaCadastroIndividualAtencaoBasica = model.statusTermoRecusaCadastroIndividualAtencaoBasica;
             uuidFichaOriginadora = model.uuidFichaOriginadora;
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
+        }
+    }
+
+    public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
+    {
+        public string uuid { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator GetCadastroIndividualViewModel(CadastroIndividual model)
+        {
+            var vm = new GetCadastroIndividualViewModel { uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id };
+
+            vm.ApplyModel(model);
+
+            return vm;
         }
     }
 
