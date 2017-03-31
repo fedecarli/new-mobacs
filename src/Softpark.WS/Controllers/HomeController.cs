@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace Softpark.WS.Controllers
 {
 #if DEBUG
-    //[Authorize]
+    [Authorize]
 #endif
     public class HomeController : Controller
     {
@@ -34,9 +34,9 @@ namespace Softpark.WS.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-//#if !DEBUG
+#if !DEBUG
             return RedirectToAction("Index", "Help");
-//#endif
+#endif
             ViewData.Add("nomeInicialSistema", "Prefeitura Municipal de Itanhaém");
             ViewData.Add("logoInicialSistema", "img/brasao_itanhaem.jpg");
 

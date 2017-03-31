@@ -239,6 +239,7 @@
       <HintPath>..\..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\portable-net45+win8+wpa81\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -406,6 +407,7 @@
     <Compile Include="Controllers\FichaVisitaDomiciliarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SwashbuckleMVCController.cs" />
+    <Compile Include="Controllers\TemplatesController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Helpers\ModalHelper.cs" />
@@ -850,6 +852,8 @@
     <Content Include="Views\Shared\Common\_Cabecalho.cshtml" />
     <Content Include="Views\SwashbuckleMVC\Index.cshtml" />
     <Content Include="Views\DataTables\Index.cshtml" />
+    <Content Include="Views\Templates\Cabecalho.cshtml" />
+    <Content Include="Views\Usuario\AcessoUnidade.cshtml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
