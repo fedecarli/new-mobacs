@@ -6,6 +6,10 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.OData;
 using Softpark.Models;
+using Softpark.WS.ViewModels;
+using Softpark.WS.Validators;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -606,6 +610,78 @@ namespace Softpark.WS.Controllers.Api
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = "/api/dados/Desfecho" },
                 new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
             }.OrderBy(x => x.Codigo).ToArray());
+        }
+
+        /// <summary>
+        /// Buscar pacientes atendidos pelo profissional informado
+        /// </summary>
+        /// <param name="cns">CNS do Profissional</param>
+        /// <param name="token">Token de acesso</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/paciente/{cns}/{token:guid}", Name = "PacienteSupplyAction")]
+        [ResponseType(typeof(CadastroIndividualViewModel[]))]
+        public async Task<IHttpActionResult> GetPacientes([FromUri, Required(AllowEmptyStrings = false), CnsValidation] string cns, [FromUri, Required] Guid token)
+        {
+            var headerToken = Domain.UnicaLotacaoTransport.FindAsync(token);
+
+            if(await Domain.UnicaLotacaoTransport.AllAsync(u => u.token != token))
+                return BadRequest("Token Inválido.");
+
+            var headers = Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == cns)
+                .SelectMany(x => x.CadastroIndividual).ToArray();
+
+            CadastroIndividualViewModelCollection results = headers;
+
+            return Ok(results.ToArray());
+        }
+
+        /// <summary>
+        /// Buscar domicílios atendidos pelo profissional informado
+        /// </summary>
+        /// <param name="cns">CNS do Profissional</param>
+        /// <param name="token">Token de acesso</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/domicilio/{cns}/{token:guid}", Name = "DomicilioSupplyAction")]
+        [ResponseType(typeof(CadastroDomiciliarViewModel[]))]
+        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required(AllowEmptyStrings = false), CnsValidation] string cns, [FromUri, Required] Guid token)
+        {
+            var headerToken = Domain.UnicaLotacaoTransport.FindAsync(token);
+
+            if (await Domain.UnicaLotacaoTransport.AllAsync(u => u.token != token))
+                return BadRequest("Token Inválido.");
+
+            var headers = Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == cns)
+                .SelectMany(x => x.CadastroDomiciliar).ToArray();
+
+            CadastroDomiciliarViewModelCollection results = headers;
+
+            return Ok(results.ToArray());
+        }
+
+        /// <summary>
+        /// Buscar visitas realizadas pelo profissional informado
+        /// </summary>
+        /// <param name="cns">CNS do Profissional</param>
+        /// <param name="token">Token de acesso</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/visita/{cns}/{token:guid}", Name = "VisitaSupplyAction")]
+        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
+        public async Task<IHttpActionResult> GetVisitas([FromUri, Required(AllowEmptyStrings = false), CnsValidation] string cns, [FromUri, Required] Guid token)
+        {
+            var headerToken = Domain.UnicaLotacaoTransport.FindAsync(token);
+
+            if (await Domain.UnicaLotacaoTransport.AllAsync(u => u.token != token))
+                return BadRequest("Token Inválido.");
+
+            var headers = Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == cns)
+                .SelectMany(x => x.FichaVisitaDomiciliarMaster.SelectMany(f => f.FichaVisitaDomiciliarChild)).ToArray();
+
+            FichaVisitaDomiciliarChildCadastroViewModelCollection results = headers;
+
+            return Ok(results.ToArray());
         }
     }
 

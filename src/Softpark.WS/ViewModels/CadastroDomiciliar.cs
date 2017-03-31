@@ -8,6 +8,24 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    public class CadastroDomiciliarViewModelCollection : List<CadastroDomiciliarViewModel>
+    {
+        public static implicit operator CadastroDomiciliarViewModelCollection(CadastroDomiciliar[] models)
+        {
+            var collection = new CadastroDomiciliarViewModelCollection();
+            collection.AddRange(models);
+            return collection;
+        }
+
+        public void AddRange(CadastroDomiciliar[] models)
+        {
+            foreach (var model in models)
+            {
+                Add(model);
+            }
+        }
+    }
+
     public class CadastroDomiciliarViewModel
     {
         [Required]
@@ -59,6 +77,54 @@ namespace Softpark.WS.ViewModels
             }
 
             return dc;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CadastroDomiciliarViewModel(CadastroDomiciliar model)
+        {
+            var vm = new CadastroDomiciliarViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(CadastroDomiciliar model)
+        {
+            if (model == null) return;
+
+            var db = DomainContainer.Current;
+
+            //dc.id = Guid.NewGuid();
+            //dc.CondicaoMoradia1 = condicaoMoradia?.ToModel();
+            //dc.EnderecoLocalPermanencia1 = enderecoLocalPermanencia?.ToModel();
+            //dc.fichaAtualizada = fichaAtualizada;
+            //dc.quantosAnimaisNoDomicilio = quantosAnimaisNoDomicilio;
+            //dc.stAnimaisNoDomicilio = stAnimaisNoDomicilio;
+            //dc.statusTermoRecusa = statusTermoRecusa;
+            //dc.tpCdsOrigem = 3;
+            //dc.uuidFichaOriginadora = uuidFichaOriginadora;
+            //dc.tipoDeImovel = tipoDeImovel;
+            //dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel();
+
+            //TP_Animais an;
+            //foreach (var a in animalNoDomicilio)
+            //    if ((an = await DomainContainer.Current.TP_Animais.FirstOrDefaultAsync(x => x.codigo == a)) != null)
+            //    {
+            //        var animal = DomainContainer.Current.AnimalNoDomicilio.Create();
+            //        animal.id_tp_animal = an.codigo;
+            //        animal.CadastroDomiciliar = dc;
+            //        dc.AnimalNoDomicilio.Add(animal);
+            //        DomainContainer.Current.AnimalNoDomicilio.Add(animal);
+            //    }
+
+            //foreach (var fr in familiaRow)
+            //{
+            //    dc.FamiliaRow.Add(fr.ToModel());
+            //}
         }
     }
 
