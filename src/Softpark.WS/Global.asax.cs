@@ -6,8 +6,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web;
 using System;
-using Softpark.WS.Validators;
-using System.Web.Http.Controllers;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;

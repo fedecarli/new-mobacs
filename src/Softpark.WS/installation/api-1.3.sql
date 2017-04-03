@@ -33,6 +33,7 @@ BEGIN TRY
 	(
 		[value] UNIQUEIDENTIFIER PRIMARY KEY
 	);
+		
 	COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH
@@ -170,6 +171,86 @@ BEGIN TRY
 	END
 	CLOSE motivo_cursor;
 	DEALLOCATE motivo_cursor;
+
+	COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+	DECLARE @ErrorMessage NVARCHAR(4000);
+	DECLARE @ErrorSeverity INT;
+	DECLARE @ErrorState INT;
+	
+	ROLLBACK TRANSACTION;
+
+	SELECT 
+		@ErrorMessage = ERROR_MESSAGE(),
+		@ErrorSeverity = ERROR_SEVERITY(),
+		@ErrorState = ERROR_STATE();
+
+	RAISERROR (
+		@ErrorMessage,
+		@ErrorSeverity,
+		@ErrorState);
+END CATCH
+END
+GO
+
+-- Criação de procedure para cadastrar Credenciado
+CREATE PROCEDURE PR_INT_CadastroCredenciado (
+	@codigo decimal(18, 0),
+	@login NVARCHAR(80),
+	@md5Pass NVARCHAR(80),
+	@email NVARCHAR(80),
+	@regime INT,
+	@cnes NCHAR(7),
+	@codOrgao INT = NULL,
+	@numConselho NCHAR(10) = NULL,
+	@codProfTab NCHAR(10),
+	@codSetor INT,
+	@matricula NCHAR(15) = NULL,
+	@codINE INT = NULL,
+	@codConv INT,
+	@cnes NCHAR(7)
+) AS
+BEGIN
+BEGIN TRANSACTION
+BEGIN TRY
+	DECLARE @codUsu INT,
+			@nome NVARCHAR(80),
+			@codCred INT,
+			@itemU INT,
+			@itemV INT,
+			@codTabProf INT;
+	SELECT @nome = [Nome] FROM [dbo].[ASSMED_Cadastro] WHERE [Codigo] = @codigo;
+	IF @nome IS NULL OR LEN(@nome) = 0
+	BEGIN
+		RAISERROR ('Cadastro de Pessoa não encontrado.', 1, 1);
+	END
+
+	SELECT @codUsu = MAX([CodUsu]) + 1 FROM [dbo].[ASSMED_Usuario];
+
+	INSERT INTO ASSMED_Usuario ([CodUsu], [Login], [Nome], [Senha], [DtSistema], [Email], [Ativo]) VALUES
+		(@codUsu, @login, @nome, @md5Pass, GETDATE(), @email, 1);
+		
+	INSERT INTO Grupo_Usuario([id_grupo], [CodUsu], [data_cadastro])VALUES(2,@codUsu,GETDATE());
+
+	INSERT INTO ASSMED_ContratoUsuario([Email], [NumContrato], [Administrador])VALUES(@email,22,'N');
+
+	INSERT INTO ASSMED_SistemaUsuario([CodSistema], [CodUsu], [NumContrato])VALUES(99, @CodUsu, 22);
+	
+	SELECT @codCred = MAX([CodCred]) + 1 FROM [dbo].[AS_Credenciados];
+	SELECT @itemU = MAX([ItemU]) + 1 FROM [dbo].[AS_CredenciadosUsu];
+	SELECT @itemV = MAX([ItemVinc]) + 1 FROM [dbo].[AS_CredenciadosVinc];
+
+	INSERT INTO [dbo].[AS_Credenciados] ([NumContrato], [CodCred], [Codigo], [CodOrgao], [NumConselho]) VALUES (22, @codCred, @codigo, @codOrgao, @numConselho);
+
+	INSERT INTO [dbo].[AS_CredenciadosUsu] ([NumContrato], [CodCred], [ItemU], [CodUsuD], [DtInicio], [DtSistema], [CodUsu]) VALUES
+		(22, @codCred, @itemU, @CodUsu, GETDATE(), GETDATE(), 1);
+		
+	SELECT @codTabProf = [CodTabProfissao] FROM [dbo].[AS_ProfissoesTab] WHERE [CodProfTab] = @codProfTab;
+
+	INSERT INTO [dbo].[AS_CredenciadosVinc] ([NumContrato], [CodCred], [ItemVinc], [CodRegime], [CodProfTab], [CodTabProfissao], [CodSetor], [CNESLocal],
+				[Matricula], [DtInicio], [CodUsu], [CodConv], [CodINE]) VALUES
+		(22, @codCred, @itemVinc, @regime, @codProfTab, @codTabProf, @codSetor, @cnes, @matricula, GETDATE(), @codUsu, @codConv, @codINE);
 
 	COMMIT TRANSACTION;
 END TRY
