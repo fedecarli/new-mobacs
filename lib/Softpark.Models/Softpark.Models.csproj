@@ -46,7 +46,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>softpark.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>pk.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -1734,10 +1734,11 @@
     <None Include="Domain.edmx.diagram">
       <DependentUpon>Domain.edmx</DependentUpon>
     </None>
+    <Content Include="key.snk" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="softpark.pfx" />
+    <None Include="pk.snk" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="changes\VW_INDIVIDUAIS.sql" />
