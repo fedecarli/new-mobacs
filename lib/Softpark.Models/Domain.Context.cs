@@ -569,6 +569,7 @@ namespace Softpark.Models
         public virtual DbSet<Vw_Relatorios_BPA> Vw_Relatorios_BPA { get; set; }
         public virtual DbSet<VW_USUARIO> VW_USUARIO { get; set; }
         public virtual DbSet<VW_VISITA_DOMICILIAR> VW_VISITA_DOMICILIAR { get; set; }
+        public virtual DbSet<TipoOrigem> TipoOrigem { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {
@@ -577,6 +578,100 @@ namespace Softpark.Models
                 new ObjectParameter("token", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_ProcessarFichasAPI", tokenParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> PR_INT_EnviarCabecalho(string profissionalCNS, string cboCodigo_2002, string cnes, Nullable<long> dataAtendimento, string codigoIbgeMunicipio, string ine, Nullable<int> tipoOrigem)
+        {
+            var profissionalCNSParameter = profissionalCNS != null ?
+                new ObjectParameter("profissionalCNS", profissionalCNS) :
+                new ObjectParameter("profissionalCNS", typeof(string));
+    
+            var cboCodigo_2002Parameter = cboCodigo_2002 != null ?
+                new ObjectParameter("cboCodigo_2002", cboCodigo_2002) :
+                new ObjectParameter("cboCodigo_2002", typeof(string));
+    
+            var cnesParameter = cnes != null ?
+                new ObjectParameter("cnes", cnes) :
+                new ObjectParameter("cnes", typeof(string));
+    
+            var dataAtendimentoParameter = dataAtendimento.HasValue ?
+                new ObjectParameter("dataAtendimento", dataAtendimento) :
+                new ObjectParameter("dataAtendimento", typeof(long));
+    
+            var codigoIbgeMunicipioParameter = codigoIbgeMunicipio != null ?
+                new ObjectParameter("codigoIbgeMunicipio", codigoIbgeMunicipio) :
+                new ObjectParameter("codigoIbgeMunicipio", typeof(string));
+    
+            var ineParameter = ine != null ?
+                new ObjectParameter("ine", ine) :
+                new ObjectParameter("ine", typeof(string));
+    
+            var tipoOrigemParameter = tipoOrigem.HasValue ?
+                new ObjectParameter("tipoOrigem", tipoOrigem) :
+                new ObjectParameter("tipoOrigem", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("PR_INT_EnviarCabecalho", profissionalCNSParameter, cboCodigo_2002Parameter, cnesParameter, dataAtendimentoParameter, codigoIbgeMunicipioParameter, ineParameter, tipoOrigemParameter);
+        }
+    
+        public virtual int PR_INT_EnviarFicha(Nullable<System.Guid> token, Nullable<int> turno, Nullable<int> desfecho, Nullable<int> tipoDeImovel, string cnsCidadao, Nullable<long> dataNascimento, Nullable<int> sexo, string microarea, Nullable<bool> stForaArea, Nullable<int> tipoOrigem, string numProntuario, Nullable<decimal> pesoAcompanhamentoNutricional, Nullable<decimal> alturaAcompanhamentoNutricional, Nullable<bool> statusVisitaCompartilhadaOutroProfissional)
+        {
+            var tokenParameter = token.HasValue ?
+                new ObjectParameter("token", token) :
+                new ObjectParameter("token", typeof(System.Guid));
+    
+            var turnoParameter = turno.HasValue ?
+                new ObjectParameter("turno", turno) :
+                new ObjectParameter("turno", typeof(int));
+    
+            var desfechoParameter = desfecho.HasValue ?
+                new ObjectParameter("desfecho", desfecho) :
+                new ObjectParameter("desfecho", typeof(int));
+    
+            var tipoDeImovelParameter = tipoDeImovel.HasValue ?
+                new ObjectParameter("tipoDeImovel", tipoDeImovel) :
+                new ObjectParameter("tipoDeImovel", typeof(int));
+    
+            var cnsCidadaoParameter = cnsCidadao != null ?
+                new ObjectParameter("cnsCidadao", cnsCidadao) :
+                new ObjectParameter("cnsCidadao", typeof(string));
+    
+            var dataNascimentoParameter = dataNascimento.HasValue ?
+                new ObjectParameter("dataNascimento", dataNascimento) :
+                new ObjectParameter("dataNascimento", typeof(long));
+    
+            var sexoParameter = sexo.HasValue ?
+                new ObjectParameter("sexo", sexo) :
+                new ObjectParameter("sexo", typeof(int));
+    
+            var microareaParameter = microarea != null ?
+                new ObjectParameter("microarea", microarea) :
+                new ObjectParameter("microarea", typeof(string));
+    
+            var stForaAreaParameter = stForaArea.HasValue ?
+                new ObjectParameter("stForaArea", stForaArea) :
+                new ObjectParameter("stForaArea", typeof(bool));
+    
+            var tipoOrigemParameter = tipoOrigem.HasValue ?
+                new ObjectParameter("tipoOrigem", tipoOrigem) :
+                new ObjectParameter("tipoOrigem", typeof(int));
+    
+            var numProntuarioParameter = numProntuario != null ?
+                new ObjectParameter("numProntuario", numProntuario) :
+                new ObjectParameter("numProntuario", typeof(string));
+    
+            var pesoAcompanhamentoNutricionalParameter = pesoAcompanhamentoNutricional.HasValue ?
+                new ObjectParameter("pesoAcompanhamentoNutricional", pesoAcompanhamentoNutricional) :
+                new ObjectParameter("pesoAcompanhamentoNutricional", typeof(decimal));
+    
+            var alturaAcompanhamentoNutricionalParameter = alturaAcompanhamentoNutricional.HasValue ?
+                new ObjectParameter("alturaAcompanhamentoNutricional", alturaAcompanhamentoNutricional) :
+                new ObjectParameter("alturaAcompanhamentoNutricional", typeof(decimal));
+    
+            var statusVisitaCompartilhadaOutroProfissionalParameter = statusVisitaCompartilhadaOutroProfissional.HasValue ?
+                new ObjectParameter("statusVisitaCompartilhadaOutroProfissional", statusVisitaCompartilhadaOutroProfissional) :
+                new ObjectParameter("statusVisitaCompartilhadaOutroProfissional", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_INT_EnviarFicha", tokenParameter, turnoParameter, desfechoParameter, tipoDeImovelParameter, cnsCidadaoParameter, dataNascimentoParameter, sexoParameter, microareaParameter, stForaAreaParameter, tipoOrigemParameter, numProntuarioParameter, pesoAcompanhamentoNutricionalParameter, alturaAcompanhamentoNutricionalParameter, statusVisitaCompartilhadaOutroProfissionalParameter);
         }
     }
 }

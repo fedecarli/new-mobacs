@@ -12,20 +12,18 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class OrigemVisita
+    public partial class TipoOrigem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public OrigemVisita()
+        public TipoOrigem()
         {
-            this.UnicaLotacaoTransport = new HashSet<UnicaLotacaoTransport>();
+            this.OrigemVisita = new HashSet<OrigemVisita>();
         }
     
-        public System.Guid token { get; set; }
-        public bool finalizado { get; set; }
-        public int id_tipo_origem { get; set; }
+        public int Id { get; set; }
+        public string Descricao { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UnicaLotacaoTransport> UnicaLotacaoTransport { get; set; }
-        public virtual TipoOrigem TipoOrigem { get; set; }
+        public virtual ICollection<OrigemVisita> OrigemVisita { get; set; }
     }
 }
