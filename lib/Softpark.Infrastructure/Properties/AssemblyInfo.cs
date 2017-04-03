@@ -1,20 +1,16 @@
-﻿using System.Resources;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Reflection;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Softpark.Infrastructure")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Softpark Infraestrutura")]
+[assembly: AssemblyDescription("Biblioteca de acessoria e suporte.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Softpark.Infrastructure")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Softpark")]
+[assembly: AssemblyProduct("SIGSM")]
+[assembly: AssemblyCopyright("Copyright © Softpark 2017")]
+[assembly: AssemblyTrademark("Softpark")]
 [assembly: AssemblyCulture("")]
-[assembly: NeutralResourcesLanguage("en")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -28,3 +24,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.3.0.0")]
 [assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyKeyFile("pk.snk")]

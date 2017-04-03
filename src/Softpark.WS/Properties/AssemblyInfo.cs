@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -11,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Softpark")]
 [assembly: AssemblyProduct("SIGSM")]
 [assembly: AssemblyCopyright("Copyright © Softpark 2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Softpark")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -33,3 +32,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.3.0.*")]
 [assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyKeyFile("pk.snk")]
