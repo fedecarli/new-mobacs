@@ -74,6 +74,7 @@ namespace Softpark.WS.Controllers.Api
             var origem = Domain.OrigemVisita.Create();
 
             origem.token = Guid.NewGuid();
+            origem.id_tipo_origem = 1;
             
             Domain.OrigemVisita.Add(origem);
 

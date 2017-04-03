@@ -308,6 +308,7 @@
           </Key>
           <Property Name="token" Type="uniqueidentifier" Nullable="false" />
           <Property Name="finalizado" Type="bit" Nullable="false" />
+          <Property Name="id_tipo_origem" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
           <Key>
@@ -325,6 +326,13 @@
           <Property Name="motivoSaidaCidadao" Type="int" />
           <Property Name="dataObito" Type="int" />
           <Property Name="numeroDO" Type="nchar" MaxLength="9" />
+        </EntityType>
+        <EntityType Name="TipoOrigem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descricao" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="UnicaLotacaoTransport">
           <Key>
@@ -7734,8 +7742,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' doe
           <Property Name="cbo" Type="nchar" MaxLength="10" />
           <Property Name="num_contrato" Type="int" Nullable="false" />
           <Property Name="codibge_munic_nasc" Type="char" MaxLength="7" />
-          <Property Name="cnes" Type="nchar" MaxLength="7" />
-          <Property Name="ine" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendimento_Odontologico' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -8500,6 +8506,27 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Nasf' does n
           <Property Name="DesUF" Type="varchar" MaxLength="50" />
           <Property Name="CodANP" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_Profissional' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="VW_Profissional">
+          <Property Name="id" Type="bigint" />
+          <Property Name="CNS" Type="varchar" MaxLength="50" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" />
+          <Property Name="CBO" Type="char" MaxLength="10" />
+          <Property Name="Profissao" Type="varchar" MaxLength="120" />
+          <Property Name="CNES" Type="char" MaxLength="7" />
+          <Property Name="Unidade" Type="varchar" MaxLength="60" />
+          <Property Name="INE" Type="nvarchar" MaxLength="10" />
+          <Property Name="Equipe" Type="nvarchar" MaxLength="100" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_Unidade' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="VW_Unidade">
+          <Property Name="id" Type="bigint" />
+          <Property Name="CNES" Type="char" MaxLength="7" />
+          <Property Name="Descricao" Type="varchar" MaxLength="60" />
+          <Property Name="Observacao" Type="varchar" MaxLength="100" />
+        </EntityType>-->
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ProAtendimentos_Listagem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ProAtendimentos_Listagem">
@@ -14709,6 +14736,18 @@ warning 6035: The relationship 'FK_InformacoesSocioDemograficas_TP_Sit_Mercado' 
         <!--Errors Found During Generation:
 warning 6035: The relationship 'FK_OrigemAlimentoSituacaoRua_TP_Origem_Alimentacao' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
         <Association Name="FK_OrigemAlimentoSituacaoRua_TP_Origem_Alimentacao" />-->
+        <Association Name="FK_OrigemVisita_TipoOrigem_Id">
+          <End Role="TipoOrigem" Type="Self.TipoOrigem" Multiplicity="1" />
+          <End Role="OrigemVisita" Type="Self.OrigemVisita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoOrigem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrigemVisita">
+              <PropertyRef Name="id_tipo_origem" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Procedimento_Sigtap_AS_Procedimentos">
           <End Role="AS_Procedimentos" Type="Self.AS_Procedimentos" Multiplicity="1" />
           <End Role="SIGSM_Procedimento_Sigtap" Type="Self.SIGSM_Procedimento_Sigtap" Multiplicity="*" />
@@ -15371,6 +15410,31 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
         <Function Name="PR_ProcessarFichasAPI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="token" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="PR_INT_EnviarCabecalho" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="profissionalCNS" Type="nchar" Mode="In" />
+          <Parameter Name="cboCodigo_2002" Type="nchar" Mode="In" />
+          <Parameter Name="cnes" Type="nchar" Mode="In" />
+          <Parameter Name="dataAtendimento" Type="bigint" Mode="In" />
+          <Parameter Name="codigoIbgeMunicipio" Type="nchar" Mode="In" />
+          <Parameter Name="ine" Type="nchar" Mode="In" />
+          <Parameter Name="tipoOrigem" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PR_INT_EnviarFicha" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="token" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="turno" Type="int" Mode="In" />
+          <Parameter Name="desfecho" Type="int" Mode="In" />
+          <Parameter Name="tipoDeImovel" Type="int" Mode="In" />
+          <Parameter Name="cnsCidadao" Type="nchar" Mode="In" />
+          <Parameter Name="dataNascimento" Type="bigint" Mode="In" />
+          <Parameter Name="sexo" Type="int" Mode="In" />
+          <Parameter Name="microarea" Type="nchar" Mode="In" />
+          <Parameter Name="stForaArea" Type="bit" Mode="In" />
+          <Parameter Name="tipoOrigem" Type="int" Mode="In" />
+          <Parameter Name="numProntuario" Type="nvarchar" Mode="In" />
+          <Parameter Name="pesoAcompanhamentoNutricional" Type="decimal" Mode="In" />
+          <Parameter Name="alturaAcompanhamentoNutricional" Type="decimal" Mode="In" />
+          <Parameter Name="statusVisitaCompartilhadaOutroProfissional" Type="bit" Mode="In" />
+        </Function>
         <EntityContainer Name="DomainStoreContainer">
           <EntitySet Name="AnimalNoDomicilio" EntityType="Self.AnimalNoDomicilio" Schema="api" store:Type="Tables" />
           <EntitySet Name="CadastroDomiciliar" EntityType="Self.CadastroDomiciliar" Schema="api" store:Type="Tables" />
@@ -15396,6 +15460,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="OrigemVisita" EntityType="Self.OrigemVisita" Schema="api" store:Type="Tables" />
           <EntitySet Name="ResponsavelPorCrianca" EntityType="Self.ResponsavelPorCrianca" Schema="api" store:Type="Tables" />
           <EntitySet Name="SaidaCidadaoCadastro" EntityType="Self.SaidaCidadaoCadastro" Schema="api" store:Type="Tables" />
+          <EntitySet Name="TipoOrigem" EntityType="Self.TipoOrigem" Schema="api" store:Type="Tables" />
           <EntitySet Name="UnicaLotacaoTransport" EntityType="Self.UnicaLotacaoTransport" Schema="api" store:Type="Tables" />
           <EntitySet Name="ACADEMIA_Aparelhos" EntityType="Self.ACADEMIA_Aparelhos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ACADEMIA_Exercicios" EntityType="Self.ACADEMIA_Exercicios" Schema="dbo" store:Type="Tables" />
@@ -18346,6 +18411,10 @@ Endereço],
             <End Role="EmSituacaoDeRua" EntitySet="EmSituacaoDeRua" />
             <End Role="OrigemAlimentoSituacaoRua" EntitySet="OrigemAlimentoSituacaoRua" />
           </AssociationSet>
+          <AssociationSet Name="FK_OrigemVisita_TipoOrigem_Id" Association="Self.FK_OrigemVisita_TipoOrigem_Id">
+            <End Role="TipoOrigem" EntitySet="TipoOrigem" />
+            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
+          </AssociationSet>
           <AssociationSet Name="FK_Procedimento_Sigtap_AS_Procedimentos" Association="Self.FK_Procedimento_Sigtap_AS_Procedimentos">
             <End Role="AS_Procedimentos" EntitySet="AS_Procedimentos" />
             <End Role="SIGSM_Procedimento_Sigtap" EntitySet="SIGSM_Procedimento_Sigtap" />
@@ -20929,6 +20998,36 @@ Endereço],
           <EntitySet Name="Vw_Relatorios_BPA" EntityType="Domain.Vw_Relatorios_BPA" />
           <EntitySet Name="VW_USUARIO" EntityType="Domain.VW_USUARIO" />
           <EntitySet Name="VW_VISITA_DOMICILIAR" EntityType="Domain.VW_VISITA_DOMICILIAR" />
+          <EntitySet Name="TipoOrigem" EntityType="Domain.TipoOrigem" />
+          <AssociationSet Name="FK_OrigemVisita_TipoOrigem_Id" Association="Domain.FK_OrigemVisita_TipoOrigem_Id">
+            <End Role="TipoOrigem" EntitySet="TipoOrigem" />
+            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
+          </AssociationSet>
+          <FunctionImport Name="PR_INT_EnviarCabecalho" ReturnType="Collection(Guid)">
+            <Parameter Name="profissionalCNS" Mode="In" Type="String" />
+            <Parameter Name="cboCodigo_2002" Mode="In" Type="String" />
+            <Parameter Name="cnes" Mode="In" Type="String" />
+            <Parameter Name="dataAtendimento" Mode="In" Type="Int64" />
+            <Parameter Name="codigoIbgeMunicipio" Mode="In" Type="String" />
+            <Parameter Name="ine" Mode="In" Type="String" />
+            <Parameter Name="tipoOrigem" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PR_INT_EnviarFicha">
+            <Parameter Name="token" Mode="In" Type="Guid" />
+            <Parameter Name="turno" Mode="In" Type="Int32" />
+            <Parameter Name="desfecho" Mode="In" Type="Int32" />
+            <Parameter Name="tipoDeImovel" Mode="In" Type="Int32" />
+            <Parameter Name="cnsCidadao" Mode="In" Type="String" />
+            <Parameter Name="dataNascimento" Mode="In" Type="Int64" />
+            <Parameter Name="sexo" Mode="In" Type="Int32" />
+            <Parameter Name="microarea" Mode="In" Type="String" />
+            <Parameter Name="stForaArea" Mode="In" Type="Boolean" />
+            <Parameter Name="tipoOrigem" Mode="In" Type="Int32" />
+            <Parameter Name="numProntuario" Mode="In" Type="String" />
+            <Parameter Name="pesoAcompanhamentoNutricional" Mode="In" Type="Decimal" />
+            <Parameter Name="alturaAcompanhamentoNutricional" Mode="In" Type="Decimal" />
+            <Parameter Name="statusVisitaCompartilhadaOutroProfissional" Mode="In" Type="Boolean" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
           <Key>
@@ -21266,6 +21365,8 @@ Endereço],
           <Property Name="token" Type="Guid" Nullable="false" />
           <Property Name="finalizado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_UnicaLotacaoTransport_OrigemVisita" FromRole="OrigemVisita" ToRole="UnicaLotacaoTransport" />
+          <Property Name="id_tipo_origem" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TipoOrigem" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="OrigemVisita" ToRole="TipoOrigem" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
           <Key>
@@ -36931,6 +37032,26 @@ Endereço],
           <Property Name="Unidade_ID" Type="Int32" />
           <Property Name="GUID_ESUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="TipoOrigem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descricao" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrigemVisita" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="TipoOrigem" ToRole="OrigemVisita" />
+        </EntityType>
+        <Association Name="FK_OrigemVisita_TipoOrigem_Id">
+          <End Type="Domain.TipoOrigem" Role="TipoOrigem" Multiplicity="1" />
+          <End Type="Domain.OrigemVisita" Role="OrigemVisita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoOrigem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrigemVisita">
+              <PropertyRef Name="id_tipo_origem" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -37236,6 +37357,7 @@ Endereço],
           <EntitySetMapping Name="OrigemVisita">
             <EntityTypeMapping TypeName="Domain.OrigemVisita">
               <MappingFragment StoreEntitySet="OrigemVisita">
+                <ScalarProperty Name="id_tipo_origem" ColumnName="id_tipo_origem" />
                 <ScalarProperty Name="finalizado" ColumnName="finalizado" />
                 <ScalarProperty Name="token" ColumnName="token" />
               </MappingFragment>
@@ -43839,8 +43961,6 @@ Endereço],
           <EntitySetMapping Name="SIGSM_Visita_Domiciliar_Profissional">
             <EntityTypeMapping TypeName="Domain.SIGSM_Visita_Domiciliar_Profissional">
               <MappingFragment StoreEntitySet="SIGSM_Visita_Domiciliar_Profissional">
-                <ScalarProperty Name="ine" ColumnName="ine" />
-                <ScalarProperty Name="cnes" ColumnName="cnes" />
                 <ScalarProperty Name="codibge_munic_nasc" ColumnName="codibge_munic_nasc" />
                 <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
                 <ScalarProperty Name="cbo" ColumnName="cbo" />
@@ -45454,6 +45574,16 @@ Endereço],
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TipoOrigem">
+            <EntityTypeMapping TypeName="Domain.TipoOrigem">
+              <MappingFragment StoreEntitySet="TipoOrigem">
+                <ScalarProperty Name="Descricao" ColumnName="Descricao" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PR_INT_EnviarCabecalho" FunctionName="Domain.Store.PR_INT_EnviarCabecalho" />
+          <FunctionImportMapping FunctionImportName="PR_INT_EnviarFicha" FunctionName="Domain.Store.PR_INT_EnviarFicha" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
