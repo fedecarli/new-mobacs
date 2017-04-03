@@ -4,10 +4,29 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    public class CadastroDomiciliarViewModelCollection : List<GetCadastroDomiciliarViewModel>
+    {
+        public static implicit operator CadastroDomiciliarViewModelCollection(CadastroDomiciliar[] models)
+        {
+            var collection = new CadastroDomiciliarViewModelCollection();
+            collection.AddRange(models);
+            return collection;
+        }
+
+        public void AddRange(CadastroDomiciliar[] models)
+        {
+            foreach (var model in models)
+            {
+                Add(model);
+            }
+        }
+    }
+
     public class CadastroDomiciliarViewModel
     {
         [Required]
@@ -60,6 +79,80 @@ namespace Softpark.WS.ViewModels
 
             return dc;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CadastroDomiciliarViewModel(CadastroDomiciliar model)
+        {
+            var vm = new CadastroDomiciliarViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        internal void ApplyModel(CadastroDomiciliar model)
+        {
+            if (model == null) return;
+
+            var db = DomainContainer.Current;
+
+            token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
+            condicaoMoradia = model.CondicaoMoradia1;
+            enderecoLocalPermanencia = model.EnderecoLocalPermanencia1;
+            fichaAtualizada = model.fichaAtualizada;
+            quantosAnimaisNoDomicilio = model.quantosAnimaisNoDomicilio;
+            stAnimaisNoDomicilio = model.stAnimaisNoDomicilio;
+            statusTermoRecusa = model.statusTermoRecusa;
+            uuidFichaOriginadora = model.uuidFichaOriginadora;
+            tipoDeImovel = model.tipoDeImovel;
+            instituicaoPermanencia = model.InstituicaoPermanencia1;
+
+            animalNoDomicilio.AddRange(model.AnimalNoDomicilio.Select(a => a.id_tp_animal));
+
+            FamiliaRowViewModelCollection rows = model.FamiliaRow.ToArray();
+
+            familiaRow.AddRange(rows);
+        }
+    }
+
+    public class GetCadastroDomiciliarViewModel : CadastroDomiciliarViewModel
+    {
+        public string uuid { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator GetCadastroDomiciliarViewModel(CadastroDomiciliar model)
+        {
+            var vm = new GetCadastroDomiciliarViewModel { uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id };
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+    }
+
+    public class FamiliaRowViewModelCollection : List<FamiliaRowViewModel>
+    {
+        public static implicit operator FamiliaRowViewModelCollection(FamiliaRow[] models)
+        {
+            var collection = new FamiliaRowViewModelCollection();
+            collection.AddRange(models);
+            return collection;
+        }
+
+        public void AddRange(FamiliaRow[] models)
+        {
+            foreach (var model in models)
+            {
+                Add(model);
+            }
+        }
     }
 
     public class FamiliaRowViewModel
@@ -89,6 +182,32 @@ namespace Softpark.WS.ViewModels
 
             return fr;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator FamiliaRowViewModel(FamiliaRow model)
+        {
+            var vm = new FamiliaRowViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(FamiliaRow model)
+        {
+            if (model == null) return;
+            
+            dataNascimentoResponsavel = model.dataNascimentoResponsavel;
+            numeroCnsResponsavel = model.numeroCnsResponsavel;
+            numeroMembrosFamilia = model.numeroMembrosFamilia;
+            numeroProntuario = model.numeroProntuario;
+            rendaFamiliar = model.rendaFamiliar;
+            resideDesde = model.resideDesde;
+            stMudanca = model.stMudanca;
+        }
     }
 
     public class InstituicaoPermanenciaViewModel
@@ -115,6 +234,31 @@ namespace Softpark.WS.ViewModels
             DomainContainer.Current.InstituicaoPermanencia.Add(ip);
 
             return ip;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator InstituicaoPermanenciaViewModel(InstituicaoPermanencia model)
+        {
+            var vm = new InstituicaoPermanenciaViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(InstituicaoPermanencia model)
+        {
+            if (model == null) return;
+
+            nomeInstituicaoPermanencia = model.nomeInstituicaoPermanencia;
+            stOutrosProfissionaisVinculados = model.stOutrosProfissionaisVinculados;
+            nomeResponsavelTecnico = model.nomeResponsavelTecnico;
+            cnsResponsavelTecnico = model.cnsResponsavelTecnico;
+            cargoInstituicao = model.cargoInstituicao;
+            telefoneResponsavelTecnico = model.telefoneResponsavelTecnico;
         }
     }
 
@@ -159,6 +303,39 @@ namespace Softpark.WS.ViewModels
 
             return elp;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator EnderecoLocalPermanenciaViewModel(EnderecoLocalPermanencia model)
+        {
+            var vm = new EnderecoLocalPermanenciaViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(EnderecoLocalPermanencia model)
+        {
+            if (model == null) return;
+
+            bairro = model.bairro;
+            cep = model.cep;
+            codigoIbgeMunicipio = model.codigoIbgeMunicipio;
+            complemento = model.complemento;
+            nomeLogradouro = model.nomeLogradouro;
+            numero = model.numero;
+            numeroDneUf = model.numeroDneUf;
+            telefoneContato = model.telefoneContato;
+            telelefoneResidencia = model.telelefoneResidencia;
+            tipoLogradouroNumeroDne = model.tipoLogradouroNumeroDne;
+            stSemNumero = model.stSemNumero;
+            pontoReferencia = model.pontoReferencia;
+            microarea = model.microarea;
+            stForaArea = model.stForaArea;
+        }
     }
 
     public class CondicaoMoradiaViewModel
@@ -199,6 +376,38 @@ namespace Softpark.WS.ViewModels
             DomainContainer.Current.CondicaoMoradia.Add(cm);
 
             return cm;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CondicaoMoradiaViewModel(CondicaoMoradia model)
+        {
+            var vm = new CondicaoMoradiaViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(CondicaoMoradia model)
+        {
+            if (model == null) return;
+
+            abastecimentoAgua = model.abastecimentoAgua;
+            areaProducaoRural = model.areaProducaoRural;
+            destinoLixo = model.destinoLixo;
+            formaEscoamentoBanheiro = model.formaEscoamentoBanheiro;
+            localizacao = model.localizacao;
+            materialPredominanteParedesExtDomicilio = model.materialPredominanteParedesExtDomicilio;
+            nuComodos = model.nuComodos;
+            nuMoradores = model.nuMoradores;
+            situacaoMoradiaPosseTerra = model.situacaoMoradiaPosseTerra;
+            stDisponibilidadeEnergiaEletrica = model.stDisponibilidadeEnergiaEletrica;
+            tipoAcessoDomicilio = model.tipoAcessoDomicilio;
+            tipoDomicilio = model.tipoDomicilio;
+            aguaConsumoDomicilio = model.aguaConsumoDomicilio;
         }
     }
 }

@@ -765,8 +765,12 @@ namespace Softpark.Models
                 throw new ValidationException("Não pode ser informados animais neste cadastro domiciliar.");
 
             if (cad.uuidFichaOriginadora == null)
-                cad.uuidFichaOriginadora = !cad.fichaAtualizada ? (cad.UnicaLotacaoTransport.cnes + '-' + cad.id) :
-                throw new ValidationException("Informe o Uuid da ficha originadora.");
+            {
+                if (!cad.fichaAtualizada)
+                    cad.uuidFichaOriginadora = (cad.UnicaLotacaoTransport.cnes + '-' + cad.id);
+                else
+                    throw new ValidationException("Informe o Uuid da ficha originadora.");
+            }
 
             if (cad.uuidFichaOriginadora != cad.UnicaLotacaoTransport.cnes + '-' + cad.id && (cad.uuidFichaOriginadora.Trim().Length != 44 ||
                 cad.uuidFichaOriginadora.Substring(0, 7) != cad.UnicaLotacaoTransport.cnes))

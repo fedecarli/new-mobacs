@@ -34,9 +34,9 @@ namespace Softpark.WS.Controllers.Api.odata
             EnableConstantParameterization = true,
             HandleNullPropagation = HandleNullPropagationOption.Default
         )]
-        public IQueryable<VW_Profissional> GetASSMED_Cadastro([FromODataUri] string key)
+        public IQueryable<VW_Profissional> GetASSMED_Cadastro([FromODataUri] int key)
         {
-            return db.VW_Profissional.Where(vw => vw.CNS == key);
+            return db.VW_Profissional.Where(vw => vw.CodUsuario == key);
         }
 
         //// PUT: odata/Profissional(5)

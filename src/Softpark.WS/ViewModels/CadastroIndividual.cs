@@ -2,10 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    public class CadastroIndividualViewModelCollection : List<GetCadastroIndividualViewModel>
+    {
+        public static implicit operator CadastroIndividualViewModelCollection(CadastroIndividual[] models)
+        {
+            var collection = new CadastroIndividualViewModelCollection();
+            collection.AddRange(models);
+            return collection;
+        }
+
+        public void AddRange(CadastroIndividual[] models)
+        {
+            foreach (var model in models)
+            {
+                Add(model);
+            }
+        }
+    }
+
     /// <summary>
     /// Ficha de cadastro individual
     /// </summary>
@@ -64,6 +83,52 @@ namespace Softpark.WS.ViewModels
 
             return ci;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CadastroIndividualViewModel(CadastroIndividual model)
+        {
+            var vm = new CadastroIndividualViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        internal void ApplyModel(CadastroIndividual model)
+        {
+            if (model == null) return;
+            
+            token = model.UnicaLotacaoTransport.token??Guid.Empty;
+            condicoesDeSaude = model.CondicoesDeSaude1;
+            emSituacaoDeRua = model.EmSituacaoDeRua1;
+            fichaAtualizada = model.fichaAtualizada;
+            identificacaoUsuarioCidadao = model.IdentificacaoUsuarioCidadao1;
+            informacoesSocioDemograficas = model.InformacoesSocioDemograficas1;
+            statusTermoRecusaCadastroIndividualAtencaoBasica = model.statusTermoRecusaCadastroIndividualAtencaoBasica;
+            uuidFichaOriginadora = model.uuidFichaOriginadora;
+            saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
+        }
+    }
+
+    public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
+    {
+        public string uuid { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator GetCadastroIndividualViewModel(CadastroIndividual model)
+        {
+            var vm = new GetCadastroIndividualViewModel { uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id };
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
     }
 
     /// <summary>
@@ -83,6 +148,28 @@ namespace Softpark.WS.ViewModels
         /// Número da Declaração
         /// </summary>
         public string numeroDO { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator SaidaCidadaoCadastroViewModel(SaidaCidadaoCadastro model)
+        {
+            var vm = new SaidaCidadaoCadastroViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(SaidaCidadaoCadastro model)
+        {
+            if (model == null) return;
+            
+            motivoSaidaCidadao = model.motivoSaidaCidadao;
+            dataObito = model.dataObito;
+            numeroDO = model.numeroDO;
+        }
 
         internal SaidaCidadaoCadastro ToModel()
         {
@@ -166,6 +253,42 @@ namespace Softpark.WS.ViewModels
         /// Lista de deficiências do cidadão
         /// </summary>
         public List<int> deficienciasCidadao { get; set; } = new List<int>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator InformacoesSocioDemograficasViewModel(InformacoesSocioDemograficas model)
+        {
+            var vm = new InformacoesSocioDemograficasViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(InformacoesSocioDemograficas model)
+        {
+            if (model == null) return;
+
+            deficienciasCidadao.AddRange(model.DeficienciasCidadao.Select(d => d.id_tp_deficiencia_cidadao));
+
+            grauInstrucaoCidadao = model.grauInstrucaoCidadao;
+            ocupacaoCodigoCbo2002 = model.ocupacaoCodigoCbo2002;
+            orientacaoSexualCidadao = model.orientacaoSexualCidadao;
+            povoComunidadeTradicional = model.povoComunidadeTradicional;
+            relacaoParentescoCidadao = model.relacaoParentescoCidadao;
+            situacaoMercadoTrabalhoCidadao = model.situacaoMercadoTrabalhoCidadao;
+            statusDesejaInformarOrientacaoSexual = model.statusDesejaInformarOrientacaoSexual;
+            statusFrequentaBenzedeira = model.statusFrequentaBenzedeira;
+            statusFrequentaEscola = model.statusFrequentaEscola;
+            statusMembroPovoComunidadeTradicional = model.statusMembroPovoComunidadeTradicional;
+            statusParticipaGrupoComunitario = model.statusParticipaGrupoComunitario;
+            statusPossuiPlanoSaudePrivado = model.statusPossuiPlanoSaudePrivado;
+            statusTemAlgumaDeficiencia = model.statusTemAlgumaDeficiencia;
+            identidadeGeneroCidadao = model.identidadeGeneroCidadao;
+            statusDesejaInformarIdentidadeGenero = model.statusDesejaInformarIdentidadeGenero;
+        }
 
         internal async Task<InformacoesSocioDemograficas> ToModel()
         {
@@ -306,6 +429,49 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public bool stForaArea { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator IdentificacaoUsuarioCidadaoViewModel(IdentificacaoUsuarioCidadao model)
+        {
+            var vm = new IdentificacaoUsuarioCidadaoViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(IdentificacaoUsuarioCidadao model)
+        {
+            if (model == null) return;
+
+            nomeSocial = model.nomeSocial;
+            codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
+            dataNascimentoCidadao = model.dataNascimentoCidadao;
+            desconheceNomeMae = model.desconheceNomeMae;
+            emailCidadao = model.emailCidadao;
+            nacionalidadeCidadao = model.nacionalidadeCidadao;
+            nomeCidadao = model.nomeCidadao;
+            nomeMaeCidadao = model.nomeMaeCidadao;
+            cnsCidadao = model.cnsCidadao;
+            cnsResponsavelFamiliar = model.cnsResponsavelFamiliar;
+            telefoneCelular = model.telefoneCelular;
+            numeroNisPisPasep = model.numeroNisPisPasep;
+            paisNascimento = model.paisNascimento;
+            racaCorCidadao = model.racaCorCidadao;
+            sexoCidadao = model.sexoCidadao;
+            statusEhResponsavel = model.statusEhResponsavel;
+            etnia = model.etnia;
+            nomePaiCidadao = model.nomePaiCidadao;
+            desconheceNomePai = model.desconheceNomePai;
+            dtNaturalizacao = model.dtNaturalizacao;
+            portariaNaturalizacao = model.portariaNaturalizacao;
+            dtEntradaBrasil = model.dtEntradaBrasil;
+            microarea = model.microarea;
+            stForaArea = model.stForaArea;
+        }
+
         internal IdentificacaoUsuarioCidadao ToModel()
         {
             var iuc = DomainContainer.Current.IdentificacaoUsuarioCidadao.Create();
@@ -393,6 +559,38 @@ namespace Softpark.WS.ViewModels
         /// Lista de origem de alimentos
         /// </summary>
         public List<int> origemAlimentoSituacaoRua { get; set; } = new List<int>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator EmSituacaoDeRuaViewModel(EmSituacaoDeRua model)
+        {
+            var vm = new EmSituacaoDeRuaViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(EmSituacaoDeRua model)
+        {
+            if (model == null) return;
+
+            grauParentescoFamiliarFrequentado = model.grauParentescoFamiliarFrequentado;
+            outraInstituicaoQueAcompanha = model.outraInstituicaoQueAcompanha;
+            quantidadeAlimentacoesAoDiaSituacaoRua = model.quantidadeAlimentacoesAoDiaSituacaoRua;
+            statusAcompanhadoPorOutraInstituicao = model.statusAcompanhadoPorOutraInstituicao;
+            statusPossuiReferenciaFamiliar = model.statusPossuiReferenciaFamiliar;
+            statusRecebeBeneficio = model.statusRecebeBeneficio;
+            statusSituacaoRua = model.statusSituacaoRua;
+            statusTemAcessoHigienePessoalSituacaoRua = model.statusTemAcessoHigienePessoalSituacaoRua;
+            statusVisitaFamiliarFrequentemente = model.statusVisitaFamiliarFrequentemente;
+            tempoSituacaoRua = model.tempoSituacaoRua;
+
+            higienePessoalSituacaoRua.AddRange(model.HigienePessoalSituacaoRua.Select(h => h.codigo_higiene_pessoal));
+            origemAlimentoSituacaoRua.AddRange(model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento));
+        }
 
         internal async Task<EmSituacaoDeRua> ToModel()
         {
@@ -563,6 +761,56 @@ namespace Softpark.WS.ViewModels
         /// Lista de doenças renais
         /// </summary>
         public List<int> doencaRins { get; set; } = new List<int>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CondicoesDeSaudeViewModel(CondicoesDeSaude model)
+        {
+            var vm = new CondicoesDeSaudeViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(CondicoesDeSaude model)
+        {
+            if (model == null) return;
+
+            descricaoCausaInternacaoEm12Meses = model.descricaoCausaInternacaoEm12Meses;
+            descricaoOutraCondicao1 = model.descricaoOutraCondicao1;
+            descricaoOutraCondicao2 = model.descricaoOutraCondicao2;
+            descricaoOutraCondicao3 = model.descricaoOutraCondicao3;
+            descricaoPlantasMedicinaisUsadas = model.descricaoPlantasMedicinaisUsadas;
+            maternidadeDeReferencia = model.maternidadeDeReferencia;
+            situacaoPeso = model.situacaoPeso;
+            statusEhDependenteAlcool = model.statusEhDependenteAlcool;
+            statusEhDependenteOutrasDrogas = model.statusEhDependenteOutrasDrogas;
+            statusEhFumante = model.statusEhFumante;
+            statusEhGestante = model.statusEhGestante;
+            statusEstaAcamado = model.statusEstaAcamado;
+            statusEstaDomiciliado = model.statusEstaDomiciliado;
+            statusTemDiabetes = model.statusTemDiabetes;
+            statusTemDoencaRespiratoria = model.statusTemDoencaRespiratoria;
+            statusTemHanseniase = model.statusTemHanseniase;
+            statusTemHipertensaoArterial = model.statusTemHipertensaoArterial;
+            statusTemTeveCancer = model.statusTemTeveCancer;
+            statusTemTeveDoencasRins = model.statusTemTeveDoencasRins;
+            statusTemTuberculose = model.statusTemTuberculose;
+            statusTeveAvcDerrame = model.statusTeveAvcDerrame;
+            statusTeveDoencaCardiaca = model.statusTeveDoencaCardiaca;
+            statusTeveInfarto = model.statusTeveInfarto;
+            statusTeveInternadoem12Meses = model.statusTeveInternadoem12Meses;
+            statusUsaOutrasPraticasIntegrativasOuComplementares = model.statusUsaOutrasPraticasIntegrativasOuComplementares;
+            statusUsaPlantasMedicinais = model.statusUsaPlantasMedicinais;
+            statusDiagnosticoMental = model.statusDiagnosticoMental;
+
+            doencaCardiaca.AddRange(model.DoencaCardiaca.Select(d => d.id_tp_doenca_cariaca));
+            doencaRespiratoria.AddRange(model.DoencaRespiratoria.Select(d => d.id_tp_doenca_respiratoria));
+            doencaRins.AddRange(model.DoencaRins.Select(x => x.id_tp_doenca_rins));
+        }
 
         internal async Task<CondicoesDeSaude> ToModel()
         {

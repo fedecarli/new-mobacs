@@ -11,6 +11,11 @@ using System;
 using System.Threading;
 using System.Web.Security;
 using System.Security.Principal;
+using System.Linq;
+using System.IO;
+using Softpark.Infrastructure.Extensions;
+using System.Web.Script.Serialization;
+using System.IdentityModel;
 
 namespace Softpark.WS.Controllers
 {
@@ -107,6 +112,8 @@ namespace Softpark.WS.Controllers
         {
             try
             {
+                ViewBag.ReturnUrl = ReturnUrl;
+
                 if (ModelState.IsValid)
                 {
                     var cancelation = new CancellationTokenSource();
@@ -120,8 +127,96 @@ namespace Softpark.WS.Controllers
                         }
                         else
                         {
+                            var serializer = new JavaScriptSerializer();
+
+                            var contentModel = serializer.Serialize(model.ForToken());
+                            
+                            var postModel = new UsuarioLoginUnidadeViewModelPost
+                            {
+                                IdUsuario = usuario.CodUsu,
+                                Setores = await (from setor in db.Setores
+                                                 join us in db.ASSMED_UsuarioSetor
+                                                 on setor.CodSetor equals us.CodSetor
+                                                 where us.CodUsuD == usuario.CodUsu
+                                                 select new SetorDDLViewModel { Value = setor.CodSetor, Text = setor.DesSetor }).ToArrayAsync(),
+                                Token = contentModel.Encrypt(usuario.Senha),
+                                NomeUsuario = usuario.Nome
+                            };
+
+                            if (postModel.Setores.Count == 1)
+                            {
+                                postModel.Setor = postModel.Setores.First().Value;
+
+                                return await AcessoUnidade(postModel, ReturnUrl);
+                            }
+
+                            return View("AcessoUnidade", postModel);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", e);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> AcessoUnidade([System.Web.Http.FromBody] UsuarioLoginUnidadeViewModel postModel, [System.Web.Http.FromUri] Uri ReturnUrl = null)
+        {
+            var viewModel = new UsuarioLoginUnidadeViewModelPost
+            {
+                IdUsuario = postModel.IdUsuario,
+                Setor = postModel.Setor,
+                Token = postModel.Token
+            };
+
+            try
+            {
+                ViewBag.ReturnUrl = ReturnUrl;
+
+                var usuario = await db.ASSMED_Usuario.SingleOrDefaultAsync(x => x.CodUsu == postModel.IdUsuario);
+
+                viewModel.Setores = await (from setor in db.Setores
+                                           join us in db.ASSMED_UsuarioSetor
+                                           on setor.CodSetor equals us.CodSetor
+                                           where us.CodUsuD == usuario.CodUsu
+                                           select new SetorDDLViewModel { Value = setor.CodSetor, Text = setor.DesSetor }).ToArrayAsync();
+
+                viewModel.NomeUsuario = usuario.Nome;
+
+                if (ModelState.IsValid)
+                {
+                    var cancelation = new CancellationTokenSource();
+
+                    var tokenUser = postModel.Token.Decrypt(usuario.Senha);
+
+                    var serializer = new JavaScriptSerializer();
+
+                    var model = serializer.Deserialize<UsuarioLoginViewModelToken>(tokenUser);
+
+                    if (model == null || !model.IsValid())
+                        return Redirect(ReturnUrl.ToString());
+
+                    using (var md5 = MD5.Create())
+                    {
+                        if (usuario == null || !VerifyMd5Hash(md5, model.Senha, usuario.Senha))
+                        {
+                            ModelState.AddModelError("", "Login ou Senha inválidos.");
+                        }
+                        if(viewModel.Setores.All(x => x.Value != postModel.Setor))
+                        {
+                            ModelState.AddModelError("", "Selecione um setor.");
+                        }
+                        else
+                        {
                             FormsAuthentication.SetAuthCookie(usuario.Email, false);
 
+                            Session.Add("CodSetor", postModel.Setor.ToString());
+                            
                             if (ReturnUrl == null)
                                 return RedirectToAction("Index", "Home");
 
@@ -135,7 +230,7 @@ namespace Softpark.WS.Controllers
                 ModelState.AddModelError("", e);
             }
 
-            return View(model);
+            return View(viewModel);
         }
 
         public ActionResult Sair()

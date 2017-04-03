@@ -9,6 +9,24 @@ using Softpark.Infrastructure.Extras;
 
 namespace Softpark.WS.ViewModels
 {
+    public class FichaVisitaDomiciliarChildCadastroViewModelCollection : List<FichaVisitaDomiciliarChildCadastroViewModel>
+    {
+        public static implicit operator FichaVisitaDomiciliarChildCadastroViewModelCollection(FichaVisitaDomiciliarChild[] models)
+        {
+            var collection = new FichaVisitaDomiciliarChildCadastroViewModelCollection();
+            collection.AddRange(models);
+            return collection;
+        }
+
+        public void AddRange(FichaVisitaDomiciliarChild[] models)
+        {
+            foreach (var model in models)
+            {
+                Add(model);
+            }
+        }
+    }
+
     /// <summary>
     /// FichaVisitaDomiciliarChild DTO
     /// </summary>
@@ -124,10 +142,43 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(statusVisitaCompartilhadaOutroProfissional))]
         public bool statusVisitaCompartilhadaOutroProfissional { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator FichaVisitaDomiciliarChildCadastroViewModel(FichaVisitaDomiciliarChild model)
+        {
+            var vm = new FichaVisitaDomiciliarChildCadastroViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(FichaVisitaDomiciliarChild model)
+        {
+            if (model == null) return;
+
+            var db = DomainContainer.Current;
+
+            alturaAcompanhamentoNutricional = model.alturaAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(model.alturaAcompanhamentoNutricional));
+            cnsCidadao = model.cnsCidadao;
+            desfecho = model.desfecho;
+            dtNascimento = model.dtNascimento;
+            microarea = model.microarea;
+            numProntuario = model.numProntuario;
+            pesoAcompanhamentoNutricional = model.pesoAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(pesoAcompanhamentoNutricional));
+            sexo = model.sexo ?? 4;
+            statusVisitaCompartilhadaOutroProfissional = model.statusVisitaCompartilhadaOutroProfissional;
+            stForaArea = model.stForaArea;
+            tipoDeImovel = model.tipoDeImovel;
+            turno = model.turno;
+        }
+
         internal FichaVisitaDomiciliarChild ToModel()
         {
             var fvdc = DomainContainer.Current.FichaVisitaDomiciliarChild.Create();
-            
+
             fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
             fvdc.cnsCidadao = cnsCidadao;
             fvdc.desfecho = desfecho;
@@ -140,7 +191,7 @@ namespace Softpark.WS.ViewModels
             fvdc.stForaArea = stForaArea;
             fvdc.tipoDeImovel = tipoDeImovel;
             fvdc.turno = turno;
-            
+
             return fvdc;
         }
     }

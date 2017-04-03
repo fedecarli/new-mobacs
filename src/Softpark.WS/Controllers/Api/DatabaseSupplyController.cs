@@ -6,6 +6,9 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.OData;
 using Softpark.Models;
+using Softpark.WS.ViewModels;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -606,6 +609,74 @@ namespace Softpark.WS.Controllers.Api
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = "/api/dados/Desfecho" },
                 new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
             }.OrderBy(x => x.Codigo).ToArray());
+        }
+
+        private async Task<UnicaLotacaoTransport> GetHeader(Guid token)
+        {
+            return await Domain.UnicaLotacaoTransport.SingleOrDefaultAsync(u => u.token == token && !u.OrigemVisita.finalizado);
+        }
+
+        private IQueryable<UnicaLotacaoTransport> GetHeadersBy(UnicaLotacaoTransport header)
+        {
+            return Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == header.profissionalCNS && u.OrigemVisita.finalizado);
+        }
+
+        /// <summary>
+        /// Buscar pacientes atendidos pelo profissional informado
+        /// </summary>
+        /// <param name="token">Token de acesso</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/paciente/{token:guid}", Name = "PacienteSupplyAction")]
+        [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
+        public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token)
+        {
+            var headerToken = await GetHeader(token);
+
+            if (headerToken == null) return BadRequest("Token Inválido.");
+
+            CadastroIndividualViewModelCollection results = GetHeadersBy(headerToken).SelectMany(x => x.CadastroIndividual).ToArray();
+
+            return Ok(results.ToArray());
+        }
+
+        /// <summary>
+        /// Buscar domicílios atendidos pelo profissional informado
+        /// </summary>
+        /// <param name="token">Token de acesso</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
+        [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
+        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token)
+        {
+            var headerToken = await GetHeader(token);
+
+            if (headerToken == null) return BadRequest("Token Inválido.");
+
+            CadastroDomiciliarViewModelCollection results = GetHeadersBy(headerToken).SelectMany(x => x.CadastroDomiciliar).ToArray();
+
+            return Ok(results.ToArray());
+        }
+
+        /// <summary>
+        /// Buscar visitas realizadas pelo profissional informado
+        /// </summary>
+        /// <param name="token">Token de acesso</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/visita/{token:guid}", Name = "VisitaSupplyAction")]
+        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
+        public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token)
+        {
+            var headerToken = await GetHeader(token);
+
+            if (headerToken == null) return BadRequest("Token Inválido.");
+
+            FichaVisitaDomiciliarChildCadastroViewModelCollection results = GetHeadersBy(headerToken)
+                .SelectMany(f => f.FichaVisitaDomiciliarMaster).SelectMany(f => f.FichaVisitaDomiciliarChild).ToArray();
+
+            return Ok(results.ToArray());
         }
     }
 
