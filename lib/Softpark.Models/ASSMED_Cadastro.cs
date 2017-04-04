@@ -50,7 +50,6 @@ namespace Softpark.Models
             this.SIGSM_Marcadores_Consumo_Alimentar = new HashSet<SIGSM_Marcadores_Consumo_Alimentar>();
             this.SIGSM_Procedimento = new HashSet<SIGSM_Procedimento>();
             this.SIGSM_Visita_Domiciliar_Paciente = new HashSet<SIGSM_Visita_Domiciliar_Paciente>();
-            this.SIGSM_Visita_Domiciliar_Profissional = new HashSet<SIGSM_Visita_Domiciliar_Profissional>();
         }
     
         public int NumContrato { get; set; }
@@ -132,7 +131,5 @@ namespace Softpark.Models
         public virtual ICollection<SIGSM_Procedimento> SIGSM_Procedimento { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SIGSM_Visita_Domiciliar_Paciente> SIGSM_Visita_Domiciliar_Paciente { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SIGSM_Visita_Domiciliar_Profissional> SIGSM_Visita_Domiciliar_Profissional { get; set; }
     }
 }

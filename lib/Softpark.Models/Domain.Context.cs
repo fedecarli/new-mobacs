@@ -470,7 +470,6 @@ namespace Softpark.Models
         public virtual DbSet<SIGSM_Tipo_Procedimento> SIGSM_Tipo_Procedimento { get; set; }
         public virtual DbSet<SIGSM_Visita_Domiciliar> SIGSM_Visita_Domiciliar { get; set; }
         public virtual DbSet<SIGSM_Visita_Domiciliar_Paciente> SIGSM_Visita_Domiciliar_Paciente { get; set; }
-        public virtual DbSet<SIGSM_Visita_Domiciliar_Profissional> SIGSM_Visita_Domiciliar_Profissional { get; set; }
         public virtual DbSet<SituacaoFamiliar> SituacaoFamiliar { get; set; }
         public virtual DbSet<SituacaoFuncional> SituacaoFuncional { get; set; }
         public virtual DbSet<SPZ_Pedido> SPZ_Pedido { get; set; }

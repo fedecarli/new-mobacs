@@ -481,7 +481,6 @@ namespace Softpark.WS
             builder.EntitySet<SIGSM_Tipo_Procedimento>("SIGSM_Tipo_Procedimento");
             builder.EntitySet<SIGSM_Visita_Domiciliar>("SIGSM_Visita_Domiciliar");
             builder.EntitySet<SIGSM_Visita_Domiciliar_Paciente>("SIGSM_Visita_Domiciliar_Paciente");
-            builder.EntitySet<SIGSM_Visita_Domiciliar_Profissional>("SIGSM_Visita_Domiciliar_Profissional");
             builder.EntitySet<SituacaoFamiliar>("SituacaoFamiliar");
             builder.EntitySet<SituacaoFuncional>("SituacaoFuncional");
             builder.EntitySet<SPZ_Pedido>("SPZ_Pedido");

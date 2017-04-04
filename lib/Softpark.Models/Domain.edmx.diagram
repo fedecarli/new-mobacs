@@ -448,7 +448,6 @@
         <EntityTypeShape EntityType="Domain.SIGSM_Tipo_Procedimento" Width="1.5" PointX="3" PointY="112.75" />
         <EntityTypeShape EntityType="Domain.SIGSM_Visita_Domiciliar" Width="1.5" PointX="9.75" PointY="120.875" />
         <EntityTypeShape EntityType="Domain.SIGSM_Visita_Domiciliar_Paciente" Width="1.5" PointX="12" PointY="121" />
-        <EntityTypeShape EntityType="Domain.SIGSM_Visita_Domiciliar_Profissional" Width="1.5" PointX="9" PointY="130.75" />
         <EntityTypeShape EntityType="Domain.SituacaoFamiliar" Width="1.5" PointX="53.75" PointY="55.375" />
         <EntityTypeShape EntityType="Domain.SituacaoFuncional" Width="1.5" PointX="53.75" PointY="58.375" />
         <EntityTypeShape EntityType="Domain.SPZ_Pedido" Width="1.5" PointX="13.75" PointY="51.625" />
@@ -821,7 +820,6 @@
         <AssociationConnector Association="Domain.FK_SIGSM_Marcadores_Consumo_Alimentar_ASSMED_Cadastro" />
         <AssociationConnector Association="Domain.FK_SIGSM_Procedimento_ASSMED_Cadastro" />
         <AssociationConnector Association="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_ASSMED_Cadastro" />
-        <AssociationConnector Association="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro" />
         <AssociationConnector Association="Domain.FK__ASSMED_CadastroC__625A9A57" />
         <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__70A8B9AE" />
         <AssociationConnector Association="Domain.FK__ASSMED_CadastroQ__0D99FE17" />
@@ -975,7 +973,6 @@
         <AssociationConnector Association="Domain.FK_Procedimento_Sigtap_Tipo_Procedimento" />
         <AssociationConnector Association="Domain.FK_SIGSM_Visita_Domiciliar_SIGSM_Status" />
         <AssociationConnector Association="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_SIGSM_Visita_Domiciliar" />
-        <AssociationConnector Association="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar" />
         <AssociationConnector Association="Domain.FK__SPZ_PedidoItens__25FB978D" />
         <AssociationConnector Association="Domain.FK__SPZ_PedidoStatus__2136E270" />
         <AssociationConnector Association="Domain.FK__SPZ_PedidoItensA__2F8501C7" />

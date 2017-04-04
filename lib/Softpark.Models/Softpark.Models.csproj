@@ -1475,9 +1475,6 @@
     <Compile Include="SIGSM_Visita_Domiciliar_Paciente.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="SIGSM_Visita_Domiciliar_Profissional.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
     <Compile Include="SigTap_Atendimento_Odontologico.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

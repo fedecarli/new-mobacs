@@ -7732,17 +7732,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' doe
           <Property Name="st_fora_area" Type="bit" Nullable="false" />
           <Property Name="tipo_de_imovel" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="SIGSM_Visita_Domiciliar_Profissional">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="id_visita_domiciliar" Type="int" Nullable="false" />
-          <Property Name="id_profissional" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="cbo" Type="nchar" MaxLength="10" />
-          <Property Name="num_contrato" Type="int" Nullable="false" />
-          <Property Name="codibge_munic_nasc" Type="char" MaxLength="7" />
-        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendimento_Odontologico' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="SigTap_Atendimento_Odontologico">
@@ -15357,32 +15346,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro">
-          <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="1" />
-          <End Role="SIGSM_Visita_Domiciliar_Profissional" Type="Self.SIGSM_Visita_Domiciliar_Profissional" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Cadastro">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Principal>
-            <Dependent Role="SIGSM_Visita_Domiciliar_Profissional">
-              <PropertyRef Name="num_contrato" />
-              <PropertyRef Name="id_profissional" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar">
-          <End Role="SIGSM_Visita_Domiciliar" Type="Self.SIGSM_Visita_Domiciliar" Multiplicity="1" />
-          <End Role="SIGSM_Visita_Domiciliar_Profissional" Type="Self.SIGSM_Visita_Domiciliar_Profissional" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SIGSM_Visita_Domiciliar">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="SIGSM_Visita_Domiciliar_Profissional">
-              <PropertyRef Name="id_visita_domiciliar" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SIGSM_Visita_Domiciliar_SIGSM_Status">
           <End Role="SIGSM_Status" Type="Self.SIGSM_Status" Multiplicity="1" />
           <End Role="SIGSM_Visita_Domiciliar" Type="Self.SIGSM_Visita_Domiciliar" Multiplicity="*" />
@@ -15884,7 +15847,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="SIGSM_Tipo_Procedimento" EntityType="Self.SIGSM_Tipo_Procedimento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_Visita_Domiciliar" EntityType="Self.SIGSM_Visita_Domiciliar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_Visita_Domiciliar_Paciente" EntityType="Self.SIGSM_Visita_Domiciliar_Paciente" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SIGSM_Visita_Domiciliar_Profissional" EntityType="Self.SIGSM_Visita_Domiciliar_Profissional" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SituacaoFamiliar" EntityType="Self.SituacaoFamiliar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SituacaoFuncional" EntityType="Self.SituacaoFuncional" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SPZ_Pedido" EntityType="Self.SPZ_Pedido" Schema="dbo" store:Type="Tables" />
@@ -18607,14 +18569,6 @@ Endereço],
             <End Role="SIGSM_Visita_Domiciliar" EntitySet="SIGSM_Visita_Domiciliar" />
             <End Role="SIGSM_Visita_Domiciliar_Paciente" EntitySet="SIGSM_Visita_Domiciliar_Paciente" />
           </AssociationSet>
-          <AssociationSet Name="FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro" Association="Self.FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro">
-            <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
-            <End Role="SIGSM_Visita_Domiciliar_Profissional" EntitySet="SIGSM_Visita_Domiciliar_Profissional" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar" Association="Self.FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar">
-            <End Role="SIGSM_Visita_Domiciliar" EntitySet="SIGSM_Visita_Domiciliar" />
-            <End Role="SIGSM_Visita_Domiciliar_Profissional" EntitySet="SIGSM_Visita_Domiciliar_Profissional" />
-          </AssociationSet>
           <AssociationSet Name="FK_SIGSM_Visita_Domiciliar_SIGSM_Status" Association="Self.FK_SIGSM_Visita_Domiciliar_SIGSM_Status">
             <End Role="SIGSM_Status" EntitySet="SIGSM_Status" />
             <End Role="SIGSM_Visita_Domiciliar" EntitySet="SIGSM_Visita_Domiciliar" />
@@ -19075,7 +19029,6 @@ Endereço],
           <EntitySet Name="SIGSM_Tipo_Procedimento" EntityType="Domain.SIGSM_Tipo_Procedimento" />
           <EntitySet Name="SIGSM_Visita_Domiciliar" EntityType="Domain.SIGSM_Visita_Domiciliar" />
           <EntitySet Name="SIGSM_Visita_Domiciliar_Paciente" EntityType="Domain.SIGSM_Visita_Domiciliar_Paciente" />
-          <EntitySet Name="SIGSM_Visita_Domiciliar_Profissional" EntityType="Domain.SIGSM_Visita_Domiciliar_Profissional" />
           <EntitySet Name="SituacaoFamiliar" EntityType="Domain.SituacaoFamiliar" />
           <EntitySet Name="SituacaoFuncional" EntityType="Domain.SituacaoFuncional" />
           <EntitySet Name="SPZ_Pedido" EntityType="Domain.SPZ_Pedido" />
@@ -20318,10 +20271,6 @@ Endereço],
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="SIGSM_Visita_Domiciliar_Paciente" EntitySet="SIGSM_Visita_Domiciliar_Paciente" />
           </AssociationSet>
-          <AssociationSet Name="FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro" Association="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro">
-            <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
-            <End Role="SIGSM_Visita_Domiciliar_Profissional" EntitySet="SIGSM_Visita_Domiciliar_Profissional" />
-          </AssociationSet>
           <AssociationSet Name="FK__ASSMED_CadastroC__625A9A57" Association="Domain.FK__ASSMED_CadastroC__625A9A57">
             <End Role="ASSMED_TipoCertidoes" EntitySet="ASSMED_TipoCertidoes" />
             <End Role="ASSMED_CadastroCertidoes" EntitySet="ASSMED_CadastroCertidoes" />
@@ -20933,10 +20882,6 @@ Endereço],
           <AssociationSet Name="FK_SIGSM_Visita_Domiciliar_Paciente_SIGSM_Visita_Domiciliar" Association="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_SIGSM_Visita_Domiciliar">
             <End Role="SIGSM_Visita_Domiciliar" EntitySet="SIGSM_Visita_Domiciliar" />
             <End Role="SIGSM_Visita_Domiciliar_Paciente" EntitySet="SIGSM_Visita_Domiciliar_Paciente" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar" Association="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar">
-            <End Role="SIGSM_Visita_Domiciliar" EntitySet="SIGSM_Visita_Domiciliar" />
-            <End Role="SIGSM_Visita_Domiciliar_Profissional" EntitySet="SIGSM_Visita_Domiciliar_Profissional" />
           </AssociationSet>
           <AssociationSet Name="FK__SPZ_PedidoItens__25FB978D" Association="Domain.FK__SPZ_PedidoItens__25FB978D">
             <End Role="SPZ_Pedido" EntitySet="SPZ_Pedido" />
@@ -25397,7 +25342,6 @@ Endereço],
           <NavigationProperty Name="SIGSM_Marcadores_Consumo_Alimentar" Relationship="Domain.FK_SIGSM_Marcadores_Consumo_Alimentar_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Marcadores_Consumo_Alimentar" />
           <NavigationProperty Name="SIGSM_Procedimento" Relationship="Domain.FK_SIGSM_Procedimento_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Procedimento" />
           <NavigationProperty Name="SIGSM_Visita_Domiciliar_Paciente" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Visita_Domiciliar_Paciente" />
-          <NavigationProperty Name="SIGSM_Visita_Domiciliar_Profissional" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Visita_Domiciliar_Profissional" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroAcaoSocial">
           <Key>
@@ -28959,7 +28903,6 @@ Endereço],
           <Property Name="data_entrada" Type="DateTime" Precision="0" />
           <NavigationProperty Name="SIGSM_Status" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_SIGSM_Status" FromRole="SIGSM_Visita_Domiciliar" ToRole="SIGSM_Status" />
           <NavigationProperty Name="SIGSM_Visita_Domiciliar_Paciente" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_SIGSM_Visita_Domiciliar" FromRole="SIGSM_Visita_Domiciliar" ToRole="SIGSM_Visita_Domiciliar_Paciente" />
-          <NavigationProperty Name="SIGSM_Visita_Domiciliar_Profissional" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar" FromRole="SIGSM_Visita_Domiciliar" ToRole="SIGSM_Visita_Domiciliar_Profissional" />
         </EntityType>
         <EntityType Name="SIGSM_Visita_Domiciliar_Paciente">
           <Key>
@@ -29022,21 +28965,6 @@ Endereço],
           <Property Name="tipo_de_imovel" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_ASSMED_Cadastro" FromRole="SIGSM_Visita_Domiciliar_Paciente" ToRole="ASSMED_Cadastro" />
           <NavigationProperty Name="SIGSM_Visita_Domiciliar" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_SIGSM_Visita_Domiciliar" FromRole="SIGSM_Visita_Domiciliar_Paciente" ToRole="SIGSM_Visita_Domiciliar" />
-        </EntityType>
-        <EntityType Name="SIGSM_Visita_Domiciliar_Profissional">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id_visita_domiciliar" Type="Int32" Nullable="false" />
-          <Property Name="id_profissional" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="cbo" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="num_contrato" Type="Int32" Nullable="false" />
-          <Property Name="codibge_munic_nasc" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro" FromRole="SIGSM_Visita_Domiciliar_Profissional" ToRole="ASSMED_Cadastro" />
-          <NavigationProperty Name="SIGSM_Visita_Domiciliar" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar" FromRole="SIGSM_Visita_Domiciliar_Profissional" ToRole="SIGSM_Visita_Domiciliar" />
-          <Property Name="cnes" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
-          <Property Name="ine" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SituacaoFamiliar">
           <Key>
@@ -34564,20 +34492,6 @@ Endereço],
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SIGSM_Visita_Domiciliar_Profissional_ASSMED_Cadastro">
-          <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="1" />
-          <End Type="Domain.SIGSM_Visita_Domiciliar_Profissional" Role="SIGSM_Visita_Domiciliar_Profissional" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Cadastro">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Principal>
-            <Dependent Role="SIGSM_Visita_Domiciliar_Profissional">
-              <PropertyRef Name="num_contrato" />
-              <PropertyRef Name="id_profissional" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__ASSMED_CadastroC__625A9A57">
           <End Type="Domain.ASSMED_TipoCertidoes" Role="ASSMED_TipoCertidoes" Multiplicity="1" />
           <End Type="Domain.ASSMED_CadastroCertidoes" Role="ASSMED_CadastroCertidoes" Multiplicity="*" />
@@ -36602,18 +36516,6 @@ Endereço],
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="SIGSM_Visita_Domiciliar_Paciente">
-              <PropertyRef Name="id_visita_domiciliar" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SIGSM_Visita_Domiciliar_Profissional_SIGSM_Visita_Domiciliar">
-          <End Type="Domain.SIGSM_Visita_Domiciliar" Role="SIGSM_Visita_Domiciliar" Multiplicity="1" />
-          <End Type="Domain.SIGSM_Visita_Domiciliar_Profissional" Role="SIGSM_Visita_Domiciliar_Profissional" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SIGSM_Visita_Domiciliar">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="SIGSM_Visita_Domiciliar_Profissional">
               <PropertyRef Name="id_visita_domiciliar" />
             </Dependent>
           </ReferentialConstraint>
@@ -43953,18 +43855,6 @@ Endereço],
                 <ScalarProperty Name="data_nascimento" ColumnName="data_nascimento" />
                 <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
                 <ScalarProperty Name="id_paciente" ColumnName="id_paciente" />
-                <ScalarProperty Name="id_visita_domiciliar" ColumnName="id_visita_domiciliar" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SIGSM_Visita_Domiciliar_Profissional">
-            <EntityTypeMapping TypeName="Domain.SIGSM_Visita_Domiciliar_Profissional">
-              <MappingFragment StoreEntitySet="SIGSM_Visita_Domiciliar_Profissional">
-                <ScalarProperty Name="codibge_munic_nasc" ColumnName="codibge_munic_nasc" />
-                <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
-                <ScalarProperty Name="cbo" ColumnName="cbo" />
-                <ScalarProperty Name="id_profissional" ColumnName="id_profissional" />
                 <ScalarProperty Name="id_visita_domiciliar" ColumnName="id_visita_domiciliar" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
