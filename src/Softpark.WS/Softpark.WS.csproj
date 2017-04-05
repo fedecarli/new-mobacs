@@ -561,7 +561,7 @@
     <Content Include="Content\font-awesome-4.3.0\scss\_rotated-flipped.scss" />
     <Content Include="Content\font-awesome-4.3.0\scss\_stacked.scss" />
     <Content Include="Content\font-awesome-4.3.0\scss\_variables.scss" />
-    <Content Include="installation\api-1.3-rc2.sql" />
+    <Content Include="installation\api-1.3-final.sql" />
     <None Include="installation\lock" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

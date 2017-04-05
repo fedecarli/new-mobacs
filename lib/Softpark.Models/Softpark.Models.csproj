@@ -1526,6 +1526,9 @@
     <Compile Include="TipoOrigem.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="TipoOrigemVisita.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tipo_Atendimento.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -1756,6 +1759,9 @@
       <Project>{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}</Project>
       <Name>Softpark.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Api\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

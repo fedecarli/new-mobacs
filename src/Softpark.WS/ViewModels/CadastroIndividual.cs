@@ -9,14 +9,29 @@ namespace Softpark.WS.ViewModels
 {
     public class CadastroIndividualViewModelCollection : List<GetCadastroIndividualViewModel>
     {
-        public static implicit operator CadastroIndividualViewModelCollection(CadastroIndividual[] models)
+        public CadastroIndividualViewModelCollection() { }
+
+        public CadastroIndividualViewModelCollection(IEnumerable<CadastroIndividual> models)
         {
-            var collection = new CadastroIndividualViewModelCollection();
-            collection.AddRange(models);
-            return collection;
+            AddRange(models);
         }
 
-        public void AddRange(CadastroIndividual[] models)
+        public CadastroIndividualViewModelCollection(IEnumerable<GetCadastroIndividualViewModel> models)
+        {
+            AddRange(models);
+        }
+
+        public static implicit operator CadastroIndividualViewModelCollection(CadastroIndividual[] models)
+        {
+            return new CadastroIndividualViewModelCollection(models);
+        }
+
+        public static implicit operator CadastroIndividualViewModelCollection(GetCadastroIndividualViewModel[] models)
+        {
+            return new CadastroIndividualViewModelCollection(models);
+        }
+
+        public void AddRange(IEnumerable<CadastroIndividual> models)
         {
             foreach (var model in models)
             {

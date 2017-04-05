@@ -40,17 +40,17 @@ namespace Softpark.Models
 
         public static void Validar(this UnicaLotacaoTransport header)
         {
-            if (!Cns.isValidCns(header.profissionalCNS) ||
-                !DomainContainer.Current.ASSMED_CadastroDocPessoal.Any(x => x.Numero == header.profissionalCNS))
+            if (header.profissionalCNS == null || !Cns.isValidCns(header.profissionalCNS) ||
+                DomainContainer.Current.ASSMED_CadastroDocPessoal.All(x => x.Numero == null || x.Numero.Trim() != header.profissionalCNS))
                 throw new ValidationException("CNS não encontrado.");
 
-            if (DomainContainer.Current.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != header.cboCodigo_2002.Trim()))
+            if (DomainContainer.Current.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != header.cboCodigo_2002))
                 throw new ValidationException("CBO não encontrado.");
 
-            if (!DomainContainer.Current.AS_CredenciadosVinc.Any(x => x.CNESLocal == header.cnes))
+            if (DomainContainer.Current.AS_CredenciadosVinc.All(x => x.CNESLocal == null || x.CNESLocal.Trim() != header.cnes))
                 throw new ValidationException("CNES não encontrado.");
 
-            if (!DomainContainer.Current.SetoresINEs.Any(x => x.Numero == header.ine))
+            if (DomainContainer.Current.SetoresINEs.All(x => x.Numero == null || x.Numero.Trim() != header.ine))
                 throw new ValidationException("INE não encontrado.");
 
             var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento);
@@ -58,7 +58,7 @@ namespace Softpark.Models
             if (validEpoch != ValidationResult.Success)
                 throw new ValidationException("Campo 'dataAtendimento' inválido.");
 
-            if (!DomainContainer.Current.Cidade.Any(x => x.CodIbge == header.codigoIbgeMunicipio))
+            if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio))
                 throw new ValidationException("Município não encontrado.");
         }
 
@@ -141,8 +141,8 @@ namespace Softpark.Models
             if (child.stForaArea && child.microarea != null)
                 throw new ValidationException("A microárea não pode ser informada quando a visita for fora de área.");
 
-            if (child.microarea != null && (child.microarea.Trim().Length != 2 || !Regex.IsMatch(child.microarea.Trim(), "^([a-zA-Z0-9][a-zA-Z0-9])$")))
-                throw new ValidationException("A microárea deve ser informada com 2 caracteres alfanuméricos.");
+            if (child.microarea != null && (child.microarea.Trim().Length != 2 || !Regex.IsMatch(child.microarea.Trim(), "^([0-9][0-9])$")))
+                throw new ValidationException("A microárea deve ser informada com 2 caracteres numéricos.");
 
             if (child.tipoDeImovel < 1 || (child.tipoDeImovel > 12 && child.tipoDeImovel != 99))
                 throw new ValidationException("O tipo de imóvel informado é inválido.");
@@ -155,7 +155,7 @@ namespace Softpark.Models
                 if (child.desfecho == 3 || child.desfecho == 2)
                     throw new ValidationException("O peso não deve ser informado para o desfecho selecionado.");
 
-                var parts = child.pesoAcompanhamentoNutricional.ToString().Split('.');
+                var parts = child.pesoAcompanhamentoNutricional.ToString().Replace(',', '.').Split('.');
 
                 var validParts = parts.Length < 2 || (parts.Length == 2 && parts[1].Length <= 3);
                 var validSize = child.pesoAcompanhamentoNutricional >= 0.5m && child.pesoAcompanhamentoNutricional <= 500;
@@ -196,10 +196,10 @@ namespace Softpark.Models
             if (cond.descricaoOutraCondicao1 != null && cond.descricaoOutraCondicao1.Length > 100)
                 throw new ValidationException("A descrição da outra condição (1) aceita no máximo 100 caracteres.");
 
-            if (cond.descricaoOutraCondicao2 != null && cond.descricaoOutraCondicao1.Length > 100)
+            if (cond.descricaoOutraCondicao2 != null && cond.descricaoOutraCondicao2.Length > 100)
                 throw new ValidationException("A descrição da outra condição (2) aceita no máximo 100 caracteres.");
 
-            if (cond.descricaoOutraCondicao3 != null && cond.descricaoOutraCondicao1.Length > 100)
+            if (cond.descricaoOutraCondicao3 != null && cond.descricaoOutraCondicao3.Length > 100)
                 throw new ValidationException("A descrição da outra condição (3) aceita no máximo 100 caracteres.");
 
             if (cond.descricaoPlantasMedicinaisUsadas != null)
@@ -207,7 +207,7 @@ namespace Softpark.Models
                 if (!cond.statusUsaPlantasMedicinais)
                     throw new ValidationException("A descrição de plantas medicinais não deve ser preenchida.");
 
-                if (cond.descricaoOutraCondicao3 != null && cond.descricaoOutraCondicao1.Length > 100)
+                if (cond.descricaoPlantasMedicinaisUsadas.Length > 100)
                     throw new ValidationException("A descrição de plantas medicinais aceita no máximo 100 caracteres.");
             }
 
@@ -302,7 +302,7 @@ namespace Softpark.Models
             if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && !cond.statusSituacaoRua)
                 throw new ValidationException("A quantidade de alimentações ao dia não deve ser informada para este caso.");
 
-            if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && !DomainContainer.Current.TP_Quantas_Vezes_Alimentacao.Any(x => x.codigo == cond.quantidadeAlimentacoesAoDiaSituacaoRua))
+            if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && DomainContainer.Current.TP_Quantas_Vezes_Alimentacao.Any(x => x.codigo != cond.quantidadeAlimentacoesAoDiaSituacaoRua))
                 throw new ValidationException("A quantidade de alimentações ao dia é inválida.");
 
             if (cond.statusAcompanhadoPorOutraInstituicao && !cond.statusSituacaoRua)
@@ -323,7 +323,7 @@ namespace Softpark.Models
             if (cond.tempoSituacaoRua != null && !cond.statusSituacaoRua)
                 throw new ValidationException("O tempo de situação de rua não deve ser informado para este caso.");
 
-            if (cond.tempoSituacaoRua != null && !DomainContainer.Current.TP_Sit_Rua.Any(x => x.codigo == cond.tempoSituacaoRua))
+            if (cond.tempoSituacaoRua != null && DomainContainer.Current.TP_Sit_Rua.Any(x => x.codigo != cond.tempoSituacaoRua))
                 throw new ValidationException("O tempo de situação de rua é inválido.");
         }
 
@@ -411,7 +411,7 @@ namespace Softpark.Models
             {
                 if ((cond.paisNascimento != 31 && cond.nacionalidadeCidadao == 1) || (cond.paisNascimento == 31 && cond.nacionalidadeCidadao != 1))
                     throw new ValidationException("O país de nascimento não corresponde à nacionalidade do cidadão.");
-                /// FIXME - Se houver problemas com o thrift no campo de paisNascimento para nacionalidadeCidadao = 2, descomentar o código abaixo
+                /* FIXME - Se houver problemas com o thrift no campo de paisNascimento para nacionalidadeCidadao = 2, descomentar o código abaixo */
                 //else if (cond.nacionalidadeCidadao == 2)
                 //    throw new ValidationException("O país de nascimento não deve ser informado para cidadão naturalizado.");
             }
@@ -467,8 +467,8 @@ namespace Softpark.Models
             if (cond.microarea == null && !cond.stForaArea)
                 throw new ValidationException("A microárea é obrigatória.");
 
-            if (cond.microarea != null && (cond.microarea.Length != 2 || !Regex.IsMatch(cond.microarea, "([^a-zA-Z0-9])")))
-                throw new ValidationException("O código da microárea é inválido.");
+            if (cond.microarea != null && (cond.microarea.Length != 2 || !Regex.IsMatch(cond.microarea, "^([0-9][0-9])$")))
+                throw new ValidationException("O código da microárea é inválido. Informe 2 caracteres numéricos.");
         }
 
         public static void Validar(this InformacoesSocioDemograficas cond, CadastroIndividual cad)
@@ -503,9 +503,12 @@ namespace Softpark.Models
             if (cond.povoComunidadeTradicional != null && cond.povoComunidadeTradicional.Length > 100)
                 throw new ValidationException("O povo de comunidade tradicioinal aceita somente 100 caracteres.");
 
-            if (cond.relacaoParentescoCidadao != null && DomainContainer.Current.TP_Relacao_Parentesco.Any(x => x.codigo == cond.relacaoParentescoCidadao)
-                && cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
+            if (cond.relacaoParentescoCidadao != null && cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
                 throw new ValidationException("A relação de parentesco não pode ser preenchida.");
+                
+            if (cond.relacaoParentescoCidadao != null && DomainContainer.Current.TP_Relacao_Parentesco.All(x => x.codigo != cond.relacaoParentescoCidadao)
+                    && !cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
+                throw new ValidationException("A relação de parentesco é inválida.");
 
             if (cond.situacaoMercadoTrabalhoCidadao != null && DomainContainer.Current.TP_Sit_Mercado.All(x => x.codigo != cond.situacaoMercadoTrabalhoCidadao))
                 throw new ValidationException("A situação no mercado de trabalho é inválida.");
@@ -559,10 +562,17 @@ namespace Softpark.Models
 
             cad.InformacoesSocioDemograficas1?.Validar(cad);
 
+            if(!cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift)
+            {
+                cad.uuidFichaOriginadora = cad.UnicaLotacaoTransport.cnes + '-' + cad.id;
+                cad.fichaAtualizada = false;
+            }
+
             if (cad.uuidFichaOriginadora == null && cad.fichaAtualizada)
                 throw new ValidationException("Informe o Uuid da ficha originadora.");
 
-            if (cad.uuidFichaOriginadora != null && (cad.uuidFichaOriginadora != cad.UnicaLotacaoTransport.cnes + '-' + cad.id && (cad.uuidFichaOriginadora.Trim().Length != 44 ||
+            if (cad.uuidFichaOriginadora != null &&
+                (cad.uuidFichaOriginadora != cad.UnicaLotacaoTransport.cnes + '-' + cad.id && (cad.uuidFichaOriginadora.Trim().Length != 44 ||
                 cad.uuidFichaOriginadora.Substring(0, 7) != cad.UnicaLotacaoTransport.cnes)))
                 throw new ValidationException("Uuid inválido. O CNES informado não corresponde ao cabeçalho.");
 
@@ -685,7 +695,7 @@ namespace Softpark.Models
             if (cond.telelefoneResidencia != null && (cond.telelefoneResidencia.Length < 10 || cond.telelefoneResidencia.Length > 11))
                 throw new ValidationException("O telefone da residência é inválido.");
 
-            if (cond.tipoLogradouroNumeroDne == null || DomainContainer.Current.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO != cond.tipoLogradouroNumeroDne))
+            if (cond.tipoLogradouroNumeroDne == null || DomainContainer.Current.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO == null || x.CO_TIPO_LOGRADOURO.Trim() != cond.tipoLogradouroNumeroDne))
                 throw new ValidationException("O tipo de logradouro é inválido.");
 
             if (cond.pontoReferencia != null && cond.pontoReferencia.Length > 40)
@@ -697,8 +707,8 @@ namespace Softpark.Models
             if (cond.microarea == null && !cond.stForaArea)
                 throw new ValidationException("A microárea deve ser informada para este local de permanência.");
 
-            if (cond.microarea != null && !Regex.IsMatch(cond.microarea, "^([a-zA-Z0-9][a-zA-Z0-9])$"))
-                throw new ValidationException("A microárea é inválida.");
+            if (cond.microarea != null && !Regex.IsMatch(cond.microarea, "^([0-9][0-9])$"))
+                throw new ValidationException("A microárea é inválida. Informe 2 digitos numéricos.");
         }
 
         private static Func<UF, string> RowNumberPad(char c, int l)

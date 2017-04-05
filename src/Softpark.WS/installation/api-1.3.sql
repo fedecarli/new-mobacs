@@ -208,8 +208,7 @@ CREATE PROCEDURE PR_INT_CadastroCredenciado (
 	@codSetor INT,
 	@matricula NCHAR(15) = NULL,
 	@codINE INT = NULL,
-	@codConv INT,
-	@cnes NCHAR(7)
+	@codConv INT
 ) AS
 BEGIN
 BEGIN TRANSACTION
@@ -250,7 +249,7 @@ BEGIN TRY
 
 	INSERT INTO [dbo].[AS_CredenciadosVinc] ([NumContrato], [CodCred], [ItemVinc], [CodRegime], [CodProfTab], [CodTabProfissao], [CodSetor], [CNESLocal],
 				[Matricula], [DtInicio], [CodUsu], [CodConv], [CodINE]) VALUES
-		(22, @codCred, @itemVinc, @regime, @codProfTab, @codTabProf, @codSetor, @cnes, @matricula, GETDATE(), @codUsu, @codConv, @codINE);
+		(22, @codCred, @itemV, @regime, @codProfTab, @codTabProf, @codSetor, @cnes, @matricula, GETDATE(), @codUsu, @codConv, @codINE);
 
 	COMMIT TRANSACTION;
 END TRY

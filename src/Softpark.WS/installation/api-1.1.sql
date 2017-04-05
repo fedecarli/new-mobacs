@@ -7,13 +7,13 @@ GO
 
 ALTER VIEW [api].[VW_Profissional] AS
 		 SELECT ROW_NUMBER() OVER (ORDER BY cad.Nome) as id, doc.Numero as [CNS],
-				cad.Nome as [Nome],
- 				cbo.CodProfTab as [CBO],
-				cbo.DesProfTab as [Profissao],
-				vinc.CNESLocal AS [CNES],
-				setor.DesSetor AS [Unidade],
-				ine.Numero	   AS [INE],
-				ine.Descricao  AS [Equipe]
+				cad.Nome	   COLLATE Latin1_General_CI_AI as [Nome],
+ 				cbo.CodProfTab COLLATE Latin1_General_CI_AI as [CBO],
+				cbo.DesProfTab COLLATE Latin1_General_CI_AI as [Profissao],
+				vinc.CNESLocal COLLATE Latin1_General_CI_AI AS [CNES],
+				setor.DesSetor COLLATE Latin1_General_CI_AI AS [Unidade],
+				ine.Numero	   COLLATE Latin1_General_CI_AI AS [INE],
+				ine.Descricao  COLLATE Latin1_General_CI_AI AS [Equipe]
 		   FROM [dbo].[ASSMED_Cadastro]					AS cad
 	 INNER JOIN [dbo].[ASSMED_CadastroDocPessoal]		AS doc
 			 ON cad.Codigo = doc.Codigo
@@ -22,7 +22,7 @@ ALTER VIEW [api].[VW_Profissional] AS
 	 INNER JOIN [dbo].[AS_CredenciadosVinc]				AS vinc
 			 ON cred.CodCred = vinc.CodCred
 	 INNER JOIN [dbo].[AS_ProfissoesTab]				AS cbo
-			 ON vinc.CodProfTab = cbo.CodProfTab
+			 ON (vinc.CodProfTab COLLATE Latin1_General_CI_AI) = cbo.CodProfTab
 	 INNER JOIN [dbo].[AS_SetoresPar]					AS par
 			 ON vinc.CNESLocal = par.CNES
 	 INNER JOIN [dbo].[Setores]							AS setor

@@ -69,12 +69,13 @@ namespace Softpark.WS.Controllers.Api
         /// <returns>Token para envio das fichas</returns>
         [Route("enviar/cabecalho")]
         [HttpPost, ResponseType(typeof(Guid))]
-        public async Task<IHttpActionResult> enviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
+        public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
             var origem = Domain.OrigemVisita.Create();
 
             origem.token = Guid.NewGuid();
             origem.id_tipo_origem = 1;
+            origem.enviarParaThrift = true;
             
             Domain.OrigemVisita.Add(origem);
 
@@ -102,7 +103,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [Route("enviar/visita/child")]
         [HttpPost, ResponseType(typeof(bool))]
-        public async Task<IHttpActionResult> enviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
+        public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
             var master = await GetOrCreateMaster(child.token);
             
@@ -145,7 +146,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [Route("enviar/cadastro/individual")]
         [HttpPost, ResponseType(typeof(bool))]
-        public async Task<IHttpActionResult> enviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
+        public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
             var origem = await Domain.OrigemVisita.FindAsync(cadInd.token);
 
@@ -176,7 +177,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [Route("enviar/cadastro/domiciliar")]
         [HttpPost, ResponseType(typeof(bool))]
-        public async Task<IHttpActionResult> enviarCadastroDomiciliar([FromBody, Required] CadastroDomiciliarViewModel cadDom)
+        public async Task<IHttpActionResult> EnviarCadastroDomiciliar([FromBody, Required] CadastroDomiciliarViewModel cadDom)
         {
             var origem = await Domain.OrigemVisita.FindAsync(cadDom.token);
 
@@ -206,7 +207,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [Route("encerrar/{token}")]
         [HttpPost, ResponseType(typeof(bool))]
-        public async Task<IHttpActionResult> finalizarTransmissao([FromUri, Required] Guid token)
+        public async Task<IHttpActionResult> FinalizarTransmissao([FromUri, Required] Guid token)
         {
             var origem = await Domain.OrigemVisita.FindAsync(token);
 

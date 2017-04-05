@@ -18,6 +18,13 @@ namespace Softpark.WS.ViewModels
             return collection;
         }
 
+        public static implicit operator FichaVisitaDomiciliarChildCadastroViewModelCollection(FichaVisitaDomiciliarChildCadastroViewModel[] models)
+        {
+            var collection = new FichaVisitaDomiciliarChildCadastroViewModelCollection();
+            collection.AddRange(models);
+            return collection;
+        }
+
         public void AddRange(FichaVisitaDomiciliarChild[] models)
         {
             foreach (var model in models)

@@ -9,6 +9,7 @@ using Softpark.Models;
 using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Text.RegularExpressions;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -625,17 +626,23 @@ namespace Softpark.WS.Controllers.Api
         /// Buscar pacientes atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
+        /// <param name="microarea"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/paciente/{token:guid}", Name = "PacienteSupplyAction")]
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
-        public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token)
+        public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
 
             CadastroIndividualViewModelCollection results = GetHeadersBy(headerToken).SelectMany(x => x.CadastroIndividual).ToArray();
+
+            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            {
+                results = results.Where(r => r.identificacaoUsuarioCidadao == null || r.identificacaoUsuarioCidadao.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
+            }
 
             return Ok(results.ToArray());
         }
@@ -644,17 +651,25 @@ namespace Softpark.WS.Controllers.Api
         /// Buscar domicílios atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
+        /// <param name="microarea"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
         [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
-        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token)
+        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
 
-            CadastroDomiciliarViewModelCollection results = GetHeadersBy(headerToken).SelectMany(x => x.CadastroDomiciliar).ToArray();
+            var cadastros = GetHeadersBy(headerToken).SelectMany(x => x.CadastroDomiciliar);
+            
+            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            {
+                cadastros = cadastros.Where(r => r.EnderecoLocalPermanencia1 == null || r.EnderecoLocalPermanencia1.microarea == null || r.EnderecoLocalPermanencia1.microarea == microarea);
+            }
+
+            CadastroDomiciliarViewModelCollection results = cadastros.ToArray();
 
             return Ok(results.ToArray());
         }
@@ -663,11 +678,12 @@ namespace Softpark.WS.Controllers.Api
         /// Buscar visitas realizadas pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
+        /// <param name="microarea"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/visita/{token:guid}", Name = "VisitaSupplyAction")]
         [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
-        public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token)
+        public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             var headerToken = await GetHeader(token);
 
@@ -675,6 +691,11 @@ namespace Softpark.WS.Controllers.Api
 
             FichaVisitaDomiciliarChildCadastroViewModelCollection results = GetHeadersBy(headerToken)
                 .SelectMany(f => f.FichaVisitaDomiciliarMaster).SelectMany(f => f.FichaVisitaDomiciliarChild).ToArray();
+
+            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            {
+                results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
+            }
 
             return Ok(results.ToArray());
         }
