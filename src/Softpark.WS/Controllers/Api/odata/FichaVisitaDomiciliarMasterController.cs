@@ -23,7 +23,7 @@ namespace Softpark.WS.Controllers.Api.odata
     using System.Web.Http.OData.Extensions;
     using Softpark.Models;
     ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<FichaVisitaDomiciliarMaster>("FichaVisitaDomiciliarMasters");
+    builder.EntitySet<FichaVisitaDomiciliarMaster>("FichaVisitaDomiciliarMaster");
     builder.EntitySet<FichaVisitaDomiciliarChild>("FichaVisitaDomiciliarChild"); 
     builder.EntitySet<UnicaLotacaoTransport>("UnicaLotacaoTransport"); 
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
@@ -32,7 +32,7 @@ namespace Softpark.WS.Controllers.Api.odata
     {
         private DomainContainer db = new DomainContainer();
 
-        // GET: odata/FichaVisitaDomiciliarMasters
+        // GET: odata/FichaVisitaDomiciliarMaster
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.All,
             AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
@@ -41,12 +41,12 @@ namespace Softpark.WS.Controllers.Api.odata
             EnableConstantParameterization = true,
             HandleNullPropagation = HandleNullPropagationOption.Default
         )]
-        public IQueryable<FichaVisitaDomiciliarMaster> GetFichaVisitaDomiciliarMasters()
+        public IQueryable<FichaVisitaDomiciliarMaster> GetFichaVisitaDomiciliarMaster()
         {
             return db.FichaVisitaDomiciliarMaster;
         }
 
-        // GET: odata/FichaVisitaDomiciliarMasters(5)
+        // GET: odata/FichaVisitaDomiciliarMaster(5)
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.All,
             AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
@@ -60,7 +60,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return SingleResult.Create(db.FichaVisitaDomiciliarMaster.Where(fichaVisitaDomiciliarMaster => fichaVisitaDomiciliarMaster.uuidFicha == key));
         }
 
-        // PUT: odata/FichaVisitaDomiciliarMasters(5)
+        // PUT: odata/FichaVisitaDomiciliarMaster(5)
         public async Task<IHttpActionResult> Put([FromODataUri] string key, Delta<FichaVisitaDomiciliarMaster> patch)
         {
             Validate(patch.GetEntity());
@@ -97,7 +97,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return Updated(fichaVisitaDomiciliarMaster);
         }
 
-        // POST: odata/FichaVisitaDomiciliarMasters
+        // POST: odata/FichaVisitaDomiciliarMaster
         public async Task<IHttpActionResult> Post(FichaVisitaDomiciliarMaster fichaVisitaDomiciliarMaster)
         {
             if (!ModelState.IsValid)
@@ -126,7 +126,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return Created(fichaVisitaDomiciliarMaster);
         }
 
-        // PATCH: odata/FichaVisitaDomiciliarMasters(5)
+        // PATCH: odata/FichaVisitaDomiciliarMaster(5)
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] string key, Delta<FichaVisitaDomiciliarMaster> patch)
         {
@@ -164,7 +164,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return Updated(fichaVisitaDomiciliarMaster);
         }
 
-        // DELETE: odata/FichaVisitaDomiciliarMasters(5)
+        // DELETE: odata/FichaVisitaDomiciliarMaster(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] string key)
         {
             FichaVisitaDomiciliarMaster fichaVisitaDomiciliarMaster = await db.FichaVisitaDomiciliarMaster.FindAsync(key);
@@ -179,7 +179,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: odata/FichaVisitaDomiciliarMasters(5)/FichaVisitaDomiciliarChild
+        // GET: odata/FichaVisitaDomiciliarMaster(5)/FichaVisitaDomiciliarChild
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.All,
             AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
@@ -193,7 +193,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return db.FichaVisitaDomiciliarMaster.Where(m => m.uuidFicha == key).SelectMany(m => m.FichaVisitaDomiciliarChild);
         }
 
-        // GET: odata/FichaVisitaDomiciliarMasters(5)/UnicaLotacaoTransport
+        // GET: odata/FichaVisitaDomiciliarMaster(5)/UnicaLotacaoTransport
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.All,
             AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,

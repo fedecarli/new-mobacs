@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using Softpark.Models;
+using System.Web.Http.OData.Query;
 
 namespace Softpark.WS.Controllers.Api.odata
 {
@@ -22,32 +23,46 @@ namespace Softpark.WS.Controllers.Api.odata
     using System.Web.Http.OData.Extensions;
     using Softpark.Models;
     ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<UnicaLotacaoTransport>("UnicaLotacaoTransports");
+    builder.EntitySet<UnicaLotacaoTransport>("UnicaLotacaoTransport");
     builder.EntitySet<CadastroDomiciliar>("CadastroDomiciliar"); 
     builder.EntitySet<CadastroIndividual>("CadastroIndividual"); 
     builder.EntitySet<FichaVisitaDomiciliarMaster>("FichaVisitaDomiciliarMaster"); 
     builder.EntitySet<OrigemVisita>("OrigemVisita"); 
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
-    public class UnicaLotacaoTransportsController : ODataController
+    public class UnicaLotacaoTransportController : ODataController
     {
         private DomainContainer db = new DomainContainer();
 
-        // GET: odata/UnicaLotacaoTransports
-        [EnableQuery]
-        public IQueryable<UnicaLotacaoTransport> GetUnicaLotacaoTransports()
+        // GET: odata/UnicaLotacaoTransport
+        [EnableQuery(
+            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedLogicalOperators = AllowedLogicalOperators.All,
+            AllowedQueryOptions = AllowedQueryOptions.All,
+            EnableConstantParameterization = true,
+            HandleNullPropagation = HandleNullPropagationOption.Default
+        )]
+        public IQueryable<UnicaLotacaoTransport> GetUnicaLotacaoTransport()
         {
             return db.UnicaLotacaoTransport;
         }
 
-        // GET: odata/UnicaLotacaoTransports(5)
-        [EnableQuery]
+        // GET: odata/UnicaLotacaoTransport(5)
+        [EnableQuery(
+            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedLogicalOperators = AllowedLogicalOperators.All,
+            AllowedQueryOptions = AllowedQueryOptions.All,
+            EnableConstantParameterization = true,
+            HandleNullPropagation = HandleNullPropagationOption.Default
+        )]
         public SingleResult<UnicaLotacaoTransport> GetUnicaLotacaoTransport([FromODataUri] Guid key)
         {
             return SingleResult.Create(db.UnicaLotacaoTransport.Where(unicaLotacaoTransport => unicaLotacaoTransport.id == key));
         }
 
-        // PUT: odata/UnicaLotacaoTransports(5)
+        // PUT: odata/UnicaLotacaoTransport(5)
         public async Task<IHttpActionResult> Put([FromODataUri] Guid key, Delta<UnicaLotacaoTransport> patch)
         {
             Validate(patch.GetEntity());
@@ -84,7 +99,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return Updated(unicaLotacaoTransport);
         }
 
-        // POST: odata/UnicaLotacaoTransports
+        // POST: odata/UnicaLotacaoTransport
         public async Task<IHttpActionResult> Post(UnicaLotacaoTransport unicaLotacaoTransport)
         {
             if (!ModelState.IsValid)
@@ -113,7 +128,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return Created(unicaLotacaoTransport);
         }
 
-        // PATCH: odata/UnicaLotacaoTransports(5)
+        // PATCH: odata/UnicaLotacaoTransport(5)
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] Guid key, Delta<UnicaLotacaoTransport> patch)
         {
@@ -151,7 +166,7 @@ namespace Softpark.WS.Controllers.Api.odata
             return Updated(unicaLotacaoTransport);
         }
 
-        // DELETE: odata/UnicaLotacaoTransports(5)
+        // DELETE: odata/UnicaLotacaoTransport(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] Guid key)
         {
             UnicaLotacaoTransport unicaLotacaoTransport = await db.UnicaLotacaoTransport.FindAsync(key);
@@ -166,29 +181,57 @@ namespace Softpark.WS.Controllers.Api.odata
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: odata/UnicaLotacaoTransports(5)/CadastroDomiciliar
-        [EnableQuery]
+        // GET: odata/UnicaLotacaoTransport(5)/CadastroDomiciliar
+        [EnableQuery(
+            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedLogicalOperators = AllowedLogicalOperators.All,
+            AllowedQueryOptions = AllowedQueryOptions.All,
+            EnableConstantParameterization = true,
+            HandleNullPropagation = HandleNullPropagationOption.Default
+        )]
         public IQueryable<CadastroDomiciliar> GetCadastroDomiciliar([FromODataUri] Guid key)
         {
             return db.UnicaLotacaoTransport.Where(m => m.id == key).SelectMany(m => m.CadastroDomiciliar);
         }
 
-        // GET: odata/UnicaLotacaoTransports(5)/CadastroIndividual
-        [EnableQuery]
+        // GET: odata/UnicaLotacaoTransport(5)/CadastroIndividual
+        [EnableQuery(
+            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedLogicalOperators = AllowedLogicalOperators.All,
+            AllowedQueryOptions = AllowedQueryOptions.All,
+            EnableConstantParameterization = true,
+            HandleNullPropagation = HandleNullPropagationOption.Default
+        )]
         public IQueryable<CadastroIndividual> GetCadastroIndividual([FromODataUri] Guid key)
         {
             return db.UnicaLotacaoTransport.Where(m => m.id == key).SelectMany(m => m.CadastroIndividual);
         }
 
-        // GET: odata/UnicaLotacaoTransports(5)/FichaVisitaDomiciliarMaster
-        [EnableQuery]
+        // GET: odata/UnicaLotacaoTransport(5)/FichaVisitaDomiciliarMaster
+        [EnableQuery(
+            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedLogicalOperators = AllowedLogicalOperators.All,
+            AllowedQueryOptions = AllowedQueryOptions.All,
+            EnableConstantParameterization = true,
+            HandleNullPropagation = HandleNullPropagationOption.Default
+        )]
         public IQueryable<FichaVisitaDomiciliarMaster> GetFichaVisitaDomiciliarMaster([FromODataUri] Guid key)
         {
             return db.UnicaLotacaoTransport.Where(m => m.id == key).SelectMany(m => m.FichaVisitaDomiciliarMaster);
         }
 
-        // GET: odata/UnicaLotacaoTransports(5)/OrigemVisita
-        [EnableQuery]
+        // GET: odata/UnicaLotacaoTransport(5)/OrigemVisita
+        [EnableQuery(
+            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedLogicalOperators = AllowedLogicalOperators.All,
+            AllowedQueryOptions = AllowedQueryOptions.All,
+            EnableConstantParameterization = true,
+            HandleNullPropagation = HandleNullPropagationOption.Default
+        )]
         public SingleResult<OrigemVisita> GetOrigemVisita([FromODataUri] Guid key)
         {
             return SingleResult.Create(db.UnicaLotacaoTransport.Where(m => m.id == key).Select(m => m.OrigemVisita));

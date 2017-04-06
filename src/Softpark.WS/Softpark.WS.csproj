@@ -403,7 +403,7 @@
     <Compile Include="Controllers\Api\odata\FichaVisitaDomiciliarMasterController.cs" />
     <Compile Include="Controllers\Api\odata\IndividuoController.cs" />
     <Compile Include="Controllers\Api\odata\SIGSM_MotivoVisitaController.cs" />
-    <Compile Include="Controllers\Api\odata\UnicaLotacaoTransportsController.cs" />
+    <Compile Include="Controllers\Api\odata\UnicaLotacaoTransportController.cs" />
     <Compile Include="Controllers\Api\ProcessosController.cs" />
     <Compile Include="Controllers\Api\odata\ProfissionalController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
