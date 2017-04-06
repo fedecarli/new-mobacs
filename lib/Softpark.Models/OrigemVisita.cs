@@ -29,6 +29,5 @@ namespace Softpark.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UnicaLotacaoTransport> UnicaLotacaoTransport { get; set; }
         public virtual TipoOrigem TipoOrigem { get; set; }
-        public virtual TipoOrigemVisita TipoOrigemVisita1 { get; set; }
     }
 }

@@ -336,13 +336,6 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descricao" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="TipoOrigemVisita">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nome" Type="nvarchar" MaxLength="50" />
-        </EntityType>
         <EntityType Name="UnicaLotacaoTransport">
           <Key>
             <PropertyRef Name="id" />
@@ -14725,18 +14718,6 @@ warning 6035: The relationship 'FK_OrigemAlimentoSituacaoRua_TP_Origem_Alimentac
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrigemVisita_TipoOrigemVisita">
-          <End Role="TipoOrigemVisita" Type="Self.TipoOrigemVisita" Multiplicity="1" />
-          <End Role="OrigemVisita" Type="Self.OrigemVisita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TipoOrigemVisita">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="OrigemVisita">
-              <PropertyRef Name="tipoOrigemVisita" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Procedimento_Sigtap_AS_Procedimentos">
           <End Role="AS_Procedimentos" Type="Self.AS_Procedimentos" Multiplicity="1" />
           <End Role="SIGSM_Procedimento_Sigtap" Type="Self.SIGSM_Procedimento_Sigtap" Multiplicity="*" />
@@ -15399,7 +15380,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="ResponsavelPorCrianca" EntityType="Self.ResponsavelPorCrianca" Schema="api" store:Type="Tables" />
           <EntitySet Name="SaidaCidadaoCadastro" EntityType="Self.SaidaCidadaoCadastro" Schema="api" store:Type="Tables" />
           <EntitySet Name="TipoOrigem" EntityType="Self.TipoOrigem" Schema="api" store:Type="Tables" />
-          <EntitySet Name="TipoOrigemVisita" EntityType="Self.TipoOrigemVisita" Schema="api" store:Type="Tables" />
           <EntitySet Name="UnicaLotacaoTransport" EntityType="Self.UnicaLotacaoTransport" Schema="api" store:Type="Tables" />
           <EntitySet Name="ACADEMIA_Aparelhos" EntityType="Self.ACADEMIA_Aparelhos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ACADEMIA_Exercicios" EntityType="Self.ACADEMIA_Exercicios" Schema="dbo" store:Type="Tables" />
@@ -18353,10 +18333,6 @@ Endereço],
             <End Role="TipoOrigem" EntitySet="TipoOrigem" />
             <End Role="OrigemVisita" EntitySet="OrigemVisita" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrigemVisita_TipoOrigemVisita" Association="Self.FK_OrigemVisita_TipoOrigemVisita">
-            <End Role="TipoOrigemVisita" EntitySet="TipoOrigemVisita" />
-            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
-          </AssociationSet>
           <AssociationSet Name="FK_Procedimento_Sigtap_AS_Procedimentos" Association="Self.FK_Procedimento_Sigtap_AS_Procedimentos">
             <End Role="AS_Procedimentos" EntitySet="AS_Procedimentos" />
             <End Role="SIGSM_Procedimento_Sigtap" EntitySet="SIGSM_Procedimento_Sigtap" />
@@ -20953,11 +20929,6 @@ Endereço],
             <Parameter Name="alturaAcompanhamentoNutricional" Mode="In" Type="Decimal" />
             <Parameter Name="statusVisitaCompartilhadaOutroProfissional" Mode="In" Type="Boolean" />
           </FunctionImport>
-          <EntitySet Name="TipoOrigemVisita" EntityType="Domain.TipoOrigemVisita" />
-          <AssociationSet Name="FK_OrigemVisita_TipoOrigemVisita" Association="Domain.FK_OrigemVisita_TipoOrigemVisita">
-            <End Role="TipoOrigemVisita" EntitySet="TipoOrigemVisita" />
-            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
-          </AssociationSet>
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
           <Key>
@@ -21299,7 +21270,6 @@ Endereço],
           <NavigationProperty Name="TipoOrigem" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="OrigemVisita" ToRole="TipoOrigem" />
           <Property Name="tipoOrigemVisita" Type="Int32" Nullable="false" />
           <Property Name="enviarParaThrift" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TipoOrigemVisita1" Relationship="Domain.FK_OrigemVisita_TipoOrigemVisita" FromRole="OrigemVisita" ToRole="TipoOrigemVisita" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
           <Key>
@@ -36942,26 +36912,6 @@ Endereço],
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TipoOrigemVisita">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nome" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="OrigemVisita" Relationship="Domain.FK_OrigemVisita_TipoOrigemVisita" FromRole="TipoOrigemVisita" ToRole="OrigemVisita" />
-        </EntityType>
-        <Association Name="FK_OrigemVisita_TipoOrigemVisita">
-          <End Type="Domain.TipoOrigemVisita" Role="TipoOrigemVisita" Multiplicity="1" />
-          <End Type="Domain.OrigemVisita" Role="OrigemVisita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TipoOrigemVisita">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="OrigemVisita">
-              <PropertyRef Name="tipoOrigemVisita" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -45479,14 +45429,6 @@ Endereço],
               <MappingFragment StoreEntitySet="TipoOrigem">
                 <ScalarProperty Name="Descricao" ColumnName="Descricao" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TipoOrigemVisita">
-            <EntityTypeMapping TypeName="Domain.TipoOrigemVisita">
-              <MappingFragment StoreEntitySet="TipoOrigemVisita">
-                <ScalarProperty Name="Nome" ColumnName="Nome" />
-                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
