@@ -1526,9 +1526,6 @@
     <Compile Include="TipoOrigem.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="TipoOrigemVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
     <Compile Include="Tipo_Atendimento.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
