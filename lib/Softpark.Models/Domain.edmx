@@ -308,7 +308,6 @@
           </Key>
           <Property Name="token" Type="uniqueidentifier" Nullable="false" />
           <Property Name="finalizado" Type="bit" Nullable="false" />
-          <Property Name="tipoOrigemVisita" Type="int" Nullable="false" />
           <Property Name="id_tipo_origem" Type="int" Nullable="false" />
           <Property Name="enviarParaThrift" Type="bit" Nullable="false" />
         </EntityType>
@@ -21268,7 +21267,6 @@ Endereço],
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_UnicaLotacaoTransport_OrigemVisita" FromRole="OrigemVisita" ToRole="UnicaLotacaoTransport" />
           <Property Name="id_tipo_origem" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TipoOrigem" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="OrigemVisita" ToRole="TipoOrigem" />
-          <Property Name="tipoOrigemVisita" Type="Int32" Nullable="false" />
           <Property Name="enviarParaThrift" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
@@ -37218,7 +37216,6 @@ Endereço],
             <EntityTypeMapping TypeName="Domain.OrigemVisita">
               <MappingFragment StoreEntitySet="OrigemVisita">
                 <ScalarProperty Name="enviarParaThrift" ColumnName="enviarParaThrift" />
-                <ScalarProperty Name="tipoOrigemVisita" ColumnName="tipoOrigemVisita" />
                 <ScalarProperty Name="id_tipo_origem" ColumnName="id_tipo_origem" />
                 <ScalarProperty Name="finalizado" ColumnName="finalizado" />
                 <ScalarProperty Name="token" ColumnName="token" />
