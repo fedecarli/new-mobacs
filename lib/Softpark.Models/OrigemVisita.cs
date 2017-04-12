@@ -18,15 +18,19 @@ namespace Softpark.Models
         public OrigemVisita()
         {
             this.UnicaLotacaoTransport = new HashSet<UnicaLotacaoTransport>();
+            this.RastroFicha = new HashSet<RastroFicha>();
         }
     
         public System.Guid token { get; set; }
         public bool finalizado { get; set; }
         public int id_tipo_origem { get; set; }
         public bool enviarParaThrift { get; set; }
+        public bool enviado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UnicaLotacaoTransport> UnicaLotacaoTransport { get; set; }
         public virtual TipoOrigem TipoOrigem { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RastroFicha> RastroFicha { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Web.Http.OData.Query;
 
 namespace Softpark.WS.Controllers.Api.odata
 {
+    [Authorize]
     public class ProfissionalController : ODataController
     {
         private DomainContainer db = new DomainContainer();

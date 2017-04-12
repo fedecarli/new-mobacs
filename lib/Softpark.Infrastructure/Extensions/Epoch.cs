@@ -21,6 +21,19 @@ namespace Softpark.Infrastructure.Extras
         }
 
         /// <summary>
+        /// Convert unix date representation to DateTime
+        /// </summary>
+        /// <param name="unix">The unix date representation.</param>
+        /// <param name="isUtc">Set false if unix date representation is not a UTC.</param>
+        /// <returns>DateTime</returns>
+        public static DateTime? FromUnix(this long? unix, bool isUtc = true)
+        {
+            if (!unix.HasValue) return null;
+            
+            return unix.Value.FromUnix();
+        }
+
+        /// <summary>
         /// Convert a DateTime to unix date represantation
         /// </summary>
         /// <param name="date">DateTime</param>
@@ -29,6 +42,18 @@ namespace Softpark.Infrastructure.Extras
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, date.Kind);
             return (long)(date - epoch).TotalSeconds;
+        }
+
+        /// <summary>
+        /// Convert a DateTime to unix date represantation
+        /// </summary>
+        /// <param name="date">DateTime</param>
+        /// <returns>The unix date representation</returns>
+        public static long? ToUnix(this DateTime? date)
+        {
+            if (!date.HasValue) return null;
+
+            return date.Value.ToUnix();
         }
 
         /// <summary>

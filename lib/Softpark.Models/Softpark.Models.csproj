@@ -1303,6 +1303,9 @@
     <Compile Include="RacaCor.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="RastroFicha.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="RegimeJuridico.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -1670,6 +1673,7 @@
     <Compile Include="UnicaLotacaoTransport.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="Classes.cs" />
     <Compile Include="VW_ATENDIMENTO_DOMICILIAR.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -1711,6 +1715,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_USUARIO.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_VISITAS.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_VISITA_DOMICILIAR.cs">

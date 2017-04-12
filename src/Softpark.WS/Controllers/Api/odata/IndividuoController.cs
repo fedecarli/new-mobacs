@@ -26,6 +26,7 @@ namespace Softpark.WS.Controllers.Api.odata
     builder.EntitySet<VW_INDIVIDUAIS>("Individuo");
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
+    [Authorize]
     public class IndividuoController : ODataController
     {
         private DomainContainer db = new DomainContainer();
@@ -33,7 +34,7 @@ namespace Softpark.WS.Controllers.Api.odata
         // GET: odata/Individuo
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf | AllowedFunctions.Length,
             AllowedLogicalOperators = AllowedLogicalOperators.All,
             AllowedQueryOptions = AllowedQueryOptions.All,
             EnableConstantParameterization = true,
@@ -47,7 +48,7 @@ namespace Softpark.WS.Controllers.Api.odata
         // GET: odata/Individuo(5)
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
+            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf | AllowedFunctions.Length,
             AllowedLogicalOperators = AllowedLogicalOperators.All,
             AllowedQueryOptions = AllowedQueryOptions.All,
             EnableConstantParameterization = true,
@@ -56,139 +57,6 @@ namespace Softpark.WS.Controllers.Api.odata
         public SingleResult<VW_INDIVIDUAIS> GetVW_INDIVIDUAIS([FromODataUri] decimal key)
         {
             return SingleResult.Create(db.VW_INDIVIDUAIS.Where(vW_INDIVIDUAIS => vW_INDIVIDUAIS.PK == key));
-        }
-
-        // PUT: odata/Individuo(5)
-        public async Task<IHttpActionResult> Put([FromODataUri] decimal key, Delta<VW_INDIVIDUAIS> patch)
-        {
-            Validate(patch.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            VW_INDIVIDUAIS vW_INDIVIDUAIS = await db.VW_INDIVIDUAIS.FindAsync(key);
-            if (vW_INDIVIDUAIS == null)
-            {
-                return NotFound();
-            }
-
-            patch.Put(vW_INDIVIDUAIS);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await VW_INDIVIDUAISExists(key))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Updated(vW_INDIVIDUAIS);
-        }
-
-        // POST: odata/Individuo
-        public async Task<IHttpActionResult> Post(VW_INDIVIDUAIS vW_INDIVIDUAIS)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.VW_INDIVIDUAIS.Add(vW_INDIVIDUAIS);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (await VW_INDIVIDUAISExists(vW_INDIVIDUAIS.PK))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Created(vW_INDIVIDUAIS);
-        }
-
-        // PATCH: odata/Individuo(5)
-        [AcceptVerbs("PATCH", "MERGE")]
-        public async Task<IHttpActionResult> Patch([FromODataUri] decimal key, Delta<VW_INDIVIDUAIS> patch)
-        {
-            Validate(patch.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            VW_INDIVIDUAIS vW_INDIVIDUAIS = await db.VW_INDIVIDUAIS.FindAsync(key);
-            if (vW_INDIVIDUAIS == null)
-            {
-                return NotFound();
-            }
-
-            patch.Patch(vW_INDIVIDUAIS);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await VW_INDIVIDUAISExists(key))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Updated(vW_INDIVIDUAIS);
-        }
-
-        // DELETE: odata/Individuo(5)
-        public async Task<IHttpActionResult> Delete([FromODataUri] decimal key)
-        {
-            VW_INDIVIDUAIS vW_INDIVIDUAIS = await db.VW_INDIVIDUAIS.FindAsync(key);
-            if (vW_INDIVIDUAIS == null)
-            {
-                return NotFound();
-            }
-
-            db.VW_INDIVIDUAIS.Remove(vW_INDIVIDUAIS);
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private async Task<bool> VW_INDIVIDUAISExists(decimal key)
-        {
-            return await db.VW_INDIVIDUAIS.AnyAsync(e => e.PK == key);
         }
     }
 }

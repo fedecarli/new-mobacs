@@ -569,6 +569,8 @@ namespace Softpark.Models
         public virtual DbSet<VW_USUARIO> VW_USUARIO { get; set; }
         public virtual DbSet<VW_VISITA_DOMICILIAR> VW_VISITA_DOMICILIAR { get; set; }
         public virtual DbSet<TipoOrigem> TipoOrigem { get; set; }
+        public virtual DbSet<RastroFicha> RastroFicha { get; set; }
+        public virtual DbSet<VW_VISITAS> VW_VISITAS { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

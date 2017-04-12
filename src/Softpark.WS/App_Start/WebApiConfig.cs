@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json.Serialization;
 using Softpark.Models;
 using Softpark.WS.Validators;
+using System.Linq;
 using System.Web.Cors;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.OData.Builder;
+using System.Web.Http.OData.Extensions;
 
 #pragma warning disable 1591
 namespace Softpark.WS
@@ -37,7 +39,11 @@ namespace Softpark.WS
         {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<VW_Profissional>("Profissional").EntityType.Property(x => x.INE).IsOptional();
+            var visitas = builder.EntitySet<VW_VISITAS>("Visitas");
+            var masters = builder.Entity<VW_VISITAS>().Collection.Action("Masters");
+            masters.ReturnsCollectionFromEntitySet(visitas);
             builder.EntitySet<VW_INDIVIDUAIS>("Individuo");
+            builder.EntitySet<RastroFicha>("RastroFicha");
             builder.EntitySet<AnimalNoDomicilio>("AnimalNoDomicilio");
             builder.EntitySet<CadastroDomiciliar>("CadastroDomiciliar");
             builder.EntitySet<CadastroIndividual>("CadastroIndividual");
@@ -412,7 +418,7 @@ namespace Softpark.WS
             builder.EntitySet<ImuVacinas_Produtos>("ImuVacinas_Produtos");
             builder.EntitySet<Menu>("Menu");
             builder.EntitySet<Paises>("Paises");
-            builder.EntitySet<Models.Parametros>("Parametros");
+            builder.EntitySet<Parametros>("Parametros");
             builder.EntitySet<ProAtendimentos>("ProAtendimentos");
             builder.EntitySet<ProAtendimentos_A_TpServico>("ProAtendimentos_A_TpServico");
             builder.EntitySet<ProAtendimentos_At_A_CIAP2>("ProAtendimentos_At_A_CIAP2");
@@ -563,7 +569,7 @@ namespace Softpark.WS
             builder.EntitySet<TipoLogradouro>("TipoLogradouro");
             builder.EntitySet<TP_Conduta>("TP_Conduta");
             builder.EntitySet<TP_Nasf>("TP_Nasf");
-            config.Routes.MapODataRoute("odata", "api/odata", builder.GetEdmModel());
+            config.Routes.MapODataServiceRoute("odata", "api/odata", builder.GetEdmModel());
         }
     }
 }

@@ -310,6 +310,19 @@
           <Property Name="finalizado" Type="bit" Nullable="false" />
           <Property Name="id_tipo_origem" Type="int" Nullable="false" />
           <Property Name="enviarParaThrift" Type="bit" Nullable="false" />
+          <Property Name="enviado" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RastroFicha">
+          <Key>
+            <PropertyRef Name="token" />
+            <PropertyRef Name="CodUsu" />
+            <PropertyRef Name="DataModificacao" />
+          </Key>
+          <Property Name="token" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CodUsu" Type="int" Nullable="false" />
+          <Property Name="DataModificacao" Type="datetime" Nullable="false" />
+          <Property Name="DadoAnterior" Type="ntext" />
+          <Property Name="DadoAtual" Type="ntext" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
           <Key>
@@ -8497,6 +8510,53 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Nasf' does n
           <Property Name="CodANP" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_VISITAS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VW_VISITAS">
+          <Key>
+            <PropertyRef Name="childId" />
+            
+            
+            
+            
+            
+            
+            
+            <PropertyRef Name="enviado" />
+            <PropertyRef Name="finalizado" />
+          </Key>
+          <Property Name="childId" Type="bigint" Nullable="false" />
+          <Property Name="masterId" Type="char" MaxLength="44" Nullable="false" />
+          <Property Name="turno" Type="bigint" Nullable="false" />
+          <Property Name="numProntuario" Type="nvarchar" MaxLength="30" />
+          <Property Name="NomePaciente" Type="varchar" MaxLength="100" />
+          <Property Name="cnsCidadao" Type="char" MaxLength="15" />
+          <Property Name="dtNascimento" Type="datetime" />
+          <Property Name="sexo" Type="bigint" />
+          <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="bit" Nullable="false" />
+          <Property Name="desfecho" Type="bigint" Nullable="false" />
+          <Property Name="microarea" Type="char" MaxLength="2" />
+          <Property Name="stForaArea" Type="bit" Nullable="false" />
+          <Property Name="tipoDeImovel" Type="bigint" Nullable="false" />
+          <Property Name="pesoAcompanhamentoNutricional" Type="decimal" Precision="6" Scale="3" />
+          <Property Name="alturaAcompanhamentoNutricional" Type="decimal" Precision="4" Scale="1" />
+          <Property Name="cnsProfissional" Type="varchar" MaxLength="50" />
+          <Property Name="nomeProfissional" Type="varchar" MaxLength="100" />
+          <Property Name="CBO" Type="char" MaxLength="10" />
+          <Property Name="Profissao" Type="varchar" MaxLength="120" />
+          <Property Name="CNES" Type="char" MaxLength="7" />
+          <Property Name="Unidade" Type="varchar" MaxLength="60" />
+          <Property Name="INE" Type="nvarchar" MaxLength="10" />
+          <Property Name="Equipe" Type="nvarchar" MaxLength="100" />
+          <Property Name="codigoIbgeMunicipio" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="dataAtendimento" Type="datetime" />
+          <Property Name="token" Type="uniqueidentifier" />
+          <Property Name="CodUsu" Type="int" />
+          <Property Name="DataModificacao" Type="datetime" />
+          <Property Name="Usuario" Type="varchar" MaxLength="100" />
+          <Property Name="enviado" Type="bit" Nullable="false" />
+          <Property Name="finalizado" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ProAtendimentos_Listagem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ProAtendimentos_Listagem">
           <Key>
@@ -14793,6 +14853,18 @@ warning 6035: The relationship 'FK_OrigemAlimentoSituacaoRua_TP_Origem_Alimentac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RastroFicha_OrigemVisita">
+          <End Role="OrigemVisita" Type="Self.OrigemVisita" Multiplicity="1" />
+          <End Role="RastroFicha" Type="Self.RastroFicha" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrigemVisita">
+              <PropertyRef Name="token" />
+            </Principal>
+            <Dependent Role="RastroFicha">
+              <PropertyRef Name="token" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ResponsavelPorCrianca_InformacoesSocioDemograficas">
           <End Role="InformacoesSocioDemograficas" Type="Self.InformacoesSocioDemograficas" Multiplicity="1" />
           <End Role="ResponsavelPorCrianca" Type="Self.ResponsavelPorCrianca" Multiplicity="*" />
@@ -15376,6 +15448,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="InstituicaoPermanencia" EntityType="Self.InstituicaoPermanencia" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrigemAlimentoSituacaoRua" EntityType="Self.OrigemAlimentoSituacaoRua" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrigemVisita" EntityType="Self.OrigemVisita" Schema="api" store:Type="Tables" />
+          <EntitySet Name="RastroFicha" EntityType="Self.RastroFicha" Schema="api" store:Type="Tables" />
           <EntitySet Name="ResponsavelPorCrianca" EntityType="Self.ResponsavelPorCrianca" Schema="api" store:Type="Tables" />
           <EntitySet Name="SaidaCidadaoCadastro" EntityType="Self.SaidaCidadaoCadastro" Schema="api" store:Type="Tables" />
           <EntitySet Name="TipoOrigem" EntityType="Self.TipoOrigem" Schema="api" store:Type="Tables" />
@@ -16462,6 +16535,41 @@ Endereço],
     [TP_Nasf].[descricao] AS [descricao], 
     [TP_Nasf].[nome_id] AS [nome_id]
     FROM [dbo].[TP_Nasf] AS [TP_Nasf]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VW_VISITAS" EntityType="Self.VW_VISITAS" store:Type="Views" store:Schema="api">
+            <DefiningQuery>SELECT 
+    [VW_VISITAS].[childId] AS [childId], 
+    [VW_VISITAS].[masterId] AS [masterId], 
+    [VW_VISITAS].[turno] AS [turno], 
+    [VW_VISITAS].[numProntuario] AS [numProntuario], 
+    [VW_VISITAS].[NomePaciente] AS [NomePaciente], 
+    [VW_VISITAS].[cnsCidadao] AS [cnsCidadao], 
+    [VW_VISITAS].[dtNascimento] AS [dtNascimento], 
+    [VW_VISITAS].[sexo] AS [sexo], 
+    [VW_VISITAS].[statusVisitaCompartilhadaOutroProfissional] AS [statusVisitaCompartilhadaOutroProfissional], 
+    [VW_VISITAS].[desfecho] AS [desfecho], 
+    [VW_VISITAS].[microarea] AS [microarea], 
+    [VW_VISITAS].[stForaArea] AS [stForaArea], 
+    [VW_VISITAS].[tipoDeImovel] AS [tipoDeImovel], 
+    [VW_VISITAS].[pesoAcompanhamentoNutricional] AS [pesoAcompanhamentoNutricional], 
+    [VW_VISITAS].[alturaAcompanhamentoNutricional] AS [alturaAcompanhamentoNutricional], 
+    [VW_VISITAS].[cnsProfissional] AS [cnsProfissional], 
+    [VW_VISITAS].[nomeProfissional] AS [nomeProfissional], 
+    [VW_VISITAS].[CBO] AS [CBO], 
+    [VW_VISITAS].[Profissao] AS [Profissao], 
+    [VW_VISITAS].[CNES] AS [CNES], 
+    [VW_VISITAS].[Unidade] AS [Unidade], 
+    [VW_VISITAS].[INE] AS [INE], 
+    [VW_VISITAS].[Equipe] AS [Equipe], 
+    [VW_VISITAS].[codigoIbgeMunicipio] AS [codigoIbgeMunicipio], 
+    [VW_VISITAS].[dataAtendimento] AS [dataAtendimento], 
+    [VW_VISITAS].[token] AS [token], 
+    [VW_VISITAS].[CodUsu] AS [CodUsu], 
+    [VW_VISITAS].[DataModificacao] AS [DataModificacao], 
+    [VW_VISITAS].[Usuario] AS [Usuario], 
+    [VW_VISITAS].[enviado] AS [enviado], 
+    [VW_VISITAS].[finalizado] AS [finalizado]
+    FROM [api].[VW_VISITAS] AS [VW_VISITAS]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ProAtendimentos_Listagem" EntityType="Self.ProAtendimentos_Listagem" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -18355,6 +18463,10 @@ Endereço],
           <AssociationSet Name="FK_Procedimento_Usuario_Procedimento" Association="Self.FK_Procedimento_Usuario_Procedimento">
             <End Role="SIGSM_Procedimento" EntitySet="SIGSM_Procedimento" />
             <End Role="SIGSM_Procedimento_Usuario" EntitySet="SIGSM_Procedimento_Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RastroFicha_OrigemVisita" Association="Self.FK_RastroFicha_OrigemVisita">
+            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
+            <End Role="RastroFicha" EntitySet="RastroFicha" />
           </AssociationSet>
           <AssociationSet Name="FK_ResponsavelPorCrianca_InformacoesSocioDemograficas" Association="Self.FK_ResponsavelPorCrianca_InformacoesSocioDemograficas">
             <End Role="InformacoesSocioDemograficas" EntitySet="InformacoesSocioDemograficas" />
@@ -20928,6 +21040,12 @@ Endereço],
             <Parameter Name="alturaAcompanhamentoNutricional" Mode="In" Type="Decimal" />
             <Parameter Name="statusVisitaCompartilhadaOutroProfissional" Mode="In" Type="Boolean" />
           </FunctionImport>
+          <EntitySet Name="RastroFicha" EntityType="Domain.RastroFicha" />
+          <AssociationSet Name="FK_RastroFicha_OrigemVisita" Association="Domain.FK_RastroFicha_OrigemVisita">
+            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
+            <End Role="RastroFicha" EntitySet="RastroFicha" />
+          </AssociationSet>
+          <EntitySet Name="VW_VISITAS" EntityType="Domain.VW_VISITAS" />
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
           <Key>
@@ -21268,6 +21386,8 @@ Endereço],
           <Property Name="id_tipo_origem" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TipoOrigem" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="OrigemVisita" ToRole="TipoOrigem" />
           <Property Name="enviarParaThrift" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RastroFicha" Relationship="Domain.FK_RastroFicha_OrigemVisita" FromRole="OrigemVisita" ToRole="RastroFicha" />
+          <Property Name="enviado" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
           <Key>
@@ -36910,6 +37030,69 @@ Endereço],
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="RastroFicha">
+          <Key>
+            <PropertyRef Name="token" />
+            <PropertyRef Name="CodUsu" />
+            <PropertyRef Name="DataModificacao" />
+          </Key>
+          <Property Name="token" Type="Guid" Nullable="false" />
+          <Property Name="CodUsu" Type="Int32" Nullable="false" />
+          <Property Name="DataModificacao" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DadoAnterior" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DadoAtual" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrigemVisita" Relationship="Domain.FK_RastroFicha_OrigemVisita" FromRole="RastroFicha" ToRole="OrigemVisita" />
+        </EntityType>
+        <Association Name="FK_RastroFicha_OrigemVisita">
+          <End Type="Domain.OrigemVisita" Role="OrigemVisita" Multiplicity="1" />
+          <End Type="Domain.RastroFicha" Role="RastroFicha" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrigemVisita">
+              <PropertyRef Name="token" />
+            </Principal>
+            <Dependent Role="RastroFicha">
+              <PropertyRef Name="token" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="VW_VISITAS">
+          <Key>
+            <PropertyRef Name="childId" />
+            <PropertyRef Name="enviado" />
+            <PropertyRef Name="finalizado" />
+          </Key>
+          <Property Name="childId" Type="Int64" Nullable="false" />
+          <Property Name="masterId" Type="String" Nullable="false" MaxLength="44" FixedLength="true" Unicode="false" />
+          <Property Name="turno" Type="Int64" Nullable="false" />
+          <Property Name="numProntuario" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="cnsCidadao" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
+          <Property Name="dtNascimento" Type="DateTime" Precision="3" />
+          <Property Name="sexo" Type="Int64" />
+          <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="Boolean" Nullable="false" />
+          <Property Name="desfecho" Type="Int64" Nullable="false" />
+          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
+          <Property Name="tipoDeImovel" Type="Int64" Nullable="false" />
+          <Property Name="pesoAcompanhamentoNutricional" Type="Decimal" Precision="6" Scale="3" />
+          <Property Name="alturaAcompanhamentoNutricional" Type="Decimal" Precision="4" Scale="1" />
+          <Property Name="nomeProfissional" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CBO" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Profissao" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="CNES" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
+          <Property Name="Unidade" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="INE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Equipe" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="codigoIbgeMunicipio" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="false" />
+          <Property Name="dataAtendimento" Type="DateTime" Precision="3" />
+          <Property Name="token" Type="Guid" />
+          <Property Name="CodUsu" Type="Int32" />
+          <Property Name="DataModificacao" Type="DateTime" Precision="3" />
+          <Property Name="Usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="enviado" Type="Boolean" Nullable="false" />
+          <Property Name="finalizado" Type="Boolean" Nullable="false" />
+          <Property Name="cnsProfissional" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NomePaciente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -37215,6 +37398,7 @@ Endereço],
           <EntitySetMapping Name="OrigemVisita">
             <EntityTypeMapping TypeName="Domain.OrigemVisita">
               <MappingFragment StoreEntitySet="OrigemVisita">
+                <ScalarProperty Name="enviado" ColumnName="enviado" />
                 <ScalarProperty Name="enviarParaThrift" ColumnName="enviarParaThrift" />
                 <ScalarProperty Name="id_tipo_origem" ColumnName="id_tipo_origem" />
                 <ScalarProperty Name="finalizado" ColumnName="finalizado" />
@@ -45426,6 +45610,54 @@ Endereço],
               <MappingFragment StoreEntitySet="TipoOrigem">
                 <ScalarProperty Name="Descricao" ColumnName="Descricao" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RastroFicha">
+            <EntityTypeMapping TypeName="Domain.RastroFicha">
+              <MappingFragment StoreEntitySet="RastroFicha">
+                <ScalarProperty Name="DadoAtual" ColumnName="DadoAtual" />
+                <ScalarProperty Name="DadoAnterior" ColumnName="DadoAnterior" />
+                <ScalarProperty Name="DataModificacao" ColumnName="DataModificacao" />
+                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
+                <ScalarProperty Name="token" ColumnName="token" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VW_VISITAS">
+            <EntityTypeMapping TypeName="Domain.VW_VISITAS">
+              <MappingFragment StoreEntitySet="VW_VISITAS">
+                <ScalarProperty Name="NomePaciente" ColumnName="NomePaciente" />
+                <ScalarProperty Name="cnsProfissional" ColumnName="cnsProfissional" />
+                <ScalarProperty Name="finalizado" ColumnName="finalizado" />
+                <ScalarProperty Name="enviado" ColumnName="enviado" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="DataModificacao" ColumnName="DataModificacao" />
+                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="dataAtendimento" ColumnName="dataAtendimento" />
+                <ScalarProperty Name="codigoIbgeMunicipio" ColumnName="codigoIbgeMunicipio" />
+                <ScalarProperty Name="Equipe" ColumnName="Equipe" />
+                <ScalarProperty Name="INE" ColumnName="INE" />
+                <ScalarProperty Name="Unidade" ColumnName="Unidade" />
+                <ScalarProperty Name="CNES" ColumnName="CNES" />
+                <ScalarProperty Name="Profissao" ColumnName="Profissao" />
+                <ScalarProperty Name="CBO" ColumnName="CBO" />
+                <ScalarProperty Name="nomeProfissional" ColumnName="nomeProfissional" />
+                <ScalarProperty Name="alturaAcompanhamentoNutricional" ColumnName="alturaAcompanhamentoNutricional" />
+                <ScalarProperty Name="pesoAcompanhamentoNutricional" ColumnName="pesoAcompanhamentoNutricional" />
+                <ScalarProperty Name="tipoDeImovel" ColumnName="tipoDeImovel" />
+                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
+                <ScalarProperty Name="microarea" ColumnName="microarea" />
+                <ScalarProperty Name="desfecho" ColumnName="desfecho" />
+                <ScalarProperty Name="statusVisitaCompartilhadaOutroProfissional" ColumnName="statusVisitaCompartilhadaOutroProfissional" />
+                <ScalarProperty Name="sexo" ColumnName="sexo" />
+                <ScalarProperty Name="dtNascimento" ColumnName="dtNascimento" />
+                <ScalarProperty Name="cnsCidadao" ColumnName="cnsCidadao" />
+                <ScalarProperty Name="numProntuario" ColumnName="numProntuario" />
+                <ScalarProperty Name="turno" ColumnName="turno" />
+                <ScalarProperty Name="masterId" ColumnName="masterId" />
+                <ScalarProperty Name="childId" ColumnName="childId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

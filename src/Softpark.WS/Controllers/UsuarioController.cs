@@ -25,7 +25,7 @@ namespace Softpark.WS.Controllers
 
         public static ASSMED_Usuario Usuario(this IPrincipal principal)
         {
-            return _usuario ?? (_usuario = DomainContainer.Current.ASSMED_Usuario.Find(principal.Identity.Name));
+            return _usuario ?? (_usuario = DomainContainer.Current.ASSMED_Usuario.Find(principal?.Identity?.Name));
         }
     }
 
@@ -231,6 +231,44 @@ namespace Softpark.WS.Controllers
             }
 
             return View(viewModel);
+        }
+        
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<JsonResult> Auth([System.Web.Http.FromBody] UsuarioLoginViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var cancelation = new CancellationTokenSource();
+                    var usuario = await db.ASSMED_Usuario.SingleOrDefaultAsync(x => x.Email == model.Login);
+
+                    using (var md5 = MD5.Create())
+                    {
+                        if (usuario == null || !VerifyMd5Hash(md5, model.Senha, usuario.Senha))
+                        {
+                            ModelState.AddModelError("", "Login ou Senha inválidos.");
+                        }
+                        else
+                        {
+                            var serializer = new JavaScriptSerializer();
+
+                            var contentModel = serializer.Serialize(model.ForToken());
+
+                            FormsAuthentication.SetAuthCookie(usuario.Email, true);
+
+                            return Json(new { Success = true }, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", e);
+            }
+
+            return Json(new { Success = false, Message = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).Aggregate((x, y) => x + "\n" + y) }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Sair()

@@ -1002,6 +1002,9 @@
         <EntityTypeShape EntityType="Domain.VW_VISITA_DOMICILIAR" Width="1.5" PointX="43.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.TipoOrigem" Width="1.5" PointX="3.5" PointY="210.25" />
         <AssociationConnector Association="Domain.FK_OrigemVisita_TipoOrigem_Id" />
+        <EntityTypeShape EntityType="Domain.RastroFicha" Width="1.5" PointX="8" PointY="70.125" />
+        <AssociationConnector Association="Domain.FK_RastroFicha_OrigemVisita" />
+        <EntityTypeShape EntityType="Domain.VW_VISITAS" Width="1.5" PointX="61.375" PointY="25.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

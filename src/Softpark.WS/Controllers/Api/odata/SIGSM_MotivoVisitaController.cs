@@ -26,6 +26,7 @@ namespace Softpark.WS.Controllers.Api.odata
     builder.EntitySet<FichaVisitaDomiciliarChild>("FichaVisitaDomiciliarChild"); 
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
+    [Authorize]
     public class SIGSM_MotivoVisitaController : ODataController
     {
         private DomainContainer db = new DomainContainer();

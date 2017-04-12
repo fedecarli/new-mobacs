@@ -30,6 +30,7 @@ namespace Softpark.WS.Controllers.Api.odata
     builder.EntitySet<OrigemVisita>("OrigemVisita"); 
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
+    [Authorize]
     public class UnicaLotacaoTransportController : ODataController
     {
         private DomainContainer db = new DomainContainer();

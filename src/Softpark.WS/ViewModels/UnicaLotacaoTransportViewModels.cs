@@ -2,6 +2,7 @@
 using Softpark.Models;
 using Softpark.WS.Validators;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Runtime.Serialization;
 
 namespace Softpark.WS.ViewModels
@@ -71,14 +72,14 @@ namespace Softpark.WS.ViewModels
         /// Código IBGE do município
         /// </summary>
         /// <remarks>
+        /// Se nulo, será substituído pelo valor atribuido ao arquivo de configuração da aplicação
         /// http://esusab.github.io/integracao/docs/municipios.html
         /// http://www.cidades.ibge.gov.br/v3/cidades/home-cidades
         /// </remarks>
         [DataMember(Name = nameof(codigoIbgeMunicipio))]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Informe o código IBGE do município.")]
         [StringLength(7, MinimumLength = 7, ErrorMessage = "O código do IBGE deve ter 7 digitos.")]
-        public string codigoIbgeMunicipio { get; set; } 
-
+        public string codigoIbgeMunicipio { get; set; }
+        
         internal UnicaLotacaoTransport ToModel()
         {
             var ult = DomainContainer.Current.UnicaLotacaoTransport.Create();
@@ -88,7 +89,7 @@ namespace Softpark.WS.ViewModels
             ult.cnes = cnes;
             ult.ine = ine;
             ult.dataAtendimento = dataAtendimento;
-            ult.codigoIbgeMunicipio = codigoIbgeMunicipio;
+            ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
 
             return ult;
         }

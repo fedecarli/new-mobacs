@@ -9,6 +9,141 @@ using Softpark.Infrastructure.Extras;
 
 namespace Softpark.WS.ViewModels
 {
+    /// <summary>
+    /// Turno de atendimento
+    /// </summary>
+    [Serializable]
+    public enum Turno
+    {
+        /// <summary>
+        /// 1 - Manhã
+        /// </summary>
+        [EnumMember(Value = nameof(Manhã))]
+        Manhã = 1,
+        /// <summary>
+        /// 2 - Tarde
+        /// </summary>
+        [EnumMember(Value = nameof(Tarde))]
+        Tarde = 2,
+        /// <summary>
+        /// 3 - Noite
+        /// </summary>
+        [EnumMember(Value = nameof(Noite))]
+        Noite = 3
+    }
+
+    [Serializable]
+    public class FichaVisitaDomiciliarChildConsultaViewModel
+    {
+        public DateTime DataAtendimento { get; set; }
+        public string CodigoIbgeMunicipio { get; set; }
+
+        /// <summary>
+        /// Token da transmissão
+        /// </summary>
+        [DataMember(Name = nameof(OrigemVisita.token))]
+        public Guid? Token { get; set; }
+
+        public VW_Profissional Profissional { get; set; }
+
+        public RastroFicha UltimaModificacao { get; set; }
+
+        /// <summary>
+        /// Turno da visita
+        /// </summary>
+        [Required]
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.turno))]
+        public Turno Turno { get; set; }
+
+        /// <summary>
+        /// Número do prontuário
+        /// </summary>
+        [RegularExpression(@"^([a-zA-Z0-9]*)$", ErrorMessage = "O campo numProntuario aceita somente letras e números.")]
+        [StringLength(30, MinimumLength = 0, ErrorMessage = "O campo numProntuario deve ter entre 0 e 30 caracteres.")]
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.numProntuario))]
+        public string NumProntuario { get; set; }
+
+        /// <summary>
+        /// Cns do Cidadão
+        /// </summary>
+        [RegularExpression(@"^([12789])([0-9]+)$", ErrorMessage = "O campo cnsCidadao deve iniciar com 1, 2, 7, 8 ou 9 e deve conter somente números.")]
+        [StringLength(15, MinimumLength = 15, ErrorMessage = "O campo cnsCidadao deve ter exatamente 15 caracteres")]
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.cnsCidadao))]
+        [CnsValidation(true, ErrorMessage = "CNS inválido")]
+        public string CnsCidadao { get; set; }
+
+        /// <summary>
+        /// Data de Nascimento
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.dtNascimento))]
+        public DateTime? DtNascimento { get; set; }
+
+        /// <summary>
+        /// Sexo do cidadão
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.sexo))]
+        public TP_Sexo Sexo { get; set; }
+
+        /// <summary>
+        /// Motivos da visita
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChildCadastroViewModel.motivosVisita))]
+        [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
+        public ICollection<SIGSM_MotivoVisita> MotivosVisita { get; set; } = new HashSet<SIGSM_MotivoVisita>();
+
+        /// <summary>
+        /// Desfecho da visita
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.desfecho))]
+        [Required]
+        [Range(1, 3)]
+        public long Desfecho { get; set; }
+
+        /// <summary>
+        /// Micro área do atendimento
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.microarea))]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "O campo microarea deve ter exatamente 2 digitos.")]
+        [RegularExpression("^([0-9][0-9])$")]
+        public string Microarea { get; set; }
+
+        /// <summary>
+        /// Fora de área
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.stForaArea))]
+        public bool StForaArea { get; set; }
+
+        /// <summary>
+        /// Tipo de imóvel da visita
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.tipoDeImovel))]
+        [Required]
+        [RegularExpression(@"^([1-9]|1[012]|99)$", ErrorMessage = "O campo tipoDeImovel espera um tipo válido. Consulte http://esusab.github.io/integracao/docs/dicionario/dicionario.html#tipodeimovel.")]
+        public TP_Imovel TipoDeImovel { get; set; }
+
+        /// <summary>
+        /// Peso do paciente
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.pesoAcompanhamentoNutricional))]
+        [Range(0.5, 500, ErrorMessage = "O campo pesoAcompanhamentoNutricional deve ter entre 0.5 e 500 Kg.")]
+        [DefaultValue(null)]
+        public decimal? PesoAcompanhamentoNutricional { get; set; } = null;
+
+        /// <summary>
+        /// Altura do paciente
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.alturaAcompanhamentoNutricional))]
+        [Range(20, 250, ErrorMessage = "O campo alturaAcompanhamentoNutricional deve ter entre 20 e 250 cm.")]
+        [DefaultValue(null)]
+        public decimal? AlturaAcompanhamentoNutricional { get; set; } = null;
+
+        /// <summary>
+        /// Visita compartilhada
+        /// </summary>
+        [DataMember(Name = nameof(FichaVisitaDomiciliarChild.statusVisitaCompartilhadaOutroProfissional))]
+        public bool StatusVisitaCompartilhadaOutroProfissional { get; set; }
+    }
+
     public class FichaVisitaDomiciliarChildCadastroViewModelCollection : List<FichaVisitaDomiciliarChildCadastroViewModel>
     {
         public static implicit operator FichaVisitaDomiciliarChildCadastroViewModelCollection(FichaVisitaDomiciliarChild[] models)

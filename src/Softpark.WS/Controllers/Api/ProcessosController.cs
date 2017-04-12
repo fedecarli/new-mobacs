@@ -58,7 +58,7 @@ namespace Softpark.WS.Controllers.Api
                 throw;
             }
         }
-        
+
         /// <summary>
         /// Cadastrar cabeçalho das fichas
         /// </summary>
@@ -74,15 +74,16 @@ namespace Softpark.WS.Controllers.Api
             var origem = Domain.OrigemVisita.Create();
 
             origem.token = Guid.NewGuid();
-            origem.id_tipo_origem = 1;
+            origem.id_tipo_origem = User != null && User.Usuario() != null ? 2 : 1;
             origem.enviarParaThrift = true;
-            
+            origem.enviado = false;
+
             Domain.OrigemVisita.Add(origem);
 
             await Domain.SaveChangesAsync();
 
             var transport = header.ToModel();
-            
+
             transport.id = Guid.NewGuid();
             transport.OrigemVisita = origem;
             transport.token = origem.token;
@@ -106,9 +107,9 @@ namespace Softpark.WS.Controllers.Api
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
             var master = await GetOrCreateMaster(child.token);
-            
+
             var ficha = child.ToModel();
-            
+
             foreach (var motivoId in child.motivosVisita)
             {
                 var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
@@ -217,7 +218,50 @@ namespace Softpark.WS.Controllers.Api
             }
 
             Domain.PR_ProcessarFichasAPI(token);
+
+            return Ok(true);
+        }
+
+        /// <summary>
+        /// Alterar cabeçalho das fichas - Somente se autenticado
+        /// </summary>
+        /// <remarks>
+        /// Todas as fichas usarão esse cabeçalho
+        /// </remarks>
+        /// <param name="token">Token do cabeçalho</param>
+        /// <param name="header">Dados à serem enviados</param>
+        [Route("alterar/cabecalho/{token}")]
+        [HttpPut, ResponseType(typeof(bool))]
+        [Authorize]
+        public async Task<IHttpActionResult> AlterarCabecalho([FromUri, Required] Guid token, [FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
+        {
+            var origem = await Domain.OrigemVisita.FindAsync(token);
+
+            var transport = header.ToModel();
+
+            var cabecalho = origem.UnicaLotacaoTransport.Count > 1 ? null : origem.UnicaLotacaoTransport.SingleOrDefault();
+
+            var t1 = cabecalho.CadastroDomiciliar.Count + cabecalho.CadastroIndividual.Count;
+            var t2 = cabecalho.CadastroIndividual.Count + cabecalho.FichaVisitaDomiciliarMaster.Count;
+            var t3 = cabecalho.CadastroDomiciliar.Count + cabecalho.FichaVisitaDomiciliarMaster.Count;
             
+            if (cabecalho == null ||
+                (cabecalho.CadastroDomiciliar.Count > 0 && cabecalho.CadastroIndividual.Count > 0) ||
+                (cabecalho.CadastroDomiciliar.Count > 0 && cabecalho.FichaVisitaDomiciliarMaster.Count > 0) ||
+                (cabecalho.CadastroIndividual.Count > 0 && cabecalho.FichaVisitaDomiciliarMaster.Count > 0))
+                throw new ValidationException("Não é possível alterar este cabeçalho, há outras fichas utilizando ele.");
+
+            cabecalho.profissionalCNS = transport.profissionalCNS;
+            cabecalho.ine = transport.ine;
+            cabecalho.dataAtendimento = transport.dataAtendimento;
+            cabecalho.codigoIbgeMunicipio = transport.codigoIbgeMunicipio;
+            cabecalho.cnes = transport.cnes;
+            cabecalho.cboCodigo_2002 = transport.cboCodigo_2002;
+
+            cabecalho.Validar();
+
+            await Domain.SaveChangesAsync();
+
             return Ok(true);
         }
     }

@@ -28,6 +28,7 @@ namespace Softpark.WS.Controllers.Api.odata
     builder.EntitySet<UnicaLotacaoTransport>("UnicaLotacaoTransport"); 
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
+    [Authorize]
     public class FichaVisitaDomiciliarMasterController : ODataController
     {
         private DomainContainer db = new DomainContainer();
