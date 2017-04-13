@@ -58,3 +58,13 @@ ALTER TABLE [api].[OrigemVisita]
 		ADD [enviado] BIT NOT NULL DEFAULT 0;
 GO
 
+ALTER TABLE [dbo].[SIGSM_Visita_Domiciliar_Paciente]
+	  ALTER COLUMN [st_fora_area] BIT NULL;
+GO
+
+ALTER TABLE [dbo].[SIGSM_Visita_Domiciliar_Paciente]
+		ADD [acao_educacional] BIT NULL,
+			[imovel_com_foco]  BIT NULL,
+			[acao_mecanica]	   BIT NULL,
+			[tratamento_focal] BIT NULL;
+GO
