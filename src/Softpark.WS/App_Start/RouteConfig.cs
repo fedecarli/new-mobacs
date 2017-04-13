@@ -33,7 +33,8 @@ namespace Softpark.WS
 
             routes.MapRoute(
                 name: "ODataDefaultRoute",
-                url: "api/odata/{controller}"
+                url: "api/odata/{controller}/{action}",
+                defaults: new { action = UrlParameter.Optional }
             );
 
             routes.MapRoute(
