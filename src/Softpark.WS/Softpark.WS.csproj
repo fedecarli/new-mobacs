@@ -569,6 +569,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="key.snk" />
     <Content Include="pk.snk" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\SoftparkWS.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />

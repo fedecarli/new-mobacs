@@ -484,7 +484,7 @@ namespace Softpark.Models
 
             if (cond.DeficienciasCidadao.Any(x => DomainContainer.Current.TP_Deficiencia.All(y => y.codigo != x.id_tp_deficiencia_cidadao)))
                 throw new ValidationException("Uma ou mais deficiências estão incorretas.");
-
+            
             if (cond.grauInstrucaoCidadao != null && DomainContainer.Current.TP_Curso.All(x => x.codigo != cond.grauInstrucaoCidadao))
                 throw new ValidationException("O grau de instrução do cidadão é inválido.");
 

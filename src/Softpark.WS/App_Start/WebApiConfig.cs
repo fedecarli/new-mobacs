@@ -568,7 +568,7 @@ namespace Softpark.WS
             builder.EntitySet<TipoCertidao>("TipoCertidao");
             builder.EntitySet<TipoLogradouro>("TipoLogradouro");
             builder.EntitySet<TP_Conduta>("TP_Conduta");
-            builder.EntitySet<TP_Nasf>("TP_Nasf");
+            //builder.EntitySet<TP_Nasf>("TP_Nasf");
             config.Routes.MapODataServiceRoute("odata", "api/odata", builder.GetEdmModel());
         }
     }

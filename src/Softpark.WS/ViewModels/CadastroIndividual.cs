@@ -268,6 +268,10 @@ namespace Softpark.WS.ViewModels
         /// Lista de deficiências do cidadão
         /// </summary>
         public List<int> deficienciasCidadao { get; set; } = new List<int>();
+        /// <summary>
+        /// Lista de tipo de responsabilidade por crianças
+        /// </summary>
+        public List<int> responsavelPorCrianca { get; set; } = new List<int>();
 
         /// <summary>
         /// 
@@ -303,6 +307,7 @@ namespace Softpark.WS.ViewModels
             statusTemAlgumaDeficiencia = model.statusTemAlgumaDeficiencia;
             identidadeGeneroCidadao = model.identidadeGeneroCidadao;
             statusDesejaInformarIdentidadeGenero = model.statusDesejaInformarIdentidadeGenero;
+            responsavelPorCrianca.AddRange(model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca));
         }
 
         internal async Task<InformacoesSocioDemograficas> ToModel()
@@ -320,6 +325,18 @@ namespace Softpark.WS.ViewModels
 
                     isd.DeficienciasCidadao.Add(@dcs);
                     DomainContainer.Current.DeficienciasCidadao.Add(@dcs);
+                }
+
+            TP_Crianca cr;
+            foreach (var _cr in responsavelPorCrianca)
+                if((cr = await DomainContainer.Current.TP_Crianca.FirstOrDefaultAsync(y => y.codigo == _cr)) != null)
+                {
+                    ResponsavelPorCrianca @crs = DomainContainer.Current.ResponsavelPorCrianca.Create();
+                    @crs.InformacoesSocioDemograficas = isd;
+                    @crs.id_tp_crianca = cr.codigo;
+
+                    isd.ResponsavelPorCrianca.Add(@crs);
+                    DomainContainer.Current.ResponsavelPorCrianca.Add(@crs);
                 }
 
             isd.grauInstrucaoCidadao = grauInstrucaoCidadao;
