@@ -25,6 +25,8 @@ namespace Softpark.Models
         public string uuidFichaOriginadora { get; set; }
         public Nullable<System.Guid> saidaCidadaoCadastro { get; set; }
         public System.Guid headerTransport { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
     
         public virtual CondicoesDeSaude CondicoesDeSaude1 { get; set; }
         public virtual EmSituacaoDeRua EmSituacaoDeRua1 { get; set; }

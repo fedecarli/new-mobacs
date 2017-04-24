@@ -29,6 +29,8 @@
           <Property Name="tipoDeImovel" Type="int" Nullable="false" />
           <Property Name="instituicaoPermanencia" Type="uniqueidentifier" />
           <Property Name="headerTransport" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="latitude" Type="nvarchar" MaxLength="20" />
+          <Property Name="longitude" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="CadastroIndividual">
           <Key>
@@ -45,6 +47,8 @@
           <Property Name="uuidFichaOriginadora" Type="nchar" MaxLength="44" />
           <Property Name="saidaCidadaoCadastro" Type="uniqueidentifier" />
           <Property Name="headerTransport" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="latitude" Type="nvarchar" MaxLength="20" />
+          <Property Name="longitude" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
@@ -171,13 +175,13 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="dataNascimentoResponsavel" Type="int" />
           <Property Name="numeroCnsResponsavel" Type="nchar" MaxLength="15" Nullable="false" />
           <Property Name="numeroMembrosFamilia" Type="int" />
           <Property Name="numeroProntuario" Type="nvarchar" MaxLength="30" />
           <Property Name="rendaFamiliar" Type="int" />
-          <Property Name="resideDesde" Type="int" />
           <Property Name="stMudanca" Type="bit" Nullable="false" />
+          <Property Name="resideDesde" Type="date" />
+          <Property Name="dataNascimentoResponsavel" Type="date" />
         </EntityType>
         <EntityType Name="Familias">
           <Key>
@@ -191,12 +195,10 @@
           <Key>
             <PropertyRef Name="childId" />
           </Key>
-          <Property Name="childId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="uuidFicha" Type="char" MaxLength="44" Nullable="false" />
           <Property Name="turno" Type="bigint" Nullable="false" />
           <Property Name="numProntuario" Type="nvarchar" MaxLength="30" />
           <Property Name="cnsCidadao" Type="char" MaxLength="15" />
-          <Property Name="dtNascimento" Type="bigint" />
           <Property Name="sexo" Type="bigint" />
           <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="bit" Nullable="false" />
           <Property Name="desfecho" Type="bigint" Nullable="false" />
@@ -205,13 +207,17 @@
           <Property Name="tipoDeImovel" Type="bigint" Nullable="false" />
           <Property Name="pesoAcompanhamentoNutricional" Type="decimal" Precision="6" Scale="3" />
           <Property Name="alturaAcompanhamentoNutricional" Type="decimal" Precision="4" Scale="1" />
+          <Property Name="latitude" Type="nvarchar" MaxLength="20" />
+          <Property Name="longitude" Type="nvarchar" MaxLength="20" />
+          <Property Name="childId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="dtNascimento" Type="date" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarChild_MotivoVisita">
           <Key>
             <PropertyRef Name="childId" />
             <PropertyRef Name="codigo" />
           </Key>
-          <Property Name="childId" Type="bigint" Nullable="false" />
+          <Property Name="childId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="codigo" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarMaster">
@@ -237,7 +243,6 @@
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="nomeSocial" Type="nvarchar" MaxLength="70" />
           <Property Name="codigoIbgeMunicipioNascimento" Type="nchar" MaxLength="7" />
-          <Property Name="dataNascimentoCidadao" Type="int" Nullable="false" />
           <Property Name="desconheceNomeMae" Type="bit" Nullable="false" />
           <Property Name="emailCidadao" Type="nvarchar" MaxLength="100" />
           <Property Name="nacionalidadeCidadao" Type="int" Nullable="false" />
@@ -255,11 +260,12 @@
           <Property Name="num_contrato" Type="int" />
           <Property Name="nomePaiCidadao" Type="nvarchar" MaxLength="70" />
           <Property Name="desconheceNomePai" Type="bit" Nullable="false" />
-          <Property Name="dtNaturalizacao" Type="int" />
           <Property Name="portariaNaturalizacao" Type="nvarchar" MaxLength="16" />
-          <Property Name="dtEntradaBrasil" Type="int" />
           <Property Name="microarea" Type="nchar" MaxLength="2" />
           <Property Name="stForaArea" Type="bit" Nullable="false" />
+          <Property Name="dataNascimentoCidadao" Type="date" Nullable="false" />
+          <Property Name="dtNaturalizacao" Type="date" />
+          <Property Name="dtEntradaBrasil" Type="date" />
         </EntityType>
         <EntityType Name="InformacoesSocioDemograficas">
           <Key>
@@ -309,8 +315,8 @@
           <Property Name="token" Type="uniqueidentifier" Nullable="false" />
           <Property Name="finalizado" Type="bit" Nullable="false" />
           <Property Name="id_tipo_origem" Type="int" Nullable="false" />
-          <Property Name="enviarParaThrift" Type="bit" Nullable="false" />
           <Property Name="enviado" Type="bit" Nullable="false" />
+          <Property Name="enviarParaThrift" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="RastroFicha">
           <Key>
@@ -338,8 +344,8 @@
           </Key>
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="motivoSaidaCidadao" Type="int" />
-          <Property Name="dataObito" Type="int" />
           <Property Name="numeroDO" Type="nchar" MaxLength="9" />
+          <Property Name="dataObito" Type="date" />
         </EntityType>
         <EntityType Name="TipoOrigem">
           <Key>
@@ -357,9 +363,9 @@
           <Property Name="cboCodigo_2002" Type="nchar" MaxLength="6" Nullable="false" />
           <Property Name="cnes" Type="char" MaxLength="7" Nullable="false" />
           <Property Name="ine" Type="char" MaxLength="10" />
-          <Property Name="dataAtendimento" Type="bigint" Nullable="false" />
           <Property Name="codigoIbgeMunicipio" Type="char" MaxLength="7" Nullable="false" />
           <Property Name="token" Type="uniqueidentifier" />
+          <Property Name="dataAtendimento" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="ACADEMIA_Aparelhos">
           <Key>
@@ -6055,6 +6061,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Consulta' does 
           <Property Name="pais_nasc" Type="int" />
           <Property Name="codibge_munic_nasc" Type="varchar" MaxLength="7" />
           <Property Name="ocupacao_CodigoCbo2002" Type="varchar" MaxLength="6" />
+          <Property Name="st_fora_area" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Erros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -7743,8 +7750,12 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' doe
           <Property Name="desfecho" Type="tinyint" Nullable="false" />
           <Property Name="microarea" Type="nchar" MaxLength="2" />
           <Property Name="peso_acompanhamento_nutricional" Type="decimal" Precision="6" Scale="3" />
-          <Property Name="st_fora_area" Type="bit" Nullable="false" />
+          <Property Name="st_fora_area" Type="bit" />
           <Property Name="tipo_de_imovel" Type="int" Nullable="false" />
+          <Property Name="acao_educacional" Type="bit" />
+          <Property Name="imovel_com_foco" Type="bit" />
+          <Property Name="acao_mecanica" Type="bit" />
+          <Property Name="tratamento_focal" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendimento_Odontologico' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -18665,7 +18676,6 @@ Endereço],
           <EntitySet Name="EmSituacaoDeRua" EntityType="Domain.EmSituacaoDeRua" />
           <EntitySet Name="EnderecoLocalPermanencia" EntityType="Domain.EnderecoLocalPermanencia" />
           <EntitySet Name="FamiliaRow" EntityType="Domain.FamiliaRow" />
-          <EntitySet Name="FichaVisitaDomiciliarChild" EntityType="Domain.FichaVisitaDomiciliarChild" />
           <EntitySet Name="FichaVisitaDomiciliarMaster" EntityType="Domain.FichaVisitaDomiciliarMaster" />
           <EntitySet Name="HigienePessoalSituacaoRua" EntityType="Domain.HigienePessoalSituacaoRua" />
           <EntitySet Name="IdentificacaoUsuarioCidadao" EntityType="Domain.IdentificacaoUsuarioCidadao" />
@@ -19257,10 +19267,6 @@ Endereço],
           <AssociationSet Name="FK_FamiliaRow_TP_Renda_Familiar" Association="Domain.FK_FamiliaRow_TP_Renda_Familiar">
             <End Role="TP_Renda_Familiar" EntitySet="TP_Renda_Familiar" />
             <End Role="FamiliaRow" EntitySet="FamiliaRow" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" Association="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster">
-            <End Role="FichaVisitaDomiciliarMaster" EntitySet="FichaVisitaDomiciliarMaster" />
-            <End Role="FichaVisitaDomiciliarChild" EntitySet="FichaVisitaDomiciliarChild" />
           </AssociationSet>
           <AssociationSet Name="FK_FichaVisitaDomiciliarMaster_UnicaLotacaoTransport" Association="Domain.FK_FichaVisitaDomiciliarMaster_UnicaLotacaoTransport">
             <End Role="UnicaLotacaoTransport" EntitySet="UnicaLotacaoTransport" />
@@ -20982,10 +20988,6 @@ Endereço],
             <End Role="CadastroDomiciliar" EntitySet="CadastroDomiciliar" />
             <End Role="FamiliaRow" EntitySet="FamiliaRow" />
           </AssociationSet>
-          <AssociationSet Name="FichaVisitaDomiciliarChild_MotivoVisita" Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita">
-            <End Role="FichaVisitaDomiciliarChild" EntitySet="FichaVisitaDomiciliarChild" />
-            <End Role="SIGSM_MotivoVisita" EntitySet="SIGSM_MotivoVisita" />
-          </AssociationSet>
           <AssociationSet Name="ASSMED_SistemaPrograma" Association="Domain.ASSMED_SistemaPrograma">
             <End Role="ASSMED_Sistema" EntitySet="ASSMED_Sistema" />
             <End Role="ASSMED_Programa" EntitySet="ASSMED_Programa" />
@@ -21046,6 +21048,15 @@ Endereço],
             <End Role="RastroFicha" EntitySet="RastroFicha" />
           </AssociationSet>
           <EntitySet Name="VW_VISITAS" EntityType="Domain.VW_VISITAS" />
+          <EntitySet Name="FichaVisitaDomiciliarChild" EntityType="Domain.FichaVisitaDomiciliarChild" />
+          <AssociationSet Name="FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" Association="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster">
+            <End Role="FichaVisitaDomiciliarMaster" EntitySet="FichaVisitaDomiciliarMaster" />
+            <End Role="FichaVisitaDomiciliarChild" EntitySet="FichaVisitaDomiciliarChild" />
+          </AssociationSet>
+          <AssociationSet Name="FichaVisitaDomiciliarChild_MotivoVisita" Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita">
+            <End Role="FichaVisitaDomiciliarChild" EntitySet="FichaVisitaDomiciliarChild" />
+            <End Role="SIGSM_MotivoVisita" EntitySet="SIGSM_MotivoVisita" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
           <Key>
@@ -21079,6 +21090,8 @@ Endereço],
           <NavigationProperty Name="TP_Imovel" Relationship="Domain.FK_CadastroDomiciliar_TP_Imovel" FromRole="CadastroDomiciliar" ToRole="TP_Imovel" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_CadastroDomiciliar_UnicaLotacaoTransport" FromRole="CadastroDomiciliar" ToRole="UnicaLotacaoTransport" />
           <NavigationProperty Name="FamiliaRow" Relationship="Domain.Familias" FromRole="CadastroDomiciliar" ToRole="FamiliaRow" />
+          <Property Name="latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CadastroIndividual">
           <Key>
@@ -21101,6 +21114,8 @@ Endereço],
           <NavigationProperty Name="InformacoesSocioDemograficas1" Relationship="Domain.FK_CadastroIndividual_InformacoesSocioDemograficas" FromRole="CadastroIndividual" ToRole="InformacoesSocioDemograficas" />
           <NavigationProperty Name="SaidaCidadaoCadastro1" Relationship="Domain.FK_CadastroIndividual_SaidaCidadaoCadastro" FromRole="CadastroIndividual" ToRole="SaidaCidadaoCadastro" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_CadastroIndividual_UnicaLotacaoTransport" FromRole="CadastroIndividual" ToRole="UnicaLotacaoTransport" />
+          <Property Name="latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
@@ -21241,36 +21256,15 @@ Endereço],
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="dataNascimentoResponsavel" Type="Int32" />
+          <Property Name="dataNascimentoResponsavel" Type="DateTime" Precision="0" />
           <Property Name="numeroCnsResponsavel" Type="String" Nullable="false" MaxLength="15" FixedLength="true" Unicode="true" />
           <Property Name="numeroMembrosFamilia" Type="Int32" />
           <Property Name="numeroProntuario" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="rendaFamiliar" Type="Int32" />
-          <Property Name="resideDesde" Type="Int32" />
+          <Property Name="resideDesde" Type="DateTime" Precision="0" />
           <Property Name="stMudanca" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TP_Renda_Familiar" Relationship="Domain.FK_FamiliaRow_TP_Renda_Familiar" FromRole="FamiliaRow" ToRole="TP_Renda_Familiar" />
           <NavigationProperty Name="CadastroDomiciliar" Relationship="Domain.Familias" FromRole="FamiliaRow" ToRole="CadastroDomiciliar" />
-        </EntityType>
-        <EntityType Name="FichaVisitaDomiciliarChild">
-          <Key>
-            <PropertyRef Name="childId" />
-          </Key>
-          <Property Name="childId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="uuidFicha" Type="String" Nullable="false" MaxLength="44" FixedLength="true" Unicode="false" />
-          <Property Name="turno" Type="Int64" Nullable="false" />
-          <Property Name="numProntuario" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="cnsCidadao" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
-          <Property Name="dtNascimento" Type="Int64" />
-          <Property Name="sexo" Type="Int64" />
-          <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="Boolean" Nullable="false" />
-          <Property Name="desfecho" Type="Int64" Nullable="false" />
-          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
-          <Property Name="tipoDeImovel" Type="Int64" Nullable="false" />
-          <Property Name="pesoAcompanhamentoNutricional" Type="Decimal" Precision="6" Scale="3" />
-          <Property Name="alturaAcompanhamentoNutricional" Type="Decimal" Precision="4" Scale="1" />
-          <NavigationProperty Name="FichaVisitaDomiciliarMaster" Relationship="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" FromRole="FichaVisitaDomiciliarChild" ToRole="FichaVisitaDomiciliarMaster" />
-          <NavigationProperty Name="SIGSM_MotivoVisita" Relationship="Domain.FichaVisitaDomiciliarChild_MotivoVisita" FromRole="FichaVisitaDomiciliarChild" ToRole="SIGSM_MotivoVisita" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarMaster">
           <Key>
@@ -21279,8 +21273,8 @@ Endereço],
           <Property Name="uuidFicha" Type="String" Nullable="false" MaxLength="44" FixedLength="true" Unicode="false" />
           <Property Name="tpCdsOrigem" Type="Int32" Nullable="false" />
           <Property Name="headerTransport" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="FichaVisitaDomiciliarChild" Relationship="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" FromRole="FichaVisitaDomiciliarMaster" ToRole="FichaVisitaDomiciliarChild" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_FichaVisitaDomiciliarMaster_UnicaLotacaoTransport" FromRole="FichaVisitaDomiciliarMaster" ToRole="UnicaLotacaoTransport" />
+          <NavigationProperty Name="FichaVisitaDomiciliarChild" Relationship="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" FromRole="FichaVisitaDomiciliarMaster" ToRole="FichaVisitaDomiciliarChild" />
         </EntityType>
         <EntityType Name="HigienePessoalSituacaoRua">
           <Key>
@@ -21298,7 +21292,7 @@ Endereço],
           <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="nomeSocial" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
           <Property Name="codigoIbgeMunicipioNascimento" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
-          <Property Name="dataNascimentoCidadao" Type="Int32" Nullable="false" />
+          <Property Name="dataNascimentoCidadao" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="desconheceNomeMae" Type="Boolean" Nullable="false" />
           <Property Name="emailCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="nacionalidadeCidadao" Type="Int32" Nullable="false" />
@@ -21316,9 +21310,9 @@ Endereço],
           <Property Name="num_contrato" Type="Int32" />
           <Property Name="nomePaiCidadao" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
           <Property Name="desconheceNomePai" Type="Boolean" Nullable="false" />
-          <Property Name="dtNaturalizacao" Type="Int32" />
+          <Property Name="dtNaturalizacao" Type="DateTime" Nullable="true" Precision="0" />
           <Property Name="portariaNaturalizacao" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Name="dtEntradaBrasil" Type="Int32" />
+          <Property Name="dtEntradaBrasil" Type="DateTime" Nullable="true" Precision="0" />
           <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
           <Property Name="stForaArea" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CadastroIndividual" Relationship="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" FromRole="IdentificacaoUsuarioCidadao" ToRole="CadastroIndividual" />
@@ -21404,7 +21398,7 @@ Endereço],
           </Key>
           <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="motivoSaidaCidadao" Type="Int32" />
-          <Property Name="dataObito" Type="Int32" />
+          <Property Name="dataObito" Type="DateTime" Precision="0" />
           <Property Name="numeroDO" Type="String" MaxLength="9" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="CadastroIndividual" Relationship="Domain.FK_CadastroIndividual_SaidaCidadaoCadastro" FromRole="SaidaCidadaoCadastro" ToRole="CadastroIndividual" />
           <NavigationProperty Name="TP_Motivo_Saida" Relationship="Domain.FK_SaidaCidadaoCadastro_TP_Motivo_Saida" FromRole="SaidaCidadaoCadastro" ToRole="TP_Motivo_Saida" />
@@ -21418,7 +21412,7 @@ Endereço],
           <Property Name="cboCodigo_2002" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="true" />
           <Property Name="cnes" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="false" />
           <Property Name="ine" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
-          <Property Name="dataAtendimento" Type="Int64" Nullable="false" />
+          <Property Name="dataAtendimento" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="codigoIbgeMunicipio" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="false" />
           <Property Name="token" Type="Guid" />
           <NavigationProperty Name="CadastroDomiciliar" Relationship="Domain.FK_CadastroDomiciliar_UnicaLotacaoTransport" FromRole="UnicaLotacaoTransport" ToRole="CadastroDomiciliar" />
@@ -27367,6 +27361,7 @@ Endereço],
           <Property Name="pais_nasc" Type="Int32" />
           <Property Name="codibge_munic_nasc" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
           <Property Name="ocupacao_CodigoCbo2002" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="st_fora_area" Type="Boolean" />
         </EntityType>
         <EntityType Name="Etnia">
           <Key>
@@ -29037,10 +29032,14 @@ Endereço],
           <Property Name="desfecho" Type="Byte" Nullable="false" />
           <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
           <Property Name="peso_acompanhamento_nutricional" Type="Decimal" Precision="6" Scale="3" />
-          <Property Name="st_fora_area" Type="Boolean" Nullable="false" />
+          <Property Name="st_fora_area" Type="Boolean" />
           <Property Name="tipo_de_imovel" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_ASSMED_Cadastro" FromRole="SIGSM_Visita_Domiciliar_Paciente" ToRole="ASSMED_Cadastro" />
           <NavigationProperty Name="SIGSM_Visita_Domiciliar" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_SIGSM_Visita_Domiciliar" FromRole="SIGSM_Visita_Domiciliar_Paciente" ToRole="SIGSM_Visita_Domiciliar" />
+          <Property Name="acao_educacional" Type="Boolean" />
+          <Property Name="imovel_com_foco" Type="Boolean" />
+          <Property Name="acao_mecanica" Type="Boolean" />
+          <Property Name="tratamento_focal" Type="Boolean" />
         </EntityType>
         <EntityType Name="SituacaoFamiliar">
           <Key>
@@ -30589,18 +30588,6 @@ Endereço],
             </Principal>
             <Dependent Role="FamiliaRow">
               <PropertyRef Name="rendaFamiliar" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster">
-          <End Type="Domain.FichaVisitaDomiciliarMaster" Role="FichaVisitaDomiciliarMaster" Multiplicity="1" />
-          <End Type="Domain.FichaVisitaDomiciliarChild" Role="FichaVisitaDomiciliarChild" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FichaVisitaDomiciliarMaster">
-              <PropertyRef Name="uuidFicha" />
-            </Principal>
-            <Dependent Role="FichaVisitaDomiciliarChild">
-              <PropertyRef Name="uuidFicha" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -36712,10 +36699,6 @@ Endereço],
           <End Type="Domain.CadastroDomiciliar" Role="CadastroDomiciliar" Multiplicity="*" />
           <End Type="Domain.FamiliaRow" Role="FamiliaRow" Multiplicity="*" />
         </Association>
-        <Association Name="FichaVisitaDomiciliarChild_MotivoVisita">
-          <End Type="Domain.FichaVisitaDomiciliarChild" Role="FichaVisitaDomiciliarChild" Multiplicity="*" />
-          <End Type="Domain.SIGSM_MotivoVisita" Role="SIGSM_MotivoVisita" Multiplicity="*" />
-        </Association>
         <Association Name="ASSMED_SistemaPrograma">
           <End Type="Domain.ASSMED_Sistema" Role="ASSMED_Sistema" Multiplicity="*" />
           <End Type="Domain.ASSMED_Programa" Role="ASSMED_Programa" Multiplicity="*" />
@@ -37093,6 +37076,45 @@ Endereço],
           <Property Name="cnsProfissional" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="NomePaciente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="FichaVisitaDomiciliarChild">
+          <Key>
+            <PropertyRef Name="childId" />
+          </Key>
+          <Property Name="uuidFicha" Type="String" Nullable="false" MaxLength="44" FixedLength="true" Unicode="false" />
+          <Property Name="turno" Type="Int64" Nullable="false" />
+          <Property Name="numProntuario" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="cnsCidadao" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
+          <Property Name="dtNascimento" Type="DateTime" Precision="0" />
+          <Property Name="sexo" Type="Int64" />
+          <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="Boolean" Nullable="false" />
+          <Property Name="desfecho" Type="Int64" Nullable="false" />
+          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
+          <Property Name="tipoDeImovel" Type="Int64" Nullable="false" />
+          <Property Name="pesoAcompanhamentoNutricional" Type="Decimal" Precision="6" Scale="3" />
+          <Property Name="alturaAcompanhamentoNutricional" Type="Decimal" Precision="4" Scale="1" />
+          <Property Name="latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="childId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="FichaVisitaDomiciliarMaster" Relationship="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" FromRole="FichaVisitaDomiciliarChild" ToRole="FichaVisitaDomiciliarMaster" />
+          <NavigationProperty Name="SIGSM_MotivoVisita" Relationship="Domain.FichaVisitaDomiciliarChild_MotivoVisita" FromRole="FichaVisitaDomiciliarChild" ToRole="SIGSM_MotivoVisita" />
+        </EntityType>
+        <Association Name="FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster">
+          <End Type="Domain.FichaVisitaDomiciliarMaster" Role="FichaVisitaDomiciliarMaster" Multiplicity="1" />
+          <End Type="Domain.FichaVisitaDomiciliarChild" Role="FichaVisitaDomiciliarChild" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FichaVisitaDomiciliarMaster">
+              <PropertyRef Name="uuidFicha" />
+            </Principal>
+            <Dependent Role="FichaVisitaDomiciliarChild">
+              <PropertyRef Name="uuidFicha" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FichaVisitaDomiciliarChild_MotivoVisita">
+          <End Type="Domain.FichaVisitaDomiciliarChild" Role="FichaVisitaDomiciliarChild" Multiplicity="*" />
+          <End Type="Domain.SIGSM_MotivoVisita" Role="SIGSM_MotivoVisita" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -37113,6 +37135,8 @@ Endereço],
           <EntitySetMapping Name="CadastroDomiciliar">
             <EntityTypeMapping TypeName="Domain.CadastroDomiciliar">
               <MappingFragment StoreEntitySet="CadastroDomiciliar">
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
                 <ScalarProperty Name="headerTransport" ColumnName="headerTransport" />
                 <ScalarProperty Name="instituicaoPermanencia" ColumnName="instituicaoPermanencia" />
                 <ScalarProperty Name="tipoDeImovel" ColumnName="tipoDeImovel" />
@@ -37131,6 +37155,8 @@ Endereço],
           <EntitySetMapping Name="CadastroIndividual">
             <EntityTypeMapping TypeName="Domain.CadastroIndividual">
               <MappingFragment StoreEntitySet="CadastroIndividual">
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
                 <ScalarProperty Name="headerTransport" ColumnName="headerTransport" />
                 <ScalarProperty Name="saidaCidadaoCadastro" ColumnName="saidaCidadaoCadastro" />
                 <ScalarProperty Name="uuidFichaOriginadora" ColumnName="uuidFichaOriginadora" />
@@ -37280,26 +37306,6 @@ Endereço],
                 <ScalarProperty Name="numeroCnsResponsavel" ColumnName="numeroCnsResponsavel" />
                 <ScalarProperty Name="dataNascimentoResponsavel" ColumnName="dataNascimentoResponsavel" />
                 <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FichaVisitaDomiciliarChild">
-            <EntityTypeMapping TypeName="Domain.FichaVisitaDomiciliarChild">
-              <MappingFragment StoreEntitySet="FichaVisitaDomiciliarChild">
-                <ScalarProperty Name="alturaAcompanhamentoNutricional" ColumnName="alturaAcompanhamentoNutricional" />
-                <ScalarProperty Name="pesoAcompanhamentoNutricional" ColumnName="pesoAcompanhamentoNutricional" />
-                <ScalarProperty Name="tipoDeImovel" ColumnName="tipoDeImovel" />
-                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
-                <ScalarProperty Name="microarea" ColumnName="microarea" />
-                <ScalarProperty Name="desfecho" ColumnName="desfecho" />
-                <ScalarProperty Name="statusVisitaCompartilhadaOutroProfissional" ColumnName="statusVisitaCompartilhadaOutroProfissional" />
-                <ScalarProperty Name="sexo" ColumnName="sexo" />
-                <ScalarProperty Name="dtNascimento" ColumnName="dtNascimento" />
-                <ScalarProperty Name="cnsCidadao" ColumnName="cnsCidadao" />
-                <ScalarProperty Name="numProntuario" ColumnName="numProntuario" />
-                <ScalarProperty Name="turno" ColumnName="turno" />
-                <ScalarProperty Name="uuidFicha" ColumnName="uuidFicha" />
-                <ScalarProperty Name="childId" ColumnName="childId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -42366,6 +42372,7 @@ Endereço],
           <EntitySetMapping Name="Domicilio_Individual">
             <EntityTypeMapping TypeName="Domain.Domicilio_Individual">
               <MappingFragment StoreEntitySet="Domicilio_Individual">
+                <ScalarProperty Name="st_fora_area" ColumnName="st_fora_area" />
                 <ScalarProperty Name="ocupacao_CodigoCbo2002" ColumnName="ocupacao_CodigoCbo2002" />
                 <ScalarProperty Name="codibge_munic_nasc" ColumnName="codibge_munic_nasc" />
                 <ScalarProperty Name="pais_nasc" ColumnName="pais_nasc" />
@@ -43943,6 +43950,10 @@ Endereço],
           <EntitySetMapping Name="SIGSM_Visita_Domiciliar_Paciente">
             <EntityTypeMapping TypeName="Domain.SIGSM_Visita_Domiciliar_Paciente">
               <MappingFragment StoreEntitySet="SIGSM_Visita_Domiciliar_Paciente">
+                <ScalarProperty Name="tratamento_focal" ColumnName="tratamento_focal" />
+                <ScalarProperty Name="acao_mecanica" ColumnName="acao_mecanica" />
+                <ScalarProperty Name="imovel_com_foco" ColumnName="imovel_com_foco" />
+                <ScalarProperty Name="acao_educacional" ColumnName="acao_educacional" />
                 <ScalarProperty Name="tipo_de_imovel" ColumnName="tipo_de_imovel" />
                 <ScalarProperty Name="st_fora_area" ColumnName="st_fora_area" />
                 <ScalarProperty Name="peso_acompanhamento_nutricional" ColumnName="peso_acompanhamento_nutricional" />
@@ -45316,14 +45327,6 @@ Endereço],
               <ScalarProperty Name="id" ColumnName="id_cadatro_domiciliar" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="FichaVisitaDomiciliarChild_MotivoVisita" TypeName="Domain.FichaVisitaDomiciliarChild_MotivoVisita" StoreEntitySet="FichaVisitaDomiciliarChild_MotivoVisita">
-            <EndProperty Name="SIGSM_MotivoVisita">
-              <ScalarProperty Name="codigo" ColumnName="codigo" />
-            </EndProperty>
-            <EndProperty Name="FichaVisitaDomiciliarChild">
-              <ScalarProperty Name="childId" ColumnName="childId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="ASSMED_SistemaPrograma" TypeName="Domain.ASSMED_SistemaPrograma" StoreEntitySet="ASSMED_SistemaPrograma">
             <EndProperty Name="ASSMED_Programa">
               <ScalarProperty Name="NomProg" ColumnName="NomProg" />
@@ -45661,6 +45664,36 @@ Endereço],
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="FichaVisitaDomiciliarChild">
+            <EntityTypeMapping TypeName="Domain.FichaVisitaDomiciliarChild">
+              <MappingFragment StoreEntitySet="FichaVisitaDomiciliarChild">
+                <ScalarProperty Name="childId" ColumnName="childId" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="alturaAcompanhamentoNutricional" ColumnName="alturaAcompanhamentoNutricional" />
+                <ScalarProperty Name="pesoAcompanhamentoNutricional" ColumnName="pesoAcompanhamentoNutricional" />
+                <ScalarProperty Name="tipoDeImovel" ColumnName="tipoDeImovel" />
+                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
+                <ScalarProperty Name="microarea" ColumnName="microarea" />
+                <ScalarProperty Name="desfecho" ColumnName="desfecho" />
+                <ScalarProperty Name="statusVisitaCompartilhadaOutroProfissional" ColumnName="statusVisitaCompartilhadaOutroProfissional" />
+                <ScalarProperty Name="sexo" ColumnName="sexo" />
+                <ScalarProperty Name="dtNascimento" ColumnName="dtNascimento" />
+                <ScalarProperty Name="cnsCidadao" ColumnName="cnsCidadao" />
+                <ScalarProperty Name="numProntuario" ColumnName="numProntuario" />
+                <ScalarProperty Name="turno" ColumnName="turno" />
+                <ScalarProperty Name="uuidFicha" ColumnName="uuidFicha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FichaVisitaDomiciliarChild_MotivoVisita" TypeName="Domain.FichaVisitaDomiciliarChild_MotivoVisita" StoreEntitySet="FichaVisitaDomiciliarChild_MotivoVisita">
+            <EndProperty Name="SIGSM_MotivoVisita">
+              <ScalarProperty Name="codigo" ColumnName="codigo" />
+            </EndProperty>
+            <EndProperty Name="FichaVisitaDomiciliarChild">
+              <ScalarProperty Name="childId" ColumnName="childId" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

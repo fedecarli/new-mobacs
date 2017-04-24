@@ -96,5 +96,6 @@ namespace Softpark.Models
         public Nullable<int> pais_nasc { get; set; }
         public string codibge_munic_nasc { get; set; }
         public string ocupacao_CodigoCbo2002 { get; set; }
+        public Nullable<bool> st_fora_area { get; set; }
     }
 }

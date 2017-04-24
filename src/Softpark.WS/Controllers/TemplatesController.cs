@@ -46,9 +46,9 @@ namespace Softpark.WS.Controllers
             VW_Profissional[] profiss = new VW_Profissional[0];
 
             if (setor != null)
-                profiss = db.VW_Profissional.AsEnumerable().Where(x => x.CodUsuario == id && x.CNES.Trim() == setor.CNES.Trim()).ToArray();
+                profiss = db.VW_Profissional.AsEnumerable().Where(x => x.CNES.Trim() == setor.CNES.Trim()).ToArray();
             else
-                profiss = db.VW_Profissional.AsEnumerable().Where(x => x.CodUsuario == id).ToArray();
+                profiss = db.VW_Profissional.ToArray();
 
             SetoresINEs[] ines = new SetoresINEs[0];
             if (setor != null)

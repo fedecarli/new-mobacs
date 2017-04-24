@@ -1,4 +1,27 @@
-﻿/****** Script do comando SelectTopNRows de SSMS  ******/
+﻿CREATE TABLE [api].[RastroFicha](
+	[token] [uniqueidentifier] NOT NULL,
+	[CodUsu] [int] NOT NULL,
+	[DataModificacao] [datetime] NOT NULL,
+	[DadoAnterior] [ntext] NULL,
+	[DadoAtual] [ntext] NULL,
+ CONSTRAINT [PK_RastroFicha] PRIMARY KEY CLUSTERED 
+(
+	[token] ASC,
+	[CodUsu] ASC,
+	[DataModificacao] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [api].[RastroFicha]  WITH CHECK ADD  CONSTRAINT [FK_RastroFicha_OrigemVisita] FOREIGN KEY([token])
+REFERENCES [api].[OrigemVisita] ([token])
+GO
+
+ALTER TABLE [api].[RastroFicha] CHECK CONSTRAINT [FK_RastroFicha_OrigemVisita]
+GO
+
+/****** Script do comando SelectTopNRows de SSMS  ******/
 CREATE VIEW [api].[VW_VISITAS] AS
 	 SELECT _child.childId,
 			_child.uuidFicha AS masterId,

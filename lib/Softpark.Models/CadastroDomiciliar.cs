@@ -33,6 +33,8 @@ namespace Softpark.Models
         public int tipoDeImovel { get; set; }
         public Nullable<System.Guid> instituicaoPermanencia { get; set; }
         public System.Guid headerTransport { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnimalNoDomicilio> AnimalNoDomicilio { get; set; }

@@ -1,4 +1,5 @@
-﻿using Softpark.Models;
+﻿using Softpark.Infrastructure.Extras;
+using Softpark.Models;
 using Softpark.WS.Validators;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,35 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CadastroDomiciliarViewModelCollection : List<GetCadastroDomiciliarViewModel>
     {
-        public static implicit operator CadastroDomiciliarViewModelCollection(CadastroDomiciliar[] models)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        public CadastroDomiciliarViewModelCollection(IEnumerable<CadastroDomiciliar> models)
         {
-            var collection = new CadastroDomiciliarViewModelCollection();
-            collection.AddRange(models);
-            return collection;
+            AddRange(models);
         }
 
-        public void AddRange(CadastroDomiciliar[] models)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public static implicit operator CadastroDomiciliarViewModelCollection(CadastroDomiciliar[] models)
+        {
+            return new CadastroDomiciliarViewModelCollection(models);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        public void AddRange(IEnumerable<CadastroDomiciliar> models)
         {
             foreach (var model in models)
             {
@@ -45,6 +65,16 @@ namespace Softpark.WS.ViewModels
         public List<int> animalNoDomicilio { get; set; } = new List<int>();
         public List<FamiliaRowViewModel> familiaRow { get; set; } = new List<FamiliaRowViewModel>();
 
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string latitude { get; set; }
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string longitude { get; set; }
+
         public async Task<CadastroDomiciliar> ToModel()
         {
             var dc = DomainContainer.Current.CadastroDomiciliar.Create();
@@ -60,6 +90,8 @@ namespace Softpark.WS.ViewModels
             dc.uuidFichaOriginadora = uuidFichaOriginadora;
             dc.tipoDeImovel = tipoDeImovel;
             dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel();
+            dc.latitude = latitude;
+            dc.longitude = longitude;
 
             TP_Animais an;
             foreach(var a in animalNoDomicilio)
@@ -109,6 +141,8 @@ namespace Softpark.WS.ViewModels
             uuidFichaOriginadora = model.uuidFichaOriginadora;
             tipoDeImovel = model.tipoDeImovel;
             instituicaoPermanencia = model.InstituicaoPermanencia1;
+            latitude = model.latitude;
+            longitude = model.longitude;
 
             animalNoDomicilio.AddRange(model.AnimalNoDomicilio.Select(a => a.id_tp_animal));
 
@@ -157,12 +191,12 @@ namespace Softpark.WS.ViewModels
 
     public class FamiliaRowViewModel
     {
-        public int? dataNascimentoResponsavel { get; set; }
+        public long? dataNascimentoResponsavel { get; set; }
         public string numeroCnsResponsavel { get; set; }
         public int? numeroMembrosFamilia { get; set; }
         public string numeroProntuario { get; set; }
         public int? rendaFamiliar { get; set; }
-        public int? resideDesde { get; set; }
+        public long? resideDesde { get; set; }
         public bool stMudanca { get; set; }
 
         public FamiliaRow ToModel()
@@ -170,12 +204,12 @@ namespace Softpark.WS.ViewModels
             var fr = DomainContainer.Current.FamiliaRow.Create();
 
             fr.id = Guid.NewGuid();
-            fr.dataNascimentoResponsavel = dataNascimentoResponsavel;
+            fr.dataNascimentoResponsavel = dataNascimentoResponsavel?.FromUnix();
             fr.numeroCnsResponsavel = numeroCnsResponsavel;
             fr.numeroMembrosFamilia = numeroMembrosFamilia;
             fr.numeroProntuario = numeroProntuario;
             fr.rendaFamiliar = rendaFamiliar;
-            fr.resideDesde = resideDesde;
+            fr.resideDesde = resideDesde?.FromUnix();
             fr.stMudanca = stMudanca;
 
             DomainContainer.Current.FamiliaRow.Add(fr);
@@ -200,12 +234,12 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
             
-            dataNascimentoResponsavel = model.dataNascimentoResponsavel;
+            dataNascimentoResponsavel = model.dataNascimentoResponsavel?.ToUnix();
             numeroCnsResponsavel = model.numeroCnsResponsavel;
             numeroMembrosFamilia = model.numeroMembrosFamilia;
             numeroProntuario = model.numeroProntuario;
             rendaFamiliar = model.rendaFamiliar;
-            resideDesde = model.resideDesde;
+            resideDesde = model.resideDesde?.ToUnix();
             stMudanca = model.stMudanca;
         }
     }

@@ -7,20 +7,20 @@ namespace Softpark.Models
     public partial class FichaVisitaDomiciliarChild
     {
         [NotMapped]
-        public virtual DateTime? DataNascimento
+        public virtual long? DataNascimento
         {
-            get { return dtNascimento.HasValue ? dtNascimento.Value.FromUnix(true) : (DateTime?)null; }
-            set { dtNascimento = value.HasValue ? value.Value.ToUnix() : (long?)null; }
+            get { return dtNascimento.HasValue ? dtNascimento.Value.ToUnix() : (long?)null; }
+            set { dtNascimento = value.HasValue ? value.Value.FromUnix() : (DateTime?)null; }
         }
     }
 
     public partial class UnicaLotacaoTransport
     {
         [NotMapped]
-        public virtual DateTime DataDeAtendimento
+        public virtual long DataDeAtendimento
         {
-            get { return dataAtendimento.FromUnix(true); }
-            set { dataAtendimento = value.ToUnix(); }
+            get { return dataAtendimento.ToUnix(); }
+            set { dataAtendimento = value.FromUnix(); }
         }
     }
 }

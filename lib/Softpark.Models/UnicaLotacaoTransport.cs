@@ -27,7 +27,7 @@ namespace Softpark.Models
         public string cboCodigo_2002 { get; set; }
         public string cnes { get; set; }
         public string ine { get; set; }
-        public long dataAtendimento { get; set; }
+        public System.DateTime dataAtendimento { get; set; }
         public string codigoIbgeMunicipio { get; set; }
         public Nullable<System.Guid> token { get; set; }
     

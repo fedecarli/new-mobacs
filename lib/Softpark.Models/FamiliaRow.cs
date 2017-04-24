@@ -21,12 +21,12 @@ namespace Softpark.Models
         }
     
         public System.Guid id { get; set; }
-        public Nullable<int> dataNascimentoResponsavel { get; set; }
+        public Nullable<System.DateTime> dataNascimentoResponsavel { get; set; }
         public string numeroCnsResponsavel { get; set; }
         public Nullable<int> numeroMembrosFamilia { get; set; }
         public string numeroProntuario { get; set; }
         public Nullable<int> rendaFamiliar { get; set; }
-        public Nullable<int> resideDesde { get; set; }
+        public Nullable<System.DateTime> resideDesde { get; set; }
         public bool stMudanca { get; set; }
     
         public virtual TP_Renda_Familiar TP_Renda_Familiar { get; set; }

@@ -32,10 +32,19 @@ namespace Softpark.WS.ViewModels
         Noite = 3
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class FichaVisitaDomiciliarChildConsultaViewModel
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTime DataAtendimento { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string CodigoIbgeMunicipio { get; set; }
 
         /// <summary>
@@ -44,8 +53,14 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(OrigemVisita.token))]
         public Guid? Token { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public VW_Profissional Profissional { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RastroFicha UltimaModificacao { get; set; }
 
         /// <summary>
@@ -127,7 +142,7 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(FichaVisitaDomiciliarChild.pesoAcompanhamentoNutricional))]
         [Range(0.5, 500, ErrorMessage = "O campo pesoAcompanhamentoNutricional deve ter entre 0.5 e 500 Kg.")]
         [DefaultValue(null)]
-        public decimal? PesoAcompanhamentoNutricional { get; set; } = null;
+        public decimal? PesoAcompanhamentoNutricional { get; set; }
 
         /// <summary>
         /// Altura do paciente
@@ -135,7 +150,7 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(FichaVisitaDomiciliarChild.alturaAcompanhamentoNutricional))]
         [Range(20, 250, ErrorMessage = "O campo alturaAcompanhamentoNutricional deve ter entre 20 e 250 cm.")]
         [DefaultValue(null)]
-        public decimal? AlturaAcompanhamentoNutricional { get; set; } = null;
+        public decimal? AlturaAcompanhamentoNutricional { get; set; }
 
         /// <summary>
         /// Visita compartilhada
@@ -144,23 +159,53 @@ namespace Softpark.WS.ViewModels
         public bool StatusVisitaCompartilhadaOutroProfissional { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class FichaVisitaDomiciliarChildCadastroViewModelCollection : List<FichaVisitaDomiciliarChildCadastroViewModel>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        public FichaVisitaDomiciliarChildCadastroViewModelCollection(IEnumerable<FichaVisitaDomiciliarChild> models)
+        {
+            AddRange(models);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection"></param>
+        public FichaVisitaDomiciliarChildCadastroViewModelCollection(IEnumerable<FichaVisitaDomiciliarChildCadastroViewModel> collection) : base(collection)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public static implicit operator FichaVisitaDomiciliarChildCadastroViewModelCollection(FichaVisitaDomiciliarChild[] models)
         {
-            var collection = new FichaVisitaDomiciliarChildCadastroViewModelCollection();
-            collection.AddRange(models);
-            return collection;
+            return new FichaVisitaDomiciliarChildCadastroViewModelCollection(models);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public static implicit operator FichaVisitaDomiciliarChildCadastroViewModelCollection(FichaVisitaDomiciliarChildCadastroViewModel[] models)
         {
-            var collection = new FichaVisitaDomiciliarChildCadastroViewModelCollection();
-            collection.AddRange(models);
-            return collection;
+            return new FichaVisitaDomiciliarChildCadastroViewModelCollection(models);
         }
 
-        public void AddRange(FichaVisitaDomiciliarChild[] models)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        public void AddRange(IEnumerable<FichaVisitaDomiciliarChild> models)
         {
             foreach (var model in models)
             {
@@ -178,6 +223,8 @@ namespace Softpark.WS.ViewModels
     [DataContract(Name = nameof(FichaVisitaDomiciliarChild))]
     public class FichaVisitaDomiciliarChildCadastroViewModel
     {
+#pragma warning disable IDE1006 // Naming Styles
+        // ReSharper disable once InconsistentNaming
         /// <summary>
         /// Token da transmissão
         /// </summary>
@@ -192,6 +239,7 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(turno))]
         [RegularExpression(@"^([123])$", ErrorMessage = "O campo turno espera pelos valores 1, 2 ou 3.")]
         [Range(1, 3, ErrorMessage = "O campo turno espera pelos valores 1, 2 ou 3.")]
+        // ReSharper disable once InconsistentNaming
         public long turno { get; set; }
 
         /// <summary>
@@ -200,6 +248,7 @@ namespace Softpark.WS.ViewModels
         [RegularExpression(@"^([a-zA-Z0-9]*)$", ErrorMessage = "O campo numProntuario aceita somente letras e números.")]
         [StringLength(30, MinimumLength = 0, ErrorMessage = "O campo numProntuario deve ter entre 0 e 30 caracteres.")]
         [DataMember(Name = nameof(numProntuario))]
+        // ReSharper disable once InconsistentNaming
         public string numProntuario { get; set; }
 
         /// <summary>
@@ -209,6 +258,7 @@ namespace Softpark.WS.ViewModels
         [StringLength(15, MinimumLength = 15, ErrorMessage = "O campo cnsCidadao deve ter exatamente 15 caracteres")]
         [DataMember(Name = nameof(cnsCidadao))]
         [CnsValidation(true, ErrorMessage = "CNS inválido")]
+        // ReSharper disable once InconsistentNaming
         public string cnsCidadao { get; set; }
 
         /// <summary>
@@ -216,6 +266,7 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         [DataMember(Name = nameof(dtNascimento))]
         [CustomValidation(typeof(Epoch), nameof(Epoch.ValidateESUSDate), ErrorMessage = "Data de nascimento inválida.")]
+        // ReSharper disable once InconsistentNaming
         public long? dtNascimento { get; set; }
 
         /// <summary>
@@ -224,6 +275,7 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(sexo))]
         [RegularExpression(@"^([014])$", ErrorMessage = "O campo sexo espera pelos valores 0, 1 ou 4.")]
         [DefaultValue(4)]
+        // ReSharper disable once InconsistentNaming
         public long sexo { get; set; }
 
         /// <summary>
@@ -231,6 +283,7 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         [DataMember(Name = nameof(motivosVisita))]
         [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
+        // ReSharper disable once InconsistentNaming
         public ISet<long> motivosVisita { get; set; } = new HashSet<long>();
 
         /// <summary>
@@ -239,6 +292,7 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(desfecho))]
         [Required]
         [Range(1, 3, ErrorMessage = "O campo desfecho espera pelos valores 1, 2 ou 3.")]
+        // ReSharper disable once InconsistentNaming
         public long desfecho { get; set; }
 
         /// <summary>
@@ -246,12 +300,14 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         [DataMember(Name = nameof(microarea))]
         [StringLength(2, MinimumLength = 2, ErrorMessage = "O campo microarea deve ter exatamente 2 digitos.")]
+        // ReSharper disable once InconsistentNaming
         public string microarea { get; set; }
 
         /// <summary>
         /// Fora de área
         /// </summary>
         [DataMember(Name = nameof(stForaArea))]
+        // ReSharper disable once InconsistentNaming
         public bool stForaArea { get; set; }
 
         /// <summary>
@@ -260,6 +316,7 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(tipoDeImovel))]
         [Required]
         [RegularExpression(@"^([1-9]|1[012]|99)$", ErrorMessage = "O campo tipoDeImovel espera um tipo válido. Consulte http://esusab.github.io/integracao/docs/dicionario/dicionario.html#tipodeimovel.")]
+        // ReSharper disable once InconsistentNaming
         public long tipoDeImovel { get; set; }
 
         /// <summary>
@@ -268,7 +325,8 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(pesoAcompanhamentoNutricional))]
         [Range(0.5, 500, ErrorMessage = "O campo pesoAcompanhamentoNutricional deve ter entre 0.5 e 500 Kg.")]
         [DefaultValue(null)]
-        public double? pesoAcompanhamentoNutricional { get; set; } = null;
+        // ReSharper disable once InconsistentNaming
+        public double? pesoAcompanhamentoNutricional { get; set; }
 
         /// <summary>
         /// Altura do paciente
@@ -276,13 +334,27 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(alturaAcompanhamentoNutricional))]
         [Range(20, 250, ErrorMessage = "O campo alturaAcompanhamentoNutricional deve ter entre 20 e 250 cm.")]
         [DefaultValue(null)]
-        public double? alturaAcompanhamentoNutricional { get; set; } = null;
+        // ReSharper disable once InconsistentNaming
+        public double? alturaAcompanhamentoNutricional { get; set; }
 
         /// <summary>
         /// Visita compartilhada
         /// </summary>
         [DataMember(Name = nameof(statusVisitaCompartilhadaOutroProfissional))]
+        // ReSharper disable once InconsistentNaming
         public bool statusVisitaCompartilhadaOutroProfissional { get; set; }
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string latitude { get; set; }
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string longitude { get; set; }
 
         /// <summary>
         /// 
@@ -301,12 +373,10 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            var db = DomainContainer.Current;
-
             alturaAcompanhamentoNutricional = model.alturaAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(model.alturaAcompanhamentoNutricional));
             cnsCidadao = model.cnsCidadao;
             desfecho = model.desfecho;
-            dtNascimento = model.dtNascimento;
+            dtNascimento = model.dtNascimento?.ToUnix();
             microarea = model.microarea;
             numProntuario = model.numProntuario;
             pesoAcompanhamentoNutricional = model.pesoAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(pesoAcompanhamentoNutricional));
@@ -315,16 +385,19 @@ namespace Softpark.WS.ViewModels
             stForaArea = model.stForaArea;
             tipoDeImovel = model.tipoDeImovel;
             turno = model.turno;
+            latitude = model.latitude;
+            longitude = model.longitude;
         }
 
         internal FichaVisitaDomiciliarChild ToModel()
         {
             var fvdc = DomainContainer.Current.FichaVisitaDomiciliarChild.Create();
 
+            fvdc.childId = Guid.NewGuid();
             fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
             fvdc.cnsCidadao = cnsCidadao;
             fvdc.desfecho = desfecho;
-            fvdc.dtNascimento = dtNascimento;
+            fvdc.dtNascimento = dtNascimento?.FromUnix();
             fvdc.microarea = microarea;
             fvdc.numProntuario = numProntuario;
             fvdc.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional == null || pesoAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(pesoAcompanhamentoNutricional);
@@ -333,8 +406,11 @@ namespace Softpark.WS.ViewModels
             fvdc.stForaArea = stForaArea;
             fvdc.tipoDeImovel = tipoDeImovel;
             fvdc.turno = turno;
+            fvdc.latitude = latitude;
+            fvdc.longitude = longitude;
 
             return fvdc;
         }
+#pragma warning restore IDE1006 // Naming Styles
     }
 }

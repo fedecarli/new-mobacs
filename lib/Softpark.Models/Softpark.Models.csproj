@@ -1698,6 +1698,7 @@
     <Compile Include="VW_GRUPO.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_IdentificacaoUsuarioCidadao.cs" />
     <Compile Include="VW_INDIVIDUAIS.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

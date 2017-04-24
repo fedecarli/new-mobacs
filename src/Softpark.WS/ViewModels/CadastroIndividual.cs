@@ -1,4 +1,5 @@
-﻿using Softpark.Models;
+﻿using Softpark.Infrastructure.Extras;
+using Softpark.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -7,30 +8,58 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CadastroIndividualViewModelCollection : List<GetCadastroIndividualViewModel>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public CadastroIndividualViewModelCollection() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
         public CadastroIndividualViewModelCollection(IEnumerable<CadastroIndividual> models)
         {
             AddRange(models);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
         public CadastroIndividualViewModelCollection(IEnumerable<GetCadastroIndividualViewModel> models)
         {
             AddRange(models);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public static implicit operator CadastroIndividualViewModelCollection(CadastroIndividual[] models)
         {
             return new CadastroIndividualViewModelCollection(models);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public static implicit operator CadastroIndividualViewModelCollection(GetCadastroIndividualViewModel[] models)
         {
             return new CadastroIndividualViewModelCollection(models);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
         public void AddRange(IEnumerable<CadastroIndividual> models)
         {
             foreach (var model in models)
@@ -48,53 +77,80 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Token de acesso
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public Guid token { get; set; }
         /// <summary>
         /// Condições de Saúde
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public CondicoesDeSaudeViewModel condicoesDeSaude { get; set; }
         /// <summary>
         /// Em Situação de Rua
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public EmSituacaoDeRuaViewModel emSituacaoDeRua { get; set; }
         /// <summary>
         /// Ficha atualizada
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool fichaAtualizada { get; set; }
         /// <summary>
         /// Identificação do usuário cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public IdentificacaoUsuarioCidadaoViewModel identificacaoUsuarioCidadao { get; set; }
         /// <summary>
         /// Informações socio demográficas
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public InformacoesSocioDemograficasViewModel informacoesSocioDemograficas { get; set; }
         /// <summary>
         /// Termo de cadastro recusado
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTermoRecusaCadastroIndividualAtencaoBasica { get; set; }
         /// <summary>
         /// Ficha de origem, informar somente se a ficha for de atualização
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string uuidFichaOriginadora { get; set; }
         /// <summary>
         /// Dados da saída do cidadão do cadastro
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; }
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string latitude { get; set; }
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string longitude { get; set; }
 
         internal async Task<CadastroIndividual> ToModel()
         {
             var ci = DomainContainer.Current.CadastroIndividual.Create();
 
             ci.id = Guid.NewGuid();
-            ci.CondicoesDeSaude1 = await condicoesDeSaude?.ToModel();
-            ci.EmSituacaoDeRua1 = await emSituacaoDeRua?.ToModel();
+            var model = condicoesDeSaude?.ToModel();
+            if (model != null) ci.CondicoesDeSaude1 = await model;
+            var task = emSituacaoDeRua?.ToModel();
+            if (task != null) ci.EmSituacaoDeRua1 = await task;
             ci.fichaAtualizada = fichaAtualizada;
             ci.IdentificacaoUsuarioCidadao1 = identificacaoUsuarioCidadao?.ToModel();
-            ci.InformacoesSocioDemograficas1 = await informacoesSocioDemograficas?.ToModel();
+            var o = informacoesSocioDemograficas?.ToModel();
+            if (o != null)
+                ci.InformacoesSocioDemograficas1 = await o;
             ci.statusTermoRecusaCadastroIndividualAtencaoBasica = statusTermoRecusaCadastroIndividualAtencaoBasica;
             ci.uuidFichaOriginadora = uuidFichaOriginadora;
             ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel();
+            ci.latitude = latitude;
+            ci.longitude = longitude;
 
             return ci;
         }
@@ -115,8 +171,8 @@ namespace Softpark.WS.ViewModels
         internal void ApplyModel(CadastroIndividual model)
         {
             if (model == null) return;
-            
-            token = model.UnicaLotacaoTransport.token??Guid.Empty;
+
+            token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
             condicoesDeSaude = model.CondicoesDeSaude1;
             emSituacaoDeRua = model.EmSituacaoDeRua1;
             fichaAtualizada = model.fichaAtualizada;
@@ -125,12 +181,27 @@ namespace Softpark.WS.ViewModels
             statusTermoRecusaCadastroIndividualAtencaoBasica = model.statusTermoRecusaCadastroIndividualAtencaoBasica;
             uuidFichaOriginadora = model.uuidFichaOriginadora;
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
+            latitude = model.latitude;
+            longitude = model.longitude;
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string uuid { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public UnicaLotacaoTransport headerTransport { get; set; }
 
         /// <summary>
         /// 
@@ -138,7 +209,12 @@ namespace Softpark.WS.ViewModels
         /// <param name="model"></param>
         public static implicit operator GetCadastroIndividualViewModel(CadastroIndividual model)
         {
-            var vm = new GetCadastroIndividualViewModel { uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id };
+            var vm = new GetCadastroIndividualViewModel
+            {
+                uuid = model.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem
+                != 1 ? model.UnicaLotacaoTransport.cnes + "-" + model.id : null,
+                headerTransport = model.UnicaLotacaoTransport
+            };
 
             vm.ApplyModel(model);
 
@@ -154,14 +230,17 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Motivo da saída do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? motivoSaidaCidadao { get; set; }
         /// <summary>
         /// Data de óbito
         /// </summary>
-        public int? dataObito { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public long? dataObito { get; set; }
         /// <summary>
         /// Número da Declaração
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string numeroDO { get; set; }
 
         /// <summary>
@@ -180,9 +259,9 @@ namespace Softpark.WS.ViewModels
         private void ApplyModel(SaidaCidadaoCadastro model)
         {
             if (model == null) return;
-            
+
             motivoSaidaCidadao = model.motivoSaidaCidadao;
-            dataObito = model.dataObito;
+            dataObito = model.dataObito?.ToUnix();
             numeroDO = model.numeroDO;
         }
 
@@ -192,7 +271,7 @@ namespace Softpark.WS.ViewModels
 
             scc.id = Guid.NewGuid();
             scc.motivoSaidaCidadao = motivoSaidaCidadao;
-            scc.dataObito = dataObito;
+            scc.dataObito = dataObito?.FromUnix();
             scc.numeroDO = numeroDO;
 
             return scc;
@@ -207,70 +286,87 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Graud de instrução
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? grauInstrucaoCidadao { get; set; }
         /// <summary>
         /// ocupação
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string ocupacaoCodigoCbo2002 { get; set; }
         /// <summary>
         /// orientação sexual
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? orientacaoSexualCidadao { get; set; }
         /// <summary>
         /// comunidade
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string povoComunidadeTradicional { get; set; }
         /// <summary>
         /// parentesco
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? relacaoParentescoCidadao { get; set; }
         /// <summary>
         /// situação / trabalho
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? situacaoMercadoTrabalhoCidadao { get; set; }
         /// <summary>
         /// Deseja informar a orientação sexual
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusDesejaInformarOrientacaoSexual { get; set; }
         /// <summary>
         /// frequenta benzedeira
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusFrequentaBenzedeira { get; set; }
         /// <summary>
         /// frequenta escola
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusFrequentaEscola { get; set; }
         /// <summary>
         /// membro de comunidade
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusMembroPovoComunidadeTradicional { get; set; }
         /// <summary>
         /// participa do grupo comunitário
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusParticipaGrupoComunitario { get; set; }
         /// <summary>
         /// possui plano de saude privado
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusPossuiPlanoSaudePrivado { get; set; }
         /// <summary>
         /// tem alguma deficiencia
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemAlgumaDeficiencia { get; set; }
         /// <summary>
         /// identidade de gênero
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? identidadeGeneroCidadao { get; set; }
         /// <summary>
         /// deseja informar a identidade de genero
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusDesejaInformarIdentidadeGenero { get; set; }
         /// <summary>
         /// Lista de deficiências do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> deficienciasCidadao { get; set; } = new List<int>();
         /// <summary>
         /// Lista de tipo de responsabilidade por crianças
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> responsavelPorCrianca { get; set; } = new List<int>();
 
         /// <summary>
@@ -315,29 +411,33 @@ namespace Softpark.WS.ViewModels
             var isd = DomainContainer.Current.InformacoesSocioDemograficas.Create();
             isd.id = Guid.NewGuid();
 
-            TP_Deficiencia dc;
+            // ReSharper disable once InconsistentNaming
             foreach (var _dc in deficienciasCidadao)
-                if ((dc = await DomainContainer.Current.TP_Deficiencia.FirstOrDefaultAsync(y => y.codigo == _dc)) != null)
-                {
-                    DeficienciasCidadao @dcs = DomainContainer.Current.DeficienciasCidadao.Create();
-                    @dcs.id_tp_deficiencia_cidadao = dc.codigo;
-                    @dcs.InformacoesSocioDemograficas = isd;
+            {
+                TP_Deficiencia dc;
+                if ((dc = await DomainContainer.Current.TP_Deficiencia.FirstOrDefaultAsync(y => y.codigo == _dc)) ==
+                    null) continue;
+                var dcs = DomainContainer.Current.DeficienciasCidadao.Create();
+                dcs.id_tp_deficiencia_cidadao = dc.codigo;
+                dcs.InformacoesSocioDemograficas = isd;
 
-                    isd.DeficienciasCidadao.Add(@dcs);
-                    DomainContainer.Current.DeficienciasCidadao.Add(@dcs);
-                }
+                isd.DeficienciasCidadao.Add(dcs);
+                DomainContainer.Current.DeficienciasCidadao.Add(dcs);
+            }
 
-            TP_Crianca cr;
+            // ReSharper disable once InconsistentNaming
             foreach (var _cr in responsavelPorCrianca)
-                if((cr = await DomainContainer.Current.TP_Crianca.FirstOrDefaultAsync(y => y.codigo == _cr)) != null)
-                {
-                    ResponsavelPorCrianca @crs = DomainContainer.Current.ResponsavelPorCrianca.Create();
-                    @crs.InformacoesSocioDemograficas = isd;
-                    @crs.id_tp_crianca = cr.codigo;
+            {
+                TP_Crianca cr;
+                if ((cr = await DomainContainer.Current.TP_Crianca.FirstOrDefaultAsync(y => y.codigo == _cr)) ==
+                    null) continue;
+                var crs = DomainContainer.Current.ResponsavelPorCrianca.Create();
+                crs.InformacoesSocioDemograficas = isd;
+                crs.id_tp_crianca = cr.codigo;
 
-                    isd.ResponsavelPorCrianca.Add(@crs);
-                    DomainContainer.Current.ResponsavelPorCrianca.Add(@crs);
-                }
+                isd.ResponsavelPorCrianca.Add(crs);
+                DomainContainer.Current.ResponsavelPorCrianca.Add(crs);
+            }
 
             isd.grauInstrucaoCidadao = grauInstrucaoCidadao;
             isd.ocupacaoCodigoCbo2002 = ocupacaoCodigoCbo2002;
@@ -365,100 +465,129 @@ namespace Softpark.WS.ViewModels
     public class IdentificacaoUsuarioCidadaoViewModel
     {
         /// <summary>
+        /// 
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public Guid id { get; set; }
+        /// <summary>
         /// nome social
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string nomeSocial { get; set; }
         /// <summary>
         /// codigo do municipio de nascimento
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string codigoIbgeMunicipioNascimento { get; set; }
         /// <summary>
         /// data de nascimento
         /// </summary>
-        public int dataNascimentoCidadao { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public long dataNascimentoCidadao { get; set; }
         /// <summary>
         /// desconhece o nome da mãe
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool desconheceNomeMae { get; set; }
         /// <summary>
         /// email do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string emailCidadao { get; set; }
         /// <summary>
         /// nacionalidade do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int nacionalidadeCidadao { get; set; }
         /// <summary>
         /// nome do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string nomeCidadao { get; set; }
         /// <summary>
         /// nome da mãe do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string nomeMaeCidadao { get; set; }
         /// <summary>
         /// CNS do cidadão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string cnsCidadao { get; set; }
         /// <summary>
         /// CNS do responsável familiar
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string cnsResponsavelFamiliar { get; set; }
         /// <summary>
         /// telefone celular
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string telefoneCelular { get; set; }
         /// <summary>
         /// NIS/PIS/PASEP
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string numeroNisPisPasep { get; set; }
         /// <summary>
         /// País de nascimento
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? paisNascimento { get; set; }
         /// <summary>
         /// Raça/Cor
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int racaCorCidadao { get; set; }
         /// <summary>
         /// Sexo
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int sexoCidadao { get; set; }
         /// <summary>
         /// É responsável
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEhResponsavel { get; set; }
         /// <summary>
         /// Etnia
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? etnia { get; set; }
         /// <summary>
         /// Nome do Pai
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string nomePaiCidadao { get; set; }
         /// <summary>
         /// Desconhece o nome do Pai
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool desconheceNomePai { get; set; }
         /// <summary>
         /// Data da naturalização
         /// </summary>
-        public int? dtNaturalizacao { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public long? dtNaturalizacao { get; set; }
         /// <summary>
         /// Portaria da Naturalização
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string portariaNaturalizacao { get; set; }
         /// <summary>
         /// Data de entrada no Brasil
         /// </summary>
-        public int? dtEntradaBrasil { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public long? dtEntradaBrasil { get; set; }
         /// <summary>
         /// Microárea
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string microarea { get; set; }
         /// <summary>
         /// Fora de área
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool stForaArea { get; set; }
 
         /// <summary>
@@ -474,13 +603,27 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
-        private void ApplyModel(IdentificacaoUsuarioCidadao model)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator IdentificacaoUsuarioCidadaoViewModel(VW_IdentificacaoUsuarioCidadao model)
+        {
+            var vm = new IdentificacaoUsuarioCidadaoViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+
+        private void ApplyModel(VW_IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
 
+            id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao;
+            dataNascimentoCidadao = model.dataNascimentoCidadao.ToUnix();
             desconheceNomeMae = model.desconheceNomeMae;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao;
@@ -497,9 +640,40 @@ namespace Softpark.WS.ViewModels
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
             desconheceNomePai = model.desconheceNomePai;
-            dtNaturalizacao = model.dtNaturalizacao;
+            dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
             portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil;
+            dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
+            microarea = model.microarea;
+            stForaArea = model.stForaArea;
+        }
+
+        private void ApplyModel(IdentificacaoUsuarioCidadao model)
+        {
+            if (model == null) return;
+
+            id = model.id;
+            nomeSocial = model.nomeSocial;
+            codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
+            dataNascimentoCidadao = model.dataNascimentoCidadao.ToUnix();
+            desconheceNomeMae = model.desconheceNomeMae;
+            emailCidadao = model.emailCidadao;
+            nacionalidadeCidadao = model.nacionalidadeCidadao;
+            nomeCidadao = model.nomeCidadao;
+            nomeMaeCidadao = model.nomeMaeCidadao;
+            cnsCidadao = model.cnsCidadao;
+            cnsResponsavelFamiliar = model.cnsResponsavelFamiliar;
+            telefoneCelular = model.telefoneCelular;
+            numeroNisPisPasep = model.numeroNisPisPasep;
+            paisNascimento = model.paisNascimento;
+            racaCorCidadao = model.racaCorCidadao;
+            sexoCidadao = model.sexoCidadao;
+            statusEhResponsavel = model.statusEhResponsavel;
+            etnia = model.etnia;
+            nomePaiCidadao = model.nomePaiCidadao;
+            desconheceNomePai = model.desconheceNomePai;
+            dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
+            portariaNaturalizacao = model.portariaNaturalizacao;
+            dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
             microarea = model.microarea;
             stForaArea = model.stForaArea;
         }
@@ -511,7 +685,7 @@ namespace Softpark.WS.ViewModels
             iuc.id = Guid.NewGuid();
             iuc.nomeSocial = nomeSocial;
             iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
-            iuc.dataNascimentoCidadao = dataNascimentoCidadao;
+            iuc.dataNascimentoCidadao = dataNascimentoCidadao.FromUnix();
             iuc.desconheceNomeMae = desconheceNomeMae;
             iuc.emailCidadao = emailCidadao;
             iuc.nacionalidadeCidadao = nacionalidadeCidadao;
@@ -528,9 +702,9 @@ namespace Softpark.WS.ViewModels
             iuc.etnia = etnia;
             iuc.nomePaiCidadao = nomePaiCidadao;
             iuc.desconheceNomePai = desconheceNomePai;
-            iuc.dtNaturalizacao = dtNaturalizacao;
+            iuc.dtNaturalizacao = dtNaturalizacao?.FromUnix();
             iuc.portariaNaturalizacao = portariaNaturalizacao;
-            iuc.dtEntradaBrasil = dtEntradaBrasil;
+            iuc.dtEntradaBrasil = dtEntradaBrasil?.FromUnix();
             iuc.microarea = microarea;
             iuc.stForaArea = stForaArea;
 
@@ -546,50 +720,62 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Grau de parentesco
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string grauParentescoFamiliarFrequentado { get; set; }
         /// <summary>
         /// Outra instituição
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string outraInstituicaoQueAcompanha { get; set; }
         /// <summary>
         /// Quantidade de refeições diária
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? quantidadeAlimentacoesAoDiaSituacaoRua { get; set; }
         /// <summary>
         /// Acompanhado por outra instituição
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusAcompanhadoPorOutraInstituicao { get; set; }
         /// <summary>
         /// Possui referência familiar
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusPossuiReferenciaFamiliar { get; set; }
         /// <summary>
         /// Recebe beneficio
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusRecebeBeneficio { get; set; }
         /// <summary>
         /// Situação de Rua
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusSituacaoRua { get; set; }
         /// <summary>
         /// Tem acesso à higiene pessoa
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemAcessoHigienePessoalSituacaoRua { get; set; }
         /// <summary>
         /// Visita familiar frequentemente
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusVisitaFamiliarFrequentemente { get; set; }
         /// <summary>
         /// Tempo da situação de rua
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? tempoSituacaoRua { get; set; }
         /// <summary>
         /// Lista de higiene pessoal
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> higienePessoalSituacaoRua { get; set; } = new List<int>();
         /// <summary>
         /// Lista de origem de alimentos
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> origemAlimentoSituacaoRua { get; set; } = new List<int>();
 
         /// <summary>
@@ -640,29 +826,32 @@ namespace Softpark.WS.ViewModels
             esdr.statusVisitaFamiliarFrequentemente = statusVisitaFamiliarFrequentemente;
             esdr.tempoSituacaoRua = tempoSituacaoRua;
 
-            TP_Higiene_Pessoal hpr;
-            foreach (var _hpsr in higienePessoalSituacaoRua)
-                if ((hpr = await DomainContainer.Current.TP_Higiene_Pessoal.FirstOrDefaultAsync(y => y.codigo == _hpsr)) != null)
-                {
-                    var @dcs = DomainContainer.Current.HigienePessoalSituacaoRua.Create();
-                    @dcs.codigo_higiene_pessoal = hpr.codigo;
-                    @dcs.EmSituacaoDeRua = esdr;
+            foreach (var hpsr in higienePessoalSituacaoRua)
+            {
+                TP_Higiene_Pessoal hpr;
+                if ((hpr = await DomainContainer.Current.TP_Higiene_Pessoal
+                        .FirstOrDefaultAsync(y => y.codigo == hpsr)) == null) continue;
+                var dcs = DomainContainer.Current.HigienePessoalSituacaoRua.Create();
+                dcs.codigo_higiene_pessoal = hpr.codigo;
+                dcs.EmSituacaoDeRua = esdr;
 
-                    esdr.HigienePessoalSituacaoRua.Add(@dcs);
-                    DomainContainer.Current.HigienePessoalSituacaoRua.Add(@dcs);
-                }
+                esdr.HigienePessoalSituacaoRua.Add(dcs);
+                DomainContainer.Current.HigienePessoalSituacaoRua.Add(dcs);
+            }
 
-            TP_Origem_Alimentacao oasr;
+            // ReSharper disable once InconsistentNaming
             foreach (var _oasr in origemAlimentoSituacaoRua)
-                if ((oasr = await DomainContainer.Current.TP_Origem_Alimentacao.FirstOrDefaultAsync(y => y.codigo == _oasr)) != null)
-                {
-                    var @dcs = DomainContainer.Current.OrigemAlimentoSituacaoRua.Create();
-                    @dcs.id_tp_origem_alimento = oasr.codigo;
-                    @dcs.EmSituacaoDeRua = esdr;
+            {
+                TP_Origem_Alimentacao oasr;
+                if ((oasr = await DomainContainer.Current.TP_Origem_Alimentacao.FirstOrDefaultAsync(
+                        y => y.codigo == _oasr)) == null) continue;
+                var dcs = DomainContainer.Current.OrigemAlimentoSituacaoRua.Create();
+                dcs.id_tp_origem_alimento = oasr.codigo;
+                dcs.EmSituacaoDeRua = esdr;
 
-                    esdr.OrigemAlimentoSituacaoRua.Add(@dcs);
-                    DomainContainer.Current.OrigemAlimentoSituacaoRua.Add(@dcs);
-                }
+                esdr.OrigemAlimentoSituacaoRua.Add(dcs);
+                DomainContainer.Current.OrigemAlimentoSituacaoRua.Add(dcs);
+            }
 
             return esdr;
         }
@@ -676,122 +865,152 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Causa da internação
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string descricaoCausaInternacaoEm12Meses { get; set; }
         /// <summary>
         /// Descrição 1
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string descricaoOutraCondicao1 { get; set; }
         /// <summary>
         /// Descrição 2
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string descricaoOutraCondicao2 { get; set; }
         /// <summary>
         /// Descrição 3
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string descricaoOutraCondicao3 { get; set; }
         /// <summary>
         /// Plantas medicinais usadas
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string descricaoPlantasMedicinaisUsadas { get; set; }
         /// <summary>
         /// Maternidade
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public string maternidadeDeReferencia { get; set; }
         /// <summary>
         /// Situação do Peso
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public int? situacaoPeso { get; set; }
         /// <summary>
         /// É dependente de álcool
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEhDependenteAlcool { get; set; }
         /// <summary>
         /// É dependente de outras drogas
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEhDependenteOutrasDrogas { get; set; }
         /// <summary>
         /// É fumante
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEhFumante { get; set; }
         /// <summary>
         /// É gestante
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEhGestante { get; set; }
         /// <summary>
         /// Está acamado
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEstaAcamado { get; set; }
         /// <summary>
         /// Está domiciliado
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusEstaDomiciliado { get; set; }
         /// <summary>
         /// Tem diabetes
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemDiabetes { get; set; }
         /// <summary>
         /// Tem doença respiratória
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemDoencaRespiratoria { get; set; }
         /// <summary>
         /// Tem hanseníase
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemHanseniase { get; set; }
         /// <summary>
         /// Tem hipertensão
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemHipertensaoArterial { get; set; }
         /// <summary>
         /// Tem/Teve câncer
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemTeveCancer { get; set; }
         /// <summary>
         /// Tem Doença renal
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemTeveDoencasRins { get; set; }
         /// <summary>
         /// Tem Tuberculose
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTemTuberculose { get; set; }
         /// <summary>
         /// Teve AVC/Derrame
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTeveAvcDerrame { get; set; }
         /// <summary>
         /// Teve/Tem doenca cardiaca
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTeveDoencaCardiaca { get; set; }
         /// <summary>
         /// Teve/tem infarto
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTeveInfarto { get; set; }
         /// <summary>
         /// Esteve/Está internado nos últimos 12 meses
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusTeveInternadoem12Meses { get; set; }
         /// <summary>
         /// Outras práticas integrativas / complementares
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusUsaOutrasPraticasIntegrativasOuComplementares { get; set; }
         /// <summary>
         /// Usa plantas medicionais
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusUsaPlantasMedicinais { get; set; }
         /// <summary>
         /// Diagnóstico mental
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public bool statusDiagnosticoMental { get; set; }
         /// <summary>
         /// Lista de doenças cardíacas
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> doencaCardiaca { get; set; } = new List<int>();
         /// <summary>
         /// Lista de doenças respiratórias
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> doencaRespiratoria { get; set; } = new List<int>();
         /// <summary>
         /// Lista de doenças renais
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public List<int> doencaRins { get; set; } = new List<int>();
 
         /// <summary>
@@ -877,41 +1096,45 @@ namespace Softpark.WS.ViewModels
             cds.statusUsaPlantasMedicinais = statusUsaPlantasMedicinais;
             cds.statusDiagnosticoMental = statusDiagnosticoMental;
 
-            TP_Doenca_Cardiaca dc;
+            // ReSharper disable once InconsistentNaming
             foreach (var _dcs in doencaCardiaca)
-                if ((dc = await DomainContainer.Current.TP_Doenca_Cardiaca.FirstOrDefaultAsync(y => y.codigo == _dcs)) != null)
-                {
-                    var @dcs = DomainContainer.Current.DoencaCardiaca.Create();
-                    @dcs.id_tp_doenca_cariaca = dc.codigo;
-                    @dcs.CondicoesDeSaude = cds;
+            {
+                TP_Doenca_Cardiaca dc;
+                if ((dc = await DomainContainer.Current.TP_Doenca_Cardiaca
+                        .FirstOrDefaultAsync(y => y.codigo == _dcs)) == null) continue;
+                var dcs = DomainContainer.Current.DoencaCardiaca.Create();
+                dcs.id_tp_doenca_cariaca = dc.codigo;
+                dcs.CondicoesDeSaude = cds;
 
-                    cds.DoencaCardiaca.Add(@dcs);
-                    DomainContainer.Current.DoencaCardiaca.Add(@dcs);
-                }
+                cds.DoencaCardiaca.Add(dcs);
+                DomainContainer.Current.DoencaCardiaca.Add(dcs);
+            }
 
-            TP_Doenca_Respiratoria dr;
             foreach (var drs in doencaRespiratoria)
-                if ((dr = await DomainContainer.Current.TP_Doenca_Respiratoria.FirstOrDefaultAsync(y => y.codigo == drs)) != null)
-                {
-                    var @dcs = DomainContainer.Current.DoencaRespiratoria.Create();
-                    @dcs.id_tp_doenca_respiratoria = dr.codigo;
-                    @dcs.CondicoesDeSaude = cds;
+            {
+                TP_Doenca_Respiratoria dr;
+                if ((dr = await DomainContainer.Current.TP_Doenca_Respiratoria
+                        .FirstOrDefaultAsync(y => y.codigo == drs)) == null) continue;
+                var dcs = DomainContainer.Current.DoencaRespiratoria.Create();
+                dcs.id_tp_doenca_respiratoria = dr.codigo;
+                dcs.CondicoesDeSaude = cds;
 
-                    cds.DoencaRespiratoria.Add(@dcs);
-                    DomainContainer.Current.DoencaRespiratoria.Add(@dcs);
-                }
+                cds.DoencaRespiratoria.Add(dcs);
+                DomainContainer.Current.DoencaRespiratoria.Add(dcs);
+            }
 
-            TP_Doenca_Renal dcr;
             foreach (var drr in doencaRins)
-                if ((dcr = await DomainContainer.Current.TP_Doenca_Renal.FirstOrDefaultAsync(y => y.codigo == drr)) != null)
-                {
-                    var @dcs = DomainContainer.Current.DoencaRins.Create();
-                    @dcs.id_tp_doenca_rins = dcr.codigo;
-                    @dcs.CondicoesDeSaude = cds;
+            {
+                TP_Doenca_Renal dcr;
+                if ((dcr = await DomainContainer.Current.TP_Doenca_Renal.FirstOrDefaultAsync(y => y.codigo == drr)) ==
+                    null) continue;
+                var dcs = DomainContainer.Current.DoencaRins.Create();
+                dcs.id_tp_doenca_rins = dcr.codigo;
+                dcs.CondicoesDeSaude = cds;
 
-                    cds.DoencaRins.Add(@dcs);
-                    DomainContainer.Current.DoencaRins.Add(@dcs);
-                }
+                cds.DoencaRins.Add(dcs);
+                DomainContainer.Current.DoencaRins.Add(dcs);
+            }
 
             return cds;
         }

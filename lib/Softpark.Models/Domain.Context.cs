@@ -39,7 +39,6 @@ namespace Softpark.Models
         public virtual DbSet<EmSituacaoDeRua> EmSituacaoDeRua { get; set; }
         public virtual DbSet<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
         public virtual DbSet<FamiliaRow> FamiliaRow { get; set; }
-        public virtual DbSet<FichaVisitaDomiciliarChild> FichaVisitaDomiciliarChild { get; set; }
         public virtual DbSet<FichaVisitaDomiciliarMaster> FichaVisitaDomiciliarMaster { get; set; }
         public virtual DbSet<HigienePessoalSituacaoRua> HigienePessoalSituacaoRua { get; set; }
         public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
@@ -571,6 +570,7 @@ namespace Softpark.Models
         public virtual DbSet<TipoOrigem> TipoOrigem { get; set; }
         public virtual DbSet<RastroFicha> RastroFicha { get; set; }
         public virtual DbSet<VW_VISITAS> VW_VISITAS { get; set; }
+        public virtual DbSet<FichaVisitaDomiciliarChild> FichaVisitaDomiciliarChild { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

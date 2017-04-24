@@ -22,7 +22,7 @@ namespace Softpark.Models
     
         public System.Guid id { get; set; }
         public Nullable<int> motivoSaidaCidadao { get; set; }
-        public Nullable<int> dataObito { get; set; }
+        public Nullable<System.DateTime> dataObito { get; set; }
         public string numeroDO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

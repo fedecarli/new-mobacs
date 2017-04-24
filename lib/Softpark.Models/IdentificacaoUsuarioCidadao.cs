@@ -23,7 +23,7 @@ namespace Softpark.Models
         public System.Guid id { get; set; }
         public string nomeSocial { get; set; }
         public string codigoIbgeMunicipioNascimento { get; set; }
-        public int dataNascimentoCidadao { get; set; }
+        public System.DateTime dataNascimentoCidadao { get; set; }
         public bool desconheceNomeMae { get; set; }
         public string emailCidadao { get; set; }
         public int nacionalidadeCidadao { get; set; }
@@ -41,9 +41,9 @@ namespace Softpark.Models
         public Nullable<int> num_contrato { get; set; }
         public string nomePaiCidadao { get; set; }
         public bool desconheceNomePai { get; set; }
-        public Nullable<int> dtNaturalizacao { get; set; }
+        public Nullable<System.DateTime> dtNaturalizacao { get; set; }
         public string portariaNaturalizacao { get; set; }
-        public Nullable<int> dtEntradaBrasil { get; set; }
+        public Nullable<System.DateTime> dtEntradaBrasil { get; set; }
         public string microarea { get; set; }
         public bool stForaArea { get; set; }
     

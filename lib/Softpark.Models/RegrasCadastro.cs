@@ -40,26 +40,26 @@ namespace Softpark.Models
 
         public static void Validar(this UnicaLotacaoTransport header)
         {
-            if (header.profissionalCNS == null || !Cns.isValidCns(header.profissionalCNS) ||
-                DomainContainer.Current.ASSMED_CadastroDocPessoal.All(x => x.Numero == null || x.Numero.Trim() != header.profissionalCNS))
+            if (!Cns.isValidCns(header.profissionalCNS))// ||
+                //DomainContainer.Current.ASSMED_CadastroDocPessoal.All(x => x.Numero == null || x.Numero.Trim() != header.profissionalCNS.Trim()))
                 throw new ValidationException("CNS não encontrado.");
 
-            if (DomainContainer.Current.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != header.cboCodigo_2002))
-                throw new ValidationException("CBO não encontrado.");
+            //if (DomainContainer.Current.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != header.cboCodigo_2002.Trim()))
+            //    throw new ValidationException("CBO não encontrado.");
 
-            if (DomainContainer.Current.AS_CredenciadosVinc.All(x => x.CNESLocal == null || x.CNESLocal.Trim() != header.cnes))
-                throw new ValidationException("CNES não encontrado.");
+            //if (DomainContainer.Current.AS_CredenciadosVinc.All(x => x.CNESLocal == null || x.CNESLocal.Trim() != header.cnes.Trim()))
+            //    throw new ValidationException("CNES não encontrado.");
 
-            if (DomainContainer.Current.SetoresINEs.All(x => x.Numero == null || x.Numero.Trim() != header.ine))
-                throw new ValidationException("INE não encontrado.");
+            //if (header.ine != null && DomainContainer.Current.SetoresINEs.All(x => x.Numero == null || x.Numero.Trim() == header.ine.Trim()))
+            //    throw new ValidationException("INE não encontrado.");
 
-            var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento);
+            //var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento);
 
-            if (validEpoch != ValidationResult.Success)
-                throw new ValidationException("Campo 'dataAtendimento' inválido.");
+            //if (validEpoch != ValidationResult.Success)
+            //    throw new ValidationException("Campo 'dataAtendimento' inválido.");
 
-            if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio))
-                throw new ValidationException("Município não encontrado.");
+            //if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
+            //    throw new ValidationException("Município não encontrado.");
         }
 
         public static void Validar(this FichaVisitaDomiciliarMaster master)
@@ -106,7 +106,7 @@ namespace Softpark.Models
             if (child.dtNascimento != null && proibido)
                 throw new ValidationException("A data de nascimento não deve ser fornecido para o tipo de imóvel selecionado.");
 
-            if (child.dtNascimento != null && !child.dtNascimento.Value.IsValidBirthDate(child.FichaVisitaDomiciliarMaster.UnicaLotacaoTransport.dataAtendimento))
+            if (child.dtNascimento != null && !child.dtNascimento.Value.ToUnix().IsValidBirthDate(child.FichaVisitaDomiciliarMaster.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
                 throw new ValidationException("Data de nascimento inválida.");
 
             if (child.dtNascimento == null && obrigatorio)
@@ -244,7 +244,7 @@ namespace Softpark.Models
             if (cond.situacaoPeso != null && !DomainContainer.Current.TP_Consideracao_Peso.Any(x => x.codigo == cond.situacaoPeso))
                 throw new ValidationException("Situação de Peso não encontrada.");
 
-            var nasc = cad.IdentificacaoUsuarioCidadao1 != null ? ((long)cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao).FromUnix() : (DateTime?)null;
+            var nasc = cad.IdentificacaoUsuarioCidadao1 != null ? cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao : (DateTime?)null;
             var sexo = cad.IdentificacaoUsuarioCidadao1 != null ? cad.IdentificacaoUsuarioCidadao1.sexoCidadao : (int?)null;
 
             if (cond.statusEhGestante)
@@ -258,7 +258,7 @@ namespace Softpark.Models
                 if (nasc == null)
                     throw new ValidationException("A identificação do cidadão deve conter a data de nascimento.");
 
-                var atend = cad.UnicaLotacaoTransport.dataAtendimento.FromUnix();
+                var atend = cad.UnicaLotacaoTransport.dataAtendimento;
 
                 if (atend.Date.AddYears(-60) > nasc || atend.Date.AddYears(-9) < nasc)
                     throw new ValidationException("Não é possível definir uma condição de gestante para um cidadão com menos de 9 anos ou com mais de 60 anos.");
@@ -349,7 +349,7 @@ namespace Softpark.Models
                     throw new ValidationException("O código IBGE do município de nascimento é inválido ou não está cadastrado.");
             }
 
-            if (!((long)cond.dataNascimentoCidadao).IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (!cond.dataNascimentoCidadao.ToUnix().IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
                 throw new ValidationException("A data de nascimento do cidadão é inválida.");
 
             try
@@ -454,7 +454,7 @@ namespace Softpark.Models
             if (cond.dtEntradaBrasil != null && cond.nacionalidadeCidadao != 3)
                 throw new ValidationException("A data de entrada no Brasil não deve ser preenchida.");
 
-            if (cond.dtEntradaBrasil == null && cond.dtEntradaBrasil == 3)
+            if (cond.dtEntradaBrasil == null && cond.nacionalidadeCidadao == 3)
                 throw new ValidationException("A data de entrada no Brasil é obrigatória.");
 
             if (cond.dtEntradaBrasil != null && (cond.dtEntradaBrasil > header.dataAtendimento ||
@@ -516,7 +516,7 @@ namespace Softpark.Models
             if (cond.identidadeGeneroCidadao != null && !cond.statusDesejaInformarIdentidadeGenero)
                 throw new ValidationException("A identidade de gênero não deve ser informada.");
 
-            var resp = cad.UnicaLotacaoTransport.dataAtendimento.FromUnix().Date.AddYears(-10).ToUnix();
+            var resp = cad.UnicaLotacaoTransport.dataAtendimento.Date.AddYears(-10);
 
             if (cond.ResponsavelPorCrianca.Count > 0 && cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao > resp)
                 throw new ValidationException("Este cidadão não pode ser reponsável por criança.");
@@ -646,7 +646,7 @@ namespace Softpark.Models
 
         public static void Validar(this FamiliaRow cond, CadastroDomiciliar cad)
         {
-            if (cond.dataNascimentoResponsavel != null && !((long)cond.dataNascimentoResponsavel).IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (cond.dataNascimentoResponsavel != null && !cond.dataNascimentoResponsavel.Value.ToUnix().IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
                 throw new ValidationException("A data de nascimento do responsável está incorreta.");
 
             if (cond.numeroCnsResponsavel == null || !Cns.isValidCns(cond.numeroCnsResponsavel))

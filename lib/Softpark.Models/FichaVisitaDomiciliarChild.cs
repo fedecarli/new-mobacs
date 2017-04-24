@@ -20,12 +20,11 @@ namespace Softpark.Models
             this.SIGSM_MotivoVisita = new HashSet<SIGSM_MotivoVisita>();
         }
     
-        public long childId { get; set; }
         public string uuidFicha { get; set; }
         public long turno { get; set; }
         public string numProntuario { get; set; }
         public string cnsCidadao { get; set; }
-        public Nullable<long> dtNascimento { get; set; }
+        public Nullable<System.DateTime> dtNascimento { get; set; }
         public Nullable<long> sexo { get; set; }
         public bool statusVisitaCompartilhadaOutroProfissional { get; set; }
         public long desfecho { get; set; }
@@ -34,6 +33,9 @@ namespace Softpark.Models
         public long tipoDeImovel { get; set; }
         public Nullable<decimal> pesoAcompanhamentoNutricional { get; set; }
         public Nullable<decimal> alturaAcompanhamentoNutricional { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+        public System.Guid childId { get; set; }
     
         public virtual FichaVisitaDomiciliarMaster FichaVisitaDomiciliarMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

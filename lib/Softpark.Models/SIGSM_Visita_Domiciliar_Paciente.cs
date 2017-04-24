@@ -67,8 +67,12 @@ namespace Softpark.Models
         public byte desfecho { get; set; }
         public string microarea { get; set; }
         public Nullable<decimal> peso_acompanhamento_nutricional { get; set; }
-        public bool st_fora_area { get; set; }
+        public Nullable<bool> st_fora_area { get; set; }
         public int tipo_de_imovel { get; set; }
+        public Nullable<bool> acao_educacional { get; set; }
+        public Nullable<bool> imovel_com_foco { get; set; }
+        public Nullable<bool> acao_mecanica { get; set; }
+        public Nullable<bool> tratamento_focal { get; set; }
     
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
         public virtual SIGSM_Visita_Domiciliar SIGSM_Visita_Domiciliar { get; set; }

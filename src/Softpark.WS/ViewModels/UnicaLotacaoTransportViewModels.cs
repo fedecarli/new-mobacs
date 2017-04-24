@@ -88,7 +88,7 @@ namespace Softpark.WS.ViewModels
             ult.cboCodigo_2002 = cboCodigo_2002;
             ult.cnes = cnes;
             ult.ine = ine;
-            ult.dataAtendimento = dataAtendimento;
+            ult.dataAtendimento = dataAtendimento.FromUnix();
             ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
 
             return ult;

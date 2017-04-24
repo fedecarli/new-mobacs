@@ -24,8 +24,8 @@ namespace Softpark.Models
         public int tpCdsOrigem { get; set; }
         public System.Guid headerTransport { get; set; }
     
+        public virtual UnicaLotacaoTransport UnicaLotacaoTransport { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FichaVisitaDomiciliarChild> FichaVisitaDomiciliarChild { get; set; }
-        public virtual UnicaLotacaoTransport UnicaLotacaoTransport { get; set; }
     }
 }

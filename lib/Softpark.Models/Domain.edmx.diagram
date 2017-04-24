@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="88" >
+      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="80" >
         <EntityTypeShape EntityType="Domain.AnimalNoDomicilio" Width="1.5" PointX="12.5" PointY="15.25" />
         <EntityTypeShape EntityType="Domain.CadastroDomiciliar" Width="1.5" PointX="10.25" PointY="10" />
         <EntityTypeShape EntityType="Domain.CadastroIndividual" Width="1.5" PointX="26.25" PointY="33.5" />
@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="Domain.EmSituacaoDeRua" Width="1.5" PointX="24" PointY="4" />
         <EntityTypeShape EntityType="Domain.EnderecoLocalPermanencia" Width="1.5" PointX="8" PointY="26" />
         <EntityTypeShape EntityType="Domain.FamiliaRow" Width="1.5" PointX="12.5" PointY="10.875" />
-        <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarChild" Width="1.5" PointX="12.5" PointY="58.75" />
         <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarMaster" Width="1.5" PointX="10.25" PointY="59.875" />
         <EntityTypeShape EntityType="Domain.HigienePessoalSituacaoRua" Width="1.5" PointX="26.25" PointY="52.5" />
         <EntityTypeShape EntityType="Domain.IdentificacaoUsuarioCidadao" Width="1.5" PointX="24" PointY="73.75" />
@@ -550,7 +549,6 @@
         <AssociationConnector Association="Domain.FK_HigienePessoalSituacaoRua_EmSituacaoDeRua" />
         <AssociationConnector Association="Domain.FK_OrigemAlimentoSituacaoRua_EmSituacaoDeRua" />
         <AssociationConnector Association="Domain.FK_FamiliaRow_TP_Renda_Familiar" />
-        <AssociationConnector Association="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" />
         <AssociationConnector Association="Domain.FK_FichaVisitaDomiciliarMaster_UnicaLotacaoTransport" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Paises" />
@@ -981,7 +979,6 @@
         <AssociationConnector Association="Domain.FK__TU_TabelaProcCla__1E256B9B" />
         <AssociationConnector Association="Domain.FK__TU_TabelaProcReg__186C9245" />
         <AssociationConnector Association="Domain.Familias" />
-        <AssociationConnector Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita" />
         <AssociationConnector Association="Domain.ASSMED_SistemaPrograma" />
         <AssociationConnector Association="Domain.AssRelSeletor" />
         <EntityTypeShape EntityType="Domain.ProAtendimentos_Listagem" Width="1.5" PointX="13.75" PointY="0.75" />
@@ -1005,6 +1002,9 @@
         <EntityTypeShape EntityType="Domain.RastroFicha" Width="1.5" PointX="8" PointY="70.125" />
         <AssociationConnector Association="Domain.FK_RastroFicha_OrigemVisita" />
         <EntityTypeShape EntityType="Domain.VW_VISITAS" Width="1.5" PointX="61.375" PointY="25.75" />
+        <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarChild" Width="1.5" PointX="12.5" PointY="58.625" />
+        <AssociationConnector Association="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" />
+        <AssociationConnector Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
