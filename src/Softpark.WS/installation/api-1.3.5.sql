@@ -1,4 +1,24 @@
-﻿ALTER VIEW [api].[VW_IdentificacaoUsuarioCidadao] AS
+﻿ALTER TABLE [dbo].[UF]
+		ADD DNE CHAR(2) NULL;
+GO
+
+ UPDATE [dbo].[UF]
+	SET UF.DNE = REPLACE(STR(_uf.Dne, 2), SPACE(1), '0')
+   FROM (SELECT ROW_NUMBER() OVER (
+		ORDER BY (CASE WHEN __uf.UF BETWEEN 'AC' AND 'ES' THEN 1
+					   WHEN __uf.UF = 'RR' THEN 2
+					   WHEN __uf.UF BETWEEN 'GO' AND 'RJ' THEN 3
+					   WHEN __uf.UF = 'RN' THEN 4
+					   WHEN __uf.UF = 'RS' THEN 5
+					   WHEN __uf.UF = 'RO' THEN 6
+					   WHEN __uf.UF = 'TO' THEN 7
+					   WHEN __uf.UF BETWEEN 'SC' AND 'SP' THEN 8
+					   ELSE 9 END) ASC, DesUF ASC
+		) AS Dne, __uf.UF FROM [dbo].[UF] AS __uf) AS _uf
+  WHERE _uf.UF = UF.UF;
+GO
+
+ALTER VIEW [api].[VW_IdentificacaoUsuarioCidadao] AS
 	 SELECT _iuc.id AS id
 			,LTRIM(RTRIM(cad.NomeSocial)) COLLATE Latin1_General_CI_AI AS nomeSocial
 			,COALESCE(LTRIM(RTRIM(cid.CodIbge)), '3547304') COLLATE Latin1_General_CI_AI AS codigoIgbeMunicipioNascimento
@@ -81,67 +101,190 @@ OUTER APPLY (
 		 INNER JOIN [api].[OrigemVisita] AS o
 				 ON ut.token = o.token
 			  WHERE o.finalizado = 1
+				AND iuc.cnsCidadao COLLATE Latin1_General_CI_AI = cns.Numero COLLATE Latin1_General_CI_AI
+				 OR iuc.numeroNisPisPasep COLLATE Latin1_General_CI_AI = pis.Numero COLLATE Latin1_General_CI_AI
+				 OR (iuc.nomeCidadao COLLATE Latin1_General_CI_AI = cad.Nome COLLATE Latin1_General_CI_AI
+				AND iuc.nomeMaeCidadao COLLATE Latin1_General_CI_AI = _cpf.NomeMae COLLATE Latin1_General_CI_AI
+				AND iuc.dataNascimentoCidadao = CONVERT(DATE, _cpf.DtNasc))
 		   ORDER BY ut.dataAtendimento DESC
-) AS _iuc;
+) AS _iuc
+	  WHERE cad.Tipo IN ('F', 'C');
 GO
 
+-- View para listar os domicílios com base nos endereços de cadastros individuais
+CREATE VIEW [api].[VW_Enderecos] AS
+	 SELECT STUFF(STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, ''), PATINDEX('%[^0-9]%', STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, '')), 1, '') COLLATE Latin1_General_CI_AI AS CEP
+			,COALESCE([Logradouro], '') COLLATE Latin1_General_CI_AI AS Logradouro
+			,(CASE WHEN PATINDEX('%[-]%', [Bairro]) > 0 THEN SUBSTRING(LTRIM(RTRIM(COALESCE([Bairro], ''))), 1, PATINDEX('%[-]%', [Bairro]) - 1) ELSE Bairro END) COLLATE Latin1_General_CI_AI AS Bairro
+			,COALESCE([Complemento], '') COLLATE Latin1_General_CI_AI AS Complemento
+			,COALESCE([Numero], '') COLLATE Latin1_General_CI_AI AS Numero
+			,[CodTpLogra]
+			,[CodCidade]
+			,[Codigo]
+	   FROM [dbo].[ASSMED_Endereco]
+	  WHERE TipoEnd = 'R' AND LEN(LTRIM(RTRIM(COALESCE(Logradouro, '')))) > 0
+		AND CodCidade IS NOT NULL
+		AND CodCidade > 0
+		AND CEP IS NOT NULL
+		AND LEN(STUFF(STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, ''), PATINDEX('%[^0-9]%', STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, '')), 1, '')) = 8
+		AND STUFF(STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, ''), PATINDEX('%[^0-9]%', STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, '')), 1, '') <> '00000000'
+		AND PATINDEX('%[^0-9]%', STUFF(STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, ''), PATINDEX('%[^0-9]%', STUFF([CEP], PATINDEX('%[^0-9]%', [CEP]), 1, '')), 1, '')) < 1
+		AND LEN(COALESCE(RTRIM(LTRIM([Logradouro])), '')) > 0
+		AND LEN((CASE WHEN PATINDEX('%[-]%', [Bairro]) > 0 THEN SUBSTRING(LTRIM(RTRIM(COALESCE([Bairro], ''))), 1, PATINDEX('%[-]%', [Bairro]) - 1) ELSE Bairro END)) > 0;
+GO
+
+CREATE VIEW [api].[VW_enderecoLocalPermanencia] AS
+	 SELECT bairro,
+			cep,
+			codigoIbgeMunicipio,
+			complemento,
+			nomeLogradouro,
+			numero,
+			numeroDneUf,
+			telefoneContato,
+			telelefoneResidencia,
+			tipoLogradouroNumeroDne,
+			stSemNumero,
+			pontoReferencia,
+			microarea,
+			stForaArea
+	   FROM [api].[EnderecoLocalPermanencia]
+CROSS APPLY (
+			SELECT e.CEP, e.Logradouro, e.Bairro, e.Complemento, e.Numero, logr.CO_TIPO_LOGRADOURO AS tipoLogradouroNumeroDne,
+			c.CodIbge, u.DNE FROM [api].[VW_Enderecos] AS e
+			INNER JOIN [dbo].[Cidade] AS c ON e.CodCidade = c.CodCidade
+			INNER JOIN [dbo].[UF] AS u ON c.UF = u.UF
+			INNER JOIN [dbo].[TB_MS_TIPO_LOGRADOURO] AS logr
+			ON logr.CO_TIPO_LOGRADOURO COLLATE Latin1_General_CI_AI =
+			CONVERT(NVARCHAR(5), e.CodTpLogra) COLLATE Latin1_General_CI_AI
+			GROUP BY e.CEP, e.Logradouro, e.Bairro, e.Complemento, e.Numero, logr.CO_TIPO_LOGRADOURO,
+			c.CodIbge, u.DNE) AS _log;
+GO
 
 -- =============================================
 -- Author:		Elton Schivei Costa
 -- Create date: 2017/04/04
--- Update date: 2017/04/23
--- Description:	Procedure para integrar cadastros individuais com o assmed_cadastro e profissionais
+-- Update date: 2017/04/24
+-- Description:	Procedure para geração de cabeçalho de ficha e token
 -- =============================================
-CREATE PROCEDURE [api].[PR_INT_CadastroIndividual_AssmedCadastro] (
-	-- cabecalho
-	 @profissionalCNS NCHAR(15)
+CREATE PROCEDURE [api].[PR_INT_EnviarCabecalho] (
+	@profissionalCNS NCHAR(15),
+	@cboCodigo_2002 NCHAR(6),
+	@cnes NCHAR(7),
+	@dataAtendimento DATE,
+	@codigoIbgeMunicipio NCHAR(7),
+	@ine NCHAR(11) = NULL,
+	@tipoOrigem INT = 3,
+	@enviarParaThrift BIT = 1
+) AS
+BEGIN
+BEGIN TRANSACTION T_PR_INT_EnviarCabecalho
+BEGIN TRY
+	SET NOCOUNT ON;
+	DECLARE @token UNIQUEIDENTIFIER;
+	SET @token = NEWID();
+
+	INSERT INTO [api].[OrigemVisita] ([token], [finalizado], [id_tipo_origem], [enviarParaThrift]) VALUES
+		(@token, 0, @tipoOrigem, @enviarParaThrift);
+
+	INSERT INTO [api].[UnicaLotacaoTransport] ([id], [profissionalCNS], [cboCodigo_2002]
+			, [cnes], [ine], [dataAtendimento], [codigoIbgeMunicipio], [token]) VALUES
+			(NEWID(), @profissionalCNS, @cboCodigo_2002, @cnes, @ine, @dataAtendimento,
+			@codigoIbgeMunicipio, @token);
+
+	SELECT @token as token;
+
+	COMMIT TRANSACTION T_PR_INT_EnviarCabecalho;
+END TRY
+BEGIN CATCH
+	DECLARE @ErrorMessage NVARCHAR(4000);
+	DECLARE @ErrorSeverity INT;
+	DECLARE @ErrorState INT;
+	
+	ROLLBACK TRANSACTION T_PR_INT_EnviarCabecalho;
+
+	SELECT 
+		@ErrorMessage = ERROR_MESSAGE(),
+		@ErrorSeverity = ERROR_SEVERITY(),
+		@ErrorState = ERROR_STATE();
+
+	RAISERROR (
+		@ErrorMessage,
+		@ErrorSeverity,
+		@ErrorState);
+END CATCH
+END
+GO
+
+-- =============================================
+-- Author:		Elton Schivei Costa
+-- Create date: 2017/04/04
+-- Update date: 2017/04/24
+-- Description:	Procedure para integrar cadastros individuais com o sigsm
+-- Argumentos: @Codigo (codigo da pessoa/paciente, no ASSMED_Cadastro
+--			   @profissionalCNS (CNS do profissional para associar dependência/responsabilidade pelo cadastro)
+--		       @cboCodigo_2002 (Código do CBO do profissional)
+--		       @cnes (Código do CNES da Unidade onde o profissional está alocado)
+--		       @ine (Código do INE da Equipe onde o profissional está alocado - opcional)
+-- =============================================
+ALTER PROCEDURE [api].[PR_INT_CadastroIndividual_AssmedCadastro] (
+	 @Codigo DECIMAL(18, 0)
+	,@profissionalCNS NCHAR(15)
 	,@cboCodigo_2002 NCHAR(6)
 	,@cnes NCHAR(7)
-	,@codigoIbgeMunicipio NCHAR(7)
 	,@ine NCHAR(11) = NULL
-	-- IdentificacaoUsuarioCidadao
-	,@nomeSocial NVARCHAR(140) = NULL
-	,@codigoIgbeMunicipioNascimento NCHAR(7) = '3547304'
-	,@desconheceNomeMae BIT = 0
-	,@emailCidadao NVARCHAR(200) = NULL
-	,@nacionalidadeCidadao INT = 1
-	,@nomeCidadao NVARCHAR(140) = NULL
-	,@nomeMaeCidadao NVARCHAR(140) = NULL
-	,@cnsCidadao NCHAR(30) = NULL
-	,@cnsResponsavelFamiliar NCHAR(30) = NULL
-	,@telefoneCelular NVARCHAR(22) = NULL
-	,@numeroNisPisPasep NCHAR(22) = NULL
-	,@paisNascimento INT = 31
-	,@racaCorCidadao INT = 6
-	,@sexoCidadao INT = 4
-	,@statusEhResponsavel BIT = 0
-	,@etnia INT = NULL
-	,@nomePaiCidadao NVARCHAR(140) = NULL
-	,@desconheceNomePai BIT = 0
-	,@portariaNaturalizacao NVARCHAR(32) = NULL
-	,@microarea NCHAR(2) = NULL
-	,@stForaArea BIT = 0
-	,@dataNascimentoCidadao DATE = NULL
-	,@dtNaturalizacao DATE = NULL
-	,@dtEntradaBrasil DATE = NULL
-	,@idCadastro UNIQUEIDENTIFIER OUT
 ) AS
 BEGIN
 	SET NOCOUNT ON;
-BEGIN TRANSACTION
+BEGIN TRANSACTION T_PR_INT_CadastroIndividual_AssmedCadastro
 BEGIN TRY
+	IF @Codigo IS NULL
+		RAISERROR ('Cadastro do Paciente não encontrado no SIGSM.', 1, 1);
+
 	DECLARE @token UNIQUEIDENTIFIER,
 			@headerTransport UNIQUEIDENTIFIER,
 			@idCadastroIndividual UNIQUEIDENTIFIER,
+			@idVwIden UNIQUEIDENTIFIER,
 			@idIdentificacaoUsuarioCidadao UNIQUEIDENTIFIER,
-			@Codigo DECIMAL(18, 0),
 			@num_contrato INT,
-			@dataAtendimento BIGINT;
-	SELECT @dataAtendimento = [api].[DateTime2Epoch](GETDATE());
+			@dataAtendimento DATE
+			,@codigoIbgeMunicipio NCHAR(7) = '3547304'
+			-- IdentificacaoUsuarioCidadao
+			,@nomeSocial NVARCHAR(140) = NULL
+			,@codigoIbgeMunicipioNascimento NCHAR(7) = '3547304'
+			,@desconheceNomeMae BIT = 0
+			,@emailCidadao NVARCHAR(200) = NULL
+			,@nacionalidadeCidadao INT = 1
+			,@nomeCidadao NVARCHAR(140) = NULL
+			,@nomeMaeCidadao NVARCHAR(140) = NULL
+			,@cnsCidadao NCHAR(30) = NULL
+			,@cnsResponsavelFamiliar NCHAR(30) = NULL
+			,@telefoneCelular NVARCHAR(22) = NULL
+			,@numeroNisPisPasep NCHAR(22) = NULL
+			,@paisNascimento INT = 31
+			,@racaCorCidadao INT = 6
+			,@sexoCidadao INT = 4
+			,@statusEhResponsavel BIT = 0
+			,@etnia INT = NULL
+			,@nomePaiCidadao NVARCHAR(140) = NULL
+			,@desconheceNomePai BIT = 0
+			,@portariaNaturalizacao NVARCHAR(32) = NULL
+			,@microarea NCHAR(2) = NULL
+			,@stForaArea BIT = 0
+			,@dataNascimentoCidadao DATE = NULL
+			,@dtNaturalizacao DATE = NULL
+			,@dtEntradaBrasil DATE = NULL
+			,@condicoesDeSaude UNIQUEIDENTIFIER = NULL
+			,@emSituacaoDeRua UNIQUEIDENTIFIER = NULL
+			,@informacoesSocioDemograficas UNIQUEIDENTIFIER = NULL;
+
+	SELECT @dataAtendimento = CONVERT(DATE, GETDATE());
+
 	DECLARE @tokenResult TABLE ([token] UNIQUEIDENTIFIER);
 
 	INSERT INTO @tokenResult EXEC [api].[PR_INT_EnviarCabecalho] @profissionalCNS, @cboCodigo_2002, @cnes, @dataAtendimento, @codigoIbgeMunicipio, @ine, 3, 0;
 	SELECT TOP 1 @token = [token] FROM @tokenResult;
+	DELETE FROM @tokenResult;
 			
 	SET @idIdentificacaoUsuarioCidadao = NEWID();
 	SET @idCadastroIndividual = NEWID();
@@ -158,38 +301,38 @@ BEGIN TRY
 		RAISERROR('O token informado não possuí um cabeçalho de transporte.', 1, 1);
 	END
 	
-	 SELECT TOP 1 @Codigo = cad.[Codigo]
-	   FROM [api].[VW_IdentificacaoUsuarioCidadao] AS cad
-	  WHERE cad.[cnsCidadao] = LTRIM(RTRIM(@cnsCidadao));
-
-	IF @Codigo IS NULL
-		RAISERROR ('Cadastro do Paciente não encontrado no SIGSM.', 1, 1);
-
-	 SELECT @nomeSocial = COALESCE([nomeSocial], @nomeSocial),
-			@codigoIbgeMunicipioNascimento = COALESCE([codigoIbgeMunicipioNascimento], @codigoIbgeMunicipioNascimento),
-			@dataNascimentoCidadao = COALESCE([dataNascimentoCidadao], @dataNascimentoCidadao),
-			@desconheceNomeMae = COALESCE([desconheceNomeMae], @desconheceNomeMae),
-			@emailCidadao = COALESCE([emailCidadao], @emailCidadao),
-			@nacionalidadeCidadao = COALESCE([nacionalidadeCidadao], @nacionalidadeCidadao),
-			@nomeCidadao = COALESCE([nomeCidadao], @nomeCidadao),
-			@nomeMaeCidadao = COALESCE([nomeMaeCidadao], @nomeMaeCidadao),
-			@cnsResponsavelFamiliar = COALESCE([cnsResponsavelFamiliar], @cnsResponsavelFamiliar),
-			@telefoneCelular = COALESCE([telefoneCelular], @telefoneCelular),
-			@numeroNisPisPasep = COALESCE([numeroNisPisPasep], @numeroNisPisPasep),
-			@paisNascimento = COALESCE([paisNascimento], @paisNascimento),
-			@racaCorCidadao = COALESCE([racaCorCidadao], @racaCorCidadao),
-			@sexoCidadao = COALESCE([sexoCidadao], @sexoCidadao),
-			@statusEhResponsavel = COALESCE([statusEhResponsavel], @statusEhResponsavel),
-			@etnia = COALESCE([etnia], @etnia),
+	 SELECT @nomeSocial = COALESCE(vw.[nomeSocial], @nomeSocial),
+			@codigoIbgeMunicipioNascimento = COALESCE(vw.[codigoIbgeMunicipioNascimento], @codigoIbgeMunicipioNascimento),
+			@dataNascimentoCidadao = COALESCE(vw.[dataNascimentoCidadao], @dataNascimentoCidadao),
+			@desconheceNomeMae = COALESCE(vw.[desconheceNomeMae], @desconheceNomeMae),
+			@emailCidadao = COALESCE(vw.[emailCidadao], @emailCidadao),
+			@nacionalidadeCidadao = COALESCE(vw.[nacionalidadeCidadao], @nacionalidadeCidadao),
+			@nomeCidadao = COALESCE(vw.[nomeCidadao], @nomeCidadao),
+			@nomeMaeCidadao = COALESCE(vw.[nomeMaeCidadao], @nomeMaeCidadao),
+			@cnsResponsavelFamiliar = COALESCE(vw.[cnsResponsavelFamiliar], @cnsResponsavelFamiliar),
+			@telefoneCelular = COALESCE(vw.[telefoneCelular], @telefoneCelular),
+			@numeroNisPisPasep = COALESCE(vw.[numeroNisPisPasep], @numeroNisPisPasep),
+			@paisNascimento = COALESCE(vw.[paisNascimento], @paisNascimento),
+			@racaCorCidadao = COALESCE(vw.[racaCorCidadao], @racaCorCidadao),
+			@sexoCidadao = COALESCE(vw.[sexoCidadao], @sexoCidadao),
+			@statusEhResponsavel = COALESCE(vw.[statusEhResponsavel], @statusEhResponsavel),
+			@etnia = COALESCE(vw.[etnia], @etnia),
 			@num_contrato = 22,
-			@nomePaiCidadao = COALESCE([nomePaiCidadao], @nomePaiCidadao),
-			@desconheceNomePai = COALESCE([desconheceNomePai], @desconheceNomePai),
-			@dtNaturalizacao = COALESCE([dtNaturalizacao], @dtNaturalizacao),
-			@portariaNaturalizacao = COALESCE([portariaNaturalizacao], @portariaNaturalizacao),
-			@dtEntradaBrasil = COALESCE([dtEntradaBrasil], @dtEntradaBrasil),
-			@microarea = COALESCE([microarea], @microarea),
-			@stForaArea = COALESCE([stForaArea], @stForaArea)
-	   FROM [api].[VW_IdentificacaoUsuarioCidadao]
+			@nomePaiCidadao = COALESCE(vw.[nomePaiCidadao], @nomePaiCidadao),
+			@desconheceNomePai = COALESCE(vw.[desconheceNomePai], @desconheceNomePai),
+			@dtNaturalizacao = COALESCE(vw.[dtNaturalizacao], @dtNaturalizacao),
+			@portariaNaturalizacao = COALESCE(vw.[portariaNaturalizacao], @portariaNaturalizacao),
+			@dtEntradaBrasil = COALESCE(vw.[dtEntradaBrasil], @dtEntradaBrasil),
+			@microarea = COALESCE(vw.[microarea], @microarea),
+			@stForaArea = COALESCE(vw.[stForaArea], @stForaArea),
+			@condicoesDeSaude = cad.[condicoesDeSaude],
+			@emSituacaoDeRua = cad.[emSituacaoDeRua],
+			@informacoesSocioDemograficas = cad.[informacoesSocioDemograficas]
+	   FROM [api].[VW_IdentificacaoUsuarioCidadao] AS vw
+  LEFT JOIN [api].[IdentificacaoUsuarioCidadao] AS iden
+		 ON vw.id = iden.id
+  LEFT JOIN [api].[CadastroIndividual] AS cad
+		 ON iden.id = cad.identificacaoUsuarioCidadao
 	  WHERE ([cnsCidadao] = LTRIM(RTRIM(@cnsCidadao)) AND [cnsCidadao] IS NOT NULL) OR
 			([numeroNisPisPasep] = LTRIM(RTRIM(@numeroNisPisPasep)) AND [numeroNisPisPasep] IS NOT NULL);
 
@@ -203,7 +346,13 @@ BEGIN TRY
 	INSERT INTO [api].[CadastroIndividual] (id, fichaAtualizada, identificacaoUsuarioCidadao, statusTermoRecusaCadastroIndividualAtencaoBasica, tpCdsOrigem, headerTransport) VALUES
 	(@idCadastroIndividual, 0, @idIdentificacaoUsuarioCidadao, 0, 3, @headerTransport);
 
-	COMMIT TRANSACTION;
+	INSERT INTO @tokenResult EXEC [api].[PR_INT_EnviarCabecalho] @profissionalCNS, @cboCodigo_2002, @cnes, @dataAtendimento, @codigoIbgeMunicipio, @ine, 3, 0;
+	SELECT TOP 1 @token = [token] FROM @tokenResult;
+	DELETE FROM @tokenResult;
+	
+	-- TODO
+
+	COMMIT TRANSACTION T_PR_INT_CadastroIndividual_AssmedCadastro;
 
 	SET @idCadastro = @idCadastroIndividual;
 
@@ -214,7 +363,7 @@ BEGIN CATCH
 	DECLARE @ErrorSeverity INT;
 	DECLARE @ErrorState INT;
 	
-	ROLLBACK TRANSACTION;
+	ROLLBACK TRANSACTION T_PR_INT_CadastroIndividual_AssmedCadastro;
 
 	SELECT 
 		@ErrorMessage = ERROR_MESSAGE(),
