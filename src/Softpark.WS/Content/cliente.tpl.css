@@ -1,0 +1,80 @@
+﻿nav a, .nav-tabs li a {
+    color: <%=corLinks%> !important;
+    font-weight: bold;
+}
+
+    nav a:hover, nav a:focus {
+        color: <%=corHoverLinks%> !important;
+        text-decoration: none;
+    }
+
+.sidebar {
+    background-color: <%=corFundoMenu%> !important;
+}
+
+    .sidebar ul li {
+        border-bottom: 1px solid <%=corLinks%> !important;
+    }
+
+        .sidebar ul li a.active, .nav li.active .mFirst {
+            background-color: <%=corFundoMenuActive%> !important;
+            cursor: default;
+        }
+
+            .sidebar ul li a.active:hover, .nav.nav-tabs li.active a:hover {
+                color: <%=corLinks%> !important;
+            }
+
+.nav li.active .mFirst {
+    background-color: <%=corFundoMenuActive%> !important;
+    color: <%=corHoverLinks%> !important;
+    cursor: default;
+}
+
+.nav.nav-tabs li a {
+    background-color: <%=corFundoMenu%> !important;
+}
+
+.nav.nav-tabs li.active a {
+    background-color: <%=corFundoAbaActive%> !important;
+}
+
+.nav > li > a:hover {
+    text-decoration: none;
+    background-color: <%=corHoverMenu%> !important;
+}
+
+.nav > li > a:focus {
+    background: inherit;
+    color: <%=corLinks%> !important;
+}
+
+.navbar-right a {
+    color: <%=corMenuTop%> !important;
+}
+
+    .navbar-right a:hover {
+        color: <%=corMenuTopHover%> !important;
+    }
+
+    .navbar-right a.no-hover:hover {
+        color: <%=corMenuTop%> !important;
+    }
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    background-color: <%=corHoverMenu%> !important;
+    border-color: <%=corHoverMenu%> !important;
+}
+
+.navbar-toggle > span.glyphicon {
+    top: -1px !important;
+    color: <%=corMenuTop%> !important;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: <%=corMenuTopHover%> !important;
+}
+
+.navbar-toggle > span.glyphicon:hover {
+    color: <%=corHoverLinks%> !important;
+}

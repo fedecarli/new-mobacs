@@ -1,0 +1,1 @@
+﻿<%@ WebHandler Class="Softpark.WS.ClienteCSS, Softpark.WS" Language="C#" CodeBehind="~/App_Start/ClienteCSS.cs" %>

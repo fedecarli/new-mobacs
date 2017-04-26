@@ -1,0 +1,208 @@
+﻿@model Softpark.Models.ASSMED_Usuario
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ASSMED_Usuario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CodUsu)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodUsu)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Login)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Login)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Senha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Senha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DtSistema)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DtSistema)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumIP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumIP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CEP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CEP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NomeCidade)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NomeCidade)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UF)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UF)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumLog)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumLog)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tipo_end)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tipo_end)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.logradouro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.logradouro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.numero)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.numero)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bairro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bairro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.municipio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.municipio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.complemento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.complemento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_user_cadastro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_user_cadastro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.data_cadastro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.data_cadastro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_user_alteracao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_user_alteracao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.data_alteracao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.data_alteracao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cpf)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cpf)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

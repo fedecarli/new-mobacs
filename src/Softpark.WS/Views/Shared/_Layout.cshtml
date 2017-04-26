@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="SIGSM - Sistema de Gestão de Saúde Municipal" />
+    <meta name="author" content="Felipe Freitas @("@Softpark")" />
+    <link rel="icon" href="@Url.Content("~/img/favicon.ico")" />
+    <title>SIGSM SAÚDE</title>
+    @Styles.Render("~/Content/sigsm")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div id="wrapper" style="background-color: @System.Parametros.corPrincipalSistema;">
+        @Html.Partial("_menu")
+        @Html.Partial("_permissao")
+
+        <div id="page-wrapper">
+            @RenderBody()
+        </div>
+        <div>
+            <div class="modal fade" id="modalAlterarSenha" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Alteração de Senha</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="senhaAtual">Senha Atual *</label>
+                                        <input type="password" class="form-control obg" name="senhaAtual" id="senhaAtual" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="novaSenha">Nova Senha *</label>
+                                        <input type="password" class="form-control obg" name="novaSenha" id="novaSenha" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="novaSenha2">Confirma Nova Senha *</label>
+                                        <input type="password" class="form-control obg" name="novaSenha2" id="novaSenha2" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger" id="alertaSemModalAltSenha" style="display: none; padding-top: 0px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-success" id="btnSalvaAltSenha" onclick="salvaAlteraSenha();">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Modal Alterar Senha -->
+        <!-- Modal Load -->
+        <div>
+            <div class="modal fade" id="modalLoad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="margin-top: 150px; opacity: 0.80; -moz-opacity: 0.80; filter: alpha(opacity=80);">
+                        <div class="modal-body text-center">
+                            <img src="img/ajax-loader-2.gif" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Modal Load -->
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/site")
+    <div id="alerta"></div>
+    @if (!string.IsNullOrEmpty(ViewBag.alert))
+    {
+        <script type='text/javascript'>modalAlerta('Atenção', '@ViewBag.alert')</script>
+    }
+    @RenderSection("scripts", required: false)
+</body>
+</html>
