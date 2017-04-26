@@ -40,26 +40,30 @@ namespace Softpark.Models
 
         public static void Validar(this UnicaLotacaoTransport header)
         {
-            if (!Cns.isValidCns(header.profissionalCNS))// ||
-                //DomainContainer.Current.ASSMED_CadastroDocPessoal.All(x => x.Numero == null || x.Numero.Trim() != header.profissionalCNS.Trim()))
+            if (!Cns.isValidCns(header.profissionalCNS))
+                throw new ValidationException("CNS inválido.");
+
+            var profissional = DomainContainer.Current.VW_Profissional.Where(x => x.CNS != null && x.CNS.Trim() == header.profissionalCNS.Trim()).ToArray();
+
+            if (profissional.Length == 0)
                 throw new ValidationException("CNS não encontrado.");
 
-            //if (DomainContainer.Current.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != header.cboCodigo_2002.Trim()))
-            //    throw new ValidationException("CBO não encontrado.");
+            if (profissional.All(x => x.CBO == null || x.CBO.Trim() != header.cboCodigo_2002.Trim()))
+                throw new ValidationException("CBO não encontrado.");
 
-            //if (DomainContainer.Current.AS_CredenciadosVinc.All(x => x.CNESLocal == null || x.CNESLocal.Trim() != header.cnes.Trim()))
-            //    throw new ValidationException("CNES não encontrado.");
+            if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header.cnes.Trim()))
+                throw new ValidationException("CNES não encontrado.");
 
-            //if (header.ine != null && DomainContainer.Current.SetoresINEs.All(x => x.Numero == null || x.Numero.Trim() == header.ine.Trim()))
-            //    throw new ValidationException("INE não encontrado.");
+            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() == header.ine.Trim()))
+                throw new ValidationException("INE não encontrado.");
 
-            //var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento);
+            var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento.ToUnix());
 
-            //if (validEpoch != ValidationResult.Success)
-            //    throw new ValidationException("Campo 'dataAtendimento' inválido.");
-
-            //if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
-            //    throw new ValidationException("Município não encontrado.");
+            if (validEpoch != ValidationResult.Success)
+                throw new ValidationException("Data do Atendimento inválida.");
+            
+            if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
+                throw new ValidationException("Município não encontrado.");
         }
 
         public static void Validar(this FichaVisitaDomiciliarMaster master)

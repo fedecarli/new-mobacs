@@ -10,7 +10,6 @@ using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
-using System.Web.Http.OData.Query;
 using Softpark.WS.Validators;
 
 namespace Softpark.WS.Controllers.Api
@@ -18,6 +17,8 @@ namespace Softpark.WS.Controllers.Api
     /// <summary>
     /// Common datasets controller
     /// </summary>
+    [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
+    [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class DatabaseSupplyController : BaseApiController
     {
         /// <summary>
@@ -27,7 +28,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/{modelo}", Name = "BasicSupplyAction")]
-        [ResponseType(typeof(IQueryable<BasicViewModel>))]
+        [ResponseType(typeof(BasicViewModel[]))]
         [EnableQuery]
         public IHttpActionResult GetEntities([FromUri, Required] string modelo)
         {
@@ -520,7 +521,7 @@ namespace Softpark.WS.Controllers.Api
                     throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
             }
 
-            return Ok(model.AsQueryable());
+            return Ok(model.ToArray());
         }
 
         /// <summary>
@@ -529,7 +530,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/profissional", Name = "ProfessionalSupplyAction")]
-        [ResponseType(typeof(IQueryable<ProfissionalViewModel>))]
+        [ResponseType(typeof(ProfissionalViewModel[]))]
         [EnableQuery]
         public IHttpActionResult GetProfissionais()
         {
@@ -540,21 +541,21 @@ namespace Softpark.WS.Controllers.Api
             Func<VW_Profissional, ProfissionalViewModel> __ = (prof) =>
             {
                 var _ = new ProfissionalViewModel();
-                ps.Add(prof.CNS.Trim(), _);
+                ps.Add(prof.CNS?.Trim(), _);
                 return _;
             };
 
-            foreach (var prof in profs.Where(x => x.CNS != null))
+            foreach (var prof in profs)
             {
                 var p = ps.ContainsKey(prof.CNS) ? ps[prof.CNS] : __.Invoke(prof);
 
-                p.CNS = prof.CNS.Trim();
+                p.CNS = prof.CNS?.Trim();
                 p.Nome = prof.Nome?.Trim();
 
                 p.Append(prof);
             }
 
-            return Ok(ps.Values.AsQueryable());
+            return Ok(ps.Values.ToArray());
         }
 
         /// <summary>
@@ -563,15 +564,7 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/modelos", Name = "ModelSupplyAction")]
-        [ResponseType(typeof(IQueryable<BasicViewModel>))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
+        [ResponseType(typeof(BasicViewModel[]))]
         public IHttpActionResult GetModels()
         {
             return Ok(new[] {
@@ -619,12 +612,17 @@ namespace Softpark.WS.Controllers.Api
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoVisita", Descricao = "MotivoVisita", Observacao = "/api/dados/MotivoVisita" },
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = "/api/dados/Desfecho" },
                 new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
-            }.OrderBy(x => x.Codigo).AsQueryable());
+            }.OrderBy(x => x.Codigo).ToArray());
         }
 
         private async Task<UnicaLotacaoTransport> GetHeader(Guid token)
         {
-            return await Domain.UnicaLotacaoTransport.SingleOrDefaultAsync(u => u.token == token && !u.OrigemVisita.finalizado);
+            return await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(u => u.token == token && !u.OrigemVisita.finalizado);
+        }
+
+        private IQueryable<UnicaLotacaoTransport> GetHeadersBy(UnicaLotacaoTransport header)
+        {
+            return Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == header.profissionalCNS && u.OrigemVisita.finalizado);
         }
 
         /// <summary>
@@ -635,22 +633,28 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/paciente/{token:guid}", Name = "PacienteSupplyAction")]
-        [ResponseType(typeof(IEnumerable<GetCadastroIndividualViewModel>))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
+        [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
         public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
-            
-            return GetPacientes(headerToken.profissionalCNS, microarea);
+
+            CadastroIndividualViewModelCollection results = GetHeadersBy(headerToken).SelectMany(x => x.CadastroIndividual).ToArray();
+
+            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            {
+                results = results.Where(r => r.identificacaoUsuarioCidadao == null || r.identificacaoUsuarioCidadao.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
+            }
+
+            foreach (var result in results)
+            {
+                var vw = Domain.VW_IdentificacaoUsuarioCidadao.FirstOrDefault(x => x.id == result.identificacaoUsuarioCidadao.id);
+
+                result.identificacaoUsuarioCidadao = vw;
+            }
+
+            return Ok(results.ToArray());
         }
 
         /// <summary>
@@ -660,21 +664,14 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="microarea"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/dados/paciente/{profissionalCns}", Name = "PacienteCNSSupplyAction")]
-        [ResponseType(typeof(IQueryable<GetCadastroIndividualViewModel>))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
-        public IHttpActionResult GetPacientes([FromUri, Required,
+        [Route("api/dados/pacienteCNS/{profissionalCns}", Name = "PacienteCNSSupplyAction")]
+        [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
+        [EnableQuery]
+        private IHttpActionResult GetPacientesCNS([FromUri, Required,
             CnsValidation] string profissionalCns,
             [FromUri] string microarea = null)
         {
-            var profissional = Domain.VW_Profissional.SingleOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
+            var profissional = Domain.VW_Profissional.FirstOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
 
             var data = Domain.CadastroIndividual
                 .Where(x => x.UnicaLotacaoTransport.profissionalCNS == profissional.CNS)
@@ -682,23 +679,23 @@ namespace Softpark.WS.Controllers.Api
                 .GroupBy(x => x.IdentificacaoUsuarioCidadao1.cnsCidadao)
                 .Select(x => x.OrderByDescending(y => y.UnicaLotacaoTransport.dataAtendimento).FirstOrDefault())
                 .Where(x => x != null);
-            
+
             if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
             {
                 data = data.Where(r => r.IdentificacaoUsuarioCidadao1.microarea == null
                 || r.IdentificacaoUsuarioCidadao1.microarea == microarea);
             }
 
-            var results = new CadastroIndividualViewModelCollection(data).ToArray();
+            var results = new CadastroIndividualViewModelCollection(data.ToArray()).ToArray();
 
             foreach (var result in results)
             {
-                var vw = Domain.VW_IdentificacaoUsuarioCidadao.Single(x => x.id == result.identificacaoUsuarioCidadao.id);
+                var vw = Domain.VW_IdentificacaoUsuarioCidadao.FirstOrDefault(x => x.id == result.identificacaoUsuarioCidadao.id);
 
                 result.identificacaoUsuarioCidadao = vw;
             }
 
-            return Ok(results.AsQueryable());
+            return Ok(results.ToArray());
         }
 
         /// <summary>
@@ -709,22 +706,23 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
-        [ResponseType(typeof(IQueryable<GetCadastroDomiciliarViewModel>))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
+        [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
         public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
 
-            return await GetDomicilios(headerToken.profissionalCNS, microarea);
+            var cadastros = GetHeadersBy(headerToken).SelectMany(x => x.CadastroDomiciliar);
+
+            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            {
+                cadastros = cadastros.Where(r => r.EnderecoLocalPermanencia1 == null || r.EnderecoLocalPermanencia1.microarea == null || r.EnderecoLocalPermanencia1.microarea == microarea);
+            }
+
+            CadastroDomiciliarViewModelCollection results = cadastros.ToArray();
+
+            return Ok(results.ToArray());
         }
 
         /// <summary>
@@ -734,21 +732,13 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="microarea"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/dados/domicilio/{profissionalCns}", Name = "DomicilioCnsSupplyAction")]
+        [Route("api/dados/domicilioCNS/{profissionalCns}", Name = "DomicilioCnsSupplyAction")]
         [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
-        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required,
+        private IHttpActionResult GetDomiciliosCNS([FromUri, Required,
             CnsValidation] string profissionalCns,
             [FromUri] string microarea = null)
         {
-            var profissional = await Domain.VW_Profissional.SingleAsync(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
+            var profissional = Domain.VW_Profissional.FirstOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
 
             var cadastros = Domain.UnicaLotacaoTransport
                 .Where(x => x.profissionalCNS == profissional.CNS)
@@ -759,9 +749,9 @@ namespace Softpark.WS.Controllers.Api
                 cadastros = cadastros.Where(r => r.EnderecoLocalPermanencia1 == null || r.EnderecoLocalPermanencia1.microarea == null || r.EnderecoLocalPermanencia1.microarea == microarea);
             }
 
-            var results = new CadastroDomiciliarViewModelCollection(cadastros);
+            var results = new CadastroDomiciliarViewModelCollection(cadastros.ToArray());
 
-            return Ok(results.AsQueryable());
+            return Ok(results.ToArray());
         }
 
         /// <summary>
@@ -772,22 +762,22 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/dados/visita/{token:guid}", Name = "VisitaSupplyAction")]
-        [ResponseType(typeof(IQueryable<FichaVisitaDomiciliarChildCadastroViewModel>))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
+        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
         public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
-            
-            return await GetVisitas(headerToken.profissionalCNS, microarea);
+
+            FichaVisitaDomiciliarChildCadastroViewModelCollection results = GetHeadersBy(headerToken)
+                .SelectMany(f => f.FichaVisitaDomiciliarMaster).SelectMany(f => f.FichaVisitaDomiciliarChild).ToArray();
+
+            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            {
+                results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
+            }
+
+            return Ok(results.ToArray());
         }
 
         /// <summary>
@@ -797,22 +787,14 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="microarea"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/dados/visita/{profissionalCns}", Name = "VisitaCnsSupplyAction")]
-        [ResponseType(typeof(IQueryable<FichaVisitaDomiciliarChildCadastroViewModel>))]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.SubstringOf | AllowedFunctions.ToLower | AllowedFunctions.IndexOf,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            EnableConstantParameterization = true,
-            HandleNullPropagation = HandleNullPropagationOption.Default
-        )]
-        public async Task<IHttpActionResult> GetVisitas([FromUri, Required,
+        [Route("api/dados/visitaCNS/{profissionalCns}", Name = "VisitaCnsSupplyAction")]
+        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
+        private IHttpActionResult GetVisitasCNS([FromUri, Required,
             CnsValidation] string profissionalCns,
             [FromUri] string microarea = null)
         {
-            var profissional = await Domain.VW_Profissional
-                .SingleAsync(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
+            var profissional = Domain.VW_Profissional
+                .FirstOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
 
             var results = Domain.UnicaLotacaoTransport
                 .Where(x => x.profissionalCNS == profissional.CNS)
@@ -826,7 +808,7 @@ namespace Softpark.WS.Controllers.Api
 
             var data = new FichaVisitaDomiciliarChildCadastroViewModelCollection(results);
 
-            return Ok(data.AsQueryable());
+            return Ok(data.ToArray());
         }
     }
 

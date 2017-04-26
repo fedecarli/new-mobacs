@@ -17,7 +17,7 @@
     <AssemblyName>Softpark.WS</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -417,6 +417,7 @@
     <Compile Include="Helpers\ModalHelper.cs" />
     <Compile Include="Helpers\ActionResultsExtensions.cs" />
     <Compile Include="Validators\TipoImovelValidationAttribute.cs" />
+    <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
     <Compile Include="ViewModels\Parametros.cs" />
     <Compile Include="ViewModels\UsuarioLoginViewModel.cs" />
     <Compile Include="Global.asax.cs">
@@ -527,6 +528,7 @@
     <Content Include="installation\api-1.3.1.sql" />
     <Content Include="installation\api-1.3.2.sql" />
     <Content Include="installation\api-1.3.3.sql" />
+    <Content Include="installation\api-1.3.5-complementar.sql" />
     <Content Include="installation\api-1.3.5.sql" />
     <Content Include="installation\api-1.3.4.sql" />
     <Content Include="installation\api-1.3.sql">
@@ -924,7 +926,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/sigsmapi</IISUrl>
+          <IISUrl>http://localhost:65069/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

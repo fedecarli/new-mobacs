@@ -29,6 +29,11 @@ namespace Softpark.Models
     /// </summary>
     public partial class DomainContainer
     {
+        public DomainContainer(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+        }
+
         private static DomainContainer _current;
 
         /// <summary>

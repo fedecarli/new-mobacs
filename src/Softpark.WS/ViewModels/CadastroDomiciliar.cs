@@ -10,35 +10,23 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class CadastroDomiciliarViewModelCollection : List<GetCadastroDomiciliarViewModel>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="models"></param>
-        public CadastroDomiciliarViewModelCollection(IEnumerable<CadastroDomiciliar> models)
+        public CadastroDomiciliarViewModelCollection() { }
+
+        public CadastroDomiciliarViewModelCollection(IEnumerable<GetCadastroDomiciliarViewModel> models) : base(models) { }
+
+        public CadastroDomiciliarViewModelCollection(CadastroDomiciliar[] models)
         {
             AddRange(models);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="models"></param>
-        /// <returns></returns>
         public static implicit operator CadastroDomiciliarViewModelCollection(CadastroDomiciliar[] models)
         {
             return new CadastroDomiciliarViewModelCollection(models);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="models"></param>
-        public void AddRange(IEnumerable<CadastroDomiciliar> models)
+        public void AddRange(CadastroDomiciliar[] models)
         {
             foreach (var model in models)
             {
@@ -61,7 +49,7 @@ namespace Softpark.WS.ViewModels
         [TipoImovelValidation]
         public int tipoDeImovel { get; set; }
         public InstituicaoPermanenciaViewModel instituicaoPermanencia { get; set; }
-        
+
         public List<int> animalNoDomicilio { get; set; } = new List<int>();
         public List<FamiliaRowViewModel> familiaRow { get; set; } = new List<FamiliaRowViewModel>();
 
@@ -94,8 +82,8 @@ namespace Softpark.WS.ViewModels
             dc.longitude = longitude;
 
             TP_Animais an;
-            foreach(var a in animalNoDomicilio)
-                if((an = await DomainContainer.Current.TP_Animais.FirstOrDefaultAsync(x => x.codigo == a)) != null)
+            foreach (var a in animalNoDomicilio)
+                if ((an = await DomainContainer.Current.TP_Animais.FirstOrDefaultAsync(x => x.codigo == a)) != null)
                 {
                     var animal = DomainContainer.Current.AnimalNoDomicilio.Create();
                     animal.id_tp_animal = an.codigo;
@@ -104,7 +92,7 @@ namespace Softpark.WS.ViewModels
                     DomainContainer.Current.AnimalNoDomicilio.Add(animal);
                 }
 
-            foreach(var fr in familiaRow)
+            foreach (var fr in familiaRow)
             {
                 dc.FamiliaRow.Add(fr.ToModel());
             }
@@ -216,7 +204,7 @@ namespace Softpark.WS.ViewModels
 
             return fr;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -233,7 +221,7 @@ namespace Softpark.WS.ViewModels
         private void ApplyModel(FamiliaRow model)
         {
             if (model == null) return;
-            
+
             dataNascimentoResponsavel = model.dataNascimentoResponsavel?.ToUnix();
             numeroCnsResponsavel = model.numeroCnsResponsavel;
             numeroMembrosFamilia = model.numeroMembrosFamilia;

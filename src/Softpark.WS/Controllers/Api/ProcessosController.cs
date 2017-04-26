@@ -2,6 +2,7 @@
 using Softpark.Models;
 using Softpark.WS.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
@@ -60,6 +61,180 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
+        /// End point para carga de dados atômica
+        /// </summary>
+        /// <param name="atomic"></param>
+        /// <returns></returns>
+        [Route("enviar/cargaCompleta")]
+        [HttpPost, ResponseType(typeof(bool))]
+        private async Task<IHttpActionResult> EnviarCargaCompleta([FromBody, Required] AtomicTransporViewModel atomic)
+        {
+            var tokens = new List<OrigemVisita>();
+            var errors = new List<Exception>();
+
+            foreach (var cads in atomic.CadastrosIndividuais)
+            {
+                foreach (var ind in cads.Individuos)
+                {
+                    using (var trans = Domain.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var origem = Domain.OrigemVisita.Create();
+                            origem.enviarParaThrift = true;
+                            origem.finalizado = true;
+                            origem.id_tipo_origem = 1;
+                            origem.token = Guid.NewGuid();
+
+                            var cad = await ind.ToModel();
+                            cad.UnicaLotacaoTransport = cads.Cabecalho.ToModel();
+                            cad.UnicaLotacaoTransport.OrigemVisita = origem;
+                            cad.UnicaLotacaoTransport.token = origem.token;
+
+                            cad.Validar();
+
+                            tokens.Add(origem);
+                            Domain.OrigemVisita.Add(origem);
+                            Domain.UnicaLotacaoTransport.Add(cad.UnicaLotacaoTransport);
+                            Domain.CadastroIndividual.Add(cad);
+                            Domain.SaveChanges();
+                            trans.Commit();
+                        }
+                        catch (Exception e)
+                        {
+                            trans.Rollback();
+                            errors.Add(e);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            foreach (var cads in atomic.CadastrosDomiciliares)
+            {
+                foreach (var dom in cads.Domicilios)
+                {
+                    using (var trans = Domain.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var origem = Domain.OrigemVisita.Create();
+                            origem.enviarParaThrift = true;
+                            origem.finalizado = true;
+                            origem.id_tipo_origem = 1;
+                            origem.token = Guid.NewGuid();
+
+                            var cad = await dom.ToModel();
+                            cad.UnicaLotacaoTransport = cads.Cabecalho.ToModel();
+                            cad.UnicaLotacaoTransport.OrigemVisita = origem;
+                            cad.UnicaLotacaoTransport.token = origem.token;
+
+                            await cad.Validar();
+
+                            tokens.Add(origem);
+                            Domain.OrigemVisita.Add(origem);
+                            Domain.UnicaLotacaoTransport.Add(cad.UnicaLotacaoTransport);
+                            Domain.CadastroDomiciliar.Add(cad);
+                            Domain.SaveChanges();
+                            trans.Commit();
+                        }
+                        catch (Exception e)
+                        {
+                            trans.Rollback();
+                            errors.Add(e);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            foreach (var fichas in atomic.FichasDeVisitas)
+            {
+                OrigemVisita origem = null;
+                UnicaLotacaoTransport header = null;
+                FichaVisitaDomiciliarMaster master = null;
+
+                foreach (var visita in fichas.Visitas)
+                {
+                    if (origem == null || header == null || (master = header.FichaVisitaDomiciliarMaster.FirstOrDefault(x => x.FichaVisitaDomiciliarChild.Count < 99)) == null)
+                    {
+                        using (var trans = Domain.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                origem = Domain.OrigemVisita.Create();
+                                origem.enviarParaThrift = true;
+                                origem.finalizado = true;
+                                origem.id_tipo_origem = 1;
+                                origem.token = Guid.NewGuid();
+
+                                header = fichas.Cabecalho.ToModel();
+                                header.OrigemVisita = origem;
+                                header.token = origem.token;
+                                header.id = Guid.NewGuid();
+
+                                header.Validar();
+
+                                tokens.Add(origem);
+                                Domain.OrigemVisita.Add(origem);
+                                Domain.UnicaLotacaoTransport.Add(header);
+
+                                master = Domain.FichaVisitaDomiciliarMaster.Create();
+
+                                master.UnicaLotacaoTransport = header;
+                                master.tpCdsOrigem = 3;
+                                master.uuidFicha = master.uuidFicha ?? (header.cnes + '-' + Guid.NewGuid());
+
+                                master.Validar();
+
+                                Domain.FichaVisitaDomiciliarMaster.Add(master);
+                                Domain.SaveChanges();
+                                trans.Commit();
+                            }
+                            catch (Exception e)
+                            {
+                                tokens.Remove(origem);
+                                trans.Rollback();
+                                errors.Add(e);
+                                continue;
+                            }
+                        }
+                    }
+
+                    if (master != null)
+                    {
+                        using (var trans = Domain.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                var child = visita.ToModel();
+                                child.FichaVisitaDomiciliarMaster = master;
+                                child.uuidFicha = master.uuidFicha;
+
+                                child.Validar();
+                                master.FichaVisitaDomiciliarChild.Add(child);
+                                Domain.FichaVisitaDomiciliarChild.Add(child);
+                                Domain.SaveChanges();
+                                trans.Commit();
+                            }
+                            catch (Exception e)
+                            {
+                                tokens.Remove(origem);
+                                trans.Rollback();
+                                errors.Add(e);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            await Domain.SaveChangesAsync();
+
+            return Ok(true);
+        }
+
+        /// <summary>
         /// Cadastrar cabeçalho das fichas
         /// </summary>
         /// <remarks>
@@ -79,9 +254,7 @@ namespace Softpark.WS.Controllers.Api
             origem.enviado = false;
 
             Domain.OrigemVisita.Add(origem);
-
-            await Domain.SaveChangesAsync();
-
+            
             var transport = header.ToModel();
 
             transport.id = Guid.NewGuid();
@@ -106,7 +279,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
-            var master = await GetOrCreateMaster(child.token);
+            var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
 
             var ficha = child.ToModel();
 
@@ -221,48 +394,5 @@ namespace Softpark.WS.Controllers.Api
 
             return Ok(true);
         }
-
-        /// <summary>
-        /// Alterar cabeçalho das fichas - Somente se autenticado
-        /// </summary>
-        /// <remarks>
-        /// Todas as fichas usarão esse cabeçalho
-        /// </remarks>
-        /// <param name="token">Token do cabeçalho</param>
-        /// <param name="header">Dados à serem enviados</param>
-        //[Route("alterar/cabecalho/{token}")]
-        //[HttpPut, ResponseType(typeof(bool))]
-        //[Authorize]
-        //public async Task<IHttpActionResult> AlterarCabecalho([FromUri, Required] Guid token, [FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
-        //{
-            //var origem = await Domain.OrigemVisita.FindAsync(token);
-
-            //var transport = header.ToModel();
-
-            //var cabecalho = origem.UnicaLotacaoTransport.Count > 1 ? null : origem.UnicaLotacaoTransport.SingleOrDefault();
-
-            //var t1 = cabecalho.CadastroDomiciliar.Count + cabecalho.CadastroIndividual.Count;
-            //var t2 = cabecalho.CadastroIndividual.Count + cabecalho.FichaVisitaDomiciliarMaster.Count;
-            //var t3 = cabecalho.CadastroDomiciliar.Count + cabecalho.FichaVisitaDomiciliarMaster.Count;
-            
-            //if (cabecalho == null ||
-                //(cabecalho.CadastroDomiciliar.Count > 0 && cabecalho.CadastroIndividual.Count > 0) ||
-                //(cabecalho.CadastroDomiciliar.Count > 0 && cabecalho.FichaVisitaDomiciliarMaster.Count > 0) ||
-                //(cabecalho.CadastroIndividual.Count > 0 && cabecalho.FichaVisitaDomiciliarMaster.Count > 0))
-                //throw new ValidationException("Não é possível alterar este cabeçalho, há outras fichas utilizando ele.");
-
-            //cabecalho.profissionalCNS = transport.profissionalCNS;
-            //cabecalho.ine = transport.ine;
-            //cabecalho.dataAtendimento = transport.dataAtendimento;
-            //cabecalho.codigoIbgeMunicipio = transport.codigoIbgeMunicipio;
-            //cabecalho.cnes = transport.cnes;
-            //cabecalho.cboCodigo_2002 = transport.cboCodigo_2002;
-
-            //cabecalho.Validar();
-
-            //await Domain.SaveChangesAsync();
-
-            //return Ok(true);
-        //}
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.WS", "src\Softpark.WS\Softpark.WS.csproj", "{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}"
 EndProject
@@ -38,6 +38,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SIGSM", "http://localhost/S
 		SlnRelativePath = "..\..\..\..\..\inetpub\wwwroot\SIGSM\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.CargaInicialDomicilio", "src\Softpark.CargaInicialDomicilio\Softpark.CargaInicialDomicilio.csproj", "{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,12 @@ Global
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Santana|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}.Santana|Any CPU.ActiveCfg = Release|Any CPU
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7}.Santana|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +87,6 @@ Global
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A} = {33F4AD7F-D10D-4139-85EF-5188FF5AE42B}
+		{9E7A5CF0-AF4E-4743-80D0-C85D0573F8A7} = {33F4AD7F-D10D-4139-85EF-5188FF5AE42B}
 	EndGlobalSection
 EndGlobal

@@ -168,7 +168,7 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         /// <param name="models"></param>
-        public FichaVisitaDomiciliarChildCadastroViewModelCollection(IEnumerable<FichaVisitaDomiciliarChild> models)
+        public FichaVisitaDomiciliarChildCadastroViewModelCollection(FichaVisitaDomiciliarChild[] models)
         {
             AddRange(models);
         }
@@ -205,7 +205,7 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         /// <param name="models"></param>
-        public void AddRange(IEnumerable<FichaVisitaDomiciliarChild> models)
+        public void AddRange(FichaVisitaDomiciliarChild[] models)
         {
             foreach (var model in models)
             {
@@ -230,7 +230,7 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         [Required]
         [DataMember(Name = nameof(OrigemVisita.token))]
-        public Guid token { get; set; }
+        public Guid? token { get; set; }
 
         /// <summary>
         /// Turno da visita

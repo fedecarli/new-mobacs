@@ -1,6 +1,7 @@
 ﻿using Softpark.Infrastructure.Extras;
 using Softpark.Models;
 using Softpark.WS.Validators;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Runtime.Serialization;
@@ -14,7 +15,7 @@ namespace Softpark.WS.ViewModels
     /// http://esusab.github.io/integracao/docs/header-transport.html#unicalotacaoheader
     /// </remarks>
     [DataContract(Name = nameof(UnicaLotacaoTransport))]
-    public struct UnicaLotacaoTransportCadastroViewModel
+    public class UnicaLotacaoTransportCadastroViewModel
     {
         /// <summary>
         /// CNS do profissional
@@ -84,6 +85,7 @@ namespace Softpark.WS.ViewModels
         {
             var ult = DomainContainer.Current.UnicaLotacaoTransport.Create();
 
+            ult.id = Guid.NewGuid();
             ult.profissionalCNS = profissionalCNS;
             ult.cboCodigo_2002 = cboCodigo_2002;
             ult.cnes = cnes;
@@ -92,6 +94,18 @@ namespace Softpark.WS.ViewModels
             ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
 
             return ult;
+        }
+
+        internal static UnicaLotacaoTransportCadastroViewModel ApplyModel(UnicaLotacaoTransport model)
+        {
+            return new UnicaLotacaoTransportCadastroViewModel {
+                cboCodigo_2002 = model.cboCodigo_2002,
+                cnes = model.cnes,
+                codigoIbgeMunicipio = model.codigoIbgeMunicipio,
+                dataAtendimento = model.dataAtendimento.ToUnix(),
+                ine = model.ine,
+                profissionalCNS = model.profissionalCNS
+            };
         }
     }
 }
