@@ -101,7 +101,8 @@ namespace Softpark.Models
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public virtual IQueryable<VW_IdentificacaoUsuarioCidadao> VW_IdentificacaoUsuarioCidadao
-            => Database.SqlQuery<VW_IdentificacaoUsuarioCidadao>("SELECT * FROM [api].[VW_IdentificacaoUsuarioCidadao]")
+            => Database
+                .SqlQuery<VW_IdentificacaoUsuarioCidadao>("SELECT * FROM [api].[VW_IdentificacaoUsuarioCidadao] WHERE id IS NOT NULL")
                 .AsQueryable();
     }
 }

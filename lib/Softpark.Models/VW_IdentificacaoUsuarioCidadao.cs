@@ -12,7 +12,7 @@ namespace Softpark.Models
         /// <summary>
         /// 
         /// </summary>
-        public Guid id { get; set; }
+        public Guid? id { get; set; }
         // ReSharper disable once InconsistentNaming
         /// <summary>
         /// 
@@ -27,7 +27,7 @@ namespace Softpark.Models
         /// <summary>
         /// 
         /// </summary>
-        public DateTime dataNascimentoCidadao { get; set; }
+        public DateTime? dataNascimentoCidadao { get; set; }
         // ReSharper disable once InconsistentNaming
         /// <summary>
         /// 

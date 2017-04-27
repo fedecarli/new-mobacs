@@ -54,7 +54,7 @@ namespace Softpark.Models
             if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header.cnes.Trim()))
                 throw new ValidationException("CNES não encontrado.");
 
-            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() == header.ine.Trim()))
+            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != header.ine.Trim()))
                 throw new ValidationException("INE não encontrado.");
 
             var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento.ToUnix());

@@ -499,7 +499,7 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao.ToUnix();
+            dataNascimentoCidadao = model.dataNascimentoCidadao?.ToUnix()??0;
             desconheceNomeMae = model.desconheceNomeMae;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao;
