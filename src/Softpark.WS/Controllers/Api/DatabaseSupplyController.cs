@@ -646,14 +646,7 @@ namespace Softpark.WS.Controllers.Api
             {
                 results = results.Where(r => r.identificacaoUsuarioCidadao == null || r.identificacaoUsuarioCidadao.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
             }
-
-            foreach (var result in results)
-            {
-                var vw = Domain.VW_IdentificacaoUsuarioCidadao.FirstOrDefault(x => x.id == result.identificacaoUsuarioCidadao.id);
-
-                result.identificacaoUsuarioCidadao = vw;
-            }
-
+            
             return Ok(results.ToArray());
         }
 
@@ -687,14 +680,7 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var results = new CadastroIndividualViewModelCollection(data.ToArray()).ToArray();
-
-            foreach (var result in results)
-            {
-                var vw = Domain.VW_IdentificacaoUsuarioCidadao.FirstOrDefault(x => x.id == result.identificacaoUsuarioCidadao.id);
-
-                result.identificacaoUsuarioCidadao = vw;
-            }
-
+            
             return Ok(results.ToArray());
         }
 
