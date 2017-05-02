@@ -57,12 +57,7 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         public VW_Profissional Profissional { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public RastroFicha UltimaModificacao { get; set; }
-
+        
         /// <summary>
         /// Turno da visita
         /// </summary>

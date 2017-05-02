@@ -29,6 +29,10 @@ namespace Softpark.Models
     /// </summary>
     public partial class DomainContainer
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameOrConnectionString"></param>
         public DomainContainer(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
@@ -83,7 +87,7 @@ namespace Softpark.Models
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public virtual IQueryable<VW_Profissional> VW_Profissional =>
-            Database.SqlQuery<VW_Profissional>("SELECT * FROM [api].[VW_Profissional]").AsQueryable();
+            Database.SqlQuery<VW_Profissional>("SELECT CBO, CNES, CNS, INE, Equipe, Nome, Profissao, Unidade FROM [api].[VW_Profissional]").AsQueryable();
 
         /// <summary>
         /// 
@@ -102,7 +106,34 @@ namespace Softpark.Models
         // ReSharper disable once InconsistentNaming
         public virtual IQueryable<VW_IdentificacaoUsuarioCidadao> VW_IdentificacaoUsuarioCidadao
             => Database
-                .SqlQuery<VW_IdentificacaoUsuarioCidadao>("SELECT * FROM [api].[VW_IdentificacaoUsuarioCidadao] WHERE id IS NOT NULL")
+                .SqlQuery<VW_IdentificacaoUsuarioCidadao>("SELECT id, nomeSocial, codigoIbgeMunicipioNascimento, dataNascimentoCidadao, desconheceNomeMae, emailCidadao, nacionalidadeCidadao, nomeCidadao, nomeMaeCidadao, cnsCidadao, cnsResponsavelFamiliar, telefoneCelular, numeroNisPisPasep, paisNascimento, racaCorCidadao, sexoCidadao, statusEhResponsavel, etnia, num_contrato, nomePaiCidadao, desconheceNomePai, dtNaturalizacao, portariaNaturalizacao, dtEntradaBrasil, microarea, stForaArea, CBO, CNES, INE, Codigo FROM [api].[VW_IdentificacaoUsuarioCidadao] WHERE id IS NOT NULL")
                 .AsQueryable();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public virtual IQueryable<VW_ultimo_cadastroDomiciliar> VW_ultimo_cadastroDomiciliar
+            => Database
+                .SqlQuery<VW_ultimo_cadastroDomiciliar>("SELECT idCadastroDomiciliar, headerTransport, token FROM [api].[VW_ultimo_cadastroDomiciliar]")
+                .AsQueryable();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public virtual IQueryable<VW_profissional_cns> VW_profissional_cns
+            => Database
+                .SqlQuery<VW_profissional_cns>("SELECT Codigo, idProfissional, cnsProfissional, cnsCidadao, IdCidadao, CNES, CBO, INE, AgendamentoMarcado FROM [api].[VW_profissional_cns]")
+                .AsQueryable();
+
+        //public virtual int PR_EncerrarAgenda(int idAgendaProd, bool retorno)
+        //{
+        //    var idAgendaProdParameter = new ObjectParameter(nameof(idAgendaProd), idAgendaProd);
+
+        //    var retornoParameter = new ObjectParameter(nameof(retorno), retorno);
+            
+        //    return ObjectContext.ExecuteFunction(nameof(PR_EncerrarAgenda), idAgendaProdParameter, retornoParameter);
+        //}
     }
 }

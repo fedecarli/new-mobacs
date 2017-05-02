@@ -568,9 +568,9 @@ namespace Softpark.Models
         public virtual DbSet<VW_USUARIO> VW_USUARIO { get; set; }
         public virtual DbSet<VW_VISITA_DOMICILIAR> VW_VISITA_DOMICILIAR { get; set; }
         public virtual DbSet<TipoOrigem> TipoOrigem { get; set; }
-        public virtual DbSet<RastroFicha> RastroFicha { get; set; }
-        public virtual DbSet<VW_VISITAS> VW_VISITAS { get; set; }
         public virtual DbSet<FichaVisitaDomiciliarChild> FichaVisitaDomiciliarChild { get; set; }
+        public virtual DbSet<ProfCidadaoVinc> ProfCidadaoVinc { get; set; }
+        public virtual DbSet<ProfCidadaoVincAgendaProd> ProfCidadaoVincAgendaProd { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {
@@ -673,6 +673,19 @@ namespace Softpark.Models
                 new ObjectParameter("statusVisitaCompartilhadaOutroProfissional", typeof(bool));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_INT_EnviarFicha", tokenParameter, turnoParameter, desfechoParameter, tipoDeImovelParameter, cnsCidadaoParameter, dataNascimentoParameter, sexoParameter, microareaParameter, stForaAreaParameter, tipoOrigemParameter, numProntuarioParameter, pesoAcompanhamentoNutricionalParameter, alturaAcompanhamentoNutricionalParameter, statusVisitaCompartilhadaOutroProfissionalParameter);
+        }
+    
+        public virtual int PR_EncerrarAgenda(Nullable<int> idAgendaProd, Nullable<bool> retorno)
+        {
+            var idAgendaProdParameter = idAgendaProd.HasValue ?
+                new ObjectParameter("idAgendaProd", idAgendaProd) :
+                new ObjectParameter("idAgendaProd", typeof(int));
+    
+            var retornoParameter = retorno.HasValue ?
+                new ObjectParameter("Retorno", retorno) :
+                new ObjectParameter("Retorno", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_EncerrarAgenda", idAgendaProdParameter, retornoParameter);
         }
     }
 }

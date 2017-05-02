@@ -10,7 +10,6 @@ using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
-using Softpark.WS.Validators;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -538,10 +537,15 @@ namespace Softpark.WS.Controllers.Api
 
             var ps = new Dictionary<string, ProfissionalViewModel>();
 
-            Func<VW_Profissional, ProfissionalViewModel> __ = (prof) =>
+            Func<VW_Profissional, ProfissionalViewModel> __ = prof =>
             {
                 var _ = new ProfissionalViewModel();
-                ps.Add(prof.CNS?.Trim(), _);
+
+                var cns = prof?.CNS?.Trim();
+
+                if(cns != null)
+                    ps.Add(cns, _);
+
                 return _;
             };
 
@@ -640,50 +644,48 @@ namespace Softpark.WS.Controllers.Api
 
             if (headerToken == null) return BadRequest("Token Inválido.");
 
-            CadastroIndividualViewModelCollection results = GetHeadersBy(headerToken).SelectMany(x => x.CadastroIndividual).ToArray();
+            var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
+
+            var pessoas = Domain.VW_profissional_cns
+                .Where(x => x.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
+                && x.AgendamentoMarcado);
+
+            var idProf = pessoas.FirstOrDefault()?.idProfissional;
+
+            var profs = Domain.ProfCidadaoVincAgendaProd
+                /// TODO - liberar agendamento
+                .Where(x => //x.DataAgendadamento <= DateTime.Now &&
+                    x.AgendamentoMarcado == true &&
+                    x.DataCarregado == null &&
+                    x.FichaGerada == true &&
+                    x.ProfCidadaoVinc.IdProfissional == idProf);
+
+            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao);
+
+            var pessoasCns = pessoas.Where(x => idsCids.Contains(x.IdCidadao)).Select(x => x.cnsCidadao.Trim());
+
+            var cadastros = Domain.CadastroIndividual
+                .Where(x => x.identificacaoUsuarioCidadao != null && ids.Contains(x.identificacaoUsuarioCidadao.Value)
+                && pessoasCns.Contains(x.IdentificacaoUsuarioCidadao1.cnsCidadao));
+            
+            CadastroIndividualViewModelCollection results = cadastros.ToArray();
 
             if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
             {
-                results = results.Where(r => r.identificacaoUsuarioCidadao == null || r.identificacaoUsuarioCidadao.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
-            }
-            
-            return Ok(results.ToArray());
-        }
-
-        /// <summary>
-        /// Buscar pacientes atendidos pelo profissional informado
-        /// </summary>
-        /// <param name="profissionalCns">CNS do profissional</param>
-        /// <param name="microarea"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("api/dados/pacienteCNS/{profissionalCns}", Name = "PacienteCNSSupplyAction")]
-        [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
-        [EnableQuery]
-        private IHttpActionResult GetPacientesCNS([FromUri, Required,
-            CnsValidation] string profissionalCns,
-            [FromUri] string microarea = null)
-        {
-            var profissional = Domain.VW_Profissional.FirstOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
-
-            var data = Domain.CadastroIndividual
-                .Where(x => x.UnicaLotacaoTransport.profissionalCNS == profissional.CNS)
-                .Where(x => x.identificacaoUsuarioCidadao != null)
-                .GroupBy(x => x.IdentificacaoUsuarioCidadao1.cnsCidadao)
-                .Select(x => x.OrderByDescending(y => y.UnicaLotacaoTransport.dataAtendimento).FirstOrDefault())
-                .Where(x => x != null);
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-            {
-                data = data.Where(r => r.IdentificacaoUsuarioCidadao1.microarea == null
-                || r.IdentificacaoUsuarioCidadao1.microarea == microarea);
+                results = results.Where(r => r.identificacaoUsuarioCidadao?.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
             }
 
-            var results = new CadastroIndividualViewModelCollection(data.ToArray()).ToArray();
+            var rs = results.ToArray().GroupBy(x => x);
             
-            return Ok(results.ToArray());
-        }
+            var data = Ok(rs.ToArray());
 
+            var ps = profs.ToList();
+            
+            ps.ForEach(x => Domain.PR_EncerrarAgenda(x.IdAgendaProd, false));
+            
+            return data;
+        }
+        
         /// <summary>
         /// Buscar domicílios atendidos pelo profissional informado
         /// </summary>
@@ -699,7 +701,10 @@ namespace Softpark.WS.Controllers.Api
 
             if (headerToken == null) return BadRequest("Token Inválido.");
 
-            var cadastros = GetHeadersBy(headerToken).SelectMany(x => x.CadastroDomiciliar);
+            var ids = Domain.VW_ultimo_cadastroDomiciliar.Select(x => x.idCadastroDomiciliar);
+
+            var cadastros = GetHeadersBy(headerToken).SelectMany(x => x.CadastroDomiciliar)
+                .Where(x => ids.Contains(x.id));
 
             if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
             {
@@ -709,37 +714,52 @@ namespace Softpark.WS.Controllers.Api
             CadastroDomiciliarViewModelCollection results = cadastros.ToArray();
 
             return Ok(results.ToArray());
+
+            //var headerToken = await GetHeader(token);
+
+            //if (headerToken == null) return BadRequest("Token Inválido.");
+            
+            //var ids = Domain.VW_ultimo_cadastroDomiciliar.Select(x => x.idCadastroDomiciliar);
+            
+            //var pessoas = Domain.VW_profissional_cns
+            //    .Where(x => x.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
+            //                && x.AgendamentoMarcado);
+
+            //var idProf = pessoas.FirstOrDefault()?.idProfissional;
+
+            //var profs = Domain.ProfCidadaoVincAgendaProd
+            //    /// TODO - liberar agendamento
+            //    .Where(x => //x.DataAgendadamento <= DateTime.Now &&
+            //        x.AgendamentoMarcado == true &&
+            //        x.DataCarregado == null &&
+            //        x.FichaGerada == true &&
+            //        x.ProfCidadaoVinc.IdProfissional == idProf);
+
+            //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao);
+
+            //var pessoasCns = pessoas.Where(x => idsCids.Contains(x.IdCidadao)).Select(x => x.cnsCidadao.Trim());
+
+            //var cadastros = Domain.FamiliaRow
+            //    .Where(x => pessoasCns.Contains(x.numeroCnsResponsavel))
+            //    .SelectMany(x => x.CadastroDomiciliar)
+            //    .Where(x => ids.Contains(x.id));
+            
+            //if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            //{
+            //    cadastros = cadastros.Where(r => r.EnderecoLocalPermanencia1 == null || r.EnderecoLocalPermanencia1.microarea == null || r.EnderecoLocalPermanencia1.microarea == microarea);
+            //}
+            
+            //CadastroDomiciliarViewModelCollection results = cadastros.ToArray();
+
+            //var data = Ok(results.ToArray());
+
+            //var ps = profs.ToArray();
+
+            //ps.ForEach(x => Domain.PR_EncerrarAgenda(x.IdAgendaProd, false));
+
+            //return data;
         }
-
-        /// <summary>
-        /// Buscar domicílios atendidos pelo profissional informado
-        /// </summary>
-        /// <param name="profissionalCns">CNS do Profissional</param>
-        /// <param name="microarea"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("api/dados/domicilioCNS/{profissionalCns}", Name = "DomicilioCnsSupplyAction")]
-        [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
-        private IHttpActionResult GetDomiciliosCNS([FromUri, Required,
-            CnsValidation] string profissionalCns,
-            [FromUri] string microarea = null)
-        {
-            var profissional = Domain.VW_Profissional.FirstOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
-
-            var cadastros = Domain.UnicaLotacaoTransport
-                .Where(x => x.profissionalCNS == profissional.CNS)
-                .SelectMany(x => x.CadastroDomiciliar);
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-            {
-                cadastros = cadastros.Where(r => r.EnderecoLocalPermanencia1 == null || r.EnderecoLocalPermanencia1.microarea == null || r.EnderecoLocalPermanencia1.microarea == microarea);
-            }
-
-            var results = new CadastroDomiciliarViewModelCollection(cadastros.ToArray());
-
-            return Ok(results.ToArray());
-        }
-
+        
         /// <summary>
         /// Buscar visitas realizadas pelo profissional informado
         /// </summary>
@@ -764,37 +784,6 @@ namespace Softpark.WS.Controllers.Api
             }
 
             return Ok(results.ToArray());
-        }
-
-        /// <summary>
-        /// Buscar visitas realizadas pelo profissional informado
-        /// </summary>
-        /// <param name="profissionalCns">Token de acesso</param>
-        /// <param name="microarea"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("api/dados/visitaCNS/{profissionalCns}", Name = "VisitaCnsSupplyAction")]
-        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
-        private IHttpActionResult GetVisitasCNS([FromUri, Required,
-            CnsValidation] string profissionalCns,
-            [FromUri] string microarea = null)
-        {
-            var profissional = Domain.VW_Profissional
-                .FirstOrDefault(x => x.CNS.Trim() == (profissionalCns ?? "").Trim());
-
-            var results = Domain.UnicaLotacaoTransport
-                .Where(x => x.profissionalCNS == profissional.CNS)
-                .SelectMany(f => f.FichaVisitaDomiciliarMaster)
-                .SelectMany(f => f.FichaVisitaDomiciliarChild).ToArray();
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-            {
-                results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
-            }
-
-            var data = new FichaVisitaDomiciliarChildCadastroViewModelCollection(results);
-
-            return Ok(data.ToArray());
         }
     }
 

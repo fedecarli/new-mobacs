@@ -1293,6 +1293,12 @@
     <Compile Include="ProAtendimentos_TpServicos.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ProfCidadaoVinc.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProfCidadaoVincAgendaProd.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PT_FeriadosFixos.cs">
       <DependentUpon>Domain.tt</DependentUpon>
@@ -1301,9 +1307,6 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="RacaCor.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="RastroFicha.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="RegimeJuridico.cs">
@@ -1709,16 +1712,15 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_Profissional.cs" />
+    <Compile Include="VW_profissional_cns.cs" />
     <Compile Include="Vw_Relatorios_AtendimentoCredenciado.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Vw_Relatorios_BPA.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_ultimo_cadastroDomiciliar.cs" />
     <Compile Include="VW_USUARIO.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VW_VISITAS.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_VISITA_DOMICILIAR.cs">

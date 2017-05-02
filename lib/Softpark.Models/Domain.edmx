@@ -17,6 +17,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
+          <Property Name="idAuto" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="condicaoMoradia" Type="uniqueidentifier" />
           <Property Name="enderecoLocalPermanencia" Type="uniqueidentifier" />
@@ -36,6 +37,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
+          <Property Name="idAuto" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="condicoesDeSaude" Type="uniqueidentifier" />
           <Property Name="emSituacaoDeRua" Type="uniqueidentifier" />
@@ -180,8 +182,8 @@
           <Property Name="numeroProntuario" Type="nvarchar" MaxLength="30" />
           <Property Name="rendaFamiliar" Type="int" />
           <Property Name="stMudanca" Type="bit" Nullable="false" />
-          <Property Name="resideDesde" Type="date" />
           <Property Name="dataNascimentoResponsavel" Type="date" />
+          <Property Name="resideDesde" Type="date" />
         </EntityType>
         <EntityType Name="Familias">
           <Key>
@@ -315,20 +317,8 @@
           <Property Name="token" Type="uniqueidentifier" Nullable="false" />
           <Property Name="finalizado" Type="bit" Nullable="false" />
           <Property Name="id_tipo_origem" Type="int" Nullable="false" />
-          <Property Name="enviado" Type="bit" Nullable="false" />
           <Property Name="enviarParaThrift" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="RastroFicha">
-          <Key>
-            <PropertyRef Name="token" />
-            <PropertyRef Name="CodUsu" />
-            <PropertyRef Name="DataModificacao" />
-          </Key>
-          <Property Name="token" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="CodUsu" Type="int" Nullable="false" />
-          <Property Name="DataModificacao" Type="datetime" Nullable="false" />
-          <Property Name="DadoAnterior" Type="ntext" />
-          <Property Name="DadoAtual" Type="ntext" />
+          <Property Name="enviado" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
           <Key>
@@ -740,7 +730,7 @@
           <Property Name="Horus_GUID" Type="varchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AE_MovimentaItemOLD' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.AE_MovimentaItemOLD' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="AE_MovimentaItemOLD">
           <Key>
             <PropertyRef Name="NumContrato" />
@@ -2086,7 +2076,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AE_MovimentaIte
           <Property Name="DesSolicitacao" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ARQ020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.ARQ020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ARQ020">
           <Key>
             <PropertyRef Name="codope" />
@@ -2604,11 +2594,11 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ARQ020' does no
           <Property Name="Instrumentador" Type="char" MaxLength="1" />
           <Property Name="Urgencia" Type="char" MaxLength="1" />
           <Property Name="CodCID" Type="char" MaxLength="5" />
-          <Property Name="servico" Type="nvarchar" MaxLength="3" />
-          <Property Name="classificacao" Type="nvarchar" MaxLength="3" />
+          <Property Name="servico" Type="nvarchar" MaxLength="6" />
+          <Property Name="classificacao" Type="nvarchar" MaxLength="6" />
           <Property Name="Acao_CAPS" Type="bit" />
           <Property Name="Acao_Territorio" Type="bit" />
-          <Property Name="Codigo_Equipe" Type="nvarchar" MaxLength="15" />
+          <Property Name="Codigo_Equipe" Type="nvarchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="AS_AtendItemEqp">
           <Key>
@@ -3316,18 +3306,18 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ARQ020' does no
           <Property Name="CodUsu" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AS_ExcluidosAgenda' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.AS_ExcluidosAgenda' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="AS_ExcluidosAgenda">
           <Key>
             <PropertyRef Name="excluidosID" />
           </Key>
           <Property Name="excluidosID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="codSetor" Type="nvarchar" MaxLength="50" />
-          <Property Name="tipoAgenda" Type="nvarchar" MaxLength="50" />
-          <Property Name="horaAgenda" Type="nvarchar" MaxLength="50" />
-          <Property Name="ordemAgenda" Type="nvarchar" MaxLength="50" />
-          <Property Name="codigo" Type="nvarchar" MaxLength="50" />
-          <Property Name="codigoTipoAgenda" Type="nvarchar" MaxLength="50" />
+          <Property Name="codSetor" Type="nvarchar" MaxLength="100" />
+          <Property Name="tipoAgenda" Type="nvarchar" MaxLength="100" />
+          <Property Name="horaAgenda" Type="nvarchar" MaxLength="100" />
+          <Property Name="ordemAgenda" Type="nvarchar" MaxLength="100" />
+          <Property Name="codigo" Type="nvarchar" MaxLength="100" />
+          <Property Name="codigoTipoAgenda" Type="nvarchar" MaxLength="100" />
           <Property Name="dataAgenda" Type="datetime" />
           <Property Name="CodUsu" Type="int" />
           <Property Name="dataSistema" Type="datetime" />
@@ -4121,6 +4111,8 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AS_ExcluidosAge
           <Property Name="CodUsu" Type="int" />
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
           <Property Name="NomeSocial" Type="varchar" MaxLength="100" />
+          <Property Name="CodMunicipe" Type="int" />
+          <Property Name="DtAtualizacao" Type="datetime" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroAcaoSocial">
           <Key>
@@ -4201,7 +4193,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AS_ExcluidosAge
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_CadastroExamesBloqueados' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.ASSMED_CadastroExamesBloqueados' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ASSMED_CadastroExamesBloqueados">
           <Key>
             <PropertyRef Name="id" />
@@ -4385,7 +4377,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_Cadastro
           <Property Name="CodUsu" Type="int" />
           <Property Name="DtSistema" Type="datetime" />
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
-          <Property Name="AcsUnidade" Type="nvarchar" MaxLength="50" />
+          <Property Name="AcsUnidade" Type="nvarchar" MaxLength="100" />
           <Property Name="Observacao" Type="ntext" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroTitular">
@@ -4437,7 +4429,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_Cadastro
           <Property Name="CodUsu" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_CadTelefones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.ASSMED_CadTelefones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ASSMED_CadTelefones">
           <Key>
             <PropertyRef Name="NumContrato" />
@@ -5326,7 +5318,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_CadTelef
           <Property Name="Versao" Type="char" MaxLength="4" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AssRelCampos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.AssRelCampos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="AssRelCampos">
           <Key>
             <PropertyRef Name="NumRel" />
@@ -5637,7 +5629,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.AssRelCampos' d
           <Property Name="DesTpAcervo" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.CEP_BAI' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.CEP_BAI' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CEP_BAI">
           <Key>
             <PropertyRef Name="NM_BAI" />
@@ -5653,7 +5645,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.CEP_BAI' does n
           <Property Name="ID_PK_LOC" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.CEP_LOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.CEP_LOC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CEP_LOC">
           <Key>
             <PropertyRef Name="PK_LOC" />
@@ -5669,7 +5661,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.CEP_LOC' does n
           <Property Name="ID_PK_UF" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.CEP_LOG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.CEP_LOG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CEP_LOG">
           <Key>
             <PropertyRef Name="ID_LOG" />
@@ -5691,7 +5683,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.CEP_LOG' does n
           <Property Name="PK_LOC" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.chatAuditoria' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.chatAuditoria' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="chatAuditoria">
           <Key>
             <PropertyRef Name="ID" />
@@ -5741,7 +5733,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.chatAuditoria' 
           <Property Name="data_cadastro" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ConfiguracoesGerais' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.ConfiguracoesGerais' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ConfiguracoesGerais">
           <Key>
             <PropertyRef Name="id" />
@@ -5752,7 +5744,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ConfiguracoesGe
           <Property Name="valor" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Consulta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Consulta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Consulta">
           <Key>
             <PropertyRef Name="NumContrato" />
@@ -6064,7 +6056,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Consulta' does 
           <Property Name="st_fora_area" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Erros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Erros' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Erros">
           <Key>
             <PropertyRef Name="ID" />
@@ -6479,7 +6471,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Erros' does not
           <Property Name="id_menu" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Nacionalidade' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Nacionalidade' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Nacionalidade">
           <Key>
             <PropertyRef Name="CodNacao" />
@@ -6488,7 +6480,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Nacionalidade' 
           <Property Name="DesNacao" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.OrgaoEmissor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.OrgaoEmissor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="OrgaoEmissor">
           <Key>
             <PropertyRef Name="CodOrgao" />
@@ -6571,7 +6563,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.OrgaoEmissor' d
           <Property Name="CodSUS" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.PMD018' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.PMD018' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PMD018">
           <Key>
             <PropertyRef Name="numcid" />
@@ -6917,6 +6909,27 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.PMD018' does no
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descricao" Type="varchar" MaxLength="200" />
         </EntityType>
+        <EntityType Name="ProfCidadaoVinc">
+          <Key>
+            <PropertyRef Name="IdVinc" />
+          </Key>
+          <Property Name="IdVinc" Type="int" Nullable="false" />
+          <Property Name="IdProfissional" Type="int" />
+          <Property Name="IdCidadao" Type="int" />
+          <Property Name="Marcado" Type="bit" />
+        </EntityType>
+        <EntityType Name="ProfCidadaoVincAgendaProd">
+          <Key>
+            <PropertyRef Name="IdAgendaProd" />
+          </Key>
+          <Property Name="IdAgendaProd" Type="int" Nullable="false" />
+          <Property Name="IdVinc" Type="int" Nullable="false" />
+          <Property Name="AgendamentoMarcado" Type="bit" />
+          <Property Name="DataAgendadamento" Type="datetime" Nullable="false" />
+          <Property Name="DataCarregado" Type="datetime" />
+          <Property Name="DataRetorno" Type="datetime" />
+          <Property Name="FichaGerada" Type="bit" />
+        </EntityType>
         <EntityType Name="PT_FeriadosFixos">
           <Key>
             <PropertyRef Name="NumContrato" />
@@ -6940,7 +6953,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.PMD018' does no
           <Property Name="Imagem" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.RacaCor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.RacaCor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RacaCor">
           <Key>
             <PropertyRef Name="CodCor" />
@@ -6994,7 +7007,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.RacaCor' does n
           <Property Name="blindado" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Setores_Cotas' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Setores_Cotas' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Setores_Cotas">
           <Key>
             <PropertyRef Name="ID" />
@@ -7021,7 +7034,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Setores_Cotas' 
           <Property Name="CodAla" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NumContrato" Type="int" />
           <Property Name="CodSetor" Type="int" />
-          <Property Name="Descricao" Type="nvarchar" MaxLength="100" />
+          <Property Name="Descricao" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="SetoresClassificacao">
           <Key>
@@ -7385,7 +7398,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Setores_Cotas' 
           <Property Name="descricao" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.SIGSM_Ciap' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="SIGSM_Ciap">
           <Key>
             <PropertyRef Name="CodCIAP" />
@@ -7519,7 +7532,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' doe
           </Key>
           <Property Name="codigo" Type="bigint" Nullable="false" />
           <Property Name="nome" Type="nvarchar" MaxLength="80" Nullable="false" />
-          <Property Name="observacoes" Type="nvarchar" MaxLength="255" />
+          <Property Name="observacoes" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="campo" Type="nvarchar" MaxLength="120" Nullable="false" />
         </EntityType>
         <EntityType Name="SIGSM_Odontologico_Conduta">
@@ -7758,7 +7771,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SIGSM_Ciap' doe
           <Property Name="tratamento_focal" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendimento_Odontologico' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.SigTap_Atendimento_Odontologico' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="SigTap_Atendimento_Odontologico">
           <Key>
             <PropertyRef Name="id" />
@@ -7877,7 +7890,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.SigTap_Atendime
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_CidadaoSocial' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.TB_CidadaoSocial' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TB_CidadaoSocial">
           <Key>
             <PropertyRef Name="NUMCID" />
@@ -7907,7 +7920,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_CidadaoSocia
           <Property Name="Estado Cívil" Type="varchar" MaxLength="15" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_MS_TIPO_LOGRADOURO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.TB_MS_TIPO_LOGRADOURO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TB_MS_TIPO_LOGRADOURO">
           <Key>
             <PropertyRef Name="CO_TIPO_LOGRADOURO" />
@@ -7918,28 +7931,28 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_MS_TIPO_LOGR
           <Property Name="DS_TIPO_LOGRADOURO_ABREV" Type="varchar" MaxLength="15" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Tb_produto' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Tb_produto' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Tb_produto">
           <Key>
             <PropertyRef Name="Identificação" />
           </Key>
           <Property Name="Identificação" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Campo1" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo2" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo3" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo4" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo5" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo6" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo7" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo8" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo9" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo10" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo11" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo12" Type="nvarchar" MaxLength="255" />
-          <Property Name="Campo13" Type="nvarchar" MaxLength="255" />
+          <Property Name="Campo1" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo2" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo3" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo4" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo5" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo6" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo7" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo8" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo9" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo10" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo11" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo12" Type="nvarchar" MaxLength="510" />
+          <Property Name="Campo13" Type="nvarchar" MaxLength="510" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.tb_TelefonesCidadao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.tb_TelefonesCidadao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tb_TelefonesCidadao">
           <Key>
             <PropertyRef Name="cd_Sequencia" />
@@ -7961,7 +7974,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.tb_TelefonesCid
           <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.tb_unidadeMedida' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.tb_unidadeMedida' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tb_unidadeMedida">
           <Key>
             <PropertyRef Name="Codigo" />
@@ -7990,7 +8003,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.tb_unidadeMedid
           <Property Name="tp_sub_grupos" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TipoCertidao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.TipoCertidao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TipoCertidao">
           <Key>
             <PropertyRef Name="CodTpCertidao" />
@@ -7999,7 +8012,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TipoCertidao' d
           <Property Name="Descricao" Type="varchar" MaxLength="80" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TipoLogradouro' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.TipoLogradouro' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TipoLogradouro">
           <Key>
             <PropertyRef Name="CodTpLogra" />
@@ -8065,7 +8078,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TipoLogradouro'
           <Property Name="codigo" Type="nvarchar" MaxLength="12" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Conduta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.TP_Conduta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TP_Conduta">
           <Key>
             <PropertyRef Name="id_tp_conduta" />
@@ -8281,7 +8294,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Conduta' doe
           <Property Name="observacao" Type="nvarchar" MaxLength="512" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Nasf' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.TP_Nasf' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TP_Nasf">
           <Key>
             <PropertyRef Name="id_tp_nasf" />
@@ -8519,56 +8532,10 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Nasf' does n
           <Property Name="UF" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="DesUF" Type="varchar" MaxLength="50" />
           <Property Name="CodANP" Type="int" />
+          <Property Name="DNE" Type="char" MaxLength="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_VISITAS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="VW_VISITAS">
-          <Key>
-            <PropertyRef Name="childId" />
-            
-            
-            
-            
-            
-            
-            
-            <PropertyRef Name="enviado" />
-            <PropertyRef Name="finalizado" />
-          </Key>
-          <Property Name="childId" Type="bigint" Nullable="false" />
-          <Property Name="masterId" Type="char" MaxLength="44" Nullable="false" />
-          <Property Name="turno" Type="bigint" Nullable="false" />
-          <Property Name="numProntuario" Type="nvarchar" MaxLength="30" />
-          <Property Name="NomePaciente" Type="varchar" MaxLength="100" />
-          <Property Name="cnsCidadao" Type="char" MaxLength="15" />
-          <Property Name="dtNascimento" Type="datetime" />
-          <Property Name="sexo" Type="bigint" />
-          <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="bit" Nullable="false" />
-          <Property Name="desfecho" Type="bigint" Nullable="false" />
-          <Property Name="microarea" Type="char" MaxLength="2" />
-          <Property Name="stForaArea" Type="bit" Nullable="false" />
-          <Property Name="tipoDeImovel" Type="bigint" Nullable="false" />
-          <Property Name="pesoAcompanhamentoNutricional" Type="decimal" Precision="6" Scale="3" />
-          <Property Name="alturaAcompanhamentoNutricional" Type="decimal" Precision="4" Scale="1" />
-          <Property Name="cnsProfissional" Type="varchar" MaxLength="50" />
-          <Property Name="nomeProfissional" Type="varchar" MaxLength="100" />
-          <Property Name="CBO" Type="char" MaxLength="10" />
-          <Property Name="Profissao" Type="varchar" MaxLength="120" />
-          <Property Name="CNES" Type="char" MaxLength="7" />
-          <Property Name="Unidade" Type="varchar" MaxLength="60" />
-          <Property Name="INE" Type="nvarchar" MaxLength="10" />
-          <Property Name="Equipe" Type="nvarchar" MaxLength="100" />
-          <Property Name="codigoIbgeMunicipio" Type="char" MaxLength="7" Nullable="false" />
-          <Property Name="dataAtendimento" Type="datetime" />
-          <Property Name="token" Type="uniqueidentifier" />
-          <Property Name="CodUsu" Type="int" />
-          <Property Name="DataModificacao" Type="datetime" />
-          <Property Name="Usuario" Type="varchar" MaxLength="100" />
-          <Property Name="enviado" Type="bit" Nullable="false" />
-          <Property Name="finalizado" Type="bit" Nullable="false" />
-        </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ProAtendimentos_Listagem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.ProAtendimentos_Listagem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ProAtendimentos_Listagem">
           <Key>
             <PropertyRef Name="A_ID" />
@@ -8585,7 +8552,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ProAtendimentos
           <Property Name="IDsTpServicos" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_DOMICILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_ATENDIMENTO_DOMICILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_ATENDIMENTO_DOMICILIAR">
           <Key>
             <PropertyRef Name="PK" />
@@ -8606,7 +8573,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_INDIVIDUAL' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_ATENDIMENTO_INDIVIDUAL' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_ATENDIMENTO_INDIVIDUAL">
           <Key>
             <PropertyRef Name="PK" />
@@ -8627,7 +8594,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_ODONTOLOGICO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_ATENDIMENTO_ODONTOLOGICO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_ATENDIMENTO_ODONTOLOGICO">
           <Key>
             <PropertyRef Name="PK" />
@@ -8649,7 +8616,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATENDIMENTO_
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATIVIDADE_COLETIVA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_ATIVIDADE_COLETIVA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_ATIVIDADE_COLETIVA">
           <Key>
             <PropertyRef Name="PK" />
@@ -8672,7 +8639,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_ATIVIDADE_CO
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_AVALIACAO_ELEGIBILIDADE_ADMISSAO">
           <Key>
             <PropertyRef Name="PK" />
@@ -8694,7 +8661,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_AVALIACAO_EL
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_COMP_FAMILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_COMP_FAMILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_COMP_FAMILIAR">
           <Key>
             <PropertyRef Name="PK" />
@@ -8712,7 +8679,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_COMP_FAMILIA
           <Property Name="num_contrato" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_DOMICILIO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_DOMICILIO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_DOMICILIO">
           <Key>
             <PropertyRef Name="ativo" />
@@ -8728,7 +8695,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_DOMICILIO' d
           <Property Name="ativo" Type="varchar" MaxLength="7" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_GRUPO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_GRUPO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_GRUPO">
           <Key>
             <PropertyRef Name="ID_GRUPO" />
@@ -8742,7 +8709,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_GRUPO' does 
           <Property Name="ATIVO" Type="varchar" MaxLength="7" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_INDIVIDUAIS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_INDIVIDUAIS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_INDIVIDUAIS">
           <Key>
             <PropertyRef Name="PK" />
@@ -8758,7 +8725,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_INDIVIDUAIS'
           <Property Name="DOCUMENTOS" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_MARCADORES_CONSUMO_ALIMENTAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_MARCADORES_CONSUMO_ALIMENTAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_MARCADORES_CONSUMO_ALIMENTAR">
           <Key>
             <PropertyRef Name="PK" />
@@ -8780,7 +8747,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_MARCADORES_C
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_PROCEDIMENTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_PROCEDIMENTO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_PROCEDIMENTO">
           <Key>
             <PropertyRef Name="PK" />
@@ -8803,7 +8770,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_PROCEDIMENTO
           <Property Name="GUID_ESUS" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Vw_Relatorios_AtendimentoCredenciado' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Vw_Relatorios_AtendimentoCredenciado' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Vw_Relatorios_AtendimentoCredenciado">
           <Key>
             <PropertyRef Name="NumAtend" />
@@ -8827,7 +8794,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Vw_Relatorios_A
           <Property Name="Numero" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Vw_Relatorios_BPA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.Vw_Relatorios_BPA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Vw_Relatorios_BPA">
           <Key>
             <PropertyRef Name="NumAtend" />
@@ -8849,7 +8816,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Vw_Relatorios_B
           <Property Name="CodCred" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_USUARIO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_USUARIO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_USUARIO">
           <Key>
             <PropertyRef Name="CodUsu" />
@@ -8864,7 +8831,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_USUARIO' doe
           <Property Name="ativo" Type="varchar" MaxLength="7" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_VISITA_DOMICILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SIGSM.dbo.VW_VISITA_DOMICILIAR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_VISITA_DOMICILIAR">
           <Key>
             <PropertyRef Name="PK" />
@@ -14705,9 +14672,6 @@ warning 6035: The relationship 'FK_IdentificacaoUsuarioCidadao_TP_Nacionalidade'
           </ReferentialConstraint>
         </Association>
         <!--Errors Found During Generation:
-warning 6035: The relationship 'FK_InformacoesSocioDemograficas_AS_ProfissoesTab' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-        <Association Name="FK_InformacoesSocioDemograficas_AS_ProfissoesTab" />-->
-        <!--Errors Found During Generation:
 warning 6035: The relationship 'FK_InformacoesSocioDemograficas_TP_Curso' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
         <Association Name="FK_InformacoesSocioDemograficas_TP_Curso" />-->
         <Association Name="FK_InformacoesSocioDemograficas_TP_Identidade_Genero_Cidadao">
@@ -14864,15 +14828,15 @@ warning 6035: The relationship 'FK_OrigemAlimentoSituacaoRua_TP_Origem_Alimentac
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RastroFicha_OrigemVisita">
-          <End Role="OrigemVisita" Type="Self.OrigemVisita" Multiplicity="1" />
-          <End Role="RastroFicha" Type="Self.RastroFicha" Multiplicity="*" />
+        <Association Name="FK_ProfCidadaoVinc">
+          <End Role="ProfCidadaoVinc" Type="Self.ProfCidadaoVinc" Multiplicity="1" />
+          <End Role="ProfCidadaoVincAgendaProd" Type="Self.ProfCidadaoVincAgendaProd" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OrigemVisita">
-              <PropertyRef Name="token" />
+            <Principal Role="ProfCidadaoVinc">
+              <PropertyRef Name="IdVinc" />
             </Principal>
-            <Dependent Role="RastroFicha">
-              <PropertyRef Name="token" />
+            <Dependent Role="ProfCidadaoVincAgendaProd">
+              <PropertyRef Name="IdVinc" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -15433,6 +15397,10 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="PR_EncerrarAgenda" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
+          <Parameter Name="idAgendaProd" Type="int" Mode="In" />
+          <Parameter Name="Retorno" Type="bit" Mode="In" />
+        </Function>
         <Function Name="PR_ProcessarFichasAPI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="token" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -15459,7 +15427,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="InstituicaoPermanencia" EntityType="Self.InstituicaoPermanencia" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrigemAlimentoSituacaoRua" EntityType="Self.OrigemAlimentoSituacaoRua" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrigemVisita" EntityType="Self.OrigemVisita" Schema="api" store:Type="Tables" />
-          <EntitySet Name="RastroFicha" EntityType="Self.RastroFicha" Schema="api" store:Type="Tables" />
           <EntitySet Name="ResponsavelPorCrianca" EntityType="Self.ResponsavelPorCrianca" Schema="api" store:Type="Tables" />
           <EntitySet Name="SaidaCidadaoCadastro" EntityType="Self.SaidaCidadaoCadastro" Schema="api" store:Type="Tables" />
           <EntitySet Name="TipoOrigem" EntityType="Self.TipoOrigem" Schema="api" store:Type="Tables" />
@@ -15831,6 +15798,8 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="ProAtendimentos_EI_TpServico" EntityType="Self.ProAtendimentos_EI_TpServico" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProAtendimentos_Status" EntityType="Self.ProAtendimentos_Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProAtendimentos_TpServicos" EntityType="Self.ProAtendimentos_TpServicos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProfCidadaoVinc" EntityType="Self.ProfCidadaoVinc" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProfCidadaoVincAgendaProd" EntityType="Self.ProfCidadaoVincAgendaProd" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PT_FeriadosFixos" EntityType="Self.PT_FeriadosFixos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PT_FeriadosMoveis" EntityType="Self.PT_FeriadosMoveis" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegimeJuridico" EntityType="Self.RegimeJuridico" Schema="dbo" store:Type="Tables" />
@@ -16546,41 +16515,6 @@ Endereço],
     [TP_Nasf].[descricao] AS [descricao], 
     [TP_Nasf].[nome_id] AS [nome_id]
     FROM [dbo].[TP_Nasf] AS [TP_Nasf]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="VW_VISITAS" EntityType="Self.VW_VISITAS" store:Type="Views" store:Schema="api">
-            <DefiningQuery>SELECT 
-    [VW_VISITAS].[childId] AS [childId], 
-    [VW_VISITAS].[masterId] AS [masterId], 
-    [VW_VISITAS].[turno] AS [turno], 
-    [VW_VISITAS].[numProntuario] AS [numProntuario], 
-    [VW_VISITAS].[NomePaciente] AS [NomePaciente], 
-    [VW_VISITAS].[cnsCidadao] AS [cnsCidadao], 
-    [VW_VISITAS].[dtNascimento] AS [dtNascimento], 
-    [VW_VISITAS].[sexo] AS [sexo], 
-    [VW_VISITAS].[statusVisitaCompartilhadaOutroProfissional] AS [statusVisitaCompartilhadaOutroProfissional], 
-    [VW_VISITAS].[desfecho] AS [desfecho], 
-    [VW_VISITAS].[microarea] AS [microarea], 
-    [VW_VISITAS].[stForaArea] AS [stForaArea], 
-    [VW_VISITAS].[tipoDeImovel] AS [tipoDeImovel], 
-    [VW_VISITAS].[pesoAcompanhamentoNutricional] AS [pesoAcompanhamentoNutricional], 
-    [VW_VISITAS].[alturaAcompanhamentoNutricional] AS [alturaAcompanhamentoNutricional], 
-    [VW_VISITAS].[cnsProfissional] AS [cnsProfissional], 
-    [VW_VISITAS].[nomeProfissional] AS [nomeProfissional], 
-    [VW_VISITAS].[CBO] AS [CBO], 
-    [VW_VISITAS].[Profissao] AS [Profissao], 
-    [VW_VISITAS].[CNES] AS [CNES], 
-    [VW_VISITAS].[Unidade] AS [Unidade], 
-    [VW_VISITAS].[INE] AS [INE], 
-    [VW_VISITAS].[Equipe] AS [Equipe], 
-    [VW_VISITAS].[codigoIbgeMunicipio] AS [codigoIbgeMunicipio], 
-    [VW_VISITAS].[dataAtendimento] AS [dataAtendimento], 
-    [VW_VISITAS].[token] AS [token], 
-    [VW_VISITAS].[CodUsu] AS [CodUsu], 
-    [VW_VISITAS].[DataModificacao] AS [DataModificacao], 
-    [VW_VISITAS].[Usuario] AS [Usuario], 
-    [VW_VISITAS].[enviado] AS [enviado], 
-    [VW_VISITAS].[finalizado] AS [finalizado]
-    FROM [api].[VW_VISITAS] AS [VW_VISITAS]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ProAtendimentos_Listagem" EntityType="Self.ProAtendimentos_Listagem" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -18475,9 +18409,9 @@ Endereço],
             <End Role="SIGSM_Procedimento" EntitySet="SIGSM_Procedimento" />
             <End Role="SIGSM_Procedimento_Usuario" EntitySet="SIGSM_Procedimento_Usuario" />
           </AssociationSet>
-          <AssociationSet Name="FK_RastroFicha_OrigemVisita" Association="Self.FK_RastroFicha_OrigemVisita">
-            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
-            <End Role="RastroFicha" EntitySet="RastroFicha" />
+          <AssociationSet Name="FK_ProfCidadaoVinc" Association="Self.FK_ProfCidadaoVinc">
+            <End Role="ProfCidadaoVinc" EntitySet="ProfCidadaoVinc" />
+            <End Role="ProfCidadaoVincAgendaProd" EntitySet="ProfCidadaoVincAgendaProd" />
           </AssociationSet>
           <AssociationSet Name="FK_ResponsavelPorCrianca_InformacoesSocioDemograficas" Association="Self.FK_ResponsavelPorCrianca_InformacoesSocioDemograficas">
             <End Role="InformacoesSocioDemograficas" EntitySet="InformacoesSocioDemograficas" />
@@ -21042,12 +20976,6 @@ Endereço],
             <Parameter Name="alturaAcompanhamentoNutricional" Mode="In" Type="Decimal" />
             <Parameter Name="statusVisitaCompartilhadaOutroProfissional" Mode="In" Type="Boolean" />
           </FunctionImport>
-          <EntitySet Name="RastroFicha" EntityType="Domain.RastroFicha" />
-          <AssociationSet Name="FK_RastroFicha_OrigemVisita" Association="Domain.FK_RastroFicha_OrigemVisita">
-            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
-            <End Role="RastroFicha" EntitySet="RastroFicha" />
-          </AssociationSet>
-          <EntitySet Name="VW_VISITAS" EntityType="Domain.VW_VISITAS" />
           <EntitySet Name="FichaVisitaDomiciliarChild" EntityType="Domain.FichaVisitaDomiciliarChild" />
           <AssociationSet Name="FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" Association="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster">
             <End Role="FichaVisitaDomiciliarMaster" EntitySet="FichaVisitaDomiciliarMaster" />
@@ -21057,6 +20985,16 @@ Endereço],
             <End Role="FichaVisitaDomiciliarChild" EntitySet="FichaVisitaDomiciliarChild" />
             <End Role="SIGSM_MotivoVisita" EntitySet="SIGSM_MotivoVisita" />
           </AssociationSet>
+          <EntitySet Name="ProfCidadaoVinc" EntityType="Domain.ProfCidadaoVinc" />
+          <EntitySet Name="ProfCidadaoVincAgendaProd" EntityType="Domain.ProfCidadaoVincAgendaProd" />
+          <AssociationSet Name="FK_ProfCidadaoVinc" Association="Domain.FK_ProfCidadaoVinc">
+            <End Role="ProfCidadaoVinc" EntitySet="ProfCidadaoVinc" />
+            <End Role="ProfCidadaoVincAgendaProd" EntitySet="ProfCidadaoVincAgendaProd" />
+          </AssociationSet>
+          <FunctionImport Name="PR_EncerrarAgenda">
+            <Parameter Name="idAgendaProd" Mode="In" Type="Int32" />
+            <Parameter Name="Retorno" Mode="In" Type="Boolean" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
           <Key>
@@ -21092,6 +21030,7 @@ Endereço],
           <NavigationProperty Name="FamiliaRow" Relationship="Domain.Familias" FromRole="CadastroDomiciliar" ToRole="FamiliaRow" />
           <Property Name="latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="idAuto" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="CadastroIndividual">
           <Key>
@@ -21116,6 +21055,7 @@ Endereço],
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_CadastroIndividual_UnicaLotacaoTransport" FromRole="CadastroIndividual" ToRole="UnicaLotacaoTransport" />
           <Property Name="latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="idAuto" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
@@ -21380,7 +21320,6 @@ Endereço],
           <Property Name="id_tipo_origem" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TipoOrigem" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="OrigemVisita" ToRole="TipoOrigem" />
           <Property Name="enviarParaThrift" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RastroFicha" Relationship="Domain.FK_RastroFicha_OrigemVisita" FromRole="OrigemVisita" ToRole="RastroFicha" />
           <Property Name="enviado" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ResponsavelPorCrianca">
@@ -23714,11 +23653,11 @@ Endereço],
           <Property Name="Instrumentador" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="Urgencia" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="CodCID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
-          <Property Name="servico" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
-          <Property Name="classificacao" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="servico" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="classificacao" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
           <Property Name="Acao_CAPS" Type="Boolean" />
           <Property Name="Acao_Territorio" Type="Boolean" />
-          <Property Name="Codigo_Equipe" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Codigo_Equipe" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AS_Atendimento" Relationship="Domain.FK__AS_AtendItem__02133CD2" FromRole="AS_AtendItem" ToRole="AS_Atendimento" />
           <NavigationProperty Name="AS_AtendItemEqp" Relationship="Domain.FK__AS_AtendItemEqp__541767F8" FromRole="AS_AtendItem" ToRole="AS_AtendItemEqp" />
           <NavigationProperty Name="AS_AtendItemFecha" Relationship="Domain.FK__AS_AtendItemFech__6AFACD50" FromRole="AS_AtendItem" ToRole="AS_AtendItemFecha" />
@@ -25412,6 +25351,8 @@ Endereço],
           <NavigationProperty Name="SIGSM_Marcadores_Consumo_Alimentar" Relationship="Domain.FK_SIGSM_Marcadores_Consumo_Alimentar_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Marcadores_Consumo_Alimentar" />
           <NavigationProperty Name="SIGSM_Procedimento" Relationship="Domain.FK_SIGSM_Procedimento_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Procedimento" />
           <NavigationProperty Name="SIGSM_Visita_Domiciliar_Paciente" Relationship="Domain.FK_SIGSM_Visita_Domiciliar_Paciente_ASSMED_Cadastro" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Visita_Domiciliar_Paciente" />
+          <Property Name="CodMunicipe" Type="Int32" />
+          <Property Name="DtAtualizacao" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroAcaoSocial">
           <Key>
@@ -25690,7 +25631,7 @@ Endereço],
           <Property Name="CodUsu" Type="Int32" />
           <Property Name="DtSistema" Type="DateTime" Precision="3" />
           <Property Name="NumIP" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
-          <Property Name="AcsUnidade" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AcsUnidade" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Observacao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_CadastroS__60132A89" FromRole="ASSMED_CadastroSetor" ToRole="ASSMED_Cadastro" />
         </EntityType>
@@ -28228,7 +28169,7 @@ Endereço],
           <Property Name="CodAla" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="NumContrato" Type="Int32" />
           <Property Name="CodSetor" Type="Int32" />
-          <Property Name="Descricao" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Descricao" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Setores" Relationship="Domain.FK_SetoresAlas_Setores" FromRole="SetoresAlas" ToRole="Setores" />
         </EntityType>
         <EntityType Name="SetoresClassificacao">
@@ -28778,7 +28719,7 @@ Endereço],
           </Key>
           <Property Name="codigo" Type="Int64" Nullable="false" />
           <Property Name="nome" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="true" />
-          <Property Name="observacoes" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="observacoes" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="campo" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="FichaVisitaDomiciliarChild" Relationship="Domain.FichaVisitaDomiciliarChild_MotivoVisita" FromRole="SIGSM_MotivoVisita" ToRole="FichaVisitaDomiciliarChild" />
         </EntityType>
@@ -29690,6 +29631,7 @@ Endereço],
           <Property Name="DesUF" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CodANP" Type="Int32" />
           <NavigationProperty Name="AS_Credenciados" Relationship="Domain.FK__AS_Credencia__UF__23A93AC7" FromRole="UF" ToRole="AS_Credenciados" />
+          <Property Name="DNE" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="AE_MovimentaItemOLD">
           <Key>
@@ -29895,12 +29837,12 @@ Endereço],
             <PropertyRef Name="excluidosID" />
           </Key>
           <Property Name="excluidosID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="codSetor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="tipoAgenda" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="horaAgenda" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ordemAgenda" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="codigo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="codigoTipoAgenda" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="codSetor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="tipoAgenda" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="horaAgenda" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ordemAgenda" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="codigo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="codigoTipoAgenda" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="dataAgenda" Type="DateTime" Precision="3" />
           <Property Name="CodUsu" Type="Int32" />
           <Property Name="dataSistema" Type="DateTime" Precision="3" />
@@ -30278,19 +30220,19 @@ Endereço],
             <PropertyRef Name="Identificação" />
           </Key>
           <Property Name="Identificação" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Campo1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo5" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo6" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo7" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo8" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo9" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo10" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo11" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo12" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Campo13" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Campo1" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo2" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo3" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo4" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo5" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo6" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo7" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo8" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo9" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo10" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo11" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo12" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
+          <Property Name="Campo13" Type="String" MaxLength="510" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tb_TelefonesCidadao">
           <Key>
@@ -37013,69 +36955,6 @@ Endereço],
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="RastroFicha">
-          <Key>
-            <PropertyRef Name="token" />
-            <PropertyRef Name="CodUsu" />
-            <PropertyRef Name="DataModificacao" />
-          </Key>
-          <Property Name="token" Type="Guid" Nullable="false" />
-          <Property Name="CodUsu" Type="Int32" Nullable="false" />
-          <Property Name="DataModificacao" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DadoAnterior" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DadoAtual" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="OrigemVisita" Relationship="Domain.FK_RastroFicha_OrigemVisita" FromRole="RastroFicha" ToRole="OrigemVisita" />
-        </EntityType>
-        <Association Name="FK_RastroFicha_OrigemVisita">
-          <End Type="Domain.OrigemVisita" Role="OrigemVisita" Multiplicity="1" />
-          <End Type="Domain.RastroFicha" Role="RastroFicha" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrigemVisita">
-              <PropertyRef Name="token" />
-            </Principal>
-            <Dependent Role="RastroFicha">
-              <PropertyRef Name="token" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="VW_VISITAS">
-          <Key>
-            <PropertyRef Name="childId" />
-            <PropertyRef Name="enviado" />
-            <PropertyRef Name="finalizado" />
-          </Key>
-          <Property Name="childId" Type="Int64" Nullable="false" />
-          <Property Name="masterId" Type="String" Nullable="false" MaxLength="44" FixedLength="true" Unicode="false" />
-          <Property Name="turno" Type="Int64" Nullable="false" />
-          <Property Name="numProntuario" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="cnsCidadao" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
-          <Property Name="dtNascimento" Type="DateTime" Precision="3" />
-          <Property Name="sexo" Type="Int64" />
-          <Property Name="statusVisitaCompartilhadaOutroProfissional" Type="Boolean" Nullable="false" />
-          <Property Name="desfecho" Type="Int64" Nullable="false" />
-          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
-          <Property Name="tipoDeImovel" Type="Int64" Nullable="false" />
-          <Property Name="pesoAcompanhamentoNutricional" Type="Decimal" Precision="6" Scale="3" />
-          <Property Name="alturaAcompanhamentoNutricional" Type="Decimal" Precision="4" Scale="1" />
-          <Property Name="nomeProfissional" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CBO" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
-          <Property Name="Profissao" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
-          <Property Name="CNES" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
-          <Property Name="Unidade" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
-          <Property Name="INE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Equipe" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="codigoIbgeMunicipio" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="false" />
-          <Property Name="dataAtendimento" Type="DateTime" Precision="3" />
-          <Property Name="token" Type="Guid" />
-          <Property Name="CodUsu" Type="Int32" />
-          <Property Name="DataModificacao" Type="DateTime" Precision="3" />
-          <Property Name="Usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="enviado" Type="Boolean" Nullable="false" />
-          <Property Name="finalizado" Type="Boolean" Nullable="false" />
-          <Property Name="cnsProfissional" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NomePaciente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="FichaVisitaDomiciliarChild">
           <Key>
             <PropertyRef Name="childId" />
@@ -37115,6 +36994,41 @@ Endereço],
           <End Type="Domain.FichaVisitaDomiciliarChild" Role="FichaVisitaDomiciliarChild" Multiplicity="*" />
           <End Type="Domain.SIGSM_MotivoVisita" Role="SIGSM_MotivoVisita" Multiplicity="*" />
         </Association>
+        <EntityType Name="ProfCidadaoVinc">
+          <Key>
+            <PropertyRef Name="IdVinc" />
+          </Key>
+          <Property Name="IdVinc" Type="Int32" Nullable="false" />
+          <Property Name="IdProfissional" Type="Int32" />
+          <Property Name="IdCidadao" Type="Int32" />
+          <Property Name="Marcado" Type="Boolean" />
+          <NavigationProperty Name="ProfCidadaoVincAgendaProd" Relationship="Domain.FK_ProfCidadaoVinc" FromRole="ProfCidadaoVinc" ToRole="ProfCidadaoVincAgendaProd" />
+        </EntityType>
+        <EntityType Name="ProfCidadaoVincAgendaProd">
+          <Key>
+            <PropertyRef Name="IdAgendaProd" />
+          </Key>
+          <Property Name="IdAgendaProd" Type="Int32" Nullable="false" />
+          <Property Name="IdVinc" Type="Int32" Nullable="false" />
+          <Property Name="AgendamentoMarcado" Type="Boolean" />
+          <Property Name="DataAgendadamento" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DataCarregado" Type="DateTime" Precision="3" />
+          <Property Name="DataRetorno" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ProfCidadaoVinc" Relationship="Domain.FK_ProfCidadaoVinc" FromRole="ProfCidadaoVincAgendaProd" ToRole="ProfCidadaoVinc" />
+          <Property Name="FichaGerada" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_ProfCidadaoVinc">
+          <End Type="Domain.ProfCidadaoVinc" Role="ProfCidadaoVinc" Multiplicity="1" />
+          <End Type="Domain.ProfCidadaoVincAgendaProd" Role="ProfCidadaoVincAgendaProd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProfCidadaoVinc">
+              <PropertyRef Name="IdVinc" />
+            </Principal>
+            <Dependent Role="ProfCidadaoVincAgendaProd">
+              <PropertyRef Name="IdVinc" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -37135,6 +37049,7 @@ Endereço],
           <EntitySetMapping Name="CadastroDomiciliar">
             <EntityTypeMapping TypeName="Domain.CadastroDomiciliar">
               <MappingFragment StoreEntitySet="CadastroDomiciliar">
+                <ScalarProperty Name="idAuto" ColumnName="idAuto" />
                 <ScalarProperty Name="longitude" ColumnName="longitude" />
                 <ScalarProperty Name="latitude" ColumnName="latitude" />
                 <ScalarProperty Name="headerTransport" ColumnName="headerTransport" />
@@ -37155,6 +37070,7 @@ Endereço],
           <EntitySetMapping Name="CadastroIndividual">
             <EntityTypeMapping TypeName="Domain.CadastroIndividual">
               <MappingFragment StoreEntitySet="CadastroIndividual">
+                <ScalarProperty Name="idAuto" ColumnName="idAuto" />
                 <ScalarProperty Name="longitude" ColumnName="longitude" />
                 <ScalarProperty Name="latitude" ColumnName="latitude" />
                 <ScalarProperty Name="headerTransport" ColumnName="headerTransport" />
@@ -40709,6 +40625,8 @@ Endereço],
           <EntitySetMapping Name="ASSMED_Cadastro">
             <EntityTypeMapping TypeName="Domain.ASSMED_Cadastro">
               <MappingFragment StoreEntitySet="ASSMED_Cadastro">
+                <ScalarProperty Name="DtAtualizacao" ColumnName="DtAtualizacao" />
+                <ScalarProperty Name="CodMunicipe" ColumnName="CodMunicipe" />
                 <ScalarProperty Name="NomeSocial" ColumnName="NomeSocial" />
                 <ScalarProperty Name="NumIP" ColumnName="NumIP" />
                 <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
@@ -44649,6 +44567,7 @@ Endereço],
           <EntitySetMapping Name="UF">
             <EntityTypeMapping TypeName="Domain.UF">
               <MappingFragment StoreEntitySet="UF">
+                <ScalarProperty Name="DNE" ColumnName="DNE" />
                 <ScalarProperty Name="CodANP" ColumnName="CodANP" />
                 <ScalarProperty Name="DesUF" ColumnName="DesUF" />
                 <ScalarProperty Name="UF1" ColumnName="UF" />
@@ -45616,54 +45535,6 @@ Endereço],
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RastroFicha">
-            <EntityTypeMapping TypeName="Domain.RastroFicha">
-              <MappingFragment StoreEntitySet="RastroFicha">
-                <ScalarProperty Name="DadoAtual" ColumnName="DadoAtual" />
-                <ScalarProperty Name="DadoAnterior" ColumnName="DadoAnterior" />
-                <ScalarProperty Name="DataModificacao" ColumnName="DataModificacao" />
-                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
-                <ScalarProperty Name="token" ColumnName="token" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="VW_VISITAS">
-            <EntityTypeMapping TypeName="Domain.VW_VISITAS">
-              <MappingFragment StoreEntitySet="VW_VISITAS">
-                <ScalarProperty Name="NomePaciente" ColumnName="NomePaciente" />
-                <ScalarProperty Name="cnsProfissional" ColumnName="cnsProfissional" />
-                <ScalarProperty Name="finalizado" ColumnName="finalizado" />
-                <ScalarProperty Name="enviado" ColumnName="enviado" />
-                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
-                <ScalarProperty Name="DataModificacao" ColumnName="DataModificacao" />
-                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
-                <ScalarProperty Name="token" ColumnName="token" />
-                <ScalarProperty Name="dataAtendimento" ColumnName="dataAtendimento" />
-                <ScalarProperty Name="codigoIbgeMunicipio" ColumnName="codigoIbgeMunicipio" />
-                <ScalarProperty Name="Equipe" ColumnName="Equipe" />
-                <ScalarProperty Name="INE" ColumnName="INE" />
-                <ScalarProperty Name="Unidade" ColumnName="Unidade" />
-                <ScalarProperty Name="CNES" ColumnName="CNES" />
-                <ScalarProperty Name="Profissao" ColumnName="Profissao" />
-                <ScalarProperty Name="CBO" ColumnName="CBO" />
-                <ScalarProperty Name="nomeProfissional" ColumnName="nomeProfissional" />
-                <ScalarProperty Name="alturaAcompanhamentoNutricional" ColumnName="alturaAcompanhamentoNutricional" />
-                <ScalarProperty Name="pesoAcompanhamentoNutricional" ColumnName="pesoAcompanhamentoNutricional" />
-                <ScalarProperty Name="tipoDeImovel" ColumnName="tipoDeImovel" />
-                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
-                <ScalarProperty Name="microarea" ColumnName="microarea" />
-                <ScalarProperty Name="desfecho" ColumnName="desfecho" />
-                <ScalarProperty Name="statusVisitaCompartilhadaOutroProfissional" ColumnName="statusVisitaCompartilhadaOutroProfissional" />
-                <ScalarProperty Name="sexo" ColumnName="sexo" />
-                <ScalarProperty Name="dtNascimento" ColumnName="dtNascimento" />
-                <ScalarProperty Name="cnsCidadao" ColumnName="cnsCidadao" />
-                <ScalarProperty Name="numProntuario" ColumnName="numProntuario" />
-                <ScalarProperty Name="turno" ColumnName="turno" />
-                <ScalarProperty Name="masterId" ColumnName="masterId" />
-                <ScalarProperty Name="childId" ColumnName="childId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="FichaVisitaDomiciliarChild">
             <EntityTypeMapping TypeName="Domain.FichaVisitaDomiciliarChild">
               <MappingFragment StoreEntitySet="FichaVisitaDomiciliarChild">
@@ -45694,6 +45565,30 @@ Endereço],
               <ScalarProperty Name="childId" ColumnName="childId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ProfCidadaoVinc">
+            <EntityTypeMapping TypeName="Domain.ProfCidadaoVinc">
+              <MappingFragment StoreEntitySet="ProfCidadaoVinc">
+                <ScalarProperty Name="Marcado" ColumnName="Marcado" />
+                <ScalarProperty Name="IdCidadao" ColumnName="IdCidadao" />
+                <ScalarProperty Name="IdProfissional" ColumnName="IdProfissional" />
+                <ScalarProperty Name="IdVinc" ColumnName="IdVinc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProfCidadaoVincAgendaProd">
+            <EntityTypeMapping TypeName="Domain.ProfCidadaoVincAgendaProd">
+              <MappingFragment StoreEntitySet="ProfCidadaoVincAgendaProd">
+                <ScalarProperty Name="FichaGerada" ColumnName="FichaGerada" />
+                <ScalarProperty Name="DataRetorno" ColumnName="DataRetorno" />
+                <ScalarProperty Name="DataCarregado" ColumnName="DataCarregado" />
+                <ScalarProperty Name="DataAgendadamento" ColumnName="DataAgendadamento" />
+                <ScalarProperty Name="AgendamentoMarcado" ColumnName="AgendamentoMarcado" />
+                <ScalarProperty Name="IdVinc" ColumnName="IdVinc" />
+                <ScalarProperty Name="IdAgendaProd" ColumnName="IdAgendaProd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PR_EncerrarAgenda" FunctionName="Domain.Store.PR_EncerrarAgenda" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

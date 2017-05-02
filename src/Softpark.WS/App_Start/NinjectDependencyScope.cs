@@ -4,40 +4,40 @@ using Ninject;
 using Ninject.Syntax;
 
 #pragma warning disable 1591
+// ReSharper disable once CheckNamespace
 namespace Softpark.WS.App_Start
 {
-    public class NinjectDependencyScope: IDependencyScope
+    public class NinjectDependencyScope : IDependencyScope
     {
-        IResolutionRoot resolver;
+        private IResolutionRoot _resolver;
 
         public NinjectDependencyScope(IResolutionRoot resolver)
         {
-            this.resolver = resolver;
+            _resolver = resolver;
         }
 
         public object GetService(Type serviceType)
         {
-            if (resolver == null)
+            if (_resolver == null)
                 throw new ObjectDisposedException("this", "This scope has been disposed");
 
-            return resolver.TryGet(serviceType);
+            return _resolver.TryGet(serviceType);
         }
 
         public System.Collections.Generic.IEnumerable<object> GetServices(Type serviceType)
         {
-            if (resolver == null)
+            if (_resolver == null)
                 throw new ObjectDisposedException("this", "This scope has been disposed");
 
-            return resolver.GetAll(serviceType);
+            return _resolver.GetAll(serviceType);
         }
 
         public void Dispose()
         {
-            IDisposable disposable = resolver as IDisposable;
-            if (disposable != null)
-                disposable.Dispose();
+            var disposable = _resolver as IDisposable;
+            disposable?.Dispose();
 
-            resolver = null;
+            _resolver = null;
         }
     }
 
@@ -45,16 +45,16 @@ namespace Softpark.WS.App_Start
     // so we derive from NinjectScope.
     public class NinjectDependencyResolver : NinjectDependencyScope, IDependencyResolver
     {
-        IKernel kernel;
+        private readonly IKernel _kernel;
 
         public NinjectDependencyResolver(IKernel kernel) : base(kernel)
         {
-            this.kernel = kernel;
+            _kernel = kernel;
         }
 
         public IDependencyScope BeginScope()
         {
-            return new NinjectDependencyScope(kernel.BeginBlock());
+            return new NinjectDependencyScope(_kernel.BeginBlock());
         }
     }
 }

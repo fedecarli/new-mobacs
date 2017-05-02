@@ -12,7 +12,7 @@ namespace Softpark.Models
         /// <summary>
         /// 
         /// </summary>
-        public Guid? id { get; set; }
+        public Guid id { get; set; }
         // ReSharper disable once InconsistentNaming
         /// <summary>
         /// 
@@ -138,5 +138,25 @@ namespace Softpark.Models
         /// 
         /// </summary>
         public bool stForaArea { get; set; }
+        // ReSharper disable once InconsistentNaming
+        /// <summary>
+        /// 
+        /// </summary>
+        public string CBO { get; set; }
+        // ReSharper disable once InconsistentNaming
+        /// <summary>
+        /// 
+        /// </summary>
+        public string CNES { get; set; }
+        // ReSharper disable once InconsistentNaming
+        /// <summary>
+        /// 
+        /// </summary>
+        public string INE { get; set; }
+        // ReSharper disable once InconsistentNaming
+        /// <summary>
+        /// 
+        /// </summary>
+        public decimal Codigo { get; set; }
     }
 }

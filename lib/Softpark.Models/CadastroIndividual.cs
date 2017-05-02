@@ -27,6 +27,7 @@ namespace Softpark.Models
         public System.Guid headerTransport { get; set; }
         public string latitude { get; set; }
         public string longitude { get; set; }
+        public long idAuto { get; set; }
     
         public virtual CondicoesDeSaude CondicoesDeSaude1 { get; set; }
         public virtual EmSituacaoDeRua EmSituacaoDeRua1 { get; set; }

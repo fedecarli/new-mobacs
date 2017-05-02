@@ -35,6 +35,7 @@ namespace Softpark.Models
         public System.Guid headerTransport { get; set; }
         public string latitude { get; set; }
         public string longitude { get; set; }
+        public long idAuto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnimalNoDomicilio> AnimalNoDomicilio { get; set; }

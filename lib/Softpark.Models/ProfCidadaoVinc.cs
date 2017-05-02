@@ -12,20 +12,20 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class UF
+    public partial class ProfCidadaoVinc
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UF()
+        public ProfCidadaoVinc()
         {
-            this.AS_Credenciados = new HashSet<AS_Credenciados>();
+            this.ProfCidadaoVincAgendaProd = new HashSet<ProfCidadaoVincAgendaProd>();
         }
     
-        public string UF1 { get; set; }
-        public string DesUF { get; set; }
-        public Nullable<int> CodANP { get; set; }
-        public string DNE { get; set; }
+        public int IdVinc { get; set; }
+        public Nullable<int> IdProfissional { get; set; }
+        public Nullable<int> IdCidadao { get; set; }
+        public Nullable<bool> Marcado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AS_Credenciados> AS_Credenciados { get; set; }
+        public virtual ICollection<ProfCidadaoVincAgendaProd> ProfCidadaoVincAgendaProd { get; set; }
     }
 }

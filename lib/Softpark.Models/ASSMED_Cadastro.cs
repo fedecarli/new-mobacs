@@ -60,6 +60,8 @@ namespace Softpark.Models
         public Nullable<int> CodUsu { get; set; }
         public string NumIP { get; set; }
         public string NomeSocial { get; set; }
+        public Nullable<int> CodMunicipe { get; set; }
+        public Nullable<System.DateTime> DtAtualizacao { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ACADEMIA_FichaTreino> ACADEMIA_FichaTreino { get; set; }

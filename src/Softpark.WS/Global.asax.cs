@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web;
 using System;
@@ -17,8 +16,8 @@ namespace Softpark.WS
     {
         protected void Application_Start()
         {
-            var ptBR = CultureInfo.GetCultureInfo("pt-BR");
-            var custom = new CultureInfo(CultureInfo.InvariantCulture.LCID, true) { DateTimeFormat = ptBR.DateTimeFormat, NumberFormat = ptBR.NumberFormat };
+            var ptBr = CultureInfo.GetCultureInfo("pt-BR");
+            var custom = new CultureInfo(CultureInfo.InvariantCulture.LCID, true) { DateTimeFormat = ptBr.DateTimeFormat, NumberFormat = ptBr.NumberFormat };
 
             CultureInfo.DefaultThreadCurrentCulture =
             CultureInfo.DefaultThreadCurrentUICulture =
@@ -29,7 +28,6 @@ namespace Softpark.WS
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 
@@ -37,8 +35,8 @@ namespace Softpark.WS
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var corrId = string.Format("{0}{1}", DateTime.Now.Ticks, Thread.CurrentThread.ManagedThreadId);
-            var requestInfo = string.Format("{0} {1}", request.Method, request.RequestUri);
+            var corrId = $"{DateTime.Now.Ticks}{Thread.CurrentThread.ManagedThreadId}";
+            var requestInfo = $"{request.Method} {request.RequestUri}";
 
             var requestMessage = await request.Content.ReadAsByteArrayAsync();
 

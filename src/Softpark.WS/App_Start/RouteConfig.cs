@@ -12,35 +12,23 @@ namespace Softpark.WS
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Default",
+                "Default",
                 namespaces: new[] { typeof(HelpController).Namespace },
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "DefaultArea",
+                "DefaultArea",
                 namespaces: new[] { typeof(HelpController).Namespace },
                 url: "",
                 defaults: new { area = "HelpPage", controller = "Help", action = "Index", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "DefaultApiAction",
-                url: "api/{controller}/{action}/{token}",
-                defaults: new { token = UrlParameter.Optional }
-            );
-
-            routes.MapRoute(
-                name: "ODataDefaultRoute",
-                url: "api/odata/{controller}/{action}",
-                defaults: new { action = UrlParameter.Optional }
-            );
-
-            routes.MapRoute(
-                name: "CustomCss",
-                url: "Content/cliente.css",
-                defaults: new { controller = "Home", action = "CustomCss" }
+                "DefaultApiAction",
+                "api/{controller}/{action}/{token}",
+                new { token = UrlParameter.Optional }
             );
         }
     }
