@@ -646,28 +646,31 @@ namespace Softpark.WS.Controllers.Api
 
             var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
 
-            var pessoas = Domain.VW_profissional_cns
-                .Where(x => x.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim());
+            var pessoas = from pc in Domain.VW_profissional_cns
+                          join cad in Domain.VW_ultimo_cadastroIndividual
+                          on pc.CodigoCidadao equals cad.Codigo
+                          where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
+                          select new { pc, cad };
 
-            var idProf = pessoas.FirstOrDefault()?.idProfissional;
+            var idProf = pessoas.FirstOrDefault()?.pc.idProfissional;
 
             var profs = Domain.ProfCidadaoVincAgendaProd
-                /// TODO - liberar agendamento
                 .Where(x => //x.DataAgendadamento <= DateTime.Now &&
                     x.AgendamentoMarcado == true &&
                     x.DataCarregado == null &&
                     x.FichaGerada == true &&
                     x.ProfCidadaoVinc.IdProfissional == idProf);
 
-            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao);
+            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
 
-            var pessoasCns = pessoas.Where(x => idsCids.Contains(x.IdCidadao)).Select(x => x.cnsCidadao.Trim());
-
+            var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
+                .Select(x => x.cad.idCadastroIndividual).ToArray();
+            
             var cadastros = Domain.CadastroIndividual
                 .Where(x => x.identificacaoUsuarioCidadao != null && ids.Contains(x.identificacaoUsuarioCidadao.Value)
-                && pessoasCns.Contains(x.IdentificacaoUsuarioCidadao1.cnsCidadao));
-            
-            CadastroIndividualViewModelCollection results = cadastros.ToArray();
+                            && cads.Contains(x.id)).ToArray();
+
+            CadastroIndividualViewModelCollection results = cadastros;
 
             if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
             {
@@ -675,16 +678,16 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var rs = results.ToArray().GroupBy(x => x);
-            
+
             var data = Ok(rs.ToArray());
 
             var ps = profs.ToList();
-            
+
             ps.ForEach(x => Domain.PR_EncerrarAgenda(x.IdAgendaProd, false));
-            
+
             return data;
         }
-        
+
         /// <summary>
         /// Buscar domicílios atendidos pelo profissional informado
         /// </summary>
@@ -713,50 +716,6 @@ namespace Softpark.WS.Controllers.Api
             CadastroDomiciliarViewModelCollection results = cadastros.ToArray();
 
             return Ok(results.ToArray());
-
-            //var headerToken = await GetHeader(token);
-
-            //if (headerToken == null) return BadRequest("Token Inválido.");
-            
-            //var ids = Domain.VW_ultimo_cadastroDomiciliar.Select(x => x.idCadastroDomiciliar);
-            
-            //var pessoas = Domain.VW_profissional_cns
-            //    .Where(x => x.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-            //                && x.AgendamentoMarcado);
-
-            //var idProf = pessoas.FirstOrDefault()?.idProfissional;
-
-            //var profs = Domain.ProfCidadaoVincAgendaProd
-            //    /// TODO - liberar agendamento
-            //    .Where(x => //x.DataAgendadamento <= DateTime.Now &&
-            //        x.AgendamentoMarcado == true &&
-            //        x.DataCarregado == null &&
-            //        x.FichaGerada == true &&
-            //        x.ProfCidadaoVinc.IdProfissional == idProf);
-
-            //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao);
-
-            //var pessoasCns = pessoas.Where(x => idsCids.Contains(x.IdCidadao)).Select(x => x.cnsCidadao.Trim());
-
-            //var cadastros = Domain.FamiliaRow
-            //    .Where(x => pessoasCns.Contains(x.numeroCnsResponsavel))
-            //    .SelectMany(x => x.CadastroDomiciliar)
-            //    .Where(x => ids.Contains(x.id));
-            
-            //if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-            //{
-            //    cadastros = cadastros.Where(r => r.EnderecoLocalPermanencia1 == null || r.EnderecoLocalPermanencia1.microarea == null || r.EnderecoLocalPermanencia1.microarea == microarea);
-            //}
-            
-            //CadastroDomiciliarViewModelCollection results = cadastros.ToArray();
-
-            //var data = Ok(results.ToArray());
-
-            //var ps = profs.ToArray();
-
-            //ps.ForEach(x => Domain.PR_EncerrarAgenda(x.IdAgendaProd, false));
-
-            //return data;
         }
         
         /// <summary>

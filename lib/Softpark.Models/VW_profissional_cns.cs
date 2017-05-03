@@ -29,5 +29,7 @@ namespace Softpark.Models
         public string CBO { get; set; }
         
         public string INE { get; set; }
+
+        public decimal CodigoCidadao { get; set; }
     }
 }

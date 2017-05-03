@@ -1720,6 +1720,7 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_ultimo_cadastroDomiciliar.cs" />
+    <Compile Include="VW_ultimo_cadastroIndividual.cs" />
     <Compile Include="VW_USUARIO.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
