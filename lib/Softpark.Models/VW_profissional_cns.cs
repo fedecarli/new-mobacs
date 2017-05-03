@@ -29,7 +29,5 @@ namespace Softpark.Models
         public string CBO { get; set; }
         
         public string INE { get; set; }
-
-        public bool AgendamentoMarcado { get; set; }
     }
 }

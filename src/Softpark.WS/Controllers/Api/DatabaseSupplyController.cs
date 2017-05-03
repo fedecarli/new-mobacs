@@ -647,8 +647,7 @@ namespace Softpark.WS.Controllers.Api
             var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
 
             var pessoas = Domain.VW_profissional_cns
-                .Where(x => x.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                && x.AgendamentoMarcado);
+                .Where(x => x.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim());
 
             var idProf = pessoas.FirstOrDefault()?.idProfissional;
 

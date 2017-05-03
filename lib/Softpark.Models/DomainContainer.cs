@@ -124,7 +124,7 @@ namespace Softpark.Models
         // ReSharper disable once InconsistentNaming
         public virtual IQueryable<VW_profissional_cns> VW_profissional_cns
             => Database
-                .SqlQuery<VW_profissional_cns>("SELECT Codigo, idProfissional, cnsProfissional, cnsCidadao, IdCidadao, CNES, CBO, INE, AgendamentoMarcado FROM [api].[VW_profissional_cns]")
+                .SqlQuery<VW_profissional_cns>("SELECT Codigo, idProfissional, cnsProfissional, cnsCidadao, IdCidadao, CNES, CBO, INE FROM [api].[VW_profissional_cns]")
                 .AsQueryable();
 
         //public virtual int PR_EncerrarAgenda(int idAgendaProd, bool retorno)

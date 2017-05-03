@@ -201,7 +201,8 @@ namespace Softpark.Models
                     throw new ValidationException("O peso é inválido.");
             }
 
-            if (child.alturaAcompanhamentoNutricional != null)
+            if (child.alturaAcompanhamentoNutricional == null) return;
+
             {
                 if (proibido)
                     throw new ValidationException("A altura não deve ser informada para o tipo de imóvel selecionado.");
