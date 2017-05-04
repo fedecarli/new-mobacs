@@ -101,8 +101,6 @@ namespace Softpark.WS
                         // more Xml comment files.
                         //
                         c.IncludeXmlComments(GetXmlCommentsPath("WS"));
-                        c.IncludeXmlComments(GetXmlCommentsPath("Infrastructure"));
-                        c.IncludeXmlComments(GetXmlCommentsPath("Models"));
 
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
