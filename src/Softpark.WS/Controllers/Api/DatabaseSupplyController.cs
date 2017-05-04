@@ -716,7 +716,9 @@ namespace Softpark.WS.Controllers.Api
                           where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
                           select new { pc, cad };
 
-            var idProf = domicilios.FirstOrDefault()?.pc.idProfissional;
+            var dom = domicilios.FirstOrDefault();
+
+            var idProf = dom != null ? (int?)dom.pc.idProfissional : null;
 
             var profs = Domain.ProfCidadaoVincAgendaProd
                 .Where(x =>
