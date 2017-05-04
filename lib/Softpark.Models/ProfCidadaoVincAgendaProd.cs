@@ -21,6 +21,9 @@ namespace Softpark.Models
         public Nullable<System.DateTime> DataCarregado { get; set; }
         public Nullable<System.DateTime> DataRetorno { get; set; }
         public Nullable<bool> FichaGerada { get; set; }
+        public Nullable<bool> FichaDomiciliarGerada { get; set; }
+        public Nullable<System.DateTime> DataCarregadoDomiciliar { get; set; }
+        public Nullable<System.DateTime> DataRetornoDomiciliar { get; set; }
     
         public virtual ProfCidadaoVinc ProfCidadaoVinc { get; set; }
     }

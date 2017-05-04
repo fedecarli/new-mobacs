@@ -6929,6 +6929,9 @@ warning 6002: The table/view 'SIGSM.dbo.PMD018' does not have a primary key defi
           <Property Name="DataCarregado" Type="datetime" />
           <Property Name="DataRetorno" Type="datetime" />
           <Property Name="FichaGerada" Type="bit" />
+          <Property Name="FichaDomiciliarGerada" Type="bit" />
+          <Property Name="DataCarregadoDomiciliar" Type="datetime" />
+          <Property Name="DataRetornoDomiciliar" Type="datetime" />
         </EntityType>
         <EntityType Name="PT_FeriadosFixos">
           <Key>
@@ -15399,6 +15402,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
         </Association>
         <Function Name="PR_EncerrarAgenda" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="idAgendaProd" Type="int" Mode="In" />
+          <Parameter Name="TipoFicha" Type="bit" Mode="In" />
           <Parameter Name="Retorno" Type="bit" Mode="In" />
         </Function>
         <Function Name="PR_ProcessarFichasAPI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
@@ -20993,7 +20997,8 @@ Endereço],
           </AssociationSet>
           <FunctionImport Name="PR_EncerrarAgenda">
             <Parameter Name="idAgendaProd" Mode="In" Type="Int32" />
-            <Parameter Name="Retorno" Mode="In" Type="Boolean" />
+            <Parameter Name="TipoFicha" Mode="In" Type="Boolean" />
+			<Parameter Name="Retorno" Mode="In" Type="Boolean" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="AnimalNoDomicilio">
@@ -37016,6 +37021,9 @@ Endereço],
           <Property Name="DataRetorno" Type="DateTime" Precision="3" />
           <NavigationProperty Name="ProfCidadaoVinc" Relationship="Domain.FK_ProfCidadaoVinc" FromRole="ProfCidadaoVincAgendaProd" ToRole="ProfCidadaoVinc" />
           <Property Name="FichaGerada" Type="Boolean" />
+          <Property Name="FichaDomiciliarGerada" Type="Boolean" Nullable="true" />
+          <Property Name="DataCarregadoDomiciliar" Type="DateTime" Nullable="true" />
+          <Property Name="DataRetornoDomiciliar" Type="DateTime" Nullable="true" />
         </EntityType>
         <Association Name="FK_ProfCidadaoVinc">
           <End Type="Domain.ProfCidadaoVinc" Role="ProfCidadaoVinc" Multiplicity="1" />
@@ -45585,6 +45593,9 @@ Endereço],
                 <ScalarProperty Name="AgendamentoMarcado" ColumnName="AgendamentoMarcado" />
                 <ScalarProperty Name="IdVinc" ColumnName="IdVinc" />
                 <ScalarProperty Name="IdAgendaProd" ColumnName="IdAgendaProd" />
+                <ScalarProperty Name="FichaDomiciliarGerada" ColumnName="FichaDomiciliarGerada" />
+                <ScalarProperty Name="DataCarregadoDomiciliar" ColumnName="DataCarregadoDomiciliar" />
+                <ScalarProperty Name="DataRetornoDomiciliar" ColumnName="DataRetornoDomiciliar" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

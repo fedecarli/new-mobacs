@@ -675,17 +675,21 @@ namespace Softpark.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_INT_EnviarFicha", tokenParameter, turnoParameter, desfechoParameter, tipoDeImovelParameter, cnsCidadaoParameter, dataNascimentoParameter, sexoParameter, microareaParameter, stForaAreaParameter, tipoOrigemParameter, numProntuarioParameter, pesoAcompanhamentoNutricionalParameter, alturaAcompanhamentoNutricionalParameter, statusVisitaCompartilhadaOutroProfissionalParameter);
         }
     
-        public virtual int PR_EncerrarAgenda(Nullable<int> idAgendaProd, Nullable<bool> retorno)
+        public virtual int PR_EncerrarAgenda(Nullable<int> idAgendaProd, Nullable<bool> tipoFicha, Nullable<bool> retorno)
         {
             var idAgendaProdParameter = idAgendaProd.HasValue ?
                 new ObjectParameter("idAgendaProd", idAgendaProd) :
                 new ObjectParameter("idAgendaProd", typeof(int));
     
+            var tipoFichaParameter = tipoFicha.HasValue ?
+                new ObjectParameter("TipoFicha", tipoFicha) :
+                new ObjectParameter("TipoFicha", typeof(bool));
+    
             var retornoParameter = retorno.HasValue ?
                 new ObjectParameter("Retorno", retorno) :
                 new ObjectParameter("Retorno", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_EncerrarAgenda", idAgendaProdParameter, retornoParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_EncerrarAgenda", idAgendaProdParameter, tipoFichaParameter, retornoParameter);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Softpark.Models;
 using Softpark.WS.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace Softpark.WS.Controllers.Api
 
             return master;
         }
-        
+
         /// <summary>
         /// Cadastrar cabeçalho das fichas
         /// </summary>
@@ -70,7 +71,7 @@ namespace Softpark.WS.Controllers.Api
             origem.enviado = false;
 
             Domain.OrigemVisita.Add(origem);
-            
+
             var transport = header.ToModel();
 
             transport.id = Guid.NewGuid();
@@ -155,6 +156,8 @@ namespace Softpark.WS.Controllers.Api
 
             Domain.CadastroIndividual.Add(cad);
 
+            int? idAgendaProd = null;
+
             if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
             {
                 var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
@@ -169,20 +172,26 @@ namespace Softpark.WS.Controllers.Api
                     throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
                 }
 
-                var idAgendaProd = Domain.ProfCidadaoVincAgendaProd
+                var agenda = Domain.ProfCidadaoVincAgendaProd
                     .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == prod.IdCidadao
-                                         && x.ProfCidadaoVinc.IdProfissional == prod.idProfissional)
-                    ?.IdAgendaProd;
+                                         && x.ProfCidadaoVinc.IdProfissional == prod.idProfissional);
 
-                if (idAgendaProd == null)
+                if (agenda?.IdAgendaProd == null)
                 {
                     throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
                 }
 
-                Domain.PR_EncerrarAgenda(idAgendaProd, true);
+                idAgendaProd = agenda.IdAgendaProd;
+
+                agenda.DataCarregado = DateTime.Now;
             }
 
             await Domain.SaveChangesAsync();
+
+            if (idAgendaProd != null)
+            {
+                Domain.PR_EncerrarAgenda(idAgendaProd, false, true);
+            }
 
             return Ok(true);
         }
@@ -212,7 +221,70 @@ namespace Softpark.WS.Controllers.Api
 
             Domain.CadastroDomiciliar.Add(cad);
 
+            var idsAgendas = new List<int>();
+
+            if (cad.fichaAtualizada)
+            {
+                var ids = Domain.VW_ultimo_cadastroDomiciliar
+                    .Select(x => x.idCadastroDomiciliar).Distinct().ToArray();
+
+                var domicilios = from pc in Domain.VW_profissional_cns
+                                 join ut in Domain.UnicaLotacaoTransport
+                                 on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
+                                 join cadastro in Domain.VW_ultimo_cadastroDomiciliar
+                                 on ut.token equals cadastro.token
+                                 where pc.cnsProfissional.Trim() == header.profissionalCNS.Trim()
+                                 select new { pc, cad = cadastro };
+
+                var idProf = domicilios.FirstOrDefault()?.pc.idProfissional;
+
+                var profs = Domain.ProfCidadaoVincAgendaProd
+                    .Where(x =>
+                        x.DataCarregadoDomiciliar < DateTime.Now &&
+                        x.FichaDomiciliarGerada == true &&
+                        x.ProfCidadaoVinc.IdProfissional == idProf);
+
+                var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).Distinct().ToArray();
+
+                var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
+                    .Select(x => x.cad.idCadastroDomiciliar).Distinct().ToArray();
+
+                var cadastros = Domain.CadastroDomiciliar
+                    .Where(x => ids.Contains(x.id) && cads.Contains(x.id))
+                    .ToArray();
+
+                var idCadOrig = new Guid(cad.uuidFichaOriginadora.Substring(cad.uuidFichaOriginadora.IndexOf('-')));
+
+                var prod = profs.First();
+
+                if (prod == null)
+                {
+                    throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                }
+
+                var all = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao)).ToArray()
+                    .Select(x => new { x.cad, x.pc, ht = Domain.UnicaLotacaoTransport.Find(x.cad.headerTransport) })
+                    .ToArray();
+
+                foreach (var cadastro in all.Where(x => x.ht.cnes + '-' + x.cad.idCadastroDomiciliar == cad.uuidFichaOriginadora).Distinct())
+                {
+                    var agenda = Domain.ProfCidadaoVincAgendaProd
+                        .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == cadastro.pc.IdCidadao
+                                                && x.ProfCidadaoVinc.IdProfissional == cadastro.pc.idProfissional);
+
+                    if (agenda?.IdAgendaProd == null)
+                    {
+                        throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                    }
+
+                    idsAgendas.Add(agenda.IdAgendaProd);
+                    agenda.DataRetornoDomiciliar = DateTime.Now;
+                }
+            }
+
             await Domain.SaveChangesAsync();
+
+            idsAgendas.ForEach(x => Domain.PR_EncerrarAgenda(x, true, true));
 
             return Ok(true);
         }
