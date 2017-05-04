@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.OData;
 using Softpark.Models;
 using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
@@ -28,7 +27,6 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/dados/{modelo}", Name = "BasicSupplyAction")]
         [ResponseType(typeof(BasicViewModel[]))]
-        [EnableQuery]
         public IHttpActionResult GetEntities([FromUri, Required] string modelo)
         {
             List<BasicViewModel> model;
@@ -530,7 +528,6 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/dados/profissional", Name = "ProfessionalSupplyAction")]
         [ResponseType(typeof(ProfissionalViewModel[]))]
-        [EnableQuery]
         public IHttpActionResult GetProfissionais()
         {
             var profs = Domain.VW_Profissional.ToList();

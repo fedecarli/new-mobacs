@@ -14,7 +14,7 @@ namespace Softpark.WS.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            return Redirect(Url.Content("/swagger"));
+            return Redirect(Url.Content("~/swagger"));
         }
     }
 }

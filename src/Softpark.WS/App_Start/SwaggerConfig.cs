@@ -3,18 +3,6 @@ using WebActivatorEx;
 using Softpark.WS;
 using Swashbuckle.Application;
 using System;
-using Swashbuckle.SwaggerGen;
-using Swashbuckle.SwaggerGen.Application;
-using Swashbuckle.SwaggerGen.Annotations;
-using Swashbuckle.SwaggerGen.Generator;
-using Swashbuckle.SwaggerUi;
-using Swashbuckle.Swagger.Annotations;
-using Swashbuckle.OData;
-using Swashbuckle.OData.Descriptions;
-using Swashbuckle.Swagger;
-using Swashbuckle.Swagger.FromUriParams;
-using Swashbuckle.Swagger.XmlComments;
-using Swashbuckle;
 
 #pragma warning disable 1591
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
@@ -112,7 +100,9 @@ namespace Softpark.WS
                         // those comments into the generated docs and UI. You can enable this by providing the path to one or
                         // more Xml comment files.
                         //
-                        c.IncludeXmlComments(GetXmlCommentsPath());
+                        c.IncludeXmlComments(GetXmlCommentsPath("WS"));
+                        c.IncludeXmlComments(GetXmlCommentsPath("Infrastructure"));
+                        c.IncludeXmlComments(GetXmlCommentsPath("Models"));
 
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
@@ -187,11 +177,11 @@ namespace Softpark.WS
                         // alternative implementation for ISwaggerProvider with the CustomProvider option.
                         //
                         //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
-                        
-                        c.CustomProvider(defaultProvider => new ODataSwaggerProvider(defaultProvider, c, GlobalConfiguration.Configuration).Configure(odataConfig =>
-                        {
-                            odataConfig.IncludeNavigationProperties();
-                        }));
+
+                        //c.CustomProvider(defaultProvider => new ODataSwaggerProvider(defaultProvider, c, GlobalConfiguration.Configuration).Configure(odataConfig =>
+                        //{
+                        //    odataConfig.IncludeNavigationProperties();
+                        //}));
                     })
                 .EnableSwaggerUi(c =>
                     {
@@ -243,7 +233,7 @@ namespace Softpark.WS
                         // a discovery URL for each version. This provides a convenient way for users to browse documentation
                         // for different API versions.
                         //
-                        c.EnableDiscoveryUrlSelector();
+                        //c.EnableDiscoveryUrlSelector();
 
                         // If your API supports the OAuth2 Implicit flow, and you've described it correctly, according to
                         // the Swagger 2.0 specification, you can enable UI support as shown below.
@@ -263,9 +253,9 @@ namespace Softpark.WS
                     });
         }
 
-        private static string GetXmlCommentsPath()
+        private static string GetXmlCommentsPath(string type)
         {
-            return string.Format(@"{0}\bin\Softpark.WS.XML", AppDomain.CurrentDomain.BaseDirectory);
+            return string.Format(@"{0}\bin\Softpark.{1}.XML", AppDomain.CurrentDomain.BaseDirectory, type);
         }
     }
 }
