@@ -269,9 +269,8 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         [DataMember(Name = nameof(sexo))]
         [RegularExpression(@"^([014])$", ErrorMessage = "O campo sexo espera pelos valores 0, 1 ou 4.")]
-        [DefaultValue(4)]
         // ReSharper disable once InconsistentNaming
-        public long sexo { get; set; }
+        public long? sexo { get; set; }
 
         /// <summary>
         /// Motivos da visita
@@ -375,7 +374,7 @@ namespace Softpark.WS.ViewModels
             microarea = model.microarea;
             numProntuario = model.numProntuario;
             pesoAcompanhamentoNutricional = model.pesoAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(pesoAcompanhamentoNutricional));
-            sexo = model.sexo ?? 4;
+            sexo = model.sexo;
             statusVisitaCompartilhadaOutroProfissional = model.statusVisitaCompartilhadaOutroProfissional;
             stForaArea = model.stForaArea;
             tipoDeImovel = model.tipoDeImovel;

@@ -26,6 +26,11 @@ namespace Softpark.WS.ViewModels
             return new CadastroDomiciliarViewModelCollection(models);
         }
 
+        public static implicit operator CadastroDomiciliarViewModelCollection(GetCadastroDomiciliarViewModel[] models)
+        {
+            return new CadastroDomiciliarViewModelCollection(models);
+        }
+
         public void AddRange(CadastroDomiciliar[] models)
         {
             foreach (var model in models)

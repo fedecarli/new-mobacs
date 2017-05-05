@@ -500,7 +500,7 @@ namespace Softpark.WS.ViewModels
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
             dataNascimentoCidadao = model.dataNascimentoCidadao?.ToUnix()??0;
-            desconheceNomeMae = model.desconheceNomeMae;
+            desconheceNomeMae = model.desconheceNomeMae??false;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao;
             nomeCidadao = model.nomeCidadao;
@@ -512,15 +512,15 @@ namespace Softpark.WS.ViewModels
             paisNascimento = model.paisNascimento;
             racaCorCidadao = model.racaCorCidadao;
             sexoCidadao = model.sexoCidadao;
-            statusEhResponsavel = model.statusEhResponsavel;
+            statusEhResponsavel = model.statusEhResponsavel??false;
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
-            desconheceNomePai = model.desconheceNomePai;
+            desconheceNomePai = model.desconheceNomePai??false;
             dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
             portariaNaturalizacao = model.portariaNaturalizacao;
             dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
             microarea = model.microarea;
-            stForaArea = model.stForaArea;
+            stForaArea = model.stForaArea??false;
         }
 
         private void ApplyModel(IdentificacaoUsuarioCidadao model)

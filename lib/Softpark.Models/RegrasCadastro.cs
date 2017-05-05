@@ -155,7 +155,7 @@ namespace Softpark.Models
             if (child.sexo == null && obrigatorio)
                 throw new ValidationException("O sexo é obrigatório.");
 
-            if (child.sexo != null && !(new long[] { 0, 1, 5 }).Contains(child.sexo ?? 4))
+            if (child.sexo != null && !(new long?[] { 0, 1, 4 }).Contains(child.sexo))
                 throw new ValidationException("O sexo informado é inválido.");
 
             if (child.SIGSM_MotivoVisita.Count > 0)
@@ -293,17 +293,10 @@ namespace Softpark.Models
 
             if (!cond.statusEhGestante) return;
 
-            if (sexo != null)
+            if (sexo == 0)
             {
-                if (sexo == 0)
-                {
-                    throw new ValidationException(
-                        "Não é possível definir uma condição de gestante para um cidadão do sexo masculino.");
-                }
-            }
-            else
-            {
-                throw new ValidationException("A identificação do cidadão deve conter o sexo.");
+                throw new ValidationException(
+                    "Não é possível definir uma condição de gestante para um cidadão do sexo masculino.");
             }
 
             if (nasc == null)
