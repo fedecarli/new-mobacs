@@ -1126,66 +1126,70 @@ warning 6002: The table/view 'SIGSM.dbo.TP_Nasf' does not have a primary key def
 warning 6002: The table/view 'SIGSM.api.VW_IdentificacaoUsuarioCidadao' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
           <Key>
+            
+            
+            
+            
             <PropertyRef Name="cnsProfissional" />
             <PropertyRef Name="CBO" />
             <PropertyRef Name="CNES" />
             <PropertyRef Name="INE" />
           </Key>
-          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="cnsProfissional" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="CBO" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="CNES" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="INE" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="nomeSocial" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="codigoIbgeMunicipioNascimento" Type="varchar" MaxLength="7" Nullable="false" />
+          <Property Name="id" Type="uniqueidentifier" />
+          <Property Name="cnsProfissional" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CBO" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CNES" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="INE" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="nomeSocial" Type="varchar" MaxLength="100" />
+          <Property Name="codigoIbgeMunicipioNascimento" Type="varchar" MaxLength="7" />
           <Property Name="desconheceNomeMae" Type="bit" />
-          <Property Name="emailCidadao" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="nacionalidadeCidadao" Type="int" Nullable="false" />
-          <Property Name="nomeCidadao" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="nomeMaeCidadao" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="cnsCidadao" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="cnsResponsavelFamiliar" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="telefoneCelular" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="numeroNisPisPasep" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="paisNascimento" Type="int" Nullable="false" />
+          <Property Name="emailCidadao" Type="varchar" MaxLength="100" />
+          <Property Name="nacionalidadeCidadao" Type="int" />
+          <Property Name="nomeCidadao" Type="varchar" MaxLength="100" />
+          <Property Name="nomeMaeCidadao" Type="varchar" MaxLength="100" />
+          <Property Name="cnsCidadao" Type="varchar" MaxLength="50" />
+          <Property Name="cnsResponsavelFamiliar" Type="nvarchar" MaxLength="15" />
+          <Property Name="telefoneCelular" Type="varchar" MaxLength="21" />
+          <Property Name="numeroNisPisPasep" Type="varchar" MaxLength="50" />
+          <Property Name="paisNascimento" Type="int" />
           <Property Name="racaCorCidadao" Type="int" Nullable="false" />
           <Property Name="sexoCidadao" Type="int" Nullable="false" />
           <Property Name="statusEhResponsavel" Type="bit" />
-          <Property Name="etnia" Type="int" Nullable="false" />
-          <Property Name="nomePaiCidadao" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="etnia" Type="int" />
+          <Property Name="nomePaiCidadao" Type="varchar" MaxLength="100" />
           <Property Name="desconheceNomePai" Type="bit" />
-          <Property Name="portariaNaturalizacao" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="microarea" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="portariaNaturalizacao" Type="nvarchar" MaxLength="16" />
+          <Property Name="microarea" Type="varchar" MaxLength="2" />
           <Property Name="stForaArea" Type="bit" />
           <Property Name="dataNascimentoCidadao" Type="date" />
           <Property Name="dtNaturalizacao" Type="date" />
           <Property Name="dtEntradaBrasil" Type="date" />
           <Property Name="num_contrato" Type="int" Nullable="false" />
-          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SIGSM.api.VW_profissional_cns' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_profissional_cns">
           <Key>
+            
+            <PropertyRef Name="IdVinc" />
+            
             <PropertyRef Name="IdProfissional" />
-            
             <PropertyRef Name="IdCidadao" />
-            
             <PropertyRef Name="CBO" />
             <PropertyRef Name="CNES" />
             <PropertyRef Name="INE" />
-            <PropertyRef Name="IdVinc" />
           </Key>
-          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="IdProfissional" Type="int" Nullable="false" />
-          <Property Name="cnsProfissional" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="cnsProfissional" Type="varchar" MaxLength="50" />
           <Property Name="IdCidadao" Type="int" Nullable="false" />
-          <Property Name="cnsCidadao" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="CBO" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="CNES" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="INE" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="cnsCidadao" Type="varchar" MaxLength="50" />
+          <Property Name="CBO" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CNES" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="INE" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="IdVinc" Type="int" Nullable="false" />
-          <Property Name="CodigoCidadao" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="CodigoCidadao" Type="decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroDomiciliar' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1213,7 +1217,7 @@ warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroIndividual' does not h
           <Property Name="headerTransport" Type="uniqueidentifier" Nullable="false" />
           <Property Name="token" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <Association Name="FK__AS_ProfissoesTab__2062B9C8">
+        <Association Name="FK__AS_ProfissoesTab__51A50FA1">
           <End Role="AS_Profissoes" Type="Self.AS_Profissoes" Multiplicity="1" />
           <End Role="AS_ProfissoesTab" Type="Self.AS_ProfissoesTab" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1227,7 +1231,7 @@ warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroIndividual' does not h
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__AS_SetoresPar__1D864D1D">
+        <Association Name="FK__AS_SetoresPar__40457975">
           <End Role="Setores" Type="Self.Setores" Multiplicity="1" />
           <End Role="AS_SetoresPar" Type="Self.AS_SetoresPar" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1241,7 +1245,7 @@ warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroIndividual' does not h
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ASSMED_CadastroD__0A7378A9">
+        <Association Name="FK__ASSMED_CadastroD__719CDDE7">
           <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="1" />
           <End Role="ASSMED_CadastroDocPessoal" Type="Self.ASSMED_CadastroDocPessoal" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1255,7 +1259,7 @@ warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroIndividual' does not h
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ASSMED_Endereco__6CE315C2">
+        <Association Name="FK__ASSMED_Endereco__5649C92D">
           <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="1" />
           <End Role="ASSMED_Endereco" Type="Self.ASSMED_Endereco" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1269,7 +1273,7 @@ warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroIndividual' does not h
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ASSMED_PesFisica__56F3D4A3">
+        <Association Name="FK__ASSMED_PesFisica__7BE56230">
           <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="1" />
           <End Role="ASSMED_PesFisica" Type="Self.ASSMED_PesFisica" Multiplicity="0..1" />
           <ReferentialConstraint>
@@ -2007,23 +2011,23 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
     [VW_ultimo_cadastroIndividual].[token] AS [token]
     FROM [api].[VW_ultimo_cadastroIndividual] AS [VW_ultimo_cadastroIndividual]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK__AS_ProfissoesTab__2062B9C8" Association="Self.FK__AS_ProfissoesTab__2062B9C8">
+          <AssociationSet Name="FK__AS_ProfissoesTab__51A50FA1" Association="Self.FK__AS_ProfissoesTab__51A50FA1">
             <End Role="AS_Profissoes" EntitySet="AS_Profissoes" />
             <End Role="AS_ProfissoesTab" EntitySet="AS_ProfissoesTab" />
           </AssociationSet>
-          <AssociationSet Name="FK__AS_SetoresPar__1D864D1D" Association="Self.FK__AS_SetoresPar__1D864D1D">
+          <AssociationSet Name="FK__AS_SetoresPar__40457975" Association="Self.FK__AS_SetoresPar__40457975">
             <End Role="Setores" EntitySet="Setores" />
             <End Role="AS_SetoresPar" EntitySet="AS_SetoresPar" />
           </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_CadastroD__0A7378A9" Association="Self.FK__ASSMED_CadastroD__0A7378A9">
+          <AssociationSet Name="FK__ASSMED_CadastroD__719CDDE7" Association="Self.FK__ASSMED_CadastroD__719CDDE7">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_CadastroDocPessoal" EntitySet="ASSMED_CadastroDocPessoal" />
           </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_Endereco__6CE315C2" Association="Self.FK__ASSMED_Endereco__6CE315C2">
+          <AssociationSet Name="FK__ASSMED_Endereco__5649C92D" Association="Self.FK__ASSMED_Endereco__5649C92D">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
           </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_PesFisica__56F3D4A3" Association="Self.FK__ASSMED_PesFisica__56F3D4A3">
+          <AssociationSet Name="FK__ASSMED_PesFisica__7BE56230" Association="Self.FK__ASSMED_PesFisica__7BE56230">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_PesFisica" EntitySet="ASSMED_PesFisica" />
           </AssociationSet>
@@ -2460,37 +2464,37 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <PropertyRef Name="CNES" />
             <PropertyRef Name="INE" />
           </Key>
-          <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="cnsProfissional" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="CBO" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="CNES" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="INE" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="nomeSocial" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="codigoIbgeMunicipioNascimento" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Guid" />
+          <Property Name="cnsProfissional" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CBO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CNES" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="INE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="nomeSocial" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="codigoIbgeMunicipioNascimento" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
           <Property Name="desconheceNomeMae" Type="Boolean" />
-          <Property Name="emailCidadao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="nacionalidadeCidadao" Type="Int32" Nullable="false" />
-          <Property Name="nomeCidadao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="nomeMaeCidadao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="cnsCidadao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="cnsResponsavelFamiliar" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="telefoneCelular" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="numeroNisPisPasep" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="paisNascimento" Type="Int32" Nullable="false" />
+          <Property Name="emailCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="nacionalidadeCidadao" Type="Int32" />
+          <Property Name="nomeCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="nomeMaeCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="cnsCidadao" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cnsResponsavelFamiliar" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="telefoneCelular" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="numeroNisPisPasep" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="paisNascimento" Type="Int32" />
           <Property Name="racaCorCidadao" Type="Int32" Nullable="false" />
           <Property Name="sexoCidadao" Type="Int32" Nullable="false" />
           <Property Name="statusEhResponsavel" Type="Boolean" />
-          <Property Name="etnia" Type="Int32" Nullable="false" />
-          <Property Name="nomePaiCidadao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="etnia" Type="Int32" />
+          <Property Name="nomePaiCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="desconheceNomePai" Type="Boolean" />
-          <Property Name="portariaNaturalizacao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="microarea" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="portariaNaturalizacao" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="stForaArea" Type="Boolean" />
           <Property Name="dataNascimentoCidadao" Type="DateTime" Precision="0" />
           <Property Name="dtNaturalizacao" Type="DateTime" Precision="0" />
           <Property Name="dtEntradaBrasil" Type="DateTime" Precision="0" />
           <Property Name="num_contrato" Type="Int32" Nullable="false" />
-          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <EntityType Name="VW_profissional_cns">
           <Key>
@@ -2501,16 +2505,16 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <PropertyRef Name="INE" />
             <PropertyRef Name="IdVinc" />
           </Key>
-          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="IdProfissional" Type="Int32" Nullable="false" />
-          <Property Name="cnsProfissional" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="cnsProfissional" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IdCidadao" Type="Int32" Nullable="false" />
-          <Property Name="cnsCidadao" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="CBO" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="CNES" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="INE" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="cnsCidadao" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CBO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CNES" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="INE" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="IdVinc" Type="Int32" Nullable="false" />
-          <Property Name="CodigoCidadao" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CodigoCidadao" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <EntityType Name="VW_ultimo_cadastroDomiciliar">
           <Key>

@@ -18,7 +18,7 @@ using System;
 public partial class VW_profissional_cns
 {
 
-    public Nullable<decimal> Codigo { get; set; }
+    public decimal Codigo { get; set; }
 
     public int IdProfissional { get; set; }
 
@@ -36,7 +36,7 @@ public partial class VW_profissional_cns
 
     public int IdVinc { get; set; }
 
-    public Nullable<decimal> CodigoCidadao { get; set; }
+    public decimal CodigoCidadao { get; set; }
 
 }
 

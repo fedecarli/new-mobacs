@@ -502,7 +502,7 @@ namespace Softpark.WS.ViewModels
             dataNascimentoCidadao = model.dataNascimentoCidadao?.ToUnix()??0;
             desconheceNomeMae = model.desconheceNomeMae??false;
             emailCidadao = model.emailCidadao;
-            nacionalidadeCidadao = model.nacionalidadeCidadao;
+            nacionalidadeCidadao = model.nacionalidadeCidadao??1;
             nomeCidadao = model.nomeCidadao;
             nomeMaeCidadao = model.nomeMaeCidadao;
             cnsCidadao = model.cnsCidadao;

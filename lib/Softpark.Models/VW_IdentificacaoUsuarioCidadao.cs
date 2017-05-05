@@ -18,7 +18,7 @@ using System;
 public partial class VW_IdentificacaoUsuarioCidadao
 {
 
-    public System.Guid id { get; set; }
+    public Nullable<System.Guid> id { get; set; }
 
     public string cnsProfissional { get; set; }
 
@@ -36,7 +36,7 @@ public partial class VW_IdentificacaoUsuarioCidadao
 
     public string emailCidadao { get; set; }
 
-    public int nacionalidadeCidadao { get; set; }
+    public Nullable<int> nacionalidadeCidadao { get; set; }
 
     public string nomeCidadao { get; set; }
 
@@ -50,7 +50,7 @@ public partial class VW_IdentificacaoUsuarioCidadao
 
     public string numeroNisPisPasep { get; set; }
 
-    public int paisNascimento { get; set; }
+    public Nullable<int> paisNascimento { get; set; }
 
     public int racaCorCidadao { get; set; }
 
@@ -58,7 +58,7 @@ public partial class VW_IdentificacaoUsuarioCidadao
 
     public Nullable<bool> statusEhResponsavel { get; set; }
 
-    public int etnia { get; set; }
+    public Nullable<int> etnia { get; set; }
 
     public string nomePaiCidadao { get; set; }
 
@@ -78,7 +78,7 @@ public partial class VW_IdentificacaoUsuarioCidadao
 
     public int num_contrato { get; set; }
 
-    public Nullable<decimal> Codigo { get; set; }
+    public decimal Codigo { get; set; }
 
 }
 
