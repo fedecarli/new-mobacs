@@ -723,8 +723,8 @@ namespace Softpark.WS.Controllers.Api
             var profs = Domain.ProfCidadaoVincAgendaProd
                 .Where(x =>
                     x.AgendamentoMarcado == true &&
-                    x.DataCarregado == null &&
-                    x.FichaGerada == true &&
+                    x.DataCarregadoDomiciliar == null &&
+                    x.FichaDomiciliarGerada == true &&
                     x.ProfCidadaoVinc.IdProfissional == idProf);
 
             var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();

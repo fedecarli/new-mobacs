@@ -273,7 +273,9 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
-            idsAgendas.ForEach(x => Domain.PR_EncerrarAgenda(x, true, true));
+            idsAgendas.ForEach(x => {
+                Domain.PR_EncerrarAgenda(x, true, true);
+            });
 
             return Ok(true);
         }
