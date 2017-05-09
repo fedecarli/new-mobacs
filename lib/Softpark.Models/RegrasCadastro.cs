@@ -581,9 +581,9 @@ namespace Softpark.Models
             if (cond.identidadeGeneroCidadao != null && !cond.statusDesejaInformarIdentidadeGenero)
                 throw new ValidationException("A identidade de gênero não deve ser informada.");
 
-            var resp = cad.UnicaLotacaoTransport.dataAtendimento.Date.AddYears(-10);
+            var resp = cad.UnicaLotacaoTransport.dataAtendimento.Date.AddYears(-9);
 
-            if (cond.ResponsavelPorCrianca.Count > 0 && cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao > resp)
+            if (cond.ResponsavelPorCrianca.Count > 0 && cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao < resp)
                 throw new ValidationException("Este cidadão não pode ser reponsável por criança.");
 
             if (cond.ResponsavelPorCrianca.Count > 6)
