@@ -66,26 +66,37 @@ namespace Softpark.Models
             if (!header.profissionalCNS.isValidCns())
                 throw new ValidationException("CNS inválido.");
 
-            var profissional = DomainContainer.Current.VW_Profissional.Where(x => x.CNS != null && x.CNS.Trim() == header.profissionalCNS.Trim()).ToArray();
+            var cns = header.profissionalCNS?.Trim();
+
+            var profissional = DomainContainer.Current.VW_profissional_cns.Where(x => x.cnsProfissional != null &&
+                    x.cnsProfissional.Trim() == cns).ToArray();
 
             if (profissional.Length == 0)
                 throw new ValidationException("CNS não encontrado.");
 
-            if (profissional.All(x => x.CBO == null || x.CBO.Trim() != header.cboCodigo_2002.Trim()))
+            var cbo = header.cboCodigo_2002?.Trim();
+
+            if (profissional.All(x => x.CBO == null || x.CBO.Trim() != cbo))
                 throw new ValidationException("CBO não encontrado.");
 
-            if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header.cnes.Trim()))
+            var cnes = header.cnes?.Trim();
+
+            if (profissional.All(x => x.CNES == null || x.CNES.Trim() != cnes))
                 throw new ValidationException("CNES não encontrado.");
 
-            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != header.ine.Trim()))
+            var ine = header.ine.Trim();
+
+            if (ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != ine))
                 throw new ValidationException("INE não encontrado.");
 
-            var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento.ToUnix());
+            var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento);
 
             if (validEpoch != ValidationResult.Success)
                 throw new ValidationException("Data do Atendimento inválida.");
 
-            if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
+            var ibge = header.codigoIbgeMunicipio?.Trim();
+
+            if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != ibge))
                 throw new ValidationException("Município não encontrado.");
         }
 
