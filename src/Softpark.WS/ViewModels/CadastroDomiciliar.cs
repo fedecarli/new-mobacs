@@ -40,10 +40,9 @@ namespace Softpark.WS.ViewModels
         }
     }
 
-    public class CadastroDomiciliarViewModel
+    public class PrimitiveCadastroDomiciliarViewModel
     {
-        [Required]
-        public Guid token { get; set; }
+        public virtual Guid? token { get; set; }
         public CondicaoMoradiaViewModel condicaoMoradia { get; set; }
         public EnderecoLocalPermanenciaViewModel enderecoLocalPermanencia { get; set; }
         public bool fichaAtualizada { get; set; }
@@ -109,9 +108,9 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator CadastroDomiciliarViewModel(CadastroDomiciliar model)
+        public static implicit operator PrimitiveCadastroDomiciliarViewModel(CadastroDomiciliar model)
         {
-            var vm = new CadastroDomiciliarViewModel();
+            var vm = new PrimitiveCadastroDomiciliarViewModel();
 
             vm.ApplyModel(model);
 
@@ -142,6 +141,25 @@ namespace Softpark.WS.ViewModels
             FamiliaRowViewModelCollection rows = model.FamiliaRow.ToArray();
 
             familiaRow.AddRange(rows);
+        }
+    }
+
+    public class CadastroDomiciliarViewModel : PrimitiveCadastroDomiciliarViewModel
+    {
+        [Required]
+        public new Guid token { get { return base.token ?? Guid.Empty; } set { base.token = value; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CadastroDomiciliarViewModel(CadastroDomiciliar model)
+        {
+            var vm = new CadastroDomiciliarViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
         }
     }
 

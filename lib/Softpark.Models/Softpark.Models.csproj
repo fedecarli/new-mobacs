@@ -80,6 +80,12 @@
     <Compile Include="ASSMED_CadastroDocPessoal.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ASSMED_CadastroDomiciliarVinc.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_CadastroIndividualVinc.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ASSMED_CadastroPF.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

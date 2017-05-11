@@ -71,19 +71,6 @@ namespace Softpark.Infrastructure.Extras
         }
 
         /// <summary>
-        /// Valida data eSUS
-        /// </summary>
-        /// <param name="epoch"></param>
-        /// <returns></returns>
-        public static ValidationResult ValidateESUSDate(DateTime epoch)
-        {
-            var past = DateTime.UtcNow.Date.AddYears(-1);
-
-            return epoch >= past ? ValidationResult.Success :
-                new ValidationResult($"A data de atendimento tem mais de 1 (um) ano ou é inválida. Data atual: {DateTime.UtcNow.Date.ToShortDateString()}, data limite: {past.Date.ToShortDateString()}");
-        }
-
-        /// <summary>
         /// Valida data nascimento
         /// </summary>
         /// <param name="epoch"></param>

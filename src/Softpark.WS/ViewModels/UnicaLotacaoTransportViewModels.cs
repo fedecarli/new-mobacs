@@ -91,7 +91,7 @@ namespace Softpark.WS.ViewModels
             ult.cnes = cnes;
             ult.ine = ine;
             ult.dataAtendimento = dataAtendimento.FromUnix();
-            ult.codigoIbgeMunicipio = codigoIbgeMunicipio ?? "3547304";
+            ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
 
             return ult;
         }

@@ -15,18 +15,16 @@ namespace Softpark.Models
 using System;
     using System.Collections.Generic;
     
-public partial class VW_ultimo_cadastroDomiciliar
+public partial class ASSMED_CadastroIndividualVinc
 {
 
-    public System.Guid idCadastroDomiciliar { get; set; }
+    public int id { get; set; }
 
-    public System.Guid headerTransport { get; set; }
-
-    public Nullable<System.Guid> token { get; set; }
-
-    public Nullable<long> idAuto { get; set; }
+    public Nullable<System.Guid> idCadastroIndividual { get; set; }
 
     public Nullable<decimal> Codigo { get; set; }
+
+    public Nullable<System.DateTime> Data { get; set; }
 
 }
 

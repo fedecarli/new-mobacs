@@ -244,7 +244,7 @@ namespace Softpark.WS.Controllers.Api
 
                 var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).Distinct().ToArray();
 
-                var prod = profs.First();
+                var prod = profs.FirstOrDefault();
 
                 if (prod == null)
                 {
@@ -276,6 +276,203 @@ namespace Softpark.WS.Controllers.Api
             idsAgendas.ForEach(x => {
                 Domain.PR_EncerrarAgenda(x, true, true);
             });
+
+            return Ok(true);
+        }
+
+        /// <summary>
+        /// Cadastro Atômico
+        /// </summary>
+        /// <param name="cadastros"></param>
+        /// <returns></returns>
+        [Route("api/processos/enviar/cadastro/atomico")]
+        [HttpPost, ResponseType(typeof(bool))]
+        public async Task<IHttpActionResult> CadastramentoAtomico([FromBody, Required] AtomicTransporViewModel[] cadastros)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var origem = Domain.OrigemVisita.Create();
+
+            origem.token = Guid.NewGuid();
+            origem.id_tipo_origem = 1;
+            origem.enviarParaThrift = true;
+            origem.enviado = false;
+
+            Domain.OrigemVisita.Add(origem);
+
+            await Domain.SaveChangesAsync();
+
+            foreach (var cadastro in cadastros)
+            {
+                var header = cadastro.cabecalho.ToModel();
+
+                header.id = Guid.NewGuid();
+                header.OrigemVisita = origem;
+                header.token = origem.token;
+
+                header.Validar();
+
+                Domain.UnicaLotacaoTransport.Add(header);
+                
+                foreach (var individuo in cadastro.individuos)
+                {
+                    var cad = await individuo.ToModel();
+                    cad.tpCdsOrigem = 3;
+                    cad.UnicaLotacaoTransport = header;
+
+                    cad.Validar();
+
+                    Domain.CadastroIndividual.Add(cad);
+
+                    int? idAgendaProd = null;
+
+                    if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
+                    {
+                        var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
+
+                        var cnsProfissional = header.profissionalCNS;
+
+                        var prod = Domain.VW_profissional_cns.FirstOrDefault(
+                            x => x.cnsCidadao == cnsCidadao && x.cnsProfissional == cnsProfissional);
+
+                        if (prod == null)
+                        {
+                            throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                        }
+
+                        var agenda = Domain.ProfCidadaoVincAgendaProd
+                            .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == prod.IdCidadao
+                                                 && x.ProfCidadaoVinc.IdProfissional == prod.IdProfissional);
+
+                        if (agenda?.IdAgendaProd == null)
+                        {
+                            throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                        }
+
+                        idAgendaProd = agenda.IdAgendaProd;
+
+                        agenda.DataCarregado = DateTime.Now;
+                    }
+                }
+
+                foreach (var domicilio in cadastro.domicilios)
+                {
+                    var cad = await domicilio.ToModel();
+                    cad.tpCdsOrigem = 3;
+                    cad.UnicaLotacaoTransport = header;
+                    if (header == null) throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
+
+                    await cad.Validar();
+
+                    Domain.CadastroDomiciliar.Add(cad);
+
+                    var idsAgendas = new List<int>();
+
+                    if (cad.fichaAtualizada)
+                    {
+                        var domicilios = from pc in Domain.VW_profissional_cns
+                                         join ut in Domain.UnicaLotacaoTransport
+                                         on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
+                                         join cadas in Domain.VW_ultimo_cadastroDomiciliar
+                                         on ut.token equals cadas.token
+                                         where pc.cnsProfissional.Trim() == header.profissionalCNS.Trim()
+                                         select new { pc, cad = cadas };
+
+                        var idProf = domicilios.FirstOrDefault()?.pc.IdProfissional;
+
+                        var profs = Domain.ProfCidadaoVincAgendaProd
+                            .Where(x =>
+                                x.DataCarregadoDomiciliar < DateTime.Now &&
+                                x.FichaDomiciliarGerada == true &&
+                                x.ProfCidadaoVinc.IdProfissional == idProf);
+
+                        var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).Distinct().ToArray();
+
+                        var prod = profs.FirstOrDefault();
+
+                        if (prod == null)
+                        {
+                            throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                        }
+
+                        var all = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao)).ToArray()
+                            .Select(x => new { x.cad, x.pc, ht = Domain.UnicaLotacaoTransport.Find(x.cad.headerTransport) })
+                            .ToArray();
+
+                        foreach (var cadas in all.Where(x => x.ht.cnes + '-' + x.cad.idCadastroDomiciliar == cad.uuidFichaOriginadora).Distinct())
+                        {
+                            var agenda = Domain.ProfCidadaoVincAgendaProd
+                                .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == cadas.pc.IdCidadao
+                                                        && x.ProfCidadaoVinc.IdProfissional == cadas.pc.IdProfissional);
+
+                            if (agenda?.IdAgendaProd == null)
+                            {
+                                throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                            }
+
+                            idsAgendas.Add(agenda.IdAgendaProd);
+                            agenda.DataRetornoDomiciliar = DateTime.Now;
+                        }
+                    }
+                }
+
+                var masters = new List<FichaVisitaDomiciliarMaster>();
+
+                Func<FichaVisitaDomiciliarMaster> getOrCreateMaster = () =>
+                {
+                    var master = masters.FirstOrDefault(x => x.FichaVisitaDomiciliarChild.Count < 99) ?? Domain.FichaVisitaDomiciliarMaster.Create();
+
+                    if (master.uuidFicha != null) return master;
+
+                    master.tpCdsOrigem = 3;
+                    master.UnicaLotacaoTransport = header;
+
+                    master.uuidFicha = header.cnes + '-' + Guid.NewGuid();
+
+                    Domain.FichaVisitaDomiciliarMaster.Add(master);
+
+                    return master;
+                };
+                
+                foreach (var child in cadastro.visitas)
+                {
+                    var master = getOrCreateMaster();
+
+                    var ficha = child.ToModel();
+                    
+                    foreach (var motivoId in child.motivosVisita)
+                    {
+                        var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
+
+                        if (motivo != null)
+                            ficha.SIGSM_MotivoVisita.Add(motivo);
+                    }
+
+                    Domain.FichaVisitaDomiciliarChild.Add(ficha);
+
+                    if (ficha.dtNascimento != null)
+                        Epoch.ValidateBirthDate(child.dtNascimento ?? 0, master.UnicaLotacaoTransport.dataAtendimento.ToUnix());
+
+                    ficha.FichaVisitaDomiciliarMaster = master;
+
+                    ficha.Validar();
+                }
+            }
+
+            try
+            {
+                await Domain.SaveChangesAsync();
+                
+                Domain.PR_ProcessarFichasAPI(origem.token);
+            }
+            catch (Exception e)
+            {
+                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
+                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+            }
 
             return Ok(true);
         }

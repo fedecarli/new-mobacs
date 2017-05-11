@@ -7,7 +7,7 @@ namespace Softpark.WS
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new ApiHandleErrorAttribute());
+            filters.Add(new HandleErrorAttribute());
         }
     }
 }

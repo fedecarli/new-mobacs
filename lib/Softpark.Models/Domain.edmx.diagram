@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="80" >
+      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="49" >
         <EntityTypeShape EntityType="Domain.VW_IdentificacaoUsuarioCidadao" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_profissional_cns" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_ultimo_cadastroDomiciliar" Width="1.5" PointX="4.75" PointY="0.75" />
@@ -134,6 +134,8 @@
         <EntityTypeShape EntityType="Domain.TB_MS_TIPO_LOGRADOURO" Width="1.5" PointX="17.375" PointY="23.75" />
         <EntityTypeShape EntityType="Domain.AS_SetoresPar" Width="1.5" PointX="8" PointY="20" />
         <AssociationConnector Association="Domain.FK__AS_SetoresPar__1D864D1D" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadastroDomiciliarVinc" Width="1.5" PointX="7.375" PointY="24.75" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadastroIndividualVinc" Width="1.5" PointX="26.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

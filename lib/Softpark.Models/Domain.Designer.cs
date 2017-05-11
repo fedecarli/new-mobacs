@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\419540829\Desktop\SIGSMAPI\lib\Softpark.Models\Domain.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\435235072\Documents\SoftPark\Fontes\Web API\sigsmapi-src-1.3.8.7\SIGSMAPI\lib\Softpark.Models\Domain.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

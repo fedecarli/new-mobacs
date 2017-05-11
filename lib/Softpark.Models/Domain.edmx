@@ -13,6 +13,28 @@
           <Property Name="id_cadastro_domiciliar" Type="uniqueidentifier" Nullable="false" />
           <Property Name="id_tp_animal" Type="int" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SIGSM.api.ASSMED_CadastroDomiciliarVinc' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ASSMED_CadastroDomiciliarVinc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idCadastroDomiciliar" Type="uniqueidentifier" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Data" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SIGSM.api.ASSMED_CadastroIndividualVinc' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ASSMED_CadastroIndividualVinc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idCadastroIndividual" Type="uniqueidentifier" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Data" Type="datetime" />
+        </EntityType>
         <EntityType Name="CadastroDomiciliar">
           <Key>
             <PropertyRef Name="id" />
@@ -1198,6 +1220,7 @@ warning 6002: The table/view 'SIGSM.api.VW_ultimo_cadastroDomiciliar' does not h
             <PropertyRef Name="idCadastroDomiciliar" />
             
           </Key>
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
           <Property Name="idCadastroDomiciliar" Type="uniqueidentifier" Nullable="false" />
           <Property Name="headerTransport" Type="uniqueidentifier" Nullable="false" />
           <Property Name="token" Type="uniqueidentifier" />
@@ -1918,6 +1941,22 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="TP_Situacao_Moradia_Rural" EntityType="Self.TP_Situacao_Moradia_Rural" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TP_Tratamento_Agua" EntityType="Self.TP_Tratamento_Agua" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UF" EntityType="Self.UF" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ASSMED_CadastroDomiciliarVinc" EntityType="Self.ASSMED_CadastroDomiciliarVinc" store:Type="Tables" store:Schema="api">
+            <DefiningQuery>SELECT 
+    [ASSMED_CadastroDomiciliarVinc].[id] AS [id], 
+    [ASSMED_CadastroDomiciliarVinc].[idCadastroDomiciliar] AS [idCadastroDomiciliar], 
+    [ASSMED_CadastroDomiciliarVinc].[Codigo] AS [Codigo], 
+    [ASSMED_CadastroDomiciliarVinc].[Data] AS [Data]
+    FROM [api].[ASSMED_CadastroDomiciliarVinc] AS [ASSMED_CadastroDomiciliarVinc]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ASSMED_CadastroIndividualVinc" EntityType="Self.ASSMED_CadastroIndividualVinc" store:Type="Tables" store:Schema="api">
+            <DefiningQuery>SELECT 
+    [ASSMED_CadastroIndividualVinc].[id] AS [id], 
+    [ASSMED_CadastroIndividualVinc].[idCadastroIndividual] AS [idCadastroIndividual], 
+    [ASSMED_CadastroIndividualVinc].[Codigo] AS [Codigo], 
+    [ASSMED_CadastroIndividualVinc].[Data] AS [Data]
+    FROM [api].[ASSMED_CadastroIndividualVinc] AS [ASSMED_CadastroIndividualVinc]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="TB_MS_TIPO_LOGRADOURO" EntityType="Self.TB_MS_TIPO_LOGRADOURO" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [TB_MS_TIPO_LOGRADOURO].[CO_TIPO_LOGRADOURO] AS [CO_TIPO_LOGRADOURO], 
@@ -1997,6 +2036,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           </EntitySet>
           <EntitySet Name="VW_ultimo_cadastroDomiciliar" EntityType="Self.VW_ultimo_cadastroDomiciliar" store:Type="Views" store:Schema="api">
             <DefiningQuery>SELECT 
+    [VW_ultimo_cadastroDomiciliar].[Codigo] AS [Codigo], 
     [VW_ultimo_cadastroDomiciliar].[idCadastroDomiciliar] AS [idCadastroDomiciliar], 
     [VW_ultimo_cadastroDomiciliar].[headerTransport] AS [headerTransport], 
     [VW_ultimo_cadastroDomiciliar].[token] AS [token], 
@@ -2456,6 +2496,8 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="Setores" EntitySet="Setores" />
             <End Role="AS_SetoresPar" EntitySet="AS_SetoresPar" />
           </AssociationSet>
+          <EntitySet Name="ASSMED_CadastroDomiciliarVinc" EntityType="Domain.ASSMED_CadastroDomiciliarVinc" />
+          <EntitySet Name="ASSMED_CadastroIndividualVinc" EntityType="Domain.ASSMED_CadastroIndividualVinc" />
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
           <Key>
@@ -2524,6 +2566,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="headerTransport" Type="Guid" Nullable="false" />
           <Property Name="token" Type="Guid" />
           <Property Name="idAuto" Type="Int64" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="VW_ultimo_cadastroIndividual">
           <Key>
@@ -4216,6 +4259,24 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ASSMED_CadastroDomiciliarVinc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idCadastroDomiciliar" Type="Guid" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Data" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ASSMED_CadastroIndividualVinc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idCadastroIndividual" Type="Guid" />
+          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Data" Type="DateTime" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4282,6 +4343,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="VW_ultimo_cadastroDomiciliar">
             <EntityTypeMapping TypeName="Domain.VW_ultimo_cadastroDomiciliar">
               <MappingFragment StoreEntitySet="VW_ultimo_cadastroDomiciliar">
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="idAuto" ColumnName="idAuto" />
                 <ScalarProperty Name="token" ColumnName="token" />
                 <ScalarProperty Name="headerTransport" ColumnName="headerTransport" />
@@ -5463,6 +5525,26 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="CodSetor" ColumnName="CodSetor" />
                 <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASSMED_CadastroDomiciliarVinc">
+            <EntityTypeMapping TypeName="Domain.ASSMED_CadastroDomiciliarVinc">
+              <MappingFragment StoreEntitySet="ASSMED_CadastroDomiciliarVinc">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="idCadastroDomiciliar" ColumnName="idCadastroDomiciliar" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASSMED_CadastroIndividualVinc">
+            <EntityTypeMapping TypeName="Domain.ASSMED_CadastroIndividualVinc">
+              <MappingFragment StoreEntitySet="ASSMED_CadastroIndividualVinc">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="idCadastroIndividual" ColumnName="idCadastroIndividual" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

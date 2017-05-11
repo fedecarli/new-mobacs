@@ -209,6 +209,10 @@ public partial class DomainContainer : DbContext
 
     public virtual DbSet<AS_SetoresPar> AS_SetoresPar { get; set; }
 
+    public virtual DbSet<ASSMED_CadastroDomiciliarVinc> ASSMED_CadastroDomiciliarVinc { get; set; }
+
+    public virtual DbSet<ASSMED_CadastroIndividualVinc> ASSMED_CadastroIndividualVinc { get; set; }
+
 
     public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
     {
