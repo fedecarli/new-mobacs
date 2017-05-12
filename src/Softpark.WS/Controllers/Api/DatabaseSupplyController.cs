@@ -704,17 +704,18 @@ namespace Softpark.WS.Controllers.Api
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
-            
+
             var ids = Domain.VW_ultimo_cadastroDomiciliar
                 .Select(x => x.idCadastroDomiciliar).ToArray();
-            
+
             var domicilios = (from pc in Domain.VW_profissional_cns
-                          join ut in Domain.UnicaLotacaoTransport
-                          on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
-                          join cad in Domain.VW_ultimo_cadastroDomiciliar
-                          on ut.token equals cad.token
-                          where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                          select new { pc, cad }).ToArray();
+                              join ut in Domain.UnicaLotacaoTransport
+                              on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
+                              join cad in Domain.VW_ultimo_cadastroDomiciliar
+                              on ut.token equals cad.token
+                              where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
+                              && pc.CodigoCidadao == cad.Codigo
+                              select new { pc, cad }).ToArray();
 
             var dom = domicilios.FirstOrDefault();
 
@@ -741,7 +742,7 @@ namespace Softpark.WS.Controllers.Api
             {
                 results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
             }
-            
+
             var ps = profs.ToList();
 
             ps.ForEach(x => {
@@ -750,10 +751,10 @@ namespace Softpark.WS.Controllers.Api
             });
 
             await Domain.SaveChangesAsync();
-            
+
             return Ok(results.ToArray());
         }
-        
+
         /// <summary>
         /// Buscar visitas realizadas pelo profissional informado
         /// </summary>
