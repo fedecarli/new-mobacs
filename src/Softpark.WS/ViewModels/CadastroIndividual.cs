@@ -2,6 +2,7 @@
 using Softpark.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,12 +42,12 @@ namespace Softpark.WS.ViewModels
     /// <summary>
     /// Ficha de cadastro individual
     /// </summary>
-    public class CadastroIndividualViewModel
+    public class PrimitiveCadastroIndividualViewModel
     {
         /// <summary>
         /// Token de acesso
         /// </summary>
-        public Guid token { get; set; }
+        public Guid? token { get; set; }
         /// <summary>
         /// Condições de Saúde
         /// </summary>
@@ -101,9 +102,9 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator CadastroIndividualViewModel(CadastroIndividual model)
+        public static implicit operator PrimitiveCadastroIndividualViewModel(CadastroIndividual model)
         {
-            var vm = new CadastroIndividualViewModel();
+            var vm = new PrimitiveCadastroIndividualViewModel();
 
             vm.ApplyModel(model);
 
@@ -126,6 +127,31 @@ namespace Softpark.WS.ViewModels
         }
     }
 
+    /// <summary>
+    /// Ficha de cadastro individual
+    /// </summary>
+    public class CadastroIndividualViewModel : PrimitiveCadastroIndividualViewModel
+    {
+        /// <summary>
+        /// Token de acesso
+        /// </summary>
+        [Required]
+        public new Guid token { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator CadastroIndividualViewModel(CadastroIndividual model)
+        {
+            var vm = new CadastroIndividualViewModel();
+
+            vm.ApplyModel(model);
+
+            return vm;
+        }
+    }
+
     public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
     {
         public string uuid { get; set; }
@@ -137,8 +163,8 @@ namespace Softpark.WS.ViewModels
         public static implicit operator GetCadastroIndividualViewModel(CadastroIndividual model)
         {
             var vm = new GetCadastroIndividualViewModel();
-            
-            if(model != null)
+
+            if (model != null)
                 vm.uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id;
 
             vm.ApplyModel(model);
@@ -499,10 +525,10 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao.ToUnix();
-            desconheceNomeMae = model.desconheceNomeMae;
+            dataNascimentoCidadao = model.dataNascimentoCidadao?.ToUnix() ?? 0;
+            desconheceNomeMae = model.desconheceNomeMae ?? false;
             emailCidadao = model.emailCidadao;
-            nacionalidadeCidadao = model.nacionalidadeCidadao;
+            nacionalidadeCidadao = model.nacionalidadeCidadao ?? 1;
             nomeCidadao = model.nomeCidadao;
             nomeMaeCidadao = model.nomeMaeCidadao;
             cnsCidadao = model.cnsCidadao;
@@ -512,15 +538,15 @@ namespace Softpark.WS.ViewModels
             paisNascimento = model.paisNascimento;
             racaCorCidadao = model.racaCorCidadao;
             sexoCidadao = model.sexoCidadao;
-            statusEhResponsavel = model.statusEhResponsavel;
+            statusEhResponsavel = model.statusEhResponsavel ?? false;
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
-            desconheceNomePai = model.desconheceNomePai;
+            desconheceNomePai = model.desconheceNomePai ?? false;
             dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
             portariaNaturalizacao = model.portariaNaturalizacao;
             dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
             microarea = model.microarea;
-            stForaArea = model.stForaArea;
+            stForaArea = model.stForaArea ?? false;
         }
 
         private void ApplyModel(IdentificacaoUsuarioCidadao model)

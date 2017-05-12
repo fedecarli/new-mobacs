@@ -11,8 +11,16 @@ using System.Threading.Tasks;
 
 namespace Softpark.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class RegrasCadastro
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static string RemoveDiacritics(this string text)
         {
             return string.Concat(
@@ -22,11 +30,21 @@ namespace Softpark.Models
               ).Normalize(NormalizationForm.FormC);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static string[] SplitWords(this string text)
         {
             return text.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nome"></param>
+        /// <returns></returns>
         public static bool NomeValido(this string nome)
         {
             if (nome == null) return false;
@@ -38,9 +56,14 @@ namespace Softpark.Models
             || Regex.IsMatch(nome, "([^a-zA-Z '])") || (words.Length == 2 && words.All(x => x.Length == 2)));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="header"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this UnicaLotacaoTransport header)
         {
-            if (!Cns.isValidCns(header.profissionalCNS))
+            if (!header.profissionalCNS.isValidCns())
                 throw new ValidationException("CNS inválido.");
 
             var profissional = DomainContainer.Current.VW_Profissional.Where(x => x.CNS != null && x.CNS.Trim() == header.profissionalCNS.Trim()).ToArray();
@@ -54,18 +77,23 @@ namespace Softpark.Models
             if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header.cnes.Trim()))
                 throw new ValidationException("CNES não encontrado.");
 
-            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() == header.ine.Trim()))
+            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != header.ine.Trim()))
                 throw new ValidationException("INE não encontrado.");
 
             var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento.ToUnix());
 
             if (validEpoch != ValidationResult.Success)
                 throw new ValidationException("Data do Atendimento inválida.");
-            
+
             if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
                 throw new ValidationException("Município não encontrado.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="master"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this FichaVisitaDomiciliarMaster master)
         {
             if (master.UnicaLotacaoTransport == null)
@@ -79,6 +107,11 @@ namespace Softpark.Models
                 throw new ValidationException("Uuid inválido. O CNES informado não corresponde ao cabeçalho.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="child"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this FichaVisitaDomiciliarChild child)
         {
             var master = child.FichaVisitaDomiciliarMaster;
@@ -122,7 +155,7 @@ namespace Softpark.Models
             if (child.sexo == null && obrigatorio)
                 throw new ValidationException("O sexo é obrigatório.");
 
-            if (child.sexo != null && !(new long[] { 0, 1, 5 }).Contains(child.sexo ?? 4))
+            if (child.sexo != null && !(new long?[] { 0, 1, 4 }).Contains(child.sexo))
                 throw new ValidationException("O sexo informado é inválido.");
 
             if (child.SIGSM_MotivoVisita.Count > 0)
@@ -168,7 +201,8 @@ namespace Softpark.Models
                     throw new ValidationException("O peso é inválido.");
             }
 
-            if (child.alturaAcompanhamentoNutricional != null)
+            if (child.alturaAcompanhamentoNutricional == null) return;
+
             {
                 if (proibido)
                     throw new ValidationException("A altura não deve ser informada para o tipo de imóvel selecionado.");
@@ -186,6 +220,12 @@ namespace Softpark.Models
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this CondicoesDeSaude cond, CadastroIndividual cad)
         {
             if (cond.descricaoCausaInternacaoEm12Meses != null)
@@ -248,27 +288,31 @@ namespace Softpark.Models
             if (cond.situacaoPeso != null && !DomainContainer.Current.TP_Consideracao_Peso.Any(x => x.codigo == cond.situacaoPeso))
                 throw new ValidationException("Situação de Peso não encontrada.");
 
-            var nasc = cad.IdentificacaoUsuarioCidadao1 != null ? cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao : (DateTime?)null;
-            var sexo = cad.IdentificacaoUsuarioCidadao1 != null ? cad.IdentificacaoUsuarioCidadao1.sexoCidadao : (int?)null;
+            var nasc = cad.IdentificacaoUsuarioCidadao1?.dataNascimentoCidadao;
+            var sexo = cad.IdentificacaoUsuarioCidadao1?.sexoCidadao;
 
-            if (cond.statusEhGestante)
+            if (!cond.statusEhGestante) return;
+
+            if (sexo == 0)
             {
-                if (sexo == null)
-                    throw new ValidationException("A identificação do cidadão deve conter o sexo.");
-
-                if (sexo == 0)
-                    throw new ValidationException("Não é possível definir uma condição de gestante para um cidadão do sexo masculino.");
-
-                if (nasc == null)
-                    throw new ValidationException("A identificação do cidadão deve conter a data de nascimento.");
-
-                var atend = cad.UnicaLotacaoTransport.dataAtendimento;
-
-                if (atend.Date.AddYears(-60) > nasc || atend.Date.AddYears(-9) < nasc)
-                    throw new ValidationException("Não é possível definir uma condição de gestante para um cidadão com menos de 9 anos ou com mais de 60 anos.");
+                throw new ValidationException(
+                    "Não é possível definir uma condição de gestante para um cidadão do sexo masculino.");
             }
+
+            if (nasc == null)
+                throw new ValidationException("A identificação do cidadão deve conter a data de nascimento.");
+
+            var atend = cad.UnicaLotacaoTransport.dataAtendimento;
+
+            if (atend.Date.AddYears(-60) > nasc || atend.Date.AddYears(-9) < nasc)
+                throw new ValidationException("Não é possível definir uma condição de gestante para um cidadão com menos de 9 anos ou com mais de 60 anos.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this EmSituacaoDeRua cond)
         {
             if (cond.grauParentescoFamiliarFrequentado != null && (!cond.statusSituacaoRua || !cond.statusVisitaFamiliarFrequentemente))
@@ -331,6 +375,13 @@ namespace Softpark.Models
                 throw new ValidationException("O tempo de situação de rua é inválido.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
+        /// <exception cref="Exception"></exception>
         public static void Validar(this IdentificacaoUsuarioCidadao cond, CadastroIndividual cad)
         {
             var header = cad.UnicaLotacaoTransport;
@@ -340,7 +391,9 @@ namespace Softpark.Models
                 if (cond.nomeSocial.Length > 70)
                     throw new ValidationException("O Nome Social não deve ter mais que 70 caracteres.");
 
-                if (!cond.nomeSocial.NomeValido())
+                var n = cond.nomeSocial.Trim().RemoveDiacritics().ToUpperInvariant();
+
+                if (Regex.IsMatch(n, "([^a-zA-Z '])"))
                     throw new ValidationException("O Nome Social é inválido.");
             }
 
@@ -391,17 +444,19 @@ namespace Softpark.Models
                     throw new ValidationException("O Nome do pai do cidadão é inválido.");
             }
 
-            if (cond.cnsCidadao != null && !Cns.isValidCns(cond.cnsCidadao))
+            if (cond.cnsCidadao != null && !cond.cnsCidadao.isValidCns())
                 throw new ValidationException("O CNS do cidadão está incorreto.");
 
             if (cond.cnsResponsavelFamiliar != null)
             {
-                if (!cond.statusEhResponsavel)
+                if (cond.statusEhResponsavel)
                     throw new ValidationException("O CNS do responsável familiar não deve ser informado neste caso.");
 
-                if (!Cns.isValidCns(cond.cnsResponsavelFamiliar))
+                if (!cond.cnsResponsavelFamiliar.isValidCns())
                     throw new ValidationException("O CNS do responsável familiar é inválido.");
             }
+            else if (!cond.statusEhResponsavel)
+                throw new ValidationException("O CNS do responsável familiar deve ser informado neste caso.");
 
             if (cond.telefoneCelular != null && (cond.telefoneCelular.Length < 10 || cond.telefoneCelular.Length > 11 ||
                 Regex.IsMatch(cond.telefoneCelular ?? "-", "([^0-9])")))
@@ -475,6 +530,12 @@ namespace Softpark.Models
                 throw new ValidationException("O código da microárea é inválido. Informe 2 caracteres numéricos.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this InformacoesSocioDemograficas cond, CadastroIndividual cad)
         {
             if (cond.DeficienciasCidadao.Count == 0 && cond.statusTemAlgumaDeficiencia)
@@ -488,7 +549,7 @@ namespace Softpark.Models
 
             if (cond.DeficienciasCidadao.Any(x => DomainContainer.Current.TP_Deficiencia.All(y => y.codigo != x.id_tp_deficiencia_cidadao)))
                 throw new ValidationException("Uma ou mais deficiências estão incorretas.");
-            
+
             if (cond.grauInstrucaoCidadao != null && DomainContainer.Current.TP_Curso.All(x => x.codigo != cond.grauInstrucaoCidadao))
                 throw new ValidationException("O grau de instrução do cidadão é inválido.");
 
@@ -509,7 +570,7 @@ namespace Softpark.Models
 
             if (cond.relacaoParentescoCidadao != null && cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
                 throw new ValidationException("A relação de parentesco não pode ser preenchida.");
-                
+
             if (cond.relacaoParentescoCidadao != null && DomainContainer.Current.TP_Relacao_Parentesco.All(x => x.codigo != cond.relacaoParentescoCidadao)
                     && !cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
                 throw new ValidationException("A relação de parentesco é inválida.");
@@ -520,15 +581,20 @@ namespace Softpark.Models
             if (cond.identidadeGeneroCidadao != null && !cond.statusDesejaInformarIdentidadeGenero)
                 throw new ValidationException("A identidade de gênero não deve ser informada.");
 
-            var resp = cad.UnicaLotacaoTransport.dataAtendimento.Date.AddYears(-10);
+            var resp = cad.UnicaLotacaoTransport.dataAtendimento.Date.AddYears(-9);
 
-            if (cond.ResponsavelPorCrianca.Count > 0 && cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao > resp)
+            if (cond.ResponsavelPorCrianca.Count > 0 && cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao < resp)
                 throw new ValidationException("Este cidadão não pode ser reponsável por criança.");
 
             if (cond.ResponsavelPorCrianca.Count > 6)
                 throw new ValidationException("O limite de responsabilidade por criança é de 6.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this SaidaCidadaoCadastro cond)
         {
             if (cond.dataObito != null && cond.motivoSaidaCidadao != 135)
@@ -541,6 +607,11 @@ namespace Softpark.Models
                 throw new ValidationException("O número do documento de óbito não deve ser informado.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this CadastroIndividual cad)
         {
             if (cad.UnicaLotacaoTransport == null)
@@ -566,7 +637,7 @@ namespace Softpark.Models
 
             cad.InformacoesSocioDemograficas1?.Validar(cad);
 
-            if(!cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift)
+            if (!cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift)
             {
                 cad.uuidFichaOriginadora = cad.UnicaLotacaoTransport.cnes + '-' + cad.id;
                 cad.fichaAtualizada = false;
@@ -583,6 +654,12 @@ namespace Softpark.Models
             cad.SaidaCidadaoCadastro1?.Validar();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this CondicaoMoradia cond, CadastroDomiciliar cad)
         {
             var proibido = (new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel);
@@ -648,18 +725,30 @@ namespace Softpark.Models
                 throw new ValidationException("O tipo de água de consumo no domicílio é inválido.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this FamiliaRow cond, CadastroDomiciliar cad)
         {
             if (cond.dataNascimentoResponsavel != null && !cond.dataNascimentoResponsavel.Value.ToUnix().IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
                 throw new ValidationException("A data de nascimento do responsável está incorreta.");
 
-            if (cond.numeroCnsResponsavel == null || !Cns.isValidCns(cond.numeroCnsResponsavel))
+            if (cond.numeroCnsResponsavel == null || !cond.numeroCnsResponsavel.isValidCns())
                 throw new ValidationException("O CNS do responsável está incorreto.");
 
             if (cond.numeroMembrosFamilia != null && (cond.numeroMembrosFamilia < 1 || cond.numeroMembrosFamilia > 99))
                 throw new ValidationException("O número de membros da família está incorreto.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this EnderecoLocalPermanencia cond, CadastroDomiciliar cad)
         {
             if (string.IsNullOrEmpty(cond.bairro) || string.IsNullOrWhiteSpace(cond.bairro) || cond.bairro.Length < 1 || cond.bairro.Length > 72)
@@ -685,10 +774,6 @@ namespace Softpark.Models
 
             if (cond.numero != null && (Regex.IsMatch(cond.numero, "([^0-9])") || cond.numero.Length < 1 || cond.numero.Length > 10))
                 throw new ValidationException("O número do local de permanência deve ter entre 1 e 10 caracteres numéricos.");
-
-            var row = 1;
-
-            var getRow = new Func<int>(() => row++);
 
             if (cond.numeroDneUf == null || DomainContainer.Current.UF.OrderBy(x => x.DesUF).Select(RowNumberPad('0', 2)).All(x => x != cond.numeroDneUf))
                 throw new ValidationException("O número DNE da UF é inválido.");
@@ -719,12 +804,15 @@ namespace Softpark.Models
         {
             var row = 1;
 
-            return (i) =>
-            {
-                return (row++).ToString().PadLeft(l, c);
-            };
+            return (i) => (row++).ToString().PadLeft(l, c);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cad"></param>
+        /// <returns></returns>
+        /// <exception cref="ValidationException"></exception>
         public static async Task Validar(this CadastroDomiciliar cad)
         {
             if (await DomainContainer.Current.TP_Imovel.AllAsync(x => x.codigo != cad.tipoDeImovel))
@@ -796,6 +884,12 @@ namespace Softpark.Models
             cad.InstituicaoPermanencia1?.Validar(cad);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cond"></param>
+        /// <param name="cad"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void Validar(this InstituicaoPermanencia cond, CadastroDomiciliar cad)
         {
             if (cond.nomeInstituicaoPermanencia != null && cond.nomeInstituicaoPermanencia.Length > 100)

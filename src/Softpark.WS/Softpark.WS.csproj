@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -17,7 +17,7 @@
     <AssemblyName>Softpark.WS</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Softpark.WS.XML</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <IncludeIisSettings>true</IncludeIisSettings>
+    <IncludeIisSettings>false</IncludeIisSettings>
     <IncludeAppPool>true</IncludeAppPool>
     <DeployEncryptKey>1q2w3e4r5t%40%40</DeployEncryptKey>
   </PropertyGroup>
@@ -117,17 +117,12 @@
     <Reference Include="Microsoft.AspNetCore.WebUtilities, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.WebUtilities.1.1.1\lib\net451\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Data.Edm.5.8.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Data.OData.5.8.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.DotNet.InternalAbstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
@@ -175,17 +170,11 @@
     <Reference Include="Microsoft.Net.Http.Headers, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Net.Http.Headers.1.1.1\lib\netstandard1.1\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.Core, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.OData.Core.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.OData.Edm, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.OData.Edm.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Spatial, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Spatial.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
+    <Reference Include="Microsoft.Spatial, Version=7.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Spatial.7.2.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
@@ -203,10 +192,6 @@
       <HintPath>..\..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Pathoschild.WebApi.Nhibernate-odata, Version=0.1.0.24823, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Pathoschild.WebApi.NHibernate-OData.0.5.0\lib\net45\Pathoschild.WebApi.Nhibernate-odata.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="QueryInterceptor, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QueryInterceptor.0.2\lib\net40\QueryInterceptor.dll</HintPath>
       <Private>True</Private>
@@ -215,13 +200,10 @@
       <HintPath>..\..\packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Swashbuckle.Core.5.5.2\lib\net40\Swashbuckle.Core.dll</HintPath>
+      <HintPath>..\..\packages\Swashbuckle.Core.5.5.3\lib\net40\Swashbuckle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Swashbuckle.MVC.Handler, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Swashbuckle.MVC.1.0.0.3\lib\Swashbuckle.MVC.Handler.dll</HintPath>
-    </Reference>
-    <Reference Include="Swashbuckle.OData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a2e252c86e553959, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Swashbuckle.OData.3.2.0\lib\net452\Swashbuckle.OData.dll</HintPath>
     </Reference>
     <Reference Include="Swashbuckle.SwaggerGen, Version=6.0.0.0, Culture=neutral, PublicKeyToken=d84d99fb0135530a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SwaggerGenerator.1.1.0\lib\net451\Swashbuckle.SwaggerGen.dll</HintPath>
@@ -277,13 +259,6 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.OData.5.7.0\lib\net45\System.Web.Http.OData.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.OData, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.OData.6.0.0\lib\net45\System.Web.OData.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -349,27 +324,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\AjaxTemplates\Models\" />
-    <Folder Include="Areas\AjaxTemplates\Views\Shared\" />
     <Folder Include="Views\Helpers\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
-    <Content Include="Areas\AjaxTemplates\Views\web.config" />
-    <Content Include="Areas\AjaxTemplates\Views\Cabecalho\Script.js" />
-    <Content Include="Areas\AjaxTemplates\Views\Cabecalho\Index.cshtml" />
-    <None Include="ClienteCSS.ashx" />
-    <Compile Include="App_Start\ClienteCSS.ashx.cs" />
+    <Compile Include="App_Start\ApiHandleErrorAttribute.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectDependencyScope.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
-    <Compile Include="App_Start\SwashbuckleMVC.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\AjaxTemplates\AjaxTemplatesAreaRegistration.cs" />
-    <Compile Include="Areas\AjaxTemplates\Controllers\CabecalhoController.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -399,23 +364,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\Api\DatabaseSupplyController.cs" />
-    <Compile Include="Controllers\Api\odata\VisitasController.cs" />
-    <Compile Include="Controllers\Api\odata\FichaVisitaDomiciliarMasterController.cs" />
-    <Compile Include="Controllers\Api\odata\IndividuoController.cs" />
-    <Compile Include="Controllers\Api\odata\SIGSM_MotivoVisitaController.cs" />
-    <Compile Include="Controllers\Api\odata\UnicaLotacaoTransportController.cs" />
     <Compile Include="Controllers\Api\ProcessosController.cs" />
-    <Compile Include="Controllers\Api\odata\ProfissionalController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
-    <Compile Include="Controllers\DataTablesController.cs" />
-    <Compile Include="Controllers\FichaVisitaDomiciliarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SwashbuckleMVCController.cs" />
-    <Compile Include="Controllers\TemplatesController.cs" />
-    <Compile Include="Controllers\UsuarioController.cs" />
-    <Compile Include="Helpers\MenuHelper.cs" />
-    <Compile Include="Helpers\ModalHelper.cs" />
-    <Compile Include="Helpers\ActionResultsExtensions.cs" />
     <Compile Include="Validators\TipoImovelValidationAttribute.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
     <Compile Include="ViewModels\Parametros.cs" />
@@ -438,46 +389,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\cliente.tpl.css" />
-    <Content Include="Content\font-awesome-4.3.0\css\font-awesome.css" />
-    <Content Include="Content\font-awesome-4.3.0\css\font-awesome.min.css" />
-    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
-    <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\images\ui-bg_flat_0_eeeeee_40x100.png" />
-    <Content Include="Content\images\ui-bg_flat_55_c0402a_40x100.png" />
-    <Content Include="Content\images\ui-bg_flat_55_eeeeee_40x100.png" />
-    <Content Include="Content\images\ui-bg_glass_100_f8f8f8_1x400.png" />
-    <Content Include="Content\images\ui-bg_glass_35_dddddd_1x400.png" />
-    <Content Include="Content\images\ui-bg_glass_60_eeeeee_1x400.png" />
-    <Content Include="Content\images\ui-bg_inset-hard_75_999999_1x100.png" />
-    <Content Include="Content\images\ui-bg_inset-soft_50_c9c9c9_1x100.png" />
-    <Content Include="Content\images\ui-icons_3383bb_256x240.png" />
-    <Content Include="Content\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\images\ui-icons_70b2e1_256x240.png" />
-    <Content Include="Content\images\ui-icons_999999_256x240.png" />
-    <Content Include="Content\images\ui-icons_fbc856_256x240.png" />
-    <Content Include="Content\jquery-ui.css" />
-    <Content Include="Content\jquery-ui.min.css" />
-    <Content Include="Content\jquery-ui.structure.css" />
-    <Content Include="Content\jquery-ui.structure.min.css" />
-    <Content Include="Content\jquery-ui.theme.css" />
-    <Content Include="Content\jquery-ui.theme.min.css" />
-    <Content Include="Content\login.css" />
-    <Content Include="Content\main.css" />
-    <Content Include="Content\plugins\dataTables.bootstrap.css" />
-    <Content Include="Content\plugins\metisMenu\metisMenu.css" />
-    <Content Include="Content\plugins\metisMenu\metisMenu.min.css" />
-    <Content Include="Content\plugins\morris.css" />
-    <Content Include="Content\plugins\social-buttons.css" />
-    <Content Include="Content\plugins\timeline.css" />
-    <Content Include="Content\sb-admin-2.css" />
-    <Content Include="Content\sb-admin.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
@@ -498,30 +410,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="img\ajax-loader-2.gif" />
-    <Content Include="img\ajax-loader.gif" />
-    <Content Include="img\biometria.png" />
-    <Content Include="img\brasao_itanhaem.jpg" />
-    <Content Include="img\brasao_itapevi.jpg" />
-    <Content Include="img\brasao_itapolis.jpg" />
-    <Content Include="img\brasao_taubate.jpg" />
-    <Content Include="img\chrome.png" />
-    <Content Include="img\default-user-icon-profile.png" />
-    <Content Include="img\favicon.ico" />
-    <Content Include="img\iexplorer.png" />
-    <Content Include="img\login_bg.jpg" />
-    <Content Include="img\Logo_Softpark2.png" />
-    <Content Include="img\marcador_google.png" />
-    <Content Include="img\sigsm_logo.png" />
-    <Content Include="img\SIGSM_TOPO.png" />
     <Content Include="installation\api-1.1.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -537,272 +425,14 @@
     <Content Include="installation\api.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="img\Thumbs.db" />
-    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\font-awesome-4.3.0\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\font-awesome-4.3.0\fonts\FontAwesome.otf" />
-    <Content Include="Content\font-awesome-4.3.0\less\animated.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\bordered-pulled.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\core.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\fixed-width.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\font-awesome.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\icons.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\larger.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\list.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\mixins.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\path.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\rotated-flipped.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\stacked.less" />
-    <Content Include="Content\font-awesome-4.3.0\less\variables.less" />
-    <Content Include="Content\font-awesome-4.3.0\scss\font-awesome.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_animated.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_bordered-pulled.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_core.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_fixed-width.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_icons.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_larger.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_list.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_mixins.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_path.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_rotated-flipped.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_stacked.scss" />
-    <Content Include="Content\font-awesome-4.3.0\scss\_variables.scss" />
     <Content Include="installation\api-1.3-final.sql" />
     <None Include="installation\lock" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="key.snk" />
     <Content Include="pk.snk" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\SoftparkWS.pubxml" />
-    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
-    <Content Include="Scripts\components\carga.js" />
-    <Content Include="Scripts\esusfw.js" />
-    <Content Include="Scripts\jquery-1.11.0.js" />
-    <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
-    <Content Include="Scripts\jquery-ui.js" />
-    <Content Include="Scripts\jquery-ui.min.js" />
-    <Content Include="Scripts\jquery.dataTables.odata.js" />
-    <Content Include="Scripts\jquery.mask.min.js" />
-    <Content Include="Scripts\jquery.maskMoney.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\main.js" />
-    <Content Include="Scripts\modals\profissional.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\plugins\dataTables\dataTables.bootstrap.js" />
-    <Content Include="Scripts\plugins\dataTables\fnSetFilteringDelay.js" />
-    <Content Include="Scripts\plugins\dataTables\jquery.dataTables.js" />
-    <Content Include="Scripts\plugins\flot\excanvas.min.js" />
-    <Content Include="Scripts\plugins\flot\flot-data.js" />
-    <Content Include="Scripts\plugins\flot\jquery.flot.js" />
-    <Content Include="Scripts\plugins\flot\jquery.flot.pie.js" />
-    <Content Include="Scripts\plugins\flot\jquery.flot.resize.js" />
-    <Content Include="Scripts\plugins\flot\jquery.flot.tooltip.min.js" />
-    <Content Include="Scripts\plugins\linq\JSLINQ.js" />
-    <Content Include="Scripts\plugins\metisMenu\metisMenu.js" />
-    <Content Include="Scripts\plugins\metisMenu\metisMenu.min.js" />
-    <Content Include="Scripts\plugins\morris\morris-data.js" />
-    <Content Include="Scripts\plugins\morris\morris.js" />
-    <Content Include="Scripts\plugins\morris\morris.min.js" />
-    <Content Include="Scripts\plugins\morris\raphael.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\langs\pt_BR.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\license.txt" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\advlist\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\anchor\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\autolink\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\autoresize\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\autosave\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\bbcode\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\charmap\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\code\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\colorpicker\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\contextmenu\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\directionality\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-cool.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-cry.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-embarassed.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-frown.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-innocent.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-kiss.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-laughing.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-money-mouth.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-sealed.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-smile.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-surprised.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-tongue-out.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-undecided.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-wink.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\img\smiley-yell.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\emoticons\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\example\dialog.html" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\example\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\example_dependency\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\fullpage\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\fullscreen\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\hr\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\image\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\importcss\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\insertdatetime\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\layer\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\legacyoutput\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\link\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\lists\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\media\moxieplayer.swf" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\media\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\nonbreaking\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\noneditable\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\pagebreak\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\paste\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\preview\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\print\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\save\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\searchreplace\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\spellchecker\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\tabfocus\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\table\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\template\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\textcolor\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\textpattern\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\visualblocks\css\visualblocks.css" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\visualblocks\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\visualchars\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\plugins\wordcount\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\content.inline.min.css" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\content.min.css" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce-small.dev.svg" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce-small.svg" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce.dev.svg" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce.svg" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\img\anchor.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\img\loader.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\img\object.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\img\trans.gif" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\skin.ie7.min.css" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\skin.min.css" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\themes\modern\theme.min.js" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\tinymce.min.js" />
-    <Content Include="Scripts\plugins\tinymce\jquery.tinymce.min.js" />
-    <Content Include="Scripts\plugins\tinymce\langs\pt_BR.js" />
-    <Content Include="Scripts\plugins\tinymce\license.txt" />
-    <Content Include="Scripts\plugins\tinymce\plugins\advlist\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\anchor\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\autolink\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\autoresize\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\autosave\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\bbcode\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\charmap\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\codesample\css\prism.css" />
-    <Content Include="Scripts\plugins\tinymce\plugins\codesample\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\code\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\colorpicker\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\contextmenu\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\directionality\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-cool.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-cry.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-embarassed.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-frown.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-innocent.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-kiss.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-laughing.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-money-mouth.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-sealed.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-smile.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-surprised.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-tongue-out.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-undecided.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-wink.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\img\smiley-yell.gif" />
-    <Content Include="Scripts\plugins\tinymce\plugins\emoticons\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\example\dialog.html" />
-    <Content Include="Scripts\plugins\tinymce\plugins\example\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\example_dependency\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\fullpage\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\fullscreen\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\hr\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\imagetools\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\image\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\importcss\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\insertdatetime\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\layer\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\legacyoutput\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\link\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\lists\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\media\moxieplayer.swf" />
-    <Content Include="Scripts\plugins\tinymce\plugins\media\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\nonbreaking\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\noneditable\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\pagebreak\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\paste\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\preview\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\print\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\save\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\searchreplace\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\spellchecker\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\tabfocus\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\table\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\template\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\textcolor\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\textpattern\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\visualblocks\css\visualblocks.css" />
-    <Content Include="Scripts\plugins\tinymce\plugins\visualblocks\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\visualchars\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\plugins\wordcount\plugin.min.js" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\content.inline.min.css" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\content.min.css" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce-small.dev.svg" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce.dev.svg" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce.svg" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\img\anchor.gif" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\img\loader.gif" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\img\object.gif" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\img\trans.gif" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\skin.ie7.min.css" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\skin.min.css" />
-    <Content Include="Scripts\plugins\tinymce\themes\inlite\theme.min.js" />
-    <Content Include="Scripts\plugins\tinymce\themes\modern\theme.min.js" />
-    <Content Include="Scripts\plugins\tinymce\tinymce.min.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\sb-admin-2.js" />
-    <Content Include="Scripts\sistema\atendDomiciliar\atendDomiciliarCad.js" />
-    <Content Include="Scripts\sistema\atendDomiciliar\main.js" />
-    <Content Include="Scripts\sistema\atendIndividual\atendIndividualCad.js" />
-    <Content Include="Scripts\sistema\atendIndividual\main.js" />
-    <Content Include="Scripts\sistema\atendOdontologico\atendOdontologicoCad.js" />
-    <Content Include="Scripts\sistema\atendOdontologico\main.js" />
-    <Content Include="Scripts\sistema\atividadeColetiva\atividadeColetivaCad.js" />
-    <Content Include="Scripts\sistema\atividadeColetiva\main.js" />
-    <Content Include="Scripts\sistema\avaliacaoElegibilidadeAdmissao\avaliacaoElegibilidadeAdmissaoCad.js" />
-    <Content Include="Scripts\sistema\avaliacaoElegibilidadeAdmissao\main.js" />
-    <Content Include="Scripts\sistema\cadIndividual\main.js" />
-    <Content Include="Scripts\sistema\compFamiliar\compFamiliarCad.js" />
-    <Content Include="Scripts\sistema\compFamiliar\main.js" />
-    <Content Include="Scripts\sistema\domicilio\domicilioCad.js" />
-    <Content Include="Scripts\sistema\domicilio\main.js" />
-    <Content Include="Scripts\sistema\grupo\grupoCad.js" />
-    <Content Include="Scripts\sistema\grupo\main.js" />
-    <Content Include="Scripts\sistema\login\login.js" />
-    <Content Include="Scripts\sistema\mapa\mapa_municipe.js" />
-    <Content Include="Scripts\sistema\marcadorConsumoAlimentar\main.js" />
-    <Content Include="Scripts\sistema\marcadorConsumoAlimentar\marcadorConsumoAlimentarCad.js" />
-    <Content Include="Scripts\sistema\procedimento\main.js" />
-    <Content Include="Scripts\sistema\procedimento\procedimentoCad.js" />
-    <Content Include="Scripts\sistema\usuario\main.js" />
-    <Content Include="Scripts\sistema\usuario\usuarioCad.js" />
-    <Content Include="Scripts\sistema\visitaDomiciliar\main.js" />
-    <Content Include="Scripts\sistema\visitaDomiciliar\visitaDomiciliarCad.js" />
-    <Content Include="Scripts\zendesk.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -811,8 +441,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <Content Include="Content\Site.css" />
-    <Content Include="Scripts\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -835,43 +463,11 @@
     <Content Include="Views\Help\Index.cshtml" />
     <Content Include="Views\Help\ResourceModel.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\langs\readme.md" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\readme.md" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce-small.eot" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce-small.ttf" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce-small.woff" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce.eot" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce.ttf" />
-    <Content Include="Scripts\plugins\tinymce BKP V4.1.2\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Scripts\plugins\tinymce\langs\readme.md" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce.eot" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce.ttf" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Views\Usuario\Create.cshtml" />
-    <Content Include="Views\Usuario\Delete.cshtml" />
-    <Content Include="Views\Usuario\Details.cshtml" />
-    <Content Include="Views\Usuario\Edit.cshtml" />
-    <Content Include="Views\Usuario\Index.cshtml" />
-    <Content Include="Views\Usuario\Acesso.cshtml" />
     <Content Include="Views\Shared\_menu.cshtml" />
     <Content Include="Views\Shared\_permissao.cshtml" />
     <Content Include="Views\Shared\_menu_old.vbhtml" />
-    <Content Include="Scripts\plugins\tinymce\skins\lightgray\fonts\readme.md" />
-    <Content Include="Views\FichaVisitaDomiciliar\Create.cshtml" />
-    <Content Include="Views\FichaVisitaDomiciliar\Delete.cshtml" />
-    <Content Include="Views\FichaVisitaDomiciliar\Details.cshtml" />
-    <Content Include="Views\FichaVisitaDomiciliar\Edit.cshtml" />
-    <Content Include="Views\FichaVisitaDomiciliar\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutHelp.cshtml" />
     <Content Include="Views\Shared\Common\_Cabecalho.cshtml" />
-    <Content Include="Views\SwashbuckleMVC\Index.cshtml" />
-    <Content Include="Views\DataTables\Index.cshtml" />
-    <Content Include="Views\Templates\Cabecalho.cshtml" />
-    <Content Include="Views\Usuario\AcessoUnidade.cshtml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -879,8 +475,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\lib\Softpark.Infrastructure\Softpark.Infrastructure.csproj">
@@ -922,11 +516,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:65069/</IISUrl>
+          <IISUrl>http://localhost:63272/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -940,9 +534,9 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

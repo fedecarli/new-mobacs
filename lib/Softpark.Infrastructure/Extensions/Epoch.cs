@@ -17,7 +17,7 @@ namespace Softpark.Infrastructure.Extras
         public static DateTime FromUnix(this long unix, bool isUtc = true)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, isUtc ? DateTimeKind.Utc : DateTimeKind.Local);
-            return epoch.AddSeconds(unix);
+            return epoch.AddSeconds(unix).ToLocalTime();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Softpark.Infrastructure.Extras
         {
             if (!unix.HasValue) return null;
             
-            return unix.Value.FromUnix();
+            return unix.Value.FromUnix(isUtc);
         }
 
         /// <summary>
@@ -40,7 +40,8 @@ namespace Softpark.Infrastructure.Extras
         /// <returns>The unix date representation</returns>
         public static long ToUnix(this DateTime date)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, date.Kind);
+            date = date.ToUniversalTime();
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             return (long)(date - epoch).TotalSeconds;
         }
 
