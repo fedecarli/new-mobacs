@@ -19,11 +19,11 @@ namespace Softpark.WS.Validators
         /// <returns></returns>
         public override bool IsValid(object value)
         {
-            var motivos = value as ISet<long>;
+            var motivos = value as IEnumerable<long>;
 
-            if (motivos == null || motivos.Count == 0) return false;
+            if (motivos == null || motivos.Count() == 0) return false;
 
-            return DomainContainer.Current.SIGSM_MotivoVisita.Count(x => motivos.Contains(x.codigo)) == motivos.Count;
+            return DomainContainer.Current.SIGSM_MotivoVisita.Count(x => motivos.Contains(x.codigo)) == motivos.Count();
         }
     }
 }

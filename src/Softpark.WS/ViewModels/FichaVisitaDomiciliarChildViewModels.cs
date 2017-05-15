@@ -223,7 +223,6 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Token da transmissão
         /// </summary>
-        [Required]
         [DataMember(Name = nameof(OrigemVisita.token))]
         public Guid? token { get; set; }
 
