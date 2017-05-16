@@ -273,7 +273,8 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
-            idsAgendas.ForEach(x => {
+            idsAgendas.ForEach(x =>
+            {
                 Domain.PR_EncerrarAgenda(x, true, true);
             });
 
@@ -289,7 +290,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> CadastramentoAtomico([FromBody, Required] AtomicTransporViewModel[] cadastros)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -316,7 +317,7 @@ namespace Softpark.WS.Controllers.Api
                 header.Validar();
 
                 Domain.UnicaLotacaoTransport.Add(header);
-                
+
                 foreach (var individuo in cadastro.individuos)
                 {
                     var cad = await individuo.ToModel();
@@ -331,16 +332,29 @@ namespace Softpark.WS.Controllers.Api
 
                     if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
                     {
+                        Guid.TryParse(cad.uuidFichaOriginadora.Substring(8), out Guid idOrigem);
+
                         var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
 
                         var cnsProfissional = header.profissionalCNS;
 
+                        var ultFicha = (from uci in Domain.VW_ultimo_cadastroIndividual
+                                        join ci in Domain.CadastroIndividual
+                                        on uci.idCadastroIndividual equals ci.id
+                                        where uci.idCadastroIndividual == idOrigem
+                                        select new { ci, uci }).FirstOrDefault();
+
+                        if (ultFicha == null)
+                        {
+                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
+                        }
+
                         var prod = Domain.VW_profissional_cns.FirstOrDefault(
-                            x => x.cnsCidadao == cnsCidadao && x.cnsProfissional == cnsProfissional);
+                             x => x.cnsProfissional == cnsProfissional && ultFicha.uci.Codigo == x.CodigoCidadao);
 
                         if (prod == null)
                         {
-                            throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
                         }
 
                         var agenda = Domain.ProfCidadaoVincAgendaProd
@@ -349,7 +363,7 @@ namespace Softpark.WS.Controllers.Api
 
                         if (agenda?.IdAgendaProd == null)
                         {
-                            throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
                         }
 
                         idAgendaProd = agenda.IdAgendaProd;
@@ -373,12 +387,26 @@ namespace Softpark.WS.Controllers.Api
 
                     if (cad.fichaAtualizada)
                     {
+                        Guid.TryParse(cad.uuidFichaOriginadora.Substring(8), out Guid idOrigem);
+
+                        var ultFicha = (from ucd in Domain.VW_ultimo_cadastroDomiciliar
+                                        join cd in Domain.CadastroDomiciliar
+                                        on ucd.idCadastroDomiciliar equals cd.id
+                                        where ucd.idCadastroDomiciliar == idOrigem
+                                        select new { cd, ucd }).FirstOrDefault();
+
+                        if (ultFicha == null)
+                        {
+                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro domiciliar (Origem: {cad.uuidFichaOriginadora}).");
+                        }
+
                         var domicilios = from pc in Domain.VW_profissional_cns
                                          join ut in Domain.UnicaLotacaoTransport
                                          on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
                                          join cadas in Domain.VW_ultimo_cadastroDomiciliar
                                          on ut.token equals cadas.token
                                          where pc.cnsProfissional.Trim() == header.profissionalCNS.Trim()
+                                         && cadas.idCadastroDomiciliar == ultFicha.cd.id
                                          select new { pc, cad = cadas };
 
                         var idProf = domicilios.FirstOrDefault()?.pc.IdProfissional;
@@ -395,7 +423,7 @@ namespace Softpark.WS.Controllers.Api
 
                         if (prod == null)
                         {
-                            throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro domiciliar (Origem: {cad.uuidFichaOriginadora}).");
                         }
 
                         var all = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao)).ToArray()
@@ -410,7 +438,7 @@ namespace Softpark.WS.Controllers.Api
 
                             if (agenda?.IdAgendaProd == null)
                             {
-                                throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                                throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro domiciliar (Origem: {cad.uuidFichaOriginadora}).");
                             }
 
                             idsAgendas.Add(agenda.IdAgendaProd);
@@ -436,13 +464,13 @@ namespace Softpark.WS.Controllers.Api
 
                     return master;
                 };
-                
+
                 foreach (var child in cadastro.visitas)
                 {
                     var master = getOrCreateMaster();
 
                     var ficha = child.ToModel();
-                    
+
                     foreach (var motivoId in child.motivosVisita)
                     {
                         var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
@@ -465,7 +493,7 @@ namespace Softpark.WS.Controllers.Api
             try
             {
                 await Domain.SaveChangesAsync();
-                
+
                 Domain.PR_ProcessarFichasAPI(origem.token);
             }
             catch (Exception e)

@@ -674,11 +674,11 @@ namespace Softpark.WS.Controllers.Api
                 results = results.Where(r => r.identificacaoUsuarioCidadao?.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
             }
 
-            var rs = results.ToArray().GroupBy(x => x);
+            var rs = results.ToArray();
 
-            var data = Ok(rs.ToArray());
+            var data = Ok(rs);
 
-            var ps = profs.ToList();
+            var ps = profs.Where(x => pessoas.Any(z => x.IdVinc == z.pc.IdVinc)).ToList();
 
             ps.ForEach(x => {
                 x.DataCarregado = DateTime.Now;
@@ -743,7 +743,7 @@ namespace Softpark.WS.Controllers.Api
                 results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
             }
 
-            var ps = profs.ToList();
+            var ps = profs.Where(x => domicilios.Any(y => y.pc.IdVinc == x.IdVinc)).ToList();
 
             ps.ForEach(x => {
                 x.DataCarregadoDomiciliar = DateTime.Now;
