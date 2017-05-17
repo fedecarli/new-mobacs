@@ -52,7 +52,7 @@ namespace Softpark.Models
             nome = nome.Trim().RemoveDiacritics().ToUpperInvariant();
             var words = nome.SplitWords();
             return !(nome.Length < 3 || nome.Length > 70 || words.Length == 1
-            || words.Any(x => x.Length == 1 && (x != "E" && x != "Y")) || words.First().Length < 3 || words.Last().Length < 3
+            || words.Any(x => x.Length == 1 && (x != "E" && x != "Y"))
             || Regex.IsMatch(nome, "([^a-zA-Z '])") || (words.Length == 2 && words.All(x => x.Length == 2)));
         }
 
