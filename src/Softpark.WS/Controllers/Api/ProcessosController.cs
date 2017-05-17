@@ -96,6 +96,11 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
 
             var ficha = child.ToModel();
@@ -111,7 +116,7 @@ namespace Softpark.WS.Controllers.Api
             Domain.FichaVisitaDomiciliarChild.Add(ficha);
 
             if (ficha.dtNascimento != null)
-                Epoch.ValidateBirthDate(child.dtNascimento ?? 0, master.UnicaLotacaoTransport.dataAtendimento.ToUnix());
+                ficha.dtNascimento.Value.IsValidBirthDate(master.UnicaLotacaoTransport.dataAtendimento);
 
             ficha.FichaVisitaDomiciliarMaster = master;
 
@@ -139,6 +144,11 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var origem = await Domain.OrigemVisita.FindAsync(cadInd.token);
 
             var header = origem?.UnicaLotacaoTransport?.FirstOrDefault();
@@ -205,6 +215,11 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroDomiciliar([FromBody, Required] CadastroDomiciliarViewModel cadDom)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var origem = await Domain.OrigemVisita.FindAsync(cadDom.token);
 
             if (origem == null || origem.finalizado)

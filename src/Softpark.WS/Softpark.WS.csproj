@@ -377,11 +377,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\CboValidation.cs" />
     <Compile Include="Validators\ExceptionHandlingAttribute.cs" />
-    <Compile Include="Validators\MotivoVisitaValidation.cs" />
     <Compile Include="Validators\IneValidation.cs" />
     <Compile Include="Validators\CnesValidation.cs" />
     <Compile Include="Validators\CnsValidation.cs" />
-    <Compile Include="Validators\SigApiControllerActionInvoker.cs" />
     <Compile Include="ViewModels\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\CadastroIndividual.cs" />
     <Compile Include="ViewModels\FichaVisitaDomiciliarChildViewModels.cs" />

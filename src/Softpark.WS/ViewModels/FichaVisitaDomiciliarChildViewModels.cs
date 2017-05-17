@@ -98,7 +98,6 @@ namespace Softpark.WS.ViewModels
         /// Motivos da visita
         /// </summary>
         [DataMember(Name = nameof(FichaVisitaDomiciliarChildCadastroViewModel.motivosVisita))]
-        [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
         public ICollection<SIGSM_MotivoVisita> MotivosVisita { get; set; } = new HashSet<SIGSM_MotivoVisita>();
 
         /// <summary>
@@ -259,7 +258,6 @@ namespace Softpark.WS.ViewModels
         /// Data de Nascimento
         /// </summary>
         [DataMember(Name = nameof(dtNascimento))]
-        [CustomValidation(typeof(Epoch), nameof(Epoch.ValidateESUSDate), ErrorMessage = "Data de nascimento inválida.")]
         // ReSharper disable once InconsistentNaming
         public long? dtNascimento { get; set; }
 
@@ -275,7 +273,6 @@ namespace Softpark.WS.ViewModels
         /// Motivos da visita
         /// </summary>
         [DataMember(Name = nameof(motivosVisita))]
-        [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
         // ReSharper disable once InconsistentNaming
         public ISet<long> motivosVisita { get; set; } = new HashSet<long>();
 
