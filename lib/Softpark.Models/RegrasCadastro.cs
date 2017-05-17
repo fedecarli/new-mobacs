@@ -80,7 +80,7 @@ namespace Softpark.Models
             if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != header.ine.Trim()))
                 throw new ValidationException("INE não encontrado.");
 
-            var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento);
+            var validEpoch = Epoch.ValidateESUSDateTime(header.dataAtendimento);
 
             if (validEpoch != ValidationResult.Success)
                 throw new ValidationException("Data do Atendimento inválida.");
@@ -143,7 +143,7 @@ namespace Softpark.Models
             if (child.dtNascimento != null && proibido)
                 throw new ValidationException("A data de nascimento não deve ser fornecido para o tipo de imóvel selecionado.");
 
-            if (child.dtNascimento != null && !child.dtNascimento.Value.IsValidBirthDate(child.FichaVisitaDomiciliarMaster.UnicaLotacaoTransport.dataAtendimento))
+            if (child.dtNascimento != null && !child.dtNascimento.Value.IsValidBirthDateTime(child.FichaVisitaDomiciliarMaster.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("Data de nascimento inválida.");
 
             if (child.dtNascimento == null && obrigatorio)
@@ -406,7 +406,7 @@ namespace Softpark.Models
                     throw new ValidationException("O código IBGE do município de nascimento é inválido ou não está cadastrado.");
             }
 
-            if (!cond.dataNascimentoCidadao.IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (!cond.dataNascimentoCidadao.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("A data de nascimento do cidadão é inválida.");
 
             try
@@ -733,7 +733,7 @@ namespace Softpark.Models
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this FamiliaRow cond, CadastroDomiciliar cad)
         {
-            if (cond.dataNascimentoResponsavel != null && !cond.dataNascimentoResponsavel.Value.IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (cond.dataNascimentoResponsavel != null && !cond.dataNascimentoResponsavel.Value.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("A data de nascimento do responsável está incorreta.");
 
             if (cond.numeroCnsResponsavel == null || !cond.numeroCnsResponsavel.isValidCns())

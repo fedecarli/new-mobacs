@@ -66,7 +66,7 @@ namespace Softpark.WS.ViewModels
         /// </remarks>
         [DataMember(Name = nameof(dataAtendimento))]
         [Required(ErrorMessage = "Informe a data de atendimento.")]
-        [CustomValidation(typeof(Epoch), nameof(Epoch.ValidateESUSDate), ErrorMessage = "Data de Atendimento inválida.")]
+        [CustomValidation(typeof(Epoch), nameof(Epoch.ValidateESUSEpoch), ErrorMessage = "Data de Atendimento inválida.")]
         public long dataAtendimento { get; set; }
 
         /// <summary>

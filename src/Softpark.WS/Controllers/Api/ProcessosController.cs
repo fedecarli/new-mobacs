@@ -116,7 +116,7 @@ namespace Softpark.WS.Controllers.Api
             Domain.FichaVisitaDomiciliarChild.Add(ficha);
 
             if (ficha.dtNascimento != null)
-                ficha.dtNascimento.Value.IsValidBirthDate(master.UnicaLotacaoTransport.dataAtendimento);
+                ficha.dtNascimento.Value.IsValidBirthDateTime(master.UnicaLotacaoTransport.dataAtendimento);
 
             ficha.FichaVisitaDomiciliarMaster = master;
 

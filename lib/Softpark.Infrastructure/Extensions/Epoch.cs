@@ -62,7 +62,7 @@ namespace Softpark.Infrastructure.Extras
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static ValidationResult ValidateESUSDate(DateTime data)
+        public static ValidationResult ValidateESUSDateTime(DateTime data)
         {
             var past = DateTime.Now.Date.AddYears(-1);
 
@@ -75,11 +75,11 @@ namespace Softpark.Infrastructure.Extras
         /// </summary>
         /// <param name="epoch"></param>
         /// <returns></returns>
-        public static ValidationResult ValidateESUSDate(long epoch)
+        public static ValidationResult ValidateESUSEpoch(long epoch)
         {
             var data = epoch.FromUnix();
 
-            return ValidateESUSDate(data);
+            return ValidateESUSDateTime(data);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Softpark.Infrastructure.Extras
         /// <returns></returns>
         public static ValidationResult ValidateBirthDate(long epoch, long limit)
         {
-            return epoch.IsValidBirthDate(limit) ? ValidationResult.Success :
+            return epoch.IsValidBirthEpoch(limit) ? ValidationResult.Success :
                 new ValidationResult($"A data de nascimento não pode ser maior ou igual à data de atendimento. Nascimento: {epoch}, Limite: {limit}");
         }
 
@@ -100,7 +100,7 @@ namespace Softpark.Infrastructure.Extras
         /// <param name="epoch"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public static bool IsValidBirthDate(this long epoch, long limit)
+        public static bool IsValidBirthEpoch(this long epoch, long limit)
         {
             var e = epoch.FromUnix();
             var l = limit.FromUnix().AddYears(-130);
@@ -114,7 +114,7 @@ namespace Softpark.Infrastructure.Extras
         /// <param name="epoch"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public static bool IsValidBirthDate(this DateTime epoch, DateTime limit)
+        public static bool IsValidBirthDateTime(this DateTime epoch, DateTime limit)
         {
             return epoch <= limit && limit.AddYears(-130) <= epoch;
         }
