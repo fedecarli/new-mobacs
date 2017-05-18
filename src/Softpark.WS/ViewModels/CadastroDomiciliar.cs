@@ -49,7 +49,7 @@ namespace Softpark.WS.ViewModels
         public int? quantosAnimaisNoDomicilio { get; set; }
         public bool stAnimaisNoDomicilio { get; set; }
         public bool statusTermoRecusa { get; set; }
-        public string uuidFichaOriginadora { get; set; }
+        public Guid? uuidFichaOriginadora { get; set; }
         [TipoImovelValidation]
         public int tipoDeImovel { get; set; }
         public InstituicaoPermanenciaViewModel instituicaoPermanencia { get; set; }

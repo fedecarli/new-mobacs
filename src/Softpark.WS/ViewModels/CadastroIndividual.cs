@@ -75,7 +75,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Ficha de origem, informar somente se a ficha for de atualização
         /// </summary>
-        public string uuidFichaOriginadora { get; set; }
+        public Guid? uuidFichaOriginadora { get; set; }
         /// <summary>
         /// Dados da saída do cidadão do cadastro
         /// </summary>

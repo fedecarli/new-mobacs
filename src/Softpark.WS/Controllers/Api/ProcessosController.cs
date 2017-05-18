@@ -193,7 +193,7 @@ namespace Softpark.WS.Controllers.Api
 
                 idAgendaProd = agenda.IdAgendaProd;
 
-                agenda.DataCarregado = DateTime.Now;
+                agenda.DataRetorno = DateTime.Now;
             }
 
             await Domain.SaveChangesAsync();
@@ -270,7 +270,7 @@ namespace Softpark.WS.Controllers.Api
                     .Select(x => new { x.cad, x.pc, ht = Domain.UnicaLotacaoTransport.Find(x.cad.headerTransport) })
                     .ToArray();
 
-                foreach (var cadastro in all.Where(x => x.ht.cnes + '-' + x.cad.idCadastroDomiciliar == cad.uuidFichaOriginadora).Distinct())
+                foreach (var cadastro in all.Where(x => x.cad.idCadastroDomiciliar == cad.uuidFichaOriginadora).Distinct())
                 {
                     var agenda = Domain.ProfCidadaoVincAgendaProd
                         .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == cadastro.pc.IdCidadao
@@ -347,8 +347,6 @@ namespace Softpark.WS.Controllers.Api
 
                     if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
                     {
-                        Guid.TryParse(cad.uuidFichaOriginadora.Substring(8), out Guid idOrigem);
-
                         var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
 
                         var cnsProfissional = header.profissionalCNS;
@@ -356,7 +354,7 @@ namespace Softpark.WS.Controllers.Api
                         var ultFicha = (from uci in Domain.VW_ultimo_cadastroIndividual
                                         join ci in Domain.CadastroIndividual
                                         on uci.idCadastroIndividual equals ci.id
-                                        where uci.idCadastroIndividual == idOrigem
+                                        where uci.idCadastroIndividual == cad.uuidFichaOriginadora
                                         select new { ci, uci }).FirstOrDefault();
 
                         if (ultFicha == null)
@@ -383,7 +381,7 @@ namespace Softpark.WS.Controllers.Api
 
                         idAgendaProd = agenda.IdAgendaProd;
 
-                        agenda.DataCarregado = DateTime.Now;
+                        agenda.DataRetorno = DateTime.Now;
                     }
                 }
 
@@ -402,12 +400,10 @@ namespace Softpark.WS.Controllers.Api
 
                     if (cad.fichaAtualizada)
                     {
-                        Guid.TryParse(cad.uuidFichaOriginadora.Substring(8), out Guid idOrigem);
-
                         var ultFicha = (from ucd in Domain.VW_ultimo_cadastroDomiciliar
                                         join cd in Domain.CadastroDomiciliar
                                         on ucd.idCadastroDomiciliar equals cd.id
-                                        where ucd.idCadastroDomiciliar == idOrigem
+                                        where ucd.idCadastroDomiciliar == cad.uuidFichaOriginadora
                                         select new { cd, ucd }).FirstOrDefault();
 
                         if (ultFicha == null)
@@ -445,7 +441,7 @@ namespace Softpark.WS.Controllers.Api
                             .Select(x => new { x.cad, x.pc, ht = Domain.UnicaLotacaoTransport.Find(x.cad.headerTransport) })
                             .ToArray();
 
-                        foreach (var cadas in all.Where(x => x.ht.cnes + '-' + x.cad.idCadastroDomiciliar == cad.uuidFichaOriginadora).Distinct())
+                        foreach (var cadas in all.Where(x => x.cad.idCadastroDomiciliar == cad.uuidFichaOriginadora).Distinct())
                         {
                             var agenda = Domain.ProfCidadaoVincAgendaProd
                                 .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == cadas.pc.IdCidadao
