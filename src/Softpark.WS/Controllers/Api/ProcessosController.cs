@@ -329,61 +329,15 @@ namespace Softpark.WS.Controllers.Api
                 header.OrigemVisita = origem;
                 header.token = origem.token;
 
-                header.Validar();
+                //header.Validar();
 
                 Domain.UnicaLotacaoTransport.Add(header);
 
-                foreach (var individuo in cadastro.individuos)
-                {
-                    var cad = await individuo.ToModel();
-                    cad.tpCdsOrigem = 3;
-                    cad.UnicaLotacaoTransport = header;
+                await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null &&
+                x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
 
-                    cad.Validar();
-
-                    Domain.CadastroIndividual.Add(cad);
-
-                    int? idAgendaProd = null;
-
-                    if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
-                    {
-                        var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
-
-                        var cnsProfissional = header.profissionalCNS;
-
-                        var ultFicha = (from uci in Domain.VW_ultimo_cadastroIndividual
-                                        join ci in Domain.CadastroIndividual
-                                        on uci.idCadastroIndividual equals ci.id
-                                        where uci.idCadastroIndividual == cad.uuidFichaOriginadora
-                                        select new { ci, uci }).FirstOrDefault();
-
-                        if (ultFicha == null)
-                        {
-                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
-                        }
-
-                        var prod = Domain.VW_profissional_cns.FirstOrDefault(
-                             x => x.cnsProfissional == cnsProfissional && ultFicha.uci.Codigo == x.CodigoCidadao);
-
-                        if (prod == null)
-                        {
-                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
-                        }
-
-                        var agenda = Domain.ProfCidadaoVincAgendaProd
-                            .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == prod.IdCidadao
-                                                 && x.ProfCidadaoVinc.IdProfissional == prod.IdProfissional);
-
-                        if (agenda?.IdAgendaProd == null)
-                        {
-                            throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
-                        }
-
-                        idAgendaProd = agenda.IdAgendaProd;
-
-                        agenda.DataRetorno = DateTime.Now;
-                    }
-                }
+                await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao == null ||
+                !x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
 
                 foreach (var domicilio in cadastro.domicilios)
                 {
@@ -392,7 +346,7 @@ namespace Softpark.WS.Controllers.Api
                     cad.UnicaLotacaoTransport = header;
                     if (header == null) throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
 
-                    await cad.Validar();
+                    //await cad.Validar();
 
                     Domain.CadastroDomiciliar.Add(cad);
 
@@ -497,7 +451,7 @@ namespace Softpark.WS.Controllers.Api
 
                     ficha.FichaVisitaDomiciliarMaster = master;
 
-                    ficha.Validar();
+                    //ficha.Validar();
                 }
             }
 
@@ -514,6 +468,62 @@ namespace Softpark.WS.Controllers.Api
             }
 
             return Ok(true);
+        }
+
+        private async Task ProcessarIndividuos(IEnumerable<PrimitiveCadastroIndividualViewModel> individuos,
+            UnicaLotacaoTransport header)
+        {
+            foreach (var individuo in individuos)
+            {
+                var cad = await individuo.ToModel();
+                cad.tpCdsOrigem = 3;
+                cad.UnicaLotacaoTransport = header;
+
+                //cad.Validar();
+
+                Domain.CadastroIndividual.Add(cad);
+
+                int? idAgendaProd = null;
+
+                if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
+                {
+                    var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
+
+                    var cnsProfissional = header.profissionalCNS;
+
+                    var ultFicha = (from uci in Domain.VW_ultimo_cadastroIndividual
+                                    join ci in Domain.CadastroIndividual
+                                    on uci.idCadastroIndividual equals ci.id
+                                    where uci.idCadastroIndividual == cad.uuidFichaOriginadora
+                                    select new { ci, uci }).FirstOrDefault();
+
+                    if (ultFicha == null)
+                    {
+                        throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
+                    }
+
+                    var prod = Domain.VW_profissional_cns.FirstOrDefault(
+                         x => x.cnsProfissional == cnsProfissional && ultFicha.uci.Codigo == x.CodigoCidadao);
+
+                    if (prod == null)
+                    {
+                        throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
+                    }
+
+                    var agenda = Domain.ProfCidadaoVincAgendaProd
+                        .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == prod.IdCidadao
+                                             && x.ProfCidadaoVinc.IdProfissional == prod.IdProfissional);
+
+                    if (agenda?.IdAgendaProd == null)
+                    {
+                        throw new ValidationException($"Não foi possível encontrar a ficha originadora para a atualização do cadastro individual (CNS: {cad.IdentificacaoUsuarioCidadao1.cnsCidadao}).");
+                    }
+
+                    idAgendaProd = agenda.IdAgendaProd;
+
+                    agenda.DataRetorno = DateTime.Now;
+                }
+            }
         }
 
         /// <summary>

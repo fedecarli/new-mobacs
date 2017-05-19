@@ -19,6 +19,8 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class DatabaseSupplyController : BaseApiController
     {
+        private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(DatabaseSupplyController));
+
         /// <summary>
         /// Endpoint para download de dados básicos para carga de trabalho
         /// </summary>
@@ -637,9 +639,18 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
         public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
+            Log.Info($"GET api/dados/paciente/{token}");
+
             var headerToken = await GetHeader(token);
 
-            if (headerToken == null) return BadRequest("Token Inválido.");
+            if (headerToken == null)
+            {
+                var error = BadRequest("Token Inválido.");
+
+                Log.Fatal("Token inválido");
+
+                return error;
+            }
 
             var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
 
@@ -662,7 +673,7 @@ namespace Softpark.WS.Controllers.Api
 
             var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
                 .Select(x => x.cad.idCadastroIndividual).ToArray();
-            
+
             var cadastros = Domain.CadastroIndividual
                 .Where(x => x.identificacaoUsuarioCidadao != null && ids.Contains(x.identificacaoUsuarioCidadao.Value)
                             && cads.Contains(x.id)).ToArray();
@@ -680,8 +691,9 @@ namespace Softpark.WS.Controllers.Api
 
             var ps = profs.Where(x => pessoas.Any(z => x.IdVinc == z.pc.IdVinc)).ToList();
 
-            ps.ForEach(x => {
-                x.DataCarregado = DateTime.Now;
+            ps.ForEach(x =>
+            {
+                //x.DataCarregado = DateTime.Now;
                 Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, false);
             });
 
