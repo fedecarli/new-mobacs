@@ -639,6 +639,7 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
         public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
+            Log.Info("-----");
             Log.Info($"GET api/dados/paciente/{token}");
 
             var headerToken = await GetHeader(token);
@@ -693,7 +694,6 @@ namespace Softpark.WS.Controllers.Api
 
             ps.ForEach(x =>
             {
-                //x.DataCarregado = DateTime.Now;
                 Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, false);
             });
 
@@ -713,58 +713,90 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
         public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
-            var headerToken = await GetHeader(token);
-
-            if (headerToken == null) return BadRequest("Token Inválido.");
-
-            var ids = Domain.VW_ultimo_cadastroDomiciliar
-                .Select(x => x.idCadastroDomiciliar).ToArray();
-
-            var domicilios = (from pc in Domain.VW_profissional_cns
-                              join ut in Domain.UnicaLotacaoTransport
-                              on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
-                              join cad in Domain.VW_ultimo_cadastroDomiciliar
-                              on ut.token equals cad.token
-                              where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                              && pc.CodigoCidadao == cad.Codigo
-                              select new { pc, cad }).ToArray();
-
-            var dom = domicilios.FirstOrDefault();
-
-            var idProf = dom?.pc.IdProfissional;
-
-            var profs = Domain.ProfCidadaoVincAgendaProd
-                .Where(x =>
-                    x.AgendamentoMarcado == true &&
-                    x.DataCarregadoDomiciliar == null &&
-                    x.FichaDomiciliarGerada == true &&
-                    x.ProfCidadaoVinc.IdProfissional == idProf);
-
-            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-            var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                .Select(x => x.cad.idCadastroDomiciliar).ToArray();
-
-            var cadastros = Domain.CadastroDomiciliar
-                .Where(x => ids.Contains(x.id) && cads.Contains(x.id)).ToArray();
-
-            CadastroDomiciliarViewModelCollection results = cadastros;
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            try
             {
-                results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
+                Log.Debug("----");
+                Log.Debug($"api/dados/domicilio/{token}");
+
+                var headerToken = await GetHeader(token);
+
+                if (headerToken == null) return BadRequest("Token Inválido.");
+
+                //var ids = Domain.VW_ultimo_cadastroDomiciliar
+                //    .Select(x => x.idCadastroDomiciliar).ToArray();
+
+                //var domicilios = (from pc in Domain.VW_profissional_cns
+                //                  join ut in Domain.UnicaLotacaoTransport
+                //                  on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
+                //                  join cad in Domain.VW_ultimo_cadastroDomiciliar
+                //                  on ut.token equals cad.token
+                //                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
+                //                  && pc.CodigoCidadao == cad.Codigo
+                //                  select new { pc, cad }).ToArray();
+
+                //Alteração Cristiano, David 
+                var domicilios = (from pc in Domain.VW_profissional_cns
+                                  join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
+                                  join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
+                                  join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
+                                  join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
+                                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
+                                    agenda.AgendamentoMarcado == true &&
+                                    agenda.DataCarregadoDomiciliar == null &&
+                                    agenda.FichaDomiciliarGerada == true
+                                  select new { pc, cad, cd, pcv, agenda }).ToList();
+
+                //var dom = domicilios.FirstOrDefault();
+
+                //var idProf = dom?.pc.IdProfissional;
+
+                //var profs = Domain.ProfCidadaoVincAgendaProd
+                //.Where(x =>
+                //    x.AgendamentoMarcado == true &&
+                //    x.DataCarregadoDomiciliar == null &&
+                //    x.FichaDomiciliarGerada == true &&
+                //    x.ProfCidadaoVinc.IdProfissional == idProf);
+
+                //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
+
+                //var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
+                //    .Select(x => x.cad.idCadastroDomiciliar).ToArray();
+
+                //var cadastros = Domain.CadastroDomiciliar
+                //   .Where(x => ids.Contains(x.id) && cads.Contains(x.id)).ToArray();
+
+                var cadastros = domicilios.Select(x => x.cd).ToArray();
+
+                CadastroDomiciliarViewModelCollection results = cadastros;
+
+                if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+                {
+                    results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
+                }
+
+                //var ps = profs.Where(x => domicilios.Any(y => y.pc.IdVinc == x.IdVinc)).ToList();
+
+                //ps.ForEach(x =>
+                //{
+                //    x.DataCarregadoDomiciliar = DateTime.Now;
+                //    Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, true);
+                //});
+
+                domicilios.ForEach(x =>
+                {
+                    Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
+                });
+
+                //await Domain.SaveChangesAsync();
+
+                return Ok(results.ToArray());
+
             }
-
-            var ps = profs.Where(x => domicilios.Any(y => y.pc.IdVinc == x.IdVinc)).ToList();
-
-            ps.ForEach(x => {
-                x.DataCarregadoDomiciliar = DateTime.Now;
-                Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, true);
-            });
-
-            await Domain.SaveChangesAsync();
-
-            return Ok(results.ToArray());
+            catch (Exception ex)
+            {
+                Log.Fatal(ex.Message, ex);
+                throw new ValidationException(ex.Message);
+            }
         }
 
         /// <summary>

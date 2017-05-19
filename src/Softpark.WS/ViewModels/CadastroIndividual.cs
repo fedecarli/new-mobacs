@@ -47,15 +47,15 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Token de acesso
         /// </summary>
-        public Guid? token { get; set; }
+        public Guid? token { get; set; } = null;
         /// <summary>
         /// Condições de Saúde
         /// </summary>
-        public CondicoesDeSaudeViewModel condicoesDeSaude { get; set; }
+        public CondicoesDeSaudeViewModel condicoesDeSaude { get; set; } = null;
         /// <summary>
         /// Em Situação de Rua
         /// </summary>
-        public EmSituacaoDeRuaViewModel emSituacaoDeRua { get; set; }
+        public EmSituacaoDeRuaViewModel emSituacaoDeRua { get; set; } = null;
         /// <summary>
         /// Ficha atualizada
         /// </summary>
@@ -63,11 +63,11 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Identificação do usuário cidadão
         /// </summary>
-        public IdentificacaoUsuarioCidadaoViewModel identificacaoUsuarioCidadao { get; set; }
+        public IdentificacaoUsuarioCidadaoViewModel identificacaoUsuarioCidadao { get; set; } = null;
         /// <summary>
         /// Informações socio demográficas
         /// </summary>
-        public InformacoesSocioDemograficasViewModel informacoesSocioDemograficas { get; set; }
+        public InformacoesSocioDemograficasViewModel informacoesSocioDemograficas { get; set; } = null;
         /// <summary>
         /// Termo de cadastro recusado
         /// </summary>
@@ -75,11 +75,11 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Ficha de origem, informar somente se a ficha for de atualização
         /// </summary>
-        public Guid? uuidFichaOriginadora { get; set; }
+        public Guid? uuidFichaOriginadora { get; set; } = null;
         /// <summary>
         /// Dados da saída do cidadão do cadastro
         /// </summary>
-        public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; }
+        public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; } = null;
 
         internal async Task<CadastroIndividual> ToModel()
         {
@@ -154,7 +154,7 @@ namespace Softpark.WS.ViewModels
 
     public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
     {
-        public string uuid { get; set; }
+        public Guid uuid { get; set; }
 
         /// <summary>
         /// 
@@ -165,7 +165,7 @@ namespace Softpark.WS.ViewModels
             var vm = new GetCadastroIndividualViewModel();
 
             if (model != null)
-                vm.uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id;
+                vm.uuid = model.id;
 
             vm.ApplyModel(model);
 
@@ -181,15 +181,15 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Motivo da saída do cidadão
         /// </summary>
-        public int? motivoSaidaCidadao { get; set; }
+        public int? motivoSaidaCidadao { get; set; } = null;
         /// <summary>
         /// Data de óbito
         /// </summary>
-        public long? dataObito { get; set; }
+        public long? dataObito { get; set; } = null;
         /// <summary>
         /// Número da Declaração
         /// </summary>
-        public string numeroDO { get; set; }
+        public string numeroDO { get; set; } = null;
 
         /// <summary>
         /// 
@@ -234,27 +234,27 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Graud de instrução
         /// </summary>
-        public int? grauInstrucaoCidadao { get; set; }
+        public int? grauInstrucaoCidadao { get; set; } = null;
         /// <summary>
         /// ocupação
         /// </summary>
-        public string ocupacaoCodigoCbo2002 { get; set; }
+        public string ocupacaoCodigoCbo2002 { get; set; } = null;
         /// <summary>
         /// orientação sexual
         /// </summary>
-        public int? orientacaoSexualCidadao { get; set; }
+        public int? orientacaoSexualCidadao { get; set; } = null;
         /// <summary>
         /// comunidade
         /// </summary>
-        public string povoComunidadeTradicional { get; set; }
+        public string povoComunidadeTradicional { get; set; } = null;
         /// <summary>
         /// parentesco
         /// </summary>
-        public int? relacaoParentescoCidadao { get; set; }
+        public int? relacaoParentescoCidadao { get; set; } = null;
         /// <summary>
         /// situação / trabalho
         /// </summary>
-        public int? situacaoMercadoTrabalhoCidadao { get; set; }
+        public int? situacaoMercadoTrabalhoCidadao { get; set; } = null;
         /// <summary>
         /// Deseja informar a orientação sexual
         /// </summary>
@@ -286,7 +286,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// identidade de gênero
         /// </summary>
-        public int? identidadeGeneroCidadao { get; set; }
+        public int? identidadeGeneroCidadao { get; set; } = null;
         /// <summary>
         /// deseja informar a identidade de genero
         /// </summary>
@@ -294,11 +294,11 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Lista de deficiências do cidadão
         /// </summary>
-        public List<int> deficienciasCidadao { get; set; } = new List<int>();
+        public int[] deficienciasCidadao { get; set; } = new int[0];
         /// <summary>
         /// Lista de tipo de responsabilidade por crianças
         /// </summary>
-        public List<int> responsavelPorCrianca { get; set; } = new List<int>();
+        public int[] responsavelPorCrianca { get; set; } = new int[0];
 
         /// <summary>
         /// 
@@ -317,7 +317,7 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            deficienciasCidadao.AddRange(model.DeficienciasCidadao.Select(d => d.id_tp_deficiencia_cidadao));
+            deficienciasCidadao = model.DeficienciasCidadao.Select(d => d.id_tp_deficiencia_cidadao).ToArray();
 
             grauInstrucaoCidadao = model.grauInstrucaoCidadao;
             ocupacaoCodigoCbo2002 = model.ocupacaoCodigoCbo2002;
@@ -334,7 +334,7 @@ namespace Softpark.WS.ViewModels
             statusTemAlgumaDeficiencia = model.statusTemAlgumaDeficiencia;
             identidadeGeneroCidadao = model.identidadeGeneroCidadao;
             statusDesejaInformarIdentidadeGenero = model.statusDesejaInformarIdentidadeGenero;
-            responsavelPorCrianca.AddRange(model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca));
+            responsavelPorCrianca = model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca).ToArray();
         }
 
         internal async Task<InformacoesSocioDemograficas> ToModel()
@@ -394,15 +394,15 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// não usado no cadastro
         /// </summary>
-        public Guid? id { get; set; }
+        public Guid? id { get; set; } = null;
         /// <summary>
         /// nome social
         /// </summary>
-        public string nomeSocial { get; set; }
+        public string nomeSocial { get; set; } = null;
         /// <summary>
         /// codigo do municipio de nascimento
         /// </summary>
-        public string codigoIbgeMunicipioNascimento { get; set; }
+        public string codigoIbgeMunicipioNascimento { get; set; } = null;
         /// <summary>
         /// data de nascimento
         /// </summary>
@@ -414,7 +414,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// email do cidadão
         /// </summary>
-        public string emailCidadao { get; set; }
+        public string emailCidadao { get; set; } = null;
         /// <summary>
         /// nacionalidade do cidadão
         /// </summary>
@@ -422,31 +422,31 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// nome do cidadão
         /// </summary>
-        public string nomeCidadao { get; set; }
+        public string nomeCidadao { get; set; } = null;
         /// <summary>
         /// nome da mãe do cidadão
         /// </summary>
-        public string nomeMaeCidadao { get; set; }
+        public string nomeMaeCidadao { get; set; } = null;
         /// <summary>
         /// CNS do cidadão
         /// </summary>
-        public string cnsCidadao { get; set; }
+        public string cnsCidadao { get; set; } = null;
         /// <summary>
         /// CNS do responsável familiar
         /// </summary>
-        public string cnsResponsavelFamiliar { get; set; }
+        public string cnsResponsavelFamiliar { get; set; } = null;
         /// <summary>
         /// telefone celular
         /// </summary>
-        public string telefoneCelular { get; set; }
+        public string telefoneCelular { get; set; } = null;
         /// <summary>
         /// NIS/PIS/PASEP
         /// </summary>
-        public string numeroNisPisPasep { get; set; }
+        public string numeroNisPisPasep { get; set; } = null;
         /// <summary>
         /// País de nascimento
         /// </summary>
-        public int? paisNascimento { get; set; }
+        public int? paisNascimento { get; set; } = null;
         /// <summary>
         /// Raça/Cor
         /// </summary>
@@ -462,11 +462,11 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Etnia
         /// </summary>
-        public int? etnia { get; set; }
+        public int? etnia { get; set; } = null;
         /// <summary>
         /// Nome do Pai
         /// </summary>
-        public string nomePaiCidadao { get; set; }
+        public string nomePaiCidadao { get; set; } = null;
         /// <summary>
         /// Desconhece o nome do Pai
         /// </summary>
@@ -474,19 +474,19 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data da naturalização
         /// </summary>
-        public long? dtNaturalizacao { get; set; }
+        public long? dtNaturalizacao { get; set; } = null;
         /// <summary>
         /// Portaria da Naturalização
         /// </summary>
-        public string portariaNaturalizacao { get; set; }
+        public string portariaNaturalizacao { get; set; } = null;
         /// <summary>
         /// Data de entrada no Brasil
         /// </summary>
-        public long? dtEntradaBrasil { get; set; }
+        public long? dtEntradaBrasil { get; set; } = null;
         /// <summary>
         /// Microárea
         /// </summary>
-        public string microarea { get; set; }
+        public string microarea { get; set; } = null;
         /// <summary>
         /// Fora de área
         /// </summary>
@@ -622,15 +622,15 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Grau de parentesco
         /// </summary>
-        public string grauParentescoFamiliarFrequentado { get; set; }
+        public string grauParentescoFamiliarFrequentado { get; set; } = null;
         /// <summary>
         /// Outra instituição
         /// </summary>
-        public string outraInstituicaoQueAcompanha { get; set; }
+        public string outraInstituicaoQueAcompanha { get; set; } = null;
         /// <summary>
         /// Quantidade de refeições diária
         /// </summary>
-        public int? quantidadeAlimentacoesAoDiaSituacaoRua { get; set; }
+        public int? quantidadeAlimentacoesAoDiaSituacaoRua { get; set; } = null;
         /// <summary>
         /// Acompanhado por outra instituição
         /// </summary>
@@ -658,15 +658,15 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Tempo da situação de rua
         /// </summary>
-        public int? tempoSituacaoRua { get; set; }
+        public int? tempoSituacaoRua { get; set; } = null;
         /// <summary>
         /// Lista de higiene pessoal
         /// </summary>
-        public List<int> higienePessoalSituacaoRua { get; set; } = new List<int>();
+        public int[] higienePessoalSituacaoRua { get; set; } = new int[0];
         /// <summary>
         /// Lista de origem de alimentos
         /// </summary>
-        public List<int> origemAlimentoSituacaoRua { get; set; } = new List<int>();
+        public int[] origemAlimentoSituacaoRua { get; set; } = new int[0];
 
         /// <summary>
         /// 
@@ -696,8 +696,8 @@ namespace Softpark.WS.ViewModels
             statusVisitaFamiliarFrequentemente = model.statusVisitaFamiliarFrequentemente;
             tempoSituacaoRua = model.tempoSituacaoRua;
 
-            higienePessoalSituacaoRua.AddRange(model.HigienePessoalSituacaoRua.Select(h => h.codigo_higiene_pessoal));
-            origemAlimentoSituacaoRua.AddRange(model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento));
+            higienePessoalSituacaoRua = model.HigienePessoalSituacaoRua.Select(h => h.codigo_higiene_pessoal).ToArray();
+            origemAlimentoSituacaoRua = model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento).ToArray();
         }
 
         internal async Task<EmSituacaoDeRua> ToModel()
@@ -752,31 +752,31 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Causa da internação
         /// </summary>
-        public string descricaoCausaInternacaoEm12Meses { get; set; }
+        public string descricaoCausaInternacaoEm12Meses { get; set; } = null;
         /// <summary>
         /// Descrição 1
         /// </summary>
-        public string descricaoOutraCondicao1 { get; set; }
+        public string descricaoOutraCondicao1 { get; set; } = null;
         /// <summary>
         /// Descrição 2
         /// </summary>
-        public string descricaoOutraCondicao2 { get; set; }
+        public string descricaoOutraCondicao2 { get; set; } = null;
         /// <summary>
         /// Descrição 3
         /// </summary>
-        public string descricaoOutraCondicao3 { get; set; }
+        public string descricaoOutraCondicao3 { get; set; } = null;
         /// <summary>
         /// Plantas medicinais usadas
         /// </summary>
-        public string descricaoPlantasMedicinaisUsadas { get; set; }
+        public string descricaoPlantasMedicinaisUsadas { get; set; } = null;
         /// <summary>
         /// Maternidade
         /// </summary>
-        public string maternidadeDeReferencia { get; set; }
+        public string maternidadeDeReferencia { get; set; } = null;
         /// <summary>
         /// Situação do Peso
         /// </summary>
-        public int? situacaoPeso { get; set; }
+        public int? situacaoPeso { get; set; } = null;
         /// <summary>
         /// É dependente de álcool
         /// </summary>
@@ -860,15 +860,15 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Lista de doenças cardíacas
         /// </summary>
-        public List<int> doencaCardiaca { get; set; } = new List<int>();
+        public int[] doencaCardiaca { get; set; } = new int[0];
         /// <summary>
         /// Lista de doenças respiratórias
         /// </summary>
-        public List<int> doencaRespiratoria { get; set; } = new List<int>();
+        public int[] doencaRespiratoria { get; set; } = new int[0];
         /// <summary>
         /// Lista de doenças renais
         /// </summary>
-        public List<int> doencaRins { get; set; } = new List<int>();
+        public int[] doencaRins { get; set; } = new int[0];
 
         /// <summary>
         /// 
@@ -915,9 +915,9 @@ namespace Softpark.WS.ViewModels
             statusUsaPlantasMedicinais = model.statusUsaPlantasMedicinais;
             statusDiagnosticoMental = model.statusDiagnosticoMental;
 
-            doencaCardiaca.AddRange(model.DoencaCardiaca.Select(d => d.id_tp_doenca_cariaca));
-            doencaRespiratoria.AddRange(model.DoencaRespiratoria.Select(d => d.id_tp_doenca_respiratoria));
-            doencaRins.AddRange(model.DoencaRins.Select(x => x.id_tp_doenca_rins));
+            doencaCardiaca = model.DoencaCardiaca.Select(d => d.id_tp_doenca_cariaca).ToArray();
+            doencaRespiratoria = model.DoencaRespiratoria.Select(d => d.id_tp_doenca_respiratoria).ToArray();
+            doencaRins = model.DoencaRins.Select(x => x.id_tp_doenca_rins).ToArray();
         }
 
         internal async Task<CondicoesDeSaude> ToModel()
