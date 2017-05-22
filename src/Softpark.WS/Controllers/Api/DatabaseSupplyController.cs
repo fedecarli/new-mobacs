@@ -787,7 +787,7 @@ namespace Softpark.WS.Controllers.Api
                     Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
                 });
 
-                //await Domain.SaveChangesAsync();
+                await Domain.SaveChangesAsync();
 
                 return Ok(results.ToArray());
 
