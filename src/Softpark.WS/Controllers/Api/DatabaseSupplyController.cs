@@ -31,448 +31,450 @@ namespace Softpark.WS.Controllers.Api
         {
             IEnumerable<BasicViewModel> models = new BasicViewModel[0];
 
-            var model = Task.FromResult(models);
-
-            switch (modelo.ToLowerInvariant())
+            using (var Domain = Repository)
             {
-                case "doencacardiaca":
-                    model = Domain.GetModel(c => c.TP_Doenca_Cardiaca, r => r
-                        .Where(x => x.ativo == 1).Select(x => new BasicViewModel
-                        {
-                            Modelo = "DoencaCardiaca",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "doencarespiratoria":
-                    model = Domain.GetModel(c => c.TP_Doenca_Respiratoria, r => r
-                        .Where(x => x.ativo == 1).Select(x => new BasicViewModel
-                        {
-                            Modelo = "DoencaRespiratoria",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "formadeescoamentodobanheiroousanitario":
-                    model = Domain.GetModel(c => c.TP_Escoamento_Esgoto, r => r
-                        .Where(x => x.ativo == 1).Select(x => new BasicViewModel
-                        {
-                            Modelo = "FormaDeEscoamentoDoBanheiroOuSanitario",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "problemarins":
-                    model = Domain.GetModel(c => c.TP_Doenca_Renal, r => r
-                        .Where(x => x.ativo == 1).Select(x => new BasicViewModel
-                        {
-                            Modelo = "ProblemaRins",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "consideracaopeso":
-                    model = Domain.GetModel(c => c.TP_Consideracao_Peso, r => r
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "ConsideracaoPeso",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacao
-                        }));
-                    break;
-                case "acessohigiene":
-                    model = Domain.GetModel(c => c.TP_Higiene_Pessoal, r => r
-                        .Where(x => x.ativo == 1).Select(x => new BasicViewModel
-                        {
-                            Modelo = "AcessoHigiene",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "origemalimentacao":
-                    model = Domain.GetModel(c => c.TP_Origem_Alimentacao, r => r
-                        .Where(x => x.ativo == 1).Select(x => new BasicViewModel
-                        {
-                            Modelo = "OrigemAlimentacao",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "quantasvezesalimentacao":
-                    model = Domain.GetModel(c => c.TP_Quantas_Vezes_Alimentacao, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "QuantasVezesAlimentacao",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacao
-                        }));
-                    break;
-                case "temposituacaoderua":
-                    model = Domain.GetModel(c => c.TP_Sit_Rua, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "TempoSituacaoDeRua",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "municipios":
-                    model = Domain.GetModel(c => c.Cidade, r => r
-                        .Where(x => x.CodIbge != null && x.UF != null)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "Municipios",
-                            Codigo = x.CodIbge.ToString(),
-                            Descricao = x.NomeCidade,
-                            Observacao = x.UF
-                        }));
-                    break;
-                case "nacionalidade":
-                    model = Domain.GetModel(c => c.TP_Nacionalidade, r => r
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "Nacionalidade",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacao
-                        }));
-                    break;
-                case "pais":
-                    model = Domain.GetModel(c => c.Paises, r => r
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "Pais",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.nome,
-                            Observacao = null
-                        }));
-                    break;
-                case "racacor":
-                    model = Domain.GetModel(c => c.TP_Raca_Cor, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "RacaCor",
-                            Codigo = x.id_tp_raca_cor.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "sexo":
-                    model = Domain.GetModel(c => c.TP_Sexo, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "Sexo",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacao
-                        }));
-                    break;
-                case "etnia":
-                    model = Domain.GetModel(c => c.Etnia, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "Etnia",
-                            Codigo = x.CodEtnia.ToString(),
-                            Descricao = x.DesEtnia,
-                            Observacao = null
-                        }));
-                    break;
-                case "deficienciacidadao":
-                    model = Domain.GetModel(c => c.TP_Deficiencia, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "DeficienciaCidadao",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "cursomaiselevado":
-                    model = Domain.GetModel(c => c.TP_Curso, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "CursoMaisElevado",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "cbo":
-                    model = Domain.GetModel(c => c.AS_ProfissoesTab, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "CBO",
-                            Codigo = x.CodProfTab.ToString(),
-                            Descricao = x.DesProfTab,
-                            Observacao = null
-                        }));
-                    break;
-                case "orientacaosexual":
-                    model = Domain.GetModel(c => c.TP_Orientacao_Sexual, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "OrientacaoSexual",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacoes
-                        }));
-                    break;
-                case "relacaoparentesco":
-                    model = Domain.GetModel(c => c.TP_Relacao_Parentesco, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "RelacaoParentesco",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacoes
-                        }));
-                    break;
-                case "situacaomercadotrabalho":
-                    model = Domain.GetModel(c => c.TP_Sit_Mercado, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "SituacaoMercadoTrabalho",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "identidadegenerocidadao":
-                    model = Domain.GetModel(c => c.TP_Identidade_Genero_Cidadao, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "identidadeGeneroCidadao",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacao
-                        }));
-                    break;
-                case "responsavelcrianca":
-                    model = Domain.GetModel(c => c.TP_Crianca, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "ResponsavelCrianca",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "motivosaida":
-                    model = Domain.GetModel(c => c.TP_Motivo_Saida, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "MotivoSaida",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacao
-                        }));
-                    break;
-                case "cnes":
-                    model = Domain.GetModel(c => (from p in c.AS_SetoresPar
-                                                  let s = p.Setores
-                                                  where p.CNES != null && p.CNES.Trim().Length > 0
-                                                  select new { p, s }).ToListAsync(), r => r
-                                                  .Select(x => new BasicViewModel
-                                                  {
-                                                      Modelo = "CNES",
-                                                      Codigo = x.p.CNES,
-                                                      Descricao = x.s.DesSetor,
-                                                      Observacao = x.s.DesSetorRes
-                                                  }));
-                    break;
-                case "ine":
-                    model = Domain.GetModel(c => c.SetoresINEs, r => r
-                        .Where(x => x.Numero != null)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "INE",
-                            Codigo = x.Numero,
-                            Descricao = x.Descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "animalnodomicilio":
-                    model = Domain.GetModel(c => c.TP_Animais, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "AnimalNoDomicilio",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "abastecimentodeagua":
-                    model = Domain.GetModel(c => c.TP_Abastecimento_Agua, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "AbastecimentoDeAgua",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "condicaodeposseeusodaterra":
-                    model = Domain.GetModel(c => c.TP_Cond_Posse_Uso_Terra, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "CondicaoDePosseEUsoDaTerra",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacoes
-                        }));
-                    break;
-                case "destinodolixo":
-                    model = Domain.GetModel(c => c.TP_Destino_Lixo, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "DestinoDoLixo",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "localizacaodamoradia":
-                    model = Domain.GetModel(c => c.TP_Localizacao, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "LocalizacaoDaMoradia",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "materialpredominantenaconstrucao":
-                    model = Domain.GetModel(c => c.TP_Construcao_Domicilio, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "MaterialPredominanteNaConstrucao",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "situacaodemoradia":
-                    model = Domain.GetModel(c => c.TP_Situacao_Moradia, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "SituacaoDeMoradia",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "tipodeacessoaodomicilio":
-                    model = Domain.GetModel(c => c.TP_Acesso_Domicilio, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "TipoDeAcessoAoDomicilio",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "tipodedomicilio":
-                    model = Domain.GetModel(c => c.TP_Domicilio, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "TipoDeDomicilio",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "aguaconsumodomicilio":
-                    model = Domain.GetModel(c => c.TP_Tratamento_Agua, r => r
-                        .Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "AguaConsumoDomicilio",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "uf":
-                    var n = 1;
+                var model = Task.FromResult(models);
 
-                    model = Domain.GetModel(c => c.UF, r => r
-                        .OrderBy(x => x.DesUF)
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "UF",
-                            Codigo = (n++).ToString().PadLeft(2, '0'),
-                            Descricao = x.DesUF,
-                            Observacao = x.UF1
-                        }));
-                    break;
-                case "tipodelogradouro":
-                    model = Domain.GetModel(c => c.TB_MS_TIPO_LOGRADOURO, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "TipoDeLogradouro",
-                            Codigo = x.CO_TIPO_LOGRADOURO.ToString(),
-                            Descricao = x.DS_TIPO_LOGRADOURO,
-                            Observacao = x.DS_TIPO_LOGRADOURO_ABREV
-                        }));
-                    break;
-                case "rendafamiliar":
-                    model = Domain.GetModel(c => c.TP_Renda_Familiar, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "RendaFamiliar",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = x.observacoes
-                        }));
-                    break;
-                case "tipodeimovel":
-                    model = Domain.GetModel(c => c.TP_Imovel, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "tipoDeImovel",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.descricao,
-                            Observacao = null
-                        }));
-                    break;
-                case "turno":
-                    models = new[] { new BasicViewModel
+                switch (modelo.ToLowerInvariant())
+                {
+                    case "doencacardiaca":
+                        model = Domain.GetModel(c => c.TP_Doenca_Cardiaca, r => r
+                            .Where(x => x.ativo == 1).Select(x => new BasicViewModel
+                            {
+                                Modelo = "DoencaCardiaca",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "doencarespiratoria":
+                        model = Domain.GetModel(c => c.TP_Doenca_Respiratoria, r => r
+                            .Where(x => x.ativo == 1).Select(x => new BasicViewModel
+                            {
+                                Modelo = "DoencaRespiratoria",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "formadeescoamentodobanheiroousanitario":
+                        model = Domain.GetModel(c => c.TP_Escoamento_Esgoto, r => r
+                            .Where(x => x.ativo == 1).Select(x => new BasicViewModel
+                            {
+                                Modelo = "FormaDeEscoamentoDoBanheiroOuSanitario",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "problemarins":
+                        model = Domain.GetModel(c => c.TP_Doenca_Renal, r => r
+                            .Where(x => x.ativo == 1).Select(x => new BasicViewModel
+                            {
+                                Modelo = "ProblemaRins",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "consideracaopeso":
+                        model = Domain.GetModel(c => c.TP_Consideracao_Peso, r => r
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "ConsideracaoPeso",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacao
+                            }));
+                        break;
+                    case "acessohigiene":
+                        model = Domain.GetModel(c => c.TP_Higiene_Pessoal, r => r
+                            .Where(x => x.ativo == 1).Select(x => new BasicViewModel
+                            {
+                                Modelo = "AcessoHigiene",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "origemalimentacao":
+                        model = Domain.GetModel(c => c.TP_Origem_Alimentacao, r => r
+                            .Where(x => x.ativo == 1).Select(x => new BasicViewModel
+                            {
+                                Modelo = "OrigemAlimentacao",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "quantasvezesalimentacao":
+                        model = Domain.GetModel(c => c.TP_Quantas_Vezes_Alimentacao, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "QuantasVezesAlimentacao",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacao
+                            }));
+                        break;
+                    case "temposituacaoderua":
+                        model = Domain.GetModel(c => c.TP_Sit_Rua, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "TempoSituacaoDeRua",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "municipios":
+                        model = Domain.GetModel(c => c.Cidade, r => r
+                            .Where(x => x.CodIbge != null && x.UF != null)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "Municipios",
+                                Codigo = x.CodIbge.ToString(),
+                                Descricao = x.NomeCidade,
+                                Observacao = x.UF
+                            }));
+                        break;
+                    case "nacionalidade":
+                        model = Domain.GetModel(c => c.TP_Nacionalidade, r => r
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "Nacionalidade",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacao
+                            }));
+                        break;
+                    case "pais":
+                        model = Domain.GetModel(c => c.Paises, r => r
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "Pais",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.nome,
+                                Observacao = null
+                            }));
+                        break;
+                    case "racacor":
+                        model = Domain.GetModel(c => c.TP_Raca_Cor, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "RacaCor",
+                                Codigo = x.id_tp_raca_cor.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "sexo":
+                        model = Domain.GetModel(c => c.TP_Sexo, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "Sexo",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacao
+                            }));
+                        break;
+                    case "etnia":
+                        model = Domain.GetModel(c => c.Etnia, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "Etnia",
+                                Codigo = x.CodEtnia.ToString(),
+                                Descricao = x.DesEtnia,
+                                Observacao = null
+                            }));
+                        break;
+                    case "deficienciacidadao":
+                        model = Domain.GetModel(c => c.TP_Deficiencia, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "DeficienciaCidadao",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "cursomaiselevado":
+                        model = Domain.GetModel(c => c.TP_Curso, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "CursoMaisElevado",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "cbo":
+                        model = Domain.GetModel(c => c.AS_ProfissoesTab, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "CBO",
+                                Codigo = x.CodProfTab.ToString(),
+                                Descricao = x.DesProfTab,
+                                Observacao = null
+                            }));
+                        break;
+                    case "orientacaosexual":
+                        model = Domain.GetModel(c => c.TP_Orientacao_Sexual, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "OrientacaoSexual",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacoes
+                            }));
+                        break;
+                    case "relacaoparentesco":
+                        model = Domain.GetModel(c => c.TP_Relacao_Parentesco, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "RelacaoParentesco",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacoes
+                            }));
+                        break;
+                    case "situacaomercadotrabalho":
+                        model = Domain.GetModel(c => c.TP_Sit_Mercado, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "SituacaoMercadoTrabalho",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "identidadegenerocidadao":
+                        model = Domain.GetModel(c => c.TP_Identidade_Genero_Cidadao, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "identidadeGeneroCidadao",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacao
+                            }));
+                        break;
+                    case "responsavelcrianca":
+                        model = Domain.GetModel(c => c.TP_Crianca, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "ResponsavelCrianca",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "motivosaida":
+                        model = Domain.GetModel(c => c.TP_Motivo_Saida, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "MotivoSaida",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacao
+                            }));
+                        break;
+                    case "cnes":
+                        model = Domain.GetModel(c => (from p in c.AS_SetoresPar
+                                                      let s = p.Setores
+                                                      where p.CNES != null && p.CNES.Trim().Length > 0
+                                                      select new { p, s }).ToListAsync(), r => r
+                                                      .Select(x => new BasicViewModel
+                                                      {
+                                                          Modelo = "CNES",
+                                                          Codigo = x.p.CNES,
+                                                          Descricao = x.s.DesSetor,
+                                                          Observacao = x.s.DesSetorRes
+                                                      }));
+                        break;
+                    case "ine":
+                        model = Domain.GetModel(c => c.SetoresINEs, r => r
+                            .Where(x => x.Numero != null)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "INE",
+                                Codigo = x.Numero,
+                                Descricao = x.Descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "animalnodomicilio":
+                        model = Domain.GetModel(c => c.TP_Animais, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "AnimalNoDomicilio",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "abastecimentodeagua":
+                        model = Domain.GetModel(c => c.TP_Abastecimento_Agua, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "AbastecimentoDeAgua",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "condicaodeposseeusodaterra":
+                        model = Domain.GetModel(c => c.TP_Cond_Posse_Uso_Terra, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "CondicaoDePosseEUsoDaTerra",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacoes
+                            }));
+                        break;
+                    case "destinodolixo":
+                        model = Domain.GetModel(c => c.TP_Destino_Lixo, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "DestinoDoLixo",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "localizacaodamoradia":
+                        model = Domain.GetModel(c => c.TP_Localizacao, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "LocalizacaoDaMoradia",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "materialpredominantenaconstrucao":
+                        model = Domain.GetModel(c => c.TP_Construcao_Domicilio, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "MaterialPredominanteNaConstrucao",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "situacaodemoradia":
+                        model = Domain.GetModel(c => c.TP_Situacao_Moradia, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "SituacaoDeMoradia",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "tipodeacessoaodomicilio":
+                        model = Domain.GetModel(c => c.TP_Acesso_Domicilio, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "TipoDeAcessoAoDomicilio",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "tipodedomicilio":
+                        model = Domain.GetModel(c => c.TP_Domicilio, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "TipoDeDomicilio",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "aguaconsumodomicilio":
+                        model = Domain.GetModel(c => c.TP_Tratamento_Agua, r => r
+                            .Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "AguaConsumoDomicilio",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "uf":
+                        var n = 1;
+
+                        model = Domain.GetModel(c => c.UF, r => r
+                            .OrderBy(x => x.DesUF)
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "UF",
+                                Codigo = (n++).ToString().PadLeft(2, '0'),
+                                Descricao = x.DesUF,
+                                Observacao = x.UF1
+                            }));
+                        break;
+                    case "tipodelogradouro":
+                        model = Domain.GetModel(c => c.TB_MS_TIPO_LOGRADOURO, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "TipoDeLogradouro",
+                                Codigo = x.CO_TIPO_LOGRADOURO.ToString(),
+                                Descricao = x.DS_TIPO_LOGRADOURO,
+                                Observacao = x.DS_TIPO_LOGRADOURO_ABREV
+                            }));
+                        break;
+                    case "rendafamiliar":
+                        model = Domain.GetModel(c => c.TP_Renda_Familiar, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "RendaFamiliar",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = x.observacoes
+                            }));
+                        break;
+                    case "tipodeimovel":
+                        model = Domain.GetModel(c => c.TP_Imovel, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "tipoDeImovel",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.descricao,
+                                Observacao = null
+                            }));
+                        break;
+                    case "turno":
+                        models = new[] { new BasicViewModel
                         {
                             Modelo = "Turno",
                             Codigo = "1",
@@ -486,20 +488,20 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = "3",
                             Descricao = "Noite"
                         } }.ToList();
-                    break;
-                case "motivovisita":
-                    model = Domain.GetModel(c => c.SIGSM_MotivoVisita, r => r
-                        //.Where(x => x.ativo == 1)
-                        .Select(x => new BasicViewModel
-                        {
-                            Modelo = "MotivoVisita",
-                            Codigo = x.codigo.ToString(),
-                            Descricao = x.nome,
-                            Observacao = x.observacoes
-                        }));
-                    break;
-                case "desfecho":
-                    models = new[] { new BasicViewModel
+                        break;
+                    case "motivovisita":
+                        model = Domain.GetModel(c => c.SIGSM_MotivoVisita, r => r
+                            //.Where(x => x.ativo == 1)
+                            .Select(x => new BasicViewModel
+                            {
+                                Modelo = "MotivoVisita",
+                                Codigo = x.codigo.ToString(),
+                                Descricao = x.nome,
+                                Observacao = x.observacoes
+                            }));
+                        break;
+                    case "desfecho":
+                        models = new[] { new BasicViewModel
                         {
                             Modelo = "Desfecho",
                             Codigo = "1",
@@ -514,16 +516,17 @@ namespace Softpark.WS.Controllers.Api
                             Descricao = "Ausente"
                         }
                     }.ToList();
-                    break;
-                default:
-                    throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
-            }
+                        break;
+                    default:
+                        throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
+                }
 
-            if (models.Count() == 0)
-            {
-                await Task.WhenAll(model);
+                if (models.Count() == 0)
+                {
+                    await Task.WhenAll(model);
 
-                models = await model;
+                    models = await model;
+                }
             }
 
             return Ok(models.ToArray());
@@ -538,11 +541,16 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(ProfissionalViewModel[]))]
         public async Task<IHttpActionResult> GetProfissionais()
         {
-            var profs = Domain.GetProfissionais();
+            var results = new ProfissionalViewModel[0];
 
-            await Task.WhenAll(profs);
+            using (var Domain = Repository)
+            {
+                var profs = Domain.GetProfissionais();
 
-            var results = await profs;
+                await Task.WhenAll(profs);
+
+                results = await profs;
+            }
 
             return Ok(results);
         }
@@ -620,13 +628,19 @@ namespace Softpark.WS.Controllers.Api
                 Log.Info("-----");
                 Log.Info($"GET api/dados/paciente/{token}");
 
-                var rep = Domain;
+                var results = new GetCadastroIndividualViewModel[0];
 
-                var results = rep.GetPacientes(token, microarea);
+                using (var Domain = Repository)
+                {
 
-                await Task.WhenAll(results);
+                    var res = Domain.GetPacientes(token, microarea);
 
-                return Ok(await results);
+                    await Task.WhenAll(res);
+
+                    results = await res;
+                }
+
+                return Ok(results);
             }
             catch (Exception e)
             {
@@ -652,13 +666,18 @@ namespace Softpark.WS.Controllers.Api
                 Log.Info("-----");
                 Log.Info($"GET api/dados/domicilio/{token}");
 
-                var rep = Domain;
+                var results = new GetCadastroDomiciliarViewModel[0];
 
-                var results = rep.GetDomicilios(token, microarea);
+                using (var Domain = Repository)
+                {
+                    var res = Domain.GetDomicilios(token, microarea);
 
-                await Task.WhenAll(results);
+                    await Task.WhenAll(res);
 
-                return Ok(await results);
+                    results = await res;
+                }
+
+                return Ok(results);
             }
             catch (Exception e)
             {
@@ -684,13 +703,18 @@ namespace Softpark.WS.Controllers.Api
                 Log.Info("-----");
                 Log.Info($"GET api/dados/visita/{token}");
 
-                var rep = Domain;
+                var results = new FichaVisitaDomiciliarChildCadastroViewModel[0];
 
-                var results = rep.GetVisitas(token, microarea);
+                using (var Domain = Repository)
+                {
+                    var res = Domain.GetVisitas(token, microarea);
 
-                await Task.WhenAll(results);
+                    await Task.WhenAll(res);
 
-                return Ok(await results);
+                    results = await res;
+                }
+
+                return Ok(results);
             }
             catch (Exception e)
             {

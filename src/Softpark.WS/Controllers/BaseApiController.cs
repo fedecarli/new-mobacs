@@ -12,10 +12,10 @@ namespace Softpark.WS.Controllers
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         protected static ILog Log => log;
-
+        
         /// <summary>
         /// Domain models
         /// </summary>
-        protected Repository Domain => new Repository(true);
+        protected Repository Repository => new Repository();
     }
 }
