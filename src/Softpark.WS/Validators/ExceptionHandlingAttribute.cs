@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -10,10 +11,14 @@ namespace Softpark.WS.Validators
 {
     public class ExceptionHandlingAttribute : ExceptionFilterAttribute
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public override void OnException(HttpActionExecutedContext context)
         {
             //Log Critical errors
             Debug.WriteLine(context.Exception);
+
+            Log.Error(String.Format("Unhandled exception thrown in {0} for request {1}: {2}", context.Request.Method, context.Request.RequestUri, context.Exception));
 
             if (context.Exception is System.ComponentModel.DataAnnotations.ValidationException)
             {

@@ -20,8 +20,6 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class ProcessosController : BaseApiController
     {
-        private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(ProcessosController));
-
         private async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
         {
             var origem = await Domain.OrigemVisita.FindAsync(token);
@@ -65,28 +63,37 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
-            var origem = Domain.OrigemVisita.Create();
+            var origem = Domain.Create(c => c.OrigemVisita, async (db, o) => {
+                return await Task.Run(() =>
+                {
+                    o.token = Guid.NewGuid();
+                    o.id_tipo_origem = 1;
+                    o.enviarParaThrift = true;
+                    o.enviado = false;
 
-            origem.token = Guid.NewGuid();
-            origem.id_tipo_origem = 1;
-            origem.enviarParaThrift = true;
-            origem.enviado = false;
+                    return o;
+                });
+            });
 
-            Domain.OrigemVisita.Add(origem);
+            var headerTransport = Domain.Create(c => c.UnicaLotacaoTransport, async (c, ult) => {
+                return await Task.Run(async () =>
+                {
+                    var transport = header.ToModel(ref ult);
 
-            var transport = header.ToModel();
+                    transport.id = Guid.NewGuid();
+                    var o = await origem;
+                    transport.OrigemVisita = o;
+                    transport.token = o.token;
 
-            transport.id = Guid.NewGuid();
-            transport.OrigemVisita = origem;
-            transport.token = origem.token;
+                    return transport;
+                });
+            });
 
-            transport.Validar();
+            await Task.WhenAll(origem, headerTransport);
 
-            Domain.UnicaLotacaoTransport.Add(transport);
+            var cabecalho = await headerTransport;
 
-            await Domain.SaveChangesAsync();
-
-            return Ok(origem.token);
+            return Ok(cabecalho.token);
         }
 
         /// <summary>
@@ -344,8 +351,6 @@ namespace Softpark.WS.Controllers.Api
                             Epoch.ValidateBirthDate(child.dtNascimento ?? 0, master.UnicaLotacaoTransport.dataAtendimento.ToUnix());
 
                         ficha.FichaVisitaDomiciliarMaster = master;
-
-                        //ficha.Validar();
                     }
                 }
             }
