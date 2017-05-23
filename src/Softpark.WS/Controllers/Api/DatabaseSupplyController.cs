@@ -19,8 +19,6 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class DatabaseSupplyController : BaseApiController
     {
-        private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(DatabaseSupplyController));
-
         /// <summary>
         /// Endpoint para download de dados básicos para carga de trabalho
         /// </summary>
@@ -29,84 +27,86 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/dados/{modelo}", Name = "BasicSupplyAction")]
         [ResponseType(typeof(BasicViewModel[]))]
-        public IHttpActionResult GetEntities([FromUri, Required] string modelo)
+        public async Task<IHttpActionResult> GetEntities([FromUri, Required] string modelo)
         {
-            List<BasicViewModel> model;
+            IEnumerable<BasicViewModel> models = new BasicViewModel[0];
+
+            var model = Task.FromResult(models);
 
             switch (modelo.ToLowerInvariant())
             {
                 case "doencacardiaca":
-                    model = Domain.TP_Doenca_Cardiaca
+                    model = Domain.GetModel(c => c.TP_Doenca_Cardiaca, r => r
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
                         {
                             Modelo = "DoencaCardiaca",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "doencarespiratoria":
-                    model = Domain.TP_Doenca_Respiratoria
+                    model = Domain.GetModel(c => c.TP_Doenca_Respiratoria, r => r
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
                         {
                             Modelo = "DoencaRespiratoria",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "formadeescoamentodobanheiroousanitario":
-                    model = Domain.TP_Escoamento_Esgoto
+                    model = Domain.GetModel(c => c.TP_Escoamento_Esgoto, r => r
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
                         {
                             Modelo = "FormaDeEscoamentoDoBanheiroOuSanitario",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "problemarins":
-                    model = Domain.TP_Doenca_Renal
+                    model = Domain.GetModel(c => c.TP_Doenca_Renal, r => r
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
                         {
                             Modelo = "ProblemaRins",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "consideracaopeso":
-                    model = Domain.TP_Consideracao_Peso
+                    model = Domain.GetModel(c => c.TP_Consideracao_Peso, r => r
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "ConsideracaoPeso",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacao
-                        }).ToList();
+                        }));
                     break;
                 case "acessohigiene":
-                    model = Domain.TP_Higiene_Pessoal
+                    model = Domain.GetModel(c => c.TP_Higiene_Pessoal, r => r
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
                         {
                             Modelo = "AcessoHigiene",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "origemalimentacao":
-                    model = Domain.TP_Origem_Alimentacao
+                    model = Domain.GetModel(c => c.TP_Origem_Alimentacao, r => r
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
                         {
                             Modelo = "OrigemAlimentacao",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "quantasvezesalimentacao":
-                    model = Domain.TP_Quantas_Vezes_Alimentacao
+                    model = Domain.GetModel(c => c.TP_Quantas_Vezes_Alimentacao, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -114,10 +114,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacao
-                        }).ToList();
+                        }));
                     break;
                 case "temposituacaoderua":
-                    model = Domain.TP_Sit_Rua
+                    model = Domain.GetModel(c => c.TP_Sit_Rua, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -125,10 +125,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "municipios":
-                    model = Domain.Cidade
+                    model = Domain.GetModel(c => c.Cidade, r => r
                         .Where(x => x.CodIbge != null && x.UF != null)
                         .Select(x => new BasicViewModel
                         {
@@ -136,30 +136,30 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.CodIbge.ToString(),
                             Descricao = x.NomeCidade,
                             Observacao = x.UF
-                        }).ToList();
+                        }));
                     break;
                 case "nacionalidade":
-                    model = Domain.TP_Nacionalidade
+                    model = Domain.GetModel(c => c.TP_Nacionalidade, r => r
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "Nacionalidade",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacao
-                        }).ToList();
+                        }));
                     break;
                 case "pais":
-                    model = Domain.Paises
+                    model = Domain.GetModel(c => c.Paises, r => r
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "Pais",
                             Codigo = x.codigo.ToString(),
                             Descricao = x.nome,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "racacor":
-                    model = Domain.TP_Raca_Cor
+                    model = Domain.GetModel(c => c.TP_Raca_Cor, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -167,10 +167,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.id_tp_raca_cor.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "sexo":
-                    model = Domain.TP_Sexo
+                    model = Domain.GetModel(c => c.TP_Sexo, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -178,10 +178,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacao
-                        }).ToList();
+                        }));
                     break;
                 case "etnia":
-                    model = Domain.Etnia
+                    model = Domain.GetModel(c => c.Etnia, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -189,10 +189,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.CodEtnia.ToString(),
                             Descricao = x.DesEtnia,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "deficienciacidadao":
-                    model = Domain.TP_Deficiencia
+                    model = Domain.GetModel(c => c.TP_Deficiencia, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -200,10 +200,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "cursomaiselevado":
-                    model = Domain.TP_Curso
+                    model = Domain.GetModel(c => c.TP_Curso, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -211,10 +211,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "cbo":
-                    model = Domain.AS_ProfissoesTab
+                    model = Domain.GetModel(c => c.AS_ProfissoesTab, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -222,10 +222,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.CodProfTab.ToString(),
                             Descricao = x.DesProfTab,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "orientacaosexual":
-                    model = Domain.TP_Orientacao_Sexual
+                    model = Domain.GetModel(c => c.TP_Orientacao_Sexual, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -233,10 +233,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacoes
-                        }).ToList();
+                        }));
                     break;
                 case "relacaoparentesco":
-                    model = Domain.TP_Relacao_Parentesco
+                    model = Domain.GetModel(c => c.TP_Relacao_Parentesco, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -244,10 +244,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacoes
-                        }).ToList();
+                        }));
                     break;
                 case "situacaomercadotrabalho":
-                    model = Domain.TP_Sit_Mercado
+                    model = Domain.GetModel(c => c.TP_Sit_Mercado, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -255,10 +255,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "identidadegenerocidadao":
-                    model = Domain.TP_Identidade_Genero_Cidadao
+                    model = Domain.GetModel(c => c.TP_Identidade_Genero_Cidadao, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -266,10 +266,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacao
-                        }).ToList();
+                        }));
                     break;
                 case "responsavelcrianca":
-                    model = Domain.TP_Crianca
+                    model = Domain.GetModel(c => c.TP_Crianca, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -277,10 +277,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "motivosaida":
-                    model = Domain.TP_Motivo_Saida
+                    model = Domain.GetModel(c => c.TP_Motivo_Saida, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -288,23 +288,23 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacao
-                        }).ToList();
+                        }));
                     break;
                 case "cnes":
-                    model = (from p in Domain.AS_SetoresPar
-                             let s = p.Setores
-                             where p.CNES != null && p.CNES.Trim().Length > 0
-                             select new BasicViewModel
-                             {
-                                 Modelo = "CNES",
-                                 Codigo = p.CNES,
-                                 Descricao = s.DesSetor,
-                                 Observacao = s.DesSetorRes
-                             })
-                             .ToList();
+                    model = Domain.GetModel(c => (from p in c.AS_SetoresPar
+                                                  let s = p.Setores
+                                                  where p.CNES != null && p.CNES.Trim().Length > 0
+                                                  select new { p, s }).ToListAsync(), r => r
+                                                  .Select(x => new BasicViewModel
+                                                  {
+                                                      Modelo = "CNES",
+                                                      Codigo = x.p.CNES,
+                                                      Descricao = x.s.DesSetor,
+                                                      Observacao = x.s.DesSetorRes
+                                                  }));
                     break;
                 case "ine":
-                    model = Domain.SetoresINEs
+                    model = Domain.GetModel(c => c.SetoresINEs, r => r
                         .Where(x => x.Numero != null)
                         .Select(x => new BasicViewModel
                         {
@@ -312,10 +312,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.Numero,
                             Descricao = x.Descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "animalnodomicilio":
-                    model = Domain.TP_Animais
+                    model = Domain.GetModel(c => c.TP_Animais, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -323,10 +323,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "abastecimentodeagua":
-                    model = Domain.TP_Abastecimento_Agua
+                    model = Domain.GetModel(c => c.TP_Abastecimento_Agua, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -334,10 +334,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "condicaodeposseeusodaterra":
-                    model = Domain.TP_Cond_Posse_Uso_Terra
+                    model = Domain.GetModel(c => c.TP_Cond_Posse_Uso_Terra, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -345,10 +345,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacoes
-                        }).ToList();
+                        }));
                     break;
                 case "destinodolixo":
-                    model = Domain.TP_Destino_Lixo
+                    model = Domain.GetModel(c => c.TP_Destino_Lixo, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -356,10 +356,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "localizacaodamoradia":
-                    model = Domain.TP_Localizacao
+                    model = Domain.GetModel(c => c.TP_Localizacao, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -367,10 +367,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "materialpredominantenaconstrucao":
-                    model = Domain.TP_Construcao_Domicilio
+                    model = Domain.GetModel(c => c.TP_Construcao_Domicilio, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -378,10 +378,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "situacaodemoradia":
-                    model = Domain.TP_Situacao_Moradia
+                    model = Domain.GetModel(c => c.TP_Situacao_Moradia, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -389,10 +389,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "tipodeacessoaodomicilio":
-                    model = Domain.TP_Acesso_Domicilio
+                    model = Domain.GetModel(c => c.TP_Acesso_Domicilio, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -400,10 +400,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "tipodedomicilio":
-                    model = Domain.TP_Domicilio
+                    model = Domain.GetModel(c => c.TP_Domicilio, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -411,10 +411,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "aguaconsumodomicilio":
-                    model = Domain.TP_Tratamento_Agua
+                    model = Domain.GetModel(c => c.TP_Tratamento_Agua, r => r
                         .Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -422,12 +422,12 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "uf":
                     var n = 1;
 
-                    model = Domain.UF.ToList()
+                    model = Domain.GetModel(c => c.UF, r => r
                         .OrderBy(x => x.DesUF)
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
@@ -436,11 +436,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = (n++).ToString().PadLeft(2, '0'),
                             Descricao = x.DesUF,
                             Observacao = x.UF1
-                        })
-                        .ToList();
+                        }));
                     break;
                 case "tipodelogradouro":
-                    model = Domain.TB_MS_TIPO_LOGRADOURO
+                    model = Domain.GetModel(c => c.TB_MS_TIPO_LOGRADOURO, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -448,10 +447,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.CO_TIPO_LOGRADOURO.ToString(),
                             Descricao = x.DS_TIPO_LOGRADOURO,
                             Observacao = x.DS_TIPO_LOGRADOURO_ABREV
-                        }).ToList();
+                        }));
                     break;
                 case "rendafamiliar":
-                    model = Domain.TP_Renda_Familiar
+                    model = Domain.GetModel(c => c.TP_Renda_Familiar, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -459,10 +458,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = x.observacoes
-                        }).ToList();
+                        }));
                     break;
                 case "tipodeimovel":
-                    model = Domain.TP_Imovel
+                    model = Domain.GetModel(c => c.TP_Imovel, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -470,10 +469,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.descricao,
                             Observacao = null
-                        }).ToList();
+                        }));
                     break;
                 case "turno":
-                    model = new[] { new BasicViewModel
+                    models = new[] { new BasicViewModel
                         {
                             Modelo = "Turno",
                             Codigo = "1",
@@ -489,7 +488,7 @@ namespace Softpark.WS.Controllers.Api
                         } }.ToList();
                     break;
                 case "motivovisita":
-                    model = Domain.SIGSM_MotivoVisita
+                    model = Domain.GetModel(c => c.SIGSM_MotivoVisita, r => r
                         //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
@@ -497,10 +496,10 @@ namespace Softpark.WS.Controllers.Api
                             Codigo = x.codigo.ToString(),
                             Descricao = x.nome,
                             Observacao = x.observacoes
-                        }).ToList();
+                        }));
                     break;
                 case "desfecho":
-                    model = new[] { new BasicViewModel
+                    models = new[] { new BasicViewModel
                         {
                             Modelo = "Desfecho",
                             Codigo = "1",
@@ -520,7 +519,14 @@ namespace Softpark.WS.Controllers.Api
                     throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
             }
 
-            return Ok(model.ToArray());
+            if (models.Count() == 0)
+            {
+                await Task.WhenAll(model);
+
+                models = await model;
+            }
+
+            return Ok(models.ToArray());
         }
 
         /// <summary>
@@ -530,35 +536,15 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/dados/profissional", Name = "ProfessionalSupplyAction")]
         [ResponseType(typeof(ProfissionalViewModel[]))]
-        public IHttpActionResult GetProfissionais()
+        public async Task<IHttpActionResult> GetProfissionais()
         {
-            var profs = Domain.VW_Profissional.ToList();
+            var profs = Domain.GetProfissionais();
 
-            var ps = new Dictionary<string, ProfissionalViewModel>();
+            await Task.WhenAll(profs);
 
-            Func<VW_Profissional, ProfissionalViewModel> __ = prof =>
-            {
-                var _ = new ProfissionalViewModel();
+            var results = await profs;
 
-                var cns = prof?.CNS?.Trim();
-
-                if(cns != null)
-                    ps.Add(cns, _);
-
-                return _;
-            };
-
-            foreach (var prof in profs)
-            {
-                var p = ps.ContainsKey(prof.CNS) ? ps[prof.CNS] : __.Invoke(prof);
-
-                p.CNS = prof.CNS?.Trim();
-                p.Nome = prof.Nome?.Trim();
-
-                p.Append(prof);
-            }
-
-            return Ok(ps.Values.ToArray());
+            return Ok(results);
         }
 
         /// <summary>
@@ -617,17 +603,7 @@ namespace Softpark.WS.Controllers.Api
                 new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
             }.OrderBy(x => x.Codigo).ToArray());
         }
-
-        private async Task<UnicaLotacaoTransport> GetHeader(Guid token)
-        {
-            return await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(u => u.token == token && !u.OrigemVisita.finalizado);
-        }
-
-        private IQueryable<UnicaLotacaoTransport> GetHeadersBy(UnicaLotacaoTransport header)
-        {
-            return Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == header.profissionalCNS && u.OrigemVisita.finalizado);
-        }
-
+        
         /// <summary>
         /// Buscar pacientes atendidos pelo profissional informado
         /// </summary>
@@ -639,67 +615,25 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
         public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
-            Log.Info("-----");
-            Log.Info($"GET api/dados/paciente/{token}");
-
-            var headerToken = await GetHeader(token);
-
-            if (headerToken == null)
+            try
             {
-                var error = BadRequest("Token Inválido.");
+                Log.Info("-----");
+                Log.Info($"GET api/dados/paciente/{token}");
 
-                Log.Fatal("Token inválido");
+                var rep = Domain;
 
-                return error;
+                var results = rep.GetPacientes(token, microarea);
+
+                await Task.WhenAll(results);
+
+                return Ok(await results);
             }
-
-            var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
-
-            var pessoas = from pc in Domain.VW_profissional_cns
-                          join cad in Domain.VW_ultimo_cadastroIndividual
-                          on pc.CodigoCidadao equals cad.Codigo
-                          where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                          select new { pc, cad };
-
-            var idProf = pessoas.FirstOrDefault()?.pc.IdProfissional;
-
-            var profs = Domain.ProfCidadaoVincAgendaProd
-                .Where(x => //x.DataAgendadamento <= DateTime.Now &&
-                    x.AgendamentoMarcado == true &&
-                    x.DataCarregado == null &&
-                    x.FichaGerada == true &&
-                    x.ProfCidadaoVinc.IdProfissional == idProf);
-
-            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-            var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                .Select(x => x.cad.idCadastroIndividual).ToArray();
-
-            var cadastros = Domain.CadastroIndividual
-                .Where(x => x.identificacaoUsuarioCidadao != null && ids.Contains(x.identificacaoUsuarioCidadao.Value)
-                            && cads.Contains(x.id)).ToArray();
-
-            CadastroIndividualViewModelCollection results = cadastros;
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            catch (Exception e)
             {
-                results = results.Where(r => r.identificacaoUsuarioCidadao?.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
+                Log.Fatal(e.Message, e);
+
+                return InternalServerError(e);
             }
-
-            var rs = results.ToArray();
-
-            var data = Ok(rs);
-
-            var ps = profs.Where(x => pessoas.Any(z => x.IdVinc == z.pc.IdVinc)).ToList();
-
-            ps.ForEach(x =>
-            {
-                Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, false);
-            });
-
-            await Domain.SaveChangesAsync();
-
-            return data;
         }
 
         /// <summary>
@@ -715,87 +649,22 @@ namespace Softpark.WS.Controllers.Api
         {
             try
             {
-                Log.Debug("----");
-                Log.Debug($"api/dados/domicilio/{token}");
+                Log.Info("-----");
+                Log.Info($"GET api/dados/domicilio/{token}");
 
-                var headerToken = await GetHeader(token);
+                var rep = Domain;
 
-                if (headerToken == null) return BadRequest("Token Inválido.");
+                var results = rep.GetDomicilios(token, microarea);
 
-                //var ids = Domain.VW_ultimo_cadastroDomiciliar
-                //    .Select(x => x.idCadastroDomiciliar).ToArray();
+                await Task.WhenAll(results);
 
-                //var domicilios = (from pc in Domain.VW_profissional_cns
-                //                  join ut in Domain.UnicaLotacaoTransport
-                //                  on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
-                //                  join cad in Domain.VW_ultimo_cadastroDomiciliar
-                //                  on ut.token equals cad.token
-                //                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                //                  && pc.CodigoCidadao == cad.Codigo
-                //                  select new { pc, cad }).ToArray();
-
-                //Alteração Cristiano, David 
-                var domicilios = (from pc in Domain.VW_profissional_cns
-                                  join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
-                                  join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
-                                  join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
-                                  join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
-                                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
-                                    agenda.AgendamentoMarcado == true &&
-                                    agenda.DataCarregadoDomiciliar == null &&
-                                    agenda.FichaDomiciliarGerada == true
-                                  select new { pc, cad, cd, pcv, agenda }).ToList();
-
-                //var dom = domicilios.FirstOrDefault();
-
-                //var idProf = dom?.pc.IdProfissional;
-
-                //var profs = Domain.ProfCidadaoVincAgendaProd
-                //.Where(x =>
-                //    x.AgendamentoMarcado == true &&
-                //    x.DataCarregadoDomiciliar == null &&
-                //    x.FichaDomiciliarGerada == true &&
-                //    x.ProfCidadaoVinc.IdProfissional == idProf);
-
-                //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-                //var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                //    .Select(x => x.cad.idCadastroDomiciliar).ToArray();
-
-                //var cadastros = Domain.CadastroDomiciliar
-                //   .Where(x => ids.Contains(x.id) && cads.Contains(x.id)).ToArray();
-
-                var cadastros = domicilios.Select(x => x.cd).ToArray();
-
-                CadastroDomiciliarViewModelCollection results = cadastros;
-
-                if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-                {
-                    results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
-                }
-
-                //var ps = profs.Where(x => domicilios.Any(y => y.pc.IdVinc == x.IdVinc)).ToList();
-
-                //ps.ForEach(x =>
-                //{
-                //    x.DataCarregadoDomiciliar = DateTime.Now;
-                //    Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, true);
-                //});
-
-                domicilios.ForEach(x =>
-                {
-                    Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
-                });
-
-                await Domain.SaveChangesAsync();
-
-                return Ok(results.ToArray());
-
+                return Ok(await results);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Log.Fatal(ex.Message, ex);
-                throw new ValidationException(ex.Message);
+                Log.Fatal(e.Message, e);
+
+                return InternalServerError(e);
             }
         }
 
@@ -810,19 +679,25 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
         public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
-            var headerToken = await GetHeader(token);
-
-            if (headerToken == null) return BadRequest("Token Inválido.");
-
-            FichaVisitaDomiciliarChildCadastroViewModelCollection results = GetHeadersBy(headerToken)
-                .SelectMany(f => f.FichaVisitaDomiciliarMaster).SelectMany(f => f.FichaVisitaDomiciliarChild).ToArray();
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            try
             {
-                results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
-            }
+                Log.Info("-----");
+                Log.Info($"GET api/dados/visita/{token}");
 
-            return Ok(results.ToArray());
+                var rep = Domain;
+
+                var results = rep.GetVisitas(token, microarea);
+
+                await Task.WhenAll(results);
+
+                return Ok(await results);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.Message, e);
+
+                return InternalServerError(e);
+            }
         }
     }
 

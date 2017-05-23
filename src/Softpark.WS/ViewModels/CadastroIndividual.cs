@@ -18,7 +18,16 @@ namespace Softpark.WS.ViewModels
             AddRange(models);
         }
 
+        public CadastroIndividualViewModelCollection(List<CadastroIndividual> models) : this(models.ToArray())
+        {
+        }
+
         public CadastroIndividualViewModelCollection(IEnumerable<GetCadastroIndividualViewModel> models) : base(models) { }
+
+        public static implicit operator CadastroIndividualViewModelCollection(List<CadastroIndividual> models)
+        {
+            return new CadastroIndividualViewModelCollection(models);
+        }
 
         public static implicit operator CadastroIndividualViewModelCollection(CadastroIndividual[] models)
         {
