@@ -37,7 +37,6 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Softpark.WS.XML</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <IncludeIisSettings>false</IncludeIisSettings>
     <IncludeAppPool>true</IncludeAppPool>
     <DeployEncryptKey>1q2w3e4r5t%40%40</DeployEncryptKey>
   </PropertyGroup>
@@ -516,11 +515,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIISExpress>True</UseIISExpress>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:63272/</IISUrl>
+          <IISExpressUrl>http://localhost:63272/</IISExpressUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
