@@ -12,6 +12,13 @@ namespace Softpark.WS.Controllers
         /// <summary>
         /// Domain models
         /// </summary>
-        protected DomainContainer Domain => DomainContainer.Current;
+        protected DomainContainer Domain { get; private set; }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        protected BaseApiController(DomainContainer domain)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        {
+            Domain = domain;
+        }
     }
 }

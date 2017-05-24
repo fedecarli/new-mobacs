@@ -81,19 +81,19 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; } = null;
 
-        internal async Task<CadastroIndividual> ToModel()
+        internal async Task<CadastroIndividual> ToModel(DomainContainer domain)
         {
-            var ci = DomainContainer.Current.CadastroIndividual.Create();
+            var ci = domain.CadastroIndividual.Create();
 
             ci.id = Guid.NewGuid();
-            ci.CondicoesDeSaude1 = await condicoesDeSaude?.ToModel();
-            ci.EmSituacaoDeRua1 = await emSituacaoDeRua?.ToModel();
+            ci.CondicoesDeSaude1 = await condicoesDeSaude?.ToModel(domain);
+            ci.EmSituacaoDeRua1 = await emSituacaoDeRua?.ToModel(domain);
             ci.fichaAtualizada = fichaAtualizada;
-            ci.IdentificacaoUsuarioCidadao1 = identificacaoUsuarioCidadao?.ToModel();
-            ci.InformacoesSocioDemograficas1 = await informacoesSocioDemograficas?.ToModel();
+            ci.IdentificacaoUsuarioCidadao1 = identificacaoUsuarioCidadao?.ToModel(domain);
+            ci.InformacoesSocioDemograficas1 = await informacoesSocioDemograficas?.ToModel(domain);
             ci.statusTermoRecusaCadastroIndividualAtencaoBasica = statusTermoRecusaCadastroIndividualAtencaoBasica;
             ci.uuidFichaOriginadora = uuidFichaOriginadora;
-            ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel();
+            ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel(domain);
 
             return ci;
         }
@@ -213,9 +213,9 @@ namespace Softpark.WS.ViewModels
             numeroDO = model.numeroDO;
         }
 
-        internal SaidaCidadaoCadastro ToModel()
+        internal SaidaCidadaoCadastro ToModel(DomainContainer domain)
         {
-            var scc = DomainContainer.Current.SaidaCidadaoCadastro.Create();
+            var scc = domain.SaidaCidadaoCadastro.Create();
 
             scc.id = Guid.NewGuid();
             scc.motivoSaidaCidadao = motivoSaidaCidadao;
@@ -337,33 +337,33 @@ namespace Softpark.WS.ViewModels
             responsavelPorCrianca = model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca).ToArray();
         }
 
-        internal async Task<InformacoesSocioDemograficas> ToModel()
+        internal async Task<InformacoesSocioDemograficas> ToModel(DomainContainer domain)
         {
-            var isd = DomainContainer.Current.InformacoesSocioDemograficas.Create();
+            var isd = domain.InformacoesSocioDemograficas.Create();
             isd.id = Guid.NewGuid();
 
             TP_Deficiencia dc;
             foreach (var _dc in deficienciasCidadao)
-                if ((dc = await DomainContainer.Current.TP_Deficiencia.FirstOrDefaultAsync(y => y.codigo == _dc)) != null)
+                if ((dc = await domain.TP_Deficiencia.FirstOrDefaultAsync(y => y.codigo == _dc)) != null)
                 {
-                    DeficienciasCidadao @dcs = DomainContainer.Current.DeficienciasCidadao.Create();
+                    DeficienciasCidadao @dcs = domain.DeficienciasCidadao.Create();
                     @dcs.id_tp_deficiencia_cidadao = dc.codigo;
                     @dcs.InformacoesSocioDemograficas = isd;
 
                     isd.DeficienciasCidadao.Add(@dcs);
-                    DomainContainer.Current.DeficienciasCidadao.Add(@dcs);
+                    domain.DeficienciasCidadao.Add(@dcs);
                 }
 
             TP_Crianca cr;
             foreach (var _cr in responsavelPorCrianca)
-                if ((cr = await DomainContainer.Current.TP_Crianca.FirstOrDefaultAsync(y => y.codigo == _cr)) != null)
+                if ((cr = await domain.TP_Crianca.FirstOrDefaultAsync(y => y.codigo == _cr)) != null)
                 {
-                    ResponsavelPorCrianca @crs = DomainContainer.Current.ResponsavelPorCrianca.Create();
+                    ResponsavelPorCrianca @crs = domain.ResponsavelPorCrianca.Create();
                     @crs.InformacoesSocioDemograficas = isd;
                     @crs.id_tp_crianca = cr.codigo;
 
                     isd.ResponsavelPorCrianca.Add(@crs);
-                    DomainContainer.Current.ResponsavelPorCrianca.Add(@crs);
+                    domain.ResponsavelPorCrianca.Add(@crs);
                 }
 
             isd.grauInstrucaoCidadao = grauInstrucaoCidadao;
@@ -580,9 +580,9 @@ namespace Softpark.WS.ViewModels
             stForaArea = model.stForaArea;
         }
 
-        internal IdentificacaoUsuarioCidadao ToModel()
+        internal IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
         {
-            var iuc = DomainContainer.Current.IdentificacaoUsuarioCidadao.Create();
+            var iuc = domain.IdentificacaoUsuarioCidadao.Create();
 
             iuc.id = Guid.NewGuid();
             iuc.nomeSocial = nomeSocial;
@@ -700,9 +700,9 @@ namespace Softpark.WS.ViewModels
             origemAlimentoSituacaoRua = model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento).ToArray();
         }
 
-        internal async Task<EmSituacaoDeRua> ToModel()
+        internal async Task<EmSituacaoDeRua> ToModel(DomainContainer domain)
         {
-            var esdr = DomainContainer.Current.EmSituacaoDeRua.Create();
+            var esdr = domain.EmSituacaoDeRua.Create();
 
             esdr.id = Guid.NewGuid();
             esdr.grauParentescoFamiliarFrequentado = grauParentescoFamiliarFrequentado;
@@ -718,26 +718,26 @@ namespace Softpark.WS.ViewModels
 
             TP_Higiene_Pessoal hpr;
             foreach (var _hpsr in higienePessoalSituacaoRua)
-                if ((hpr = await DomainContainer.Current.TP_Higiene_Pessoal.FirstOrDefaultAsync(y => y.codigo == _hpsr)) != null)
+                if ((hpr = await domain.TP_Higiene_Pessoal.FirstOrDefaultAsync(y => y.codigo == _hpsr)) != null)
                 {
-                    var @dcs = DomainContainer.Current.HigienePessoalSituacaoRua.Create();
+                    var @dcs = domain.HigienePessoalSituacaoRua.Create();
                     @dcs.codigo_higiene_pessoal = hpr.codigo;
                     @dcs.EmSituacaoDeRua = esdr;
 
                     esdr.HigienePessoalSituacaoRua.Add(@dcs);
-                    DomainContainer.Current.HigienePessoalSituacaoRua.Add(@dcs);
+                    domain.HigienePessoalSituacaoRua.Add(@dcs);
                 }
 
             TP_Origem_Alimentacao oasr;
             foreach (var _oasr in origemAlimentoSituacaoRua)
-                if ((oasr = await DomainContainer.Current.TP_Origem_Alimentacao.FirstOrDefaultAsync(y => y.codigo == _oasr)) != null)
+                if ((oasr = await domain.TP_Origem_Alimentacao.FirstOrDefaultAsync(y => y.codigo == _oasr)) != null)
                 {
-                    var @dcs = DomainContainer.Current.OrigemAlimentoSituacaoRua.Create();
+                    var @dcs = domain.OrigemAlimentoSituacaoRua.Create();
                     @dcs.id_tp_origem_alimento = oasr.codigo;
                     @dcs.EmSituacaoDeRua = esdr;
 
                     esdr.OrigemAlimentoSituacaoRua.Add(@dcs);
-                    DomainContainer.Current.OrigemAlimentoSituacaoRua.Add(@dcs);
+                    domain.OrigemAlimentoSituacaoRua.Add(@dcs);
                 }
 
             return esdr;
@@ -920,9 +920,9 @@ namespace Softpark.WS.ViewModels
             doencaRins = model.DoencaRins.Select(x => x.id_tp_doenca_rins).ToArray();
         }
 
-        internal async Task<CondicoesDeSaude> ToModel()
+        internal async Task<CondicoesDeSaude> ToModel(DomainContainer domain)
         {
-            var cds = DomainContainer.Current.CondicoesDeSaude.Create();
+            var cds = domain.CondicoesDeSaude.Create();
 
             cds.id = Guid.NewGuid();
             cds.descricaoCausaInternacaoEm12Meses = descricaoCausaInternacaoEm12Meses;
@@ -955,38 +955,38 @@ namespace Softpark.WS.ViewModels
 
             TP_Doenca_Cardiaca dc;
             foreach (var _dcs in doencaCardiaca)
-                if ((dc = await DomainContainer.Current.TP_Doenca_Cardiaca.FirstOrDefaultAsync(y => y.codigo == _dcs)) != null)
+                if ((dc = await domain.TP_Doenca_Cardiaca.FirstOrDefaultAsync(y => y.codigo == _dcs)) != null)
                 {
-                    var @dcs = DomainContainer.Current.DoencaCardiaca.Create();
+                    var @dcs = domain.DoencaCardiaca.Create();
                     @dcs.id_tp_doenca_cariaca = dc.codigo;
                     @dcs.CondicoesDeSaude = cds;
 
                     cds.DoencaCardiaca.Add(@dcs);
-                    DomainContainer.Current.DoencaCardiaca.Add(@dcs);
+                    domain.DoencaCardiaca.Add(@dcs);
                 }
 
             TP_Doenca_Respiratoria dr;
             foreach (var drs in doencaRespiratoria)
-                if ((dr = await DomainContainer.Current.TP_Doenca_Respiratoria.FirstOrDefaultAsync(y => y.codigo == drs)) != null)
+                if ((dr = await domain.TP_Doenca_Respiratoria.FirstOrDefaultAsync(y => y.codigo == drs)) != null)
                 {
-                    var @dcs = DomainContainer.Current.DoencaRespiratoria.Create();
+                    var @dcs = domain.DoencaRespiratoria.Create();
                     @dcs.id_tp_doenca_respiratoria = dr.codigo;
                     @dcs.CondicoesDeSaude = cds;
 
                     cds.DoencaRespiratoria.Add(@dcs);
-                    DomainContainer.Current.DoencaRespiratoria.Add(@dcs);
+                    domain.DoencaRespiratoria.Add(@dcs);
                 }
 
             TP_Doenca_Renal dcr;
             foreach (var drr in doencaRins)
-                if ((dcr = await DomainContainer.Current.TP_Doenca_Renal.FirstOrDefaultAsync(y => y.codigo == drr)) != null)
+                if ((dcr = await domain.TP_Doenca_Renal.FirstOrDefaultAsync(y => y.codigo == drr)) != null)
                 {
-                    var @dcs = DomainContainer.Current.DoencaRins.Create();
+                    var @dcs = domain.DoencaRins.Create();
                     @dcs.id_tp_doenca_rins = dcr.codigo;
                     @dcs.CondicoesDeSaude = cds;
 
                     cds.DoencaRins.Add(@dcs);
-                    DomainContainer.Current.DoencaRins.Add(@dcs);
+                    domain.DoencaRins.Add(@dcs);
                 }
 
             return cds;

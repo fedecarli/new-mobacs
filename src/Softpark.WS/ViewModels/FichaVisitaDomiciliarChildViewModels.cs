@@ -57,7 +57,7 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         public VW_Profissional Profissional { get; set; }
-        
+
         /// <summary>
         /// Turno da visita
         /// </summary>
@@ -363,9 +363,9 @@ namespace Softpark.WS.ViewModels
             longitude = model.longitude;
         }
 
-        internal FichaVisitaDomiciliarChild ToModel()
+        internal FichaVisitaDomiciliarChild ToModel(DomainContainer domain)
         {
-            var fvdc = DomainContainer.Current.FichaVisitaDomiciliarChild.Create();
+            var fvdc = domain.FichaVisitaDomiciliarChild.Create();
 
             fvdc.childId = Guid.NewGuid();
             fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
@@ -382,6 +382,8 @@ namespace Softpark.WS.ViewModels
             fvdc.turno = turno;
             fvdc.latitude = latitude;
             fvdc.longitude = longitude;
+
+            domain.FichaVisitaDomiciliarChild.Add(fvdc);
 
             return fvdc;
         }
