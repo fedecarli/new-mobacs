@@ -90,19 +90,25 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; } = null;
 
-        internal async Task<CadastroIndividual> ToModel()
+        internal async Task<CadastroIndividual> ToModel(CadastroIndividual ci, Repository rep)
         {
-            var ci = DomainContainer.Current.CadastroIndividual.Create();
-
             ci.id = Guid.NewGuid();
-            ci.CondicoesDeSaude1 = await condicoesDeSaude?.ToModel();
-            ci.EmSituacaoDeRua1 = await emSituacaoDeRua?.ToModel();
+            var cds = rep.Create(c => c.CondicoesDeSaude, (c, f) => condicoesDeSaude?.ToModel(f, c, rep));
+            var sdr = rep.Create(c => c.EmSituacaoDeRua, (c, f) => emSituacaoDeRua?.ToModel(f, c, rep));
+            var iuc = rep.Create(c => c.IdentificacaoUsuarioCidadao, (c, f) => Task.FromResult(identificacaoUsuarioCidadao?.ToModel(f)));
+            var isd = rep.Create(c => c.InformacoesSocioDemograficas, (c, f) => informacoesSocioDemograficas?.ToModel(f, c, rep));
+            var scc = rep.Create(c => c.SaidaCidadaoCadastro, (c, f) => Task.FromResult(saidaCidadaoCadastro?.ToModel(f)));
+
+            await Task.WhenAll(cds, sdr, isd);
+
+            ci.condicoesDeSaude = (await cds)?.id;
+            ci.emSituacaoDeRua = (await sdr)?.id;
             ci.fichaAtualizada = fichaAtualizada;
-            ci.IdentificacaoUsuarioCidadao1 = identificacaoUsuarioCidadao?.ToModel();
-            ci.InformacoesSocioDemograficas1 = await informacoesSocioDemograficas?.ToModel();
+            ci.identificacaoUsuarioCidadao = (await iuc)?.id;
+            ci.informacoesSocioDemograficas = (await isd)?.id;
             ci.statusTermoRecusaCadastroIndividualAtencaoBasica = statusTermoRecusaCadastroIndividualAtencaoBasica;
             ci.uuidFichaOriginadora = uuidFichaOriginadora;
-            ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel();
+            ci.saidaCidadaoCadastro = (await scc)?.id;
 
             return ci;
         }
@@ -222,10 +228,8 @@ namespace Softpark.WS.ViewModels
             numeroDO = model.numeroDO;
         }
 
-        internal SaidaCidadaoCadastro ToModel()
+        internal SaidaCidadaoCadastro ToModel(SaidaCidadaoCadastro scc)
         {
-            var scc = DomainContainer.Current.SaidaCidadaoCadastro.Create();
-
             scc.id = Guid.NewGuid();
             scc.motivoSaidaCidadao = motivoSaidaCidadao;
             scc.dataObito = dataObito?.FromUnix();
@@ -346,34 +350,9 @@ namespace Softpark.WS.ViewModels
             responsavelPorCrianca = model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca).ToArray();
         }
 
-        internal async Task<InformacoesSocioDemograficas> ToModel()
+        internal async Task<InformacoesSocioDemograficas> ToModel(InformacoesSocioDemograficas isd, DomainContainer c, Repository rep)
         {
-            var isd = DomainContainer.Current.InformacoesSocioDemograficas.Create();
             isd.id = Guid.NewGuid();
-
-            TP_Deficiencia dc;
-            foreach (var _dc in deficienciasCidadao)
-                if ((dc = await DomainContainer.Current.TP_Deficiencia.FirstOrDefaultAsync(y => y.codigo == _dc)) != null)
-                {
-                    DeficienciasCidadao @dcs = DomainContainer.Current.DeficienciasCidadao.Create();
-                    @dcs.id_tp_deficiencia_cidadao = dc.codigo;
-                    @dcs.InformacoesSocioDemograficas = isd;
-
-                    isd.DeficienciasCidadao.Add(@dcs);
-                    DomainContainer.Current.DeficienciasCidadao.Add(@dcs);
-                }
-
-            TP_Crianca cr;
-            foreach (var _cr in responsavelPorCrianca)
-                if ((cr = await DomainContainer.Current.TP_Crianca.FirstOrDefaultAsync(y => y.codigo == _cr)) != null)
-                {
-                    ResponsavelPorCrianca @crs = DomainContainer.Current.ResponsavelPorCrianca.Create();
-                    @crs.InformacoesSocioDemograficas = isd;
-                    @crs.id_tp_crianca = cr.codigo;
-
-                    isd.ResponsavelPorCrianca.Add(@crs);
-                    DomainContainer.Current.ResponsavelPorCrianca.Add(@crs);
-                }
 
             isd.grauInstrucaoCidadao = grauInstrucaoCidadao;
             isd.ocupacaoCodigoCbo2002 = ocupacaoCodigoCbo2002;
@@ -390,6 +369,34 @@ namespace Softpark.WS.ViewModels
             isd.statusTemAlgumaDeficiencia = statusTemAlgumaDeficiencia;
             isd.identidadeGeneroCidadao = identidadeGeneroCidadao;
             isd.statusDesejaInformarIdentidadeGenero = statusDesejaInformarIdentidadeGenero;
+
+            var dc = rep.GetModel(_c => _c.TP_Deficiencia.Where(x => deficienciasCidadao.Contains(x.codigo)).ToListAsync(), (l) => l.Select(e =>
+            {
+                var d = c.DeficienciasCidadao.Create();
+
+                d.id_tp_deficiencia_cidadao = e.codigo;
+                d.InformacoesSocioDemograficas = isd;
+
+                isd.DeficienciasCidadao.Add(d);
+                c.DeficienciasCidadao.Add(d);
+
+                return d;
+            }));
+
+            var cr = rep.GetModel(_c => _c.TP_Crianca.Where(x => responsavelPorCrianca.Contains(x.codigo)).ToListAsync(), (l) => l.Select(e =>
+            {
+                var d = c.ResponsavelPorCrianca.Create();
+
+                d.InformacoesSocioDemograficas = isd;
+                d.id_tp_crianca = e.codigo;
+
+                isd.ResponsavelPorCrianca.Add(d);
+                c.ResponsavelPorCrianca.Add(d);
+
+                return d;
+            }));
+
+            Task.WaitAll(dc, cr);
 
             return isd;
         }
@@ -589,10 +596,8 @@ namespace Softpark.WS.ViewModels
             stForaArea = model.stForaArea;
         }
 
-        internal IdentificacaoUsuarioCidadao ToModel()
+        internal IdentificacaoUsuarioCidadao ToModel(IdentificacaoUsuarioCidadao iuc)
         {
-            var iuc = DomainContainer.Current.IdentificacaoUsuarioCidadao.Create();
-
             iuc.id = Guid.NewGuid();
             iuc.nomeSocial = nomeSocial;
             iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
@@ -709,10 +714,8 @@ namespace Softpark.WS.ViewModels
             origemAlimentoSituacaoRua = model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento).ToArray();
         }
 
-        internal async Task<EmSituacaoDeRua> ToModel()
+        internal async Task<EmSituacaoDeRua> ToModel(EmSituacaoDeRua esdr, DomainContainer c, Repository rep)
         {
-            var esdr = DomainContainer.Current.EmSituacaoDeRua.Create();
-
             esdr.id = Guid.NewGuid();
             esdr.grauParentescoFamiliarFrequentado = grauParentescoFamiliarFrequentado;
             esdr.outraInstituicaoQueAcompanha = outraInstituicaoQueAcompanha;
@@ -725,29 +728,33 @@ namespace Softpark.WS.ViewModels
             esdr.statusVisitaFamiliarFrequentemente = statusVisitaFamiliarFrequentemente;
             esdr.tempoSituacaoRua = tempoSituacaoRua;
 
-            TP_Higiene_Pessoal hpr;
-            foreach (var _hpsr in higienePessoalSituacaoRua)
-                if ((hpr = await DomainContainer.Current.TP_Higiene_Pessoal.FirstOrDefaultAsync(y => y.codigo == _hpsr)) != null)
-                {
-                    var @dcs = DomainContainer.Current.HigienePessoalSituacaoRua.Create();
-                    @dcs.codigo_higiene_pessoal = hpr.codigo;
-                    @dcs.EmSituacaoDeRua = esdr;
+            var hpr = rep.GetModel(_c => _c.TP_Higiene_Pessoal.Where(x => higienePessoalSituacaoRua.Contains(x.codigo)).ToListAsync(), (doencas) => doencas.Select(dcs =>
+            {
+                var _dcs = c.HigienePessoalSituacaoRua.Create();
 
-                    esdr.HigienePessoalSituacaoRua.Add(@dcs);
-                    DomainContainer.Current.HigienePessoalSituacaoRua.Add(@dcs);
-                }
+                _dcs.codigo_higiene_pessoal = dcs.codigo;
+                _dcs.id_em_situacao_de_rua = esdr.id;
 
-            TP_Origem_Alimentacao oasr;
-            foreach (var _oasr in origemAlimentoSituacaoRua)
-                if ((oasr = await DomainContainer.Current.TP_Origem_Alimentacao.FirstOrDefaultAsync(y => y.codigo == _oasr)) != null)
-                {
-                    var @dcs = DomainContainer.Current.OrigemAlimentoSituacaoRua.Create();
-                    @dcs.id_tp_origem_alimento = oasr.codigo;
-                    @dcs.EmSituacaoDeRua = esdr;
+                esdr.HigienePessoalSituacaoRua.Add(_dcs);
+                c.HigienePessoalSituacaoRua.Add(_dcs);
 
-                    esdr.OrigemAlimentoSituacaoRua.Add(@dcs);
-                    DomainContainer.Current.OrigemAlimentoSituacaoRua.Add(@dcs);
-                }
+                return _dcs;
+            }));
+
+            var oasr = rep.GetModel(_c => _c.TP_Origem_Alimentacao.Where(x => origemAlimentoSituacaoRua.Contains(x.codigo)).ToListAsync(), (doencas) => doencas.Select(dcs =>
+            {
+                var _dcs = c.OrigemAlimentoSituacaoRua.Create();
+
+                _dcs.id_tp_origem_alimento = dcs.codigo;
+                _dcs.id_em_situacao_rua = esdr.id;
+
+                esdr.OrigemAlimentoSituacaoRua.Add(_dcs);
+                c.OrigemAlimentoSituacaoRua.Add(_dcs);
+
+                return _dcs;
+            }));
+
+            await Task.WhenAll(hpr, oasr);
 
             return esdr;
         }
@@ -929,10 +936,8 @@ namespace Softpark.WS.ViewModels
             doencaRins = model.DoencaRins.Select(x => x.id_tp_doenca_rins).ToArray();
         }
 
-        internal async Task<CondicoesDeSaude> ToModel()
+        internal async Task<CondicoesDeSaude> ToModel(CondicoesDeSaude cds, DomainContainer c, Repository rep)
         {
-            var cds = DomainContainer.Current.CondicoesDeSaude.Create();
-
             cds.id = Guid.NewGuid();
             cds.descricaoCausaInternacaoEm12Meses = descricaoCausaInternacaoEm12Meses;
             cds.descricaoOutraCondicao1 = descricaoOutraCondicao1;
@@ -962,41 +967,46 @@ namespace Softpark.WS.ViewModels
             cds.statusUsaPlantasMedicinais = statusUsaPlantasMedicinais;
             cds.statusDiagnosticoMental = statusDiagnosticoMental;
 
-            TP_Doenca_Cardiaca dc;
-            foreach (var _dcs in doencaCardiaca)
-                if ((dc = await DomainContainer.Current.TP_Doenca_Cardiaca.FirstOrDefaultAsync(y => y.codigo == _dcs)) != null)
-                {
-                    var @dcs = DomainContainer.Current.DoencaCardiaca.Create();
-                    @dcs.id_tp_doenca_cariaca = dc.codigo;
-                    @dcs.CondicoesDeSaude = cds;
+            var dc = rep.GetModel((_c) => _c.TP_Doenca_Cardiaca.Where(x => doencaCardiaca.Contains(x.codigo)).ToListAsync(), (doencas) => doencas.Select(dcs =>
+            {
+                var _dcs = c.DoencaCardiaca.Create();
 
-                    cds.DoencaCardiaca.Add(@dcs);
-                    DomainContainer.Current.DoencaCardiaca.Add(@dcs);
-                }
+                _dcs.id_tp_doenca_cariaca = dcs.codigo;
+                _dcs.id_condicao_de_saude = cds.id;
 
-            TP_Doenca_Respiratoria dr;
-            foreach (var drs in doencaRespiratoria)
-                if ((dr = await DomainContainer.Current.TP_Doenca_Respiratoria.FirstOrDefaultAsync(y => y.codigo == drs)) != null)
-                {
-                    var @dcs = DomainContainer.Current.DoencaRespiratoria.Create();
-                    @dcs.id_tp_doenca_respiratoria = dr.codigo;
-                    @dcs.CondicoesDeSaude = cds;
+                cds.DoencaCardiaca.Add(_dcs);
+                c.DoencaCardiaca.Add(_dcs);
 
-                    cds.DoencaRespiratoria.Add(@dcs);
-                    DomainContainer.Current.DoencaRespiratoria.Add(@dcs);
-                }
+                return _dcs;
+            }));
 
-            TP_Doenca_Renal dcr;
-            foreach (var drr in doencaRins)
-                if ((dcr = await DomainContainer.Current.TP_Doenca_Renal.FirstOrDefaultAsync(y => y.codigo == drr)) != null)
-                {
-                    var @dcs = DomainContainer.Current.DoencaRins.Create();
-                    @dcs.id_tp_doenca_rins = dcr.codigo;
-                    @dcs.CondicoesDeSaude = cds;
+            var dr = rep.GetModel(_c => _c.TP_Doenca_Respiratoria.Where(x => doencaRespiratoria.Contains(x.codigo)).ToListAsync(), (doencas) => doencas.Select(dcs =>
+            {
+                var _dcs = c.DoencaRespiratoria.Create();
 
-                    cds.DoencaRins.Add(@dcs);
-                    DomainContainer.Current.DoencaRins.Add(@dcs);
-                }
+                _dcs.id_tp_doenca_respiratoria = dcs.codigo;
+                _dcs.id_condicao_de_saude = cds.id;
+
+                cds.DoencaRespiratoria.Add(_dcs);
+                c.DoencaRespiratoria.Add(_dcs);
+
+                return _dcs;
+            }));
+
+            var dcr = rep.GetModel(_c => _c.TP_Doenca_Renal.Where(x => doencaRins.Contains(x.codigo)).ToListAsync(), (doencas) => doencas.Select(dcs =>
+            {
+                var _dcs = c.DoencaRins.Create();
+
+                _dcs.id_tp_doenca_rins = dcs.codigo;
+                _dcs.id_condicao_de_saude = cds.id;
+
+                cds.DoencaRins.Add(_dcs);
+                c.DoencaRins.Add(_dcs);
+
+                return _dcs;
+            }));
+
+            await Task.WhenAll(dc, dr, dcr);
 
             return cds;
         }

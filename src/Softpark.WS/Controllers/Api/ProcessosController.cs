@@ -32,6 +32,12 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
+            if (!ModelState.IsValid)
+            {
+                Log.Fatal(ModelState);
+                return BadRequest(ModelState);
+            }
+
             using (var Domain = Repository)
             {
                 var origem = Domain.Create(c => c.OrigemVisita, async (db, o) =>
@@ -82,6 +88,7 @@ namespace Softpark.WS.Controllers.Api
         {
             if (!ModelState.IsValid)
             {
+                Log.Fatal(ModelState);
                 return BadRequest(ModelState);
             }
 
@@ -89,7 +96,7 @@ namespace Softpark.WS.Controllers.Api
             {   
                 try
                 {
-                    await Domain.CreateFichasVisita(child.token ?? Guid.Empty, new[] { child });
+                    await Domain.CreateFichasVisita(child.token ?? Guid.Empty, new[] { child }, true);
 
                     await Domain.SaveChanges();
                 }
@@ -112,32 +119,31 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
+            Log.Info("-----");
+            Log.Info("POST enviar/cadastro/individual");
+            Log.Info($"TOKEN {cadInd.token}");
+
             if (!ModelState.IsValid)
             {
+                Log.Fatal(ModelState);
                 return BadRequest(ModelState);
             }
 
-            var origem = await Domain.OrigemVisita.FindAsync(cadInd.token);
-
-            var header = origem?.UnicaLotacaoTransport?.FirstOrDefault();
-
-            if (origem == null || origem.finalizado || header == null)
+            using (var Domain = Repository)
             {
-                throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
+                try
+                {
+                    await Domain.CreateFichasIndividuais(cadInd.token, new[] { cadInd }, true);
+
+                    await Domain.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
             }
 
-            await ProcessarIndividuos(new[] { cadInd }, header, true);
-
-            var cad = await cadInd.ToModel();
-            cad.tpCdsOrigem = 3;
-            cad.UnicaLotacaoTransport = header;
-
-            cad.Validar();
-
-            Domain.CadastroIndividual.Add(cad);
-            
-            await Domain.SaveChangesAsync();
-            
             return Ok(true);
         }
 
@@ -160,30 +166,21 @@ namespace Softpark.WS.Controllers.Api
                 return BadRequest(ModelState);
             }
 
-            var origem = await Domain.OrigemVisita.FindAsync(cadDom.token);
-
-            if (origem == null || origem.finalizado)
+            using (var Domain = Repository)
             {
-                Log.Fatal("Token inválido. Inicie o processo de transmissão.");
-                throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
+                try
+                {
+                    await Domain.CreateFichasDomiciliares(cadDom.token, new[] { cadDom }, true);
+
+                    await Domain.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
             }
 
-            var header = origem.UnicaLotacaoTransport.FirstOrDefault();
-            var cad = await cadDom.ToModel();
-            cad.tpCdsOrigem = 3;
-            cad.UnicaLotacaoTransport = header;
-            if (header == null)
-            {
-                Log.Fatal("Token inválido. Inicie o processo de transmissão.");
-                throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
-            }
-
-            await cad.Validar();
-
-            Domain.CadastroDomiciliar.Add(cad);
-            
-            await Domain.SaveChangesAsync();
-            
             return Ok(true);
         }
 
@@ -199,121 +196,64 @@ namespace Softpark.WS.Controllers.Api
             Log.Info("-----");
             Log.Info("POST api/processos/enviar/cadastro/atomico");
 
-            var origem = Domain.OrigemVisita.Create();
-
-            origem.token = Guid.NewGuid();
-            origem.id_tipo_origem = 1;
-            origem.enviarParaThrift = true;
-            origem.enviado = false;
-
-            Domain.OrigemVisita.Add(origem);
-
-            await Domain.SaveChangesAsync();
-
-            try
+            using (var Domain = Repository)
             {
-                foreach (var cadastro in cadastros)
+                try
                 {
-                    var header = cadastro.cabecalho.ToModel();
+                    var token = Guid.NewGuid();
 
-                    header.id = Guid.NewGuid();
-                    header.OrigemVisita = origem;
-                    header.token = origem.token;
-                    
-                    Domain.UnicaLotacaoTransport.Add(header);
+                    var origem = Domain.Create(c => c.OrigemVisita, (c, o) => {
+                        o.token = token;
+                        o.id_tipo_origem = 1;
+                        o.enviarParaThrift = true;
 
-                    await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null &&
-                    x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
+                        return Task.FromResult(o);
+                    });
 
-                    await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao == null ||
-                    !x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
+                    var tasks = new List<Task>();
 
-                    foreach (var domicilio in cadastro.domicilios)
+                    foreach (var cadastro in cadastros)
                     {
-                        var cad = await domicilio.ToModel();
-                        cad.tpCdsOrigem = 3;
-                        cad.UnicaLotacaoTransport = header;
-
-                        Domain.CadastroDomiciliar.Add(cad);
-                    }
-
-                    var masters = new List<FichaVisitaDomiciliarMaster>();
-
-                    Func<FichaVisitaDomiciliarMaster> getOrCreateMaster = () =>
-                    {
-                        var master = masters.FirstOrDefault(x => x.FichaVisitaDomiciliarChild.Count < 99) ?? Domain.FichaVisitaDomiciliarMaster.Create();
-
-                        if (master.uuidFicha != null) return master;
-
-                        master.tpCdsOrigem = 3;
-                        master.UnicaLotacaoTransport = header;
-
-                        master.uuidFicha = header.cnes + '-' + Guid.NewGuid();
-
-                        Domain.FichaVisitaDomiciliarMaster.Add(master);
-
-                        return master;
-                    };
-
-                    foreach (var child in cadastro.visitas)
-                    {
-                        var master = getOrCreateMaster();
-
-                        var ficha = child.ToModel();
-
-                        foreach (var motivoId in child.motivosVisita)
+                        var header = Domain.Create(c => c.UnicaLotacaoTransport, async (c, transport) =>
                         {
-                            var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
+                            transport = cadastro.cabecalho.ToModel(ref transport);
+                            origem.Wait();
+                            var orig = await origem;
+                            transport.OrigemVisita = orig;
+                            transport.token = orig.token;
+                            return transport;
+                        });
 
-                            if (motivo != null)
-                                ficha.SIGSM_MotivoVisita.Add(motivo);
-                        }
+                        tasks.Add(header);
 
-                        Domain.FichaVisitaDomiciliarChild.Add(ficha);
+                        var fichasResp = cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null && x.identificacaoUsuarioCidadao.statusEhResponsavel);
 
-                        if (ficha.dtNascimento != null)
-                            Epoch.ValidateBirthDate(child.dtNascimento ?? 0, master.UnicaLotacaoTransport.dataAtendimento.ToUnix());
+                        var cadsResp = Domain.CreateFichasIndividuais(header, fichasResp);
 
-                        ficha.FichaVisitaDomiciliarMaster = master;
+                        tasks.Add(cadsResp);
+
+                        var fichasNRes = cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao == null || !x.identificacaoUsuarioCidadao.statusEhResponsavel);
+
+                        var cadsNRes = Domain.CreateFichasIndividuais(header, fichasNRes);
+
+                        tasks.Add(cadsNRes);
+
+                        var cadsDoms = Domain.CreateFichasDomiciliares(header, cadastro.domicilios);
+
+                        await Domain.CreateFichasVisita(header, cadastro.visitas, false, true);
                     }
+
+                    await Domain.SaveChanges();
                 }
-            }
-            catch(Exception e)
-            {
-                Log.Fatal(e.Message);
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
-            }
-
-            try
-            {
-                await Domain.SaveChangesAsync();
-
-                Domain.PR_ProcessarFichasAPI(origem.token);
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e.Message);
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                catch (Exception e)
+                {
+                    Log.Error(e.Message);
+                    var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
             }
 
             return Ok(true);
-        }
-
-        private async Task ProcessarIndividuos(IEnumerable<PrimitiveCadastroIndividualViewModel> individuos,
-            UnicaLotacaoTransport header, bool validar = false)
-        {
-            foreach (var individuo in individuos)
-            {
-                var cad = await individuo.ToModel();
-                cad.tpCdsOrigem = 3;
-                cad.UnicaLotacaoTransport = header;
-
-                if (validar) cad.Validar();
-                
-                Domain.CadastroIndividual.Add(cad);
-            }
         }
 
         /// <summary>
@@ -325,20 +265,23 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> FinalizarTransmissao([FromUri, Required] Guid token)
         {
-            var origem = await Domain.OrigemVisita.FindAsync(token);
+            using (var Domain = Repository)
+            {
+                var origem = await Domain.GetModel(c => c.OrigemVisita.FindAsync(token));
 
-            if (origem == null || origem.finalizado)
-            {
-                throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
-            }
-            else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
-            {
-                Domain.PR_ProcessarFichasAPI(token);
-            }
-            else
-            {
-                origem.finalizado = true;
-                await Domain.SaveChangesAsync();
+                if (origem == null || origem.finalizado)
+                {
+                    throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
+                }
+                else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
+                {
+                    await Domain.Execute(c => c.PR_ProcessarFichasAPI(token));
+                }
+                else
+                {
+                    origem.finalizado = true;
+                    await Domain.SaveChanges();
+                }
             }
 
             return Ok(true);

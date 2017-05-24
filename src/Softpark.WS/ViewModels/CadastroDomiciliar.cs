@@ -69,13 +69,15 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<CadastroDomiciliar> ToModel()
+        public async Task<CadastroDomiciliar> ToModel(CadastroDomiciliar dc, DomainContainer c, Repository rep)
         {
-            var dc = DomainContainer.Current.CadastroDomiciliar.Create();
+            var cm = condicaoMoradia?.ToModel(c);
+            var elp = enderecoLocalPermanencia?.ToModel(c);
+            var ip = instituicaoPermanencia?.ToModel(c);
 
             dc.id = Guid.NewGuid();
-            dc.CondicaoMoradia1 = condicaoMoradia?.ToModel();
-            dc.EnderecoLocalPermanencia1 = enderecoLocalPermanencia?.ToModel();
+            dc.CondicaoMoradia1 = cm;
+            dc.EnderecoLocalPermanencia1 = elp;
             dc.fichaAtualizada = fichaAtualizada;
             dc.quantosAnimaisNoDomicilio = quantosAnimaisNoDomicilio;
             dc.stAnimaisNoDomicilio = stAnimaisNoDomicilio;
@@ -83,26 +85,27 @@ namespace Softpark.WS.ViewModels
             dc.tpCdsOrigem = 3;
             dc.uuidFichaOriginadora = uuidFichaOriginadora;
             dc.tipoDeImovel = tipoDeImovel;
-            dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel();
+            dc.InstituicaoPermanencia1 = ip;
             dc.latitude = latitude;
             dc.longitude = longitude;
 
-            TP_Animais an;
-            foreach (var a in animalNoDomicilio)
-                if ((an = await DomainContainer.Current.TP_Animais.FirstOrDefaultAsync(x => x.codigo == a)) != null)
-                {
-                    var animal = DomainContainer.Current.AnimalNoDomicilio.Create();
-                    animal.id_tp_animal = an.codigo;
-                    animal.CadastroDomiciliar = dc;
-                    dc.AnimalNoDomicilio.Add(animal);
-                    DomainContainer.Current.AnimalNoDomicilio.Add(animal);
-                }
-
-            foreach (var fr in familiaRow)
+            var and = rep.GetModel(_c => _c.TP_Animais.Where(x => animalNoDomicilio.Contains(x.codigo)).ToListAsync(), animais => animais.Select(an =>
             {
-                dc.FamiliaRow.Add(fr.ToModel());
-            }
+                var animal = c.AnimalNoDomicilio.Create();
 
+                animal.id_tp_animal = an.codigo;
+                animal.id_cadastro_domiciliar = dc.id;
+
+                dc.AnimalNoDomicilio.Add(animal);
+                c.AnimalNoDomicilio.Add(animal);
+
+                return animal;
+            }));
+
+            await Task.WhenAll(and);
+
+            familiaRow.ToList().ForEach(fr => dc.FamiliaRow.Add(fr.ToModel(c)));
+            
             return dc;
         }
 
@@ -122,9 +125,7 @@ namespace Softpark.WS.ViewModels
         internal void ApplyModel(CadastroDomiciliar model)
         {
             if (model == null) return;
-
-            var db = DomainContainer.Current;
-
+            
             token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
             condicaoMoradia = model.CondicaoMoradia1;
             enderecoLocalPermanencia = model.EnderecoLocalPermanencia1;
@@ -212,9 +213,9 @@ namespace Softpark.WS.ViewModels
         public long? resideDesde { get; set; } = null;
         public bool stMudanca { get; set; }
 
-        public FamiliaRow ToModel()
+        public FamiliaRow ToModel(DomainContainer c)
         {
-            var fr = DomainContainer.Current.FamiliaRow.Create();
+            var fr = c.FamiliaRow.Create();
 
             fr.id = Guid.NewGuid();
             fr.dataNascimentoResponsavel = dataNascimentoResponsavel?.FromUnix();
@@ -225,7 +226,7 @@ namespace Softpark.WS.ViewModels
             fr.resideDesde = resideDesde?.FromUnix();
             fr.stMudanca = stMudanca;
 
-            DomainContainer.Current.FamiliaRow.Add(fr);
+            c.FamiliaRow.Add(fr);
 
             return fr;
         }
@@ -266,9 +267,9 @@ namespace Softpark.WS.ViewModels
         public string cargoInstituicao { get; set; } = null;
         public string telefoneResponsavelTecnico { get; set; } = null;
 
-        internal InstituicaoPermanencia ToModel()
+        internal InstituicaoPermanencia ToModel(DomainContainer c)
         {
-            var ip = DomainContainer.Current.InstituicaoPermanencia.Create();
+            var ip = c.InstituicaoPermanencia.Create();
 
             ip.id = Guid.NewGuid();
             ip.nomeInstituicaoPermanencia = nomeInstituicaoPermanencia;
@@ -278,7 +279,7 @@ namespace Softpark.WS.ViewModels
             ip.cargoInstituicao = cargoInstituicao;
             ip.telefoneResponsavelTecnico = telefoneResponsavelTecnico;
 
-            DomainContainer.Current.InstituicaoPermanencia.Add(ip);
+            c.InstituicaoPermanencia.Add(ip);
 
             return ip;
         }
@@ -326,9 +327,9 @@ namespace Softpark.WS.ViewModels
         public string microarea { get; set; } = null;
         public bool stForaArea { get; set; }
 
-        internal EnderecoLocalPermanencia ToModel()
+        internal EnderecoLocalPermanencia ToModel(DomainContainer c)
         {
-            var elp = DomainContainer.Current.EnderecoLocalPermanencia.Create();
+            var elp = c.EnderecoLocalPermanencia.Create();
 
             elp.id = Guid.NewGuid();
             elp.bairro = bairro;
@@ -346,7 +347,7 @@ namespace Softpark.WS.ViewModels
             elp.microarea = microarea;
             elp.stForaArea = stForaArea;
 
-            DomainContainer.Current.EnderecoLocalPermanencia.Add(elp);
+            c.EnderecoLocalPermanencia.Add(elp);
 
             return elp;
         }
@@ -401,9 +402,9 @@ namespace Softpark.WS.ViewModels
         public int? tipoDomicilio { get; set; } = null;
         public int? aguaConsumoDomicilio { get; set; } = null;
 
-        internal CondicaoMoradia ToModel()
+        internal CondicaoMoradia ToModel(DomainContainer c)
         {
-            var cm = DomainContainer.Current.CondicaoMoradia.Create();
+            var cm = c.CondicaoMoradia.Create();
 
             cm.id = Guid.NewGuid();
             cm.abastecimentoAgua = abastecimentoAgua;
@@ -420,7 +421,7 @@ namespace Softpark.WS.ViewModels
             cm.tipoDomicilio = tipoDomicilio;
             cm.aguaConsumoDomicilio = aguaConsumoDomicilio;
 
-            DomainContainer.Current.CondicaoMoradia.Add(cm);
+            c.CondicaoMoradia.Add(cm);
 
             return cm;
         }

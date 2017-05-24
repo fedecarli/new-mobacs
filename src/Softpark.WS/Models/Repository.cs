@@ -98,31 +98,40 @@ namespace Softpark.WS
             return ps.Values.ToArray();
         }
 
-        public async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
+        public async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token, bool mock = false)
         {
-            var transport = GetHeader(token);
+            return await GetOrCreateMaster(GetHeader(token), mock);
+        }
 
-            var masterVisita = await GetModel(c => c.FichaVisitaDomiciliarMaster.FirstOrDefaultAsync(m => m.FichaVisitaDomiciliarChild.Count < 99), async r =>
+        private static List<FichaVisitaDomiciliarMaster>  masters = new List<FichaVisitaDomiciliarMaster>();
+        
+        public async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Task<UnicaLotacaoTransport> transport, bool mock = false)
+        {
+            var masterVisitas = Task.FromResult(masters.Where(m => m.FichaVisitaDomiciliarChild.Count < 99).ToList());
+
+            if(!mock)
             {
-                if (r == null)
-                {
-                    return await Create(c => c.FichaVisitaDomiciliarMaster, async (c, e) =>
+                masterVisitas = GetModel(c => c.FichaVisitaDomiciliarMaster.Where(m => m.FichaVisitaDomiciliarChild.Count < 99).ToListAsync());
+            }
+
+            Func<Task<FichaVisitaDomiciliarMaster>> getOrCreateMaster = async () =>
+            {
+                transport.Wait();
+                var header = await transport;
+
+                return masters.FirstOrDefault(x => x.headerTransport == header.id) ??
+                    await Create(c => c.FichaVisitaDomiciliarMaster, (c, m) =>
                     {
-                        transport.Wait();
-
-                        var header = await transport;
-
-                        e.tpCdsOrigem = 3;
-                        e.headerTransport = header.id;
-                        e.uuidFicha = header.cnes + '-' + Guid.NewGuid();
-                        return e;
+                        m.tpCdsOrigem = 3;
+                        m.headerTransport = header.id;
+                        m.uuidFicha = header.cnes + '-' + Guid.NewGuid();
+                        return Task.FromResult(m);
                     });
-                }
+            };
 
-                return r;
-            });
+            var masterVisita = getOrCreateMaster();
 
-            await Task.WhenAll(transport, masterVisita);
+            await Task.WhenAll(transport, masterVisitas, masterVisita);
 
             return await masterVisita;
         }
@@ -293,13 +302,23 @@ namespace Softpark.WS
             return results.ToArray();
         }
 
-        public async Task CreateFichasVisita(Guid token, IEnumerable<FichaVisitaDomiciliarChildCadastroViewModel> fichas, bool validar = true)
+        public async Task<T> Execute<T>(Func<DomainContainer, T> p)
+        {
+            return await Task.Run(() => p(_context.Value));
+        }
+
+        public async Task CreateFichasVisita(Guid token, IEnumerable<FichaVisitaDomiciliarChildCadastroViewModel> fichas, bool validar = false, bool mock = false)
+        {
+            await CreateFichasVisita(GetHeader(token), fichas, validar, mock);
+        }
+
+        public async Task CreateFichasVisita(Task<UnicaLotacaoTransport> transport, IEnumerable<FichaVisitaDomiciliarChildCadastroViewModel> fichas, bool validar = false, bool mock = false)
         {
             var tfichas = new List<Task<FichaVisitaDomiciliarChild>>();
 
             foreach (var child in fichas)
             {
-                var masterVisita = GetOrCreateMaster(token);
+                var masterVisita = GetOrCreateMaster(transport, mock);
 
                 masterVisita.Wait();
 
@@ -309,22 +328,21 @@ namespace Softpark.WS
                 {
                     var ficha = child.ToModel(ref f);
 
-                    foreach (var motivoId in child.motivosVisita)
+                    var tasks = child.motivosVisita.ToList().Select(async motivoId =>
                     {
-                        var model = c.SIGSM_MotivoVisita.FindAsync(motivoId);
-
-                        model.Wait();
-
-                        var motivo = await model;
-
+                        var motivo = await GetModel(_c => _c.SIGSM_MotivoVisita.FindAsync(motivoId));
                         if (motivo != null)
                             ficha.SIGSM_MotivoVisita.Add(motivo);
-                    }
+
+                        return motivo;
+                    });
 
                     if (ficha.dtNascimento != null)
                         ficha.dtNascimento.Value.IsValidBirthDateTime(master.UnicaLotacaoTransport.dataAtendimento);
 
                     ficha.uuidFicha = master.uuidFicha;
+
+                    await Task.WhenAll(tasks);
 
                     if (validar) ficha.Validar();
 
@@ -332,11 +350,97 @@ namespace Softpark.WS
                 });
 
                 tfichas.Add(fichaVisita);
+
+                await fichaVisita;
+            }
+
+            await Task.WhenAll(tfichas);
+        }
+
+        public async Task CreateFichasIndividuais(Guid token, IEnumerable<PrimitiveCadastroIndividualViewModel> cadastros, bool validar = false)
+        {
+            await CreateFichasIndividuais(GetHeader(token), cadastros, validar);
+        }
+        
+        public async Task CreateFichasIndividuais(Task<UnicaLotacaoTransport> transport, IEnumerable<PrimitiveCadastroIndividualViewModel> cadastros, bool validar = false)
+        {
+            var tfichas = new List<Task<CadastroIndividual>>();
+
+            var hasErrors = false;
+            var throws = new Dictionary<PrimitiveCadastroIndividualViewModel, IList<Exception>>();
+
+            foreach (var cadInd in cadastros)
+            {
+                try
+                {
+                    var cadastro = Create(c => c.CadastroIndividual, async (c, f) => {
+                        var cad = await cadInd.ToModel(f, this);
+                        
+                        cad.tpCdsOrigem = 3;
+                        transport.Wait();
+                        cad.UnicaLotacaoTransport = await transport;
+
+                        if (validar) await cad.Validar(c);
+
+                        return cad;
+                    });
+                }
+                catch (Exception e)
+                {
+                    hasErrors = true;
+                    if (!throws.ContainsKey(cadInd)) throws.Add(cadInd, new List<Exception>());
+
+                    throws[cadInd].Add(e);
+                    continue;
+                }
             }
 
             await Task.WhenAll(tfichas);
 
-            tfichas.ForEach(async f => await f);
+            if (hasErrors) throw new SomeErrors<PrimitiveCadastroIndividualViewModel>(throws);
+        }
+
+        public async Task CreateFichasDomiciliares(Guid token, IEnumerable<PrimitiveCadastroDomiciliarViewModel> cadastros, bool validar = false)
+        {
+            await CreateFichasDomiciliares(GetHeader(token), cadastros, validar);
+        }
+
+        public async Task CreateFichasDomiciliares(Task<UnicaLotacaoTransport> transport, IEnumerable<PrimitiveCadastroDomiciliarViewModel> cadastros, bool validar = false)
+        {
+            var tfichas = new List<Task<CadastroDomiciliar>>();
+
+            var hasErrors = false;
+            var throws = new Dictionary<PrimitiveCadastroDomiciliarViewModel, IList<Exception>>();
+
+            foreach (var cadDom in cadastros)
+            {
+                try
+                {
+                    var cadastro = Create(c => c.CadastroDomiciliar, async (c, f) => {
+                        var cad = await cadDom.ToModel(f, c, this);
+
+                        cad.tpCdsOrigem = 3;
+                        transport.Wait();
+                        cad.UnicaLotacaoTransport = await transport;
+
+                        if (validar) await cad.Validar(c);
+
+                        return cad;
+                    });
+                }
+                catch (Exception e)
+                {
+                    hasErrors = true;
+                    if (!throws.ContainsKey(cadDom)) throws.Add(cadDom, new List<Exception>());
+
+                    throws[cadDom].Add(e);
+                    continue;
+                }
+            }
+
+            await Task.WhenAll(tfichas);
+
+            if (hasErrors) throw new SomeErrors<PrimitiveCadastroDomiciliarViewModel>(throws);
         }
 
         private Task<T> WithContext<T>(Func<DomainContainer, Task<T>> func)
@@ -354,15 +458,29 @@ namespace Softpark.WS
 
         public Task<T> Create<T>(Func<DomainContainer, DbSet<T>> func, Func<DomainContainer, T, Task<T>> then) where T : class
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                DbSet<T> table = func(_context.Value);
+                var table = func(_context.Value);
 
                 var entity = table.Create();
 
-                table.Add(entity);
+                try
+                {
+                    var ret = then(_context.Value, entity);
 
-                return then(_context.Value, entity);
+                    table.Add(entity);
+
+                    return await ret;
+                }
+                catch(Exception)
+                {
+                    if (await table.ContainsAsync(entity))
+                    {
+                        table.Remove(entity);
+                    }
+
+                    throw;
+                }
             });
         }
 
