@@ -66,6 +66,9 @@
     <Reference Include="Flurl, Version=2.3.0.0, Culture=neutral, PublicKeyToken=1308302a96879dfb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Flurl.Signed.2.3.0\lib\portable40-net40+sl5+win8+wp8+wpa81\Flurl.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Authorization, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Authorization.1.1.1\lib\net451\Microsoft.AspNetCore.Authorization.dll</HintPath>
     </Reference>
@@ -377,11 +380,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\CboValidation.cs" />
     <Compile Include="Validators\ExceptionHandlingAttribute.cs" />
-    <Compile Include="Validators\MotivoVisitaValidation.cs" />
     <Compile Include="Validators\IneValidation.cs" />
     <Compile Include="Validators\CnesValidation.cs" />
     <Compile Include="Validators\CnsValidation.cs" />
-    <Compile Include="Validators\SigApiControllerActionInvoker.cs" />
     <Compile Include="ViewModels\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\CadastroIndividual.cs" />
     <Compile Include="ViewModels\FichaVisitaDomiciliarChildViewModels.cs" />

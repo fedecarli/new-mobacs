@@ -48,7 +48,7 @@ warning 6002: The table/view 'SIGSM.api.ASSMED_CadastroIndividualVinc' does not 
           <Property Name="stAnimaisNoDomicilio" Type="bit" Nullable="false" />
           <Property Name="statusTermoRecusa" Type="bit" Nullable="false" />
           <Property Name="tpCdsOrigem" Type="int" Nullable="false" />
-          <Property Name="uuidFichaOriginadora" Type="nvarchar" MaxLength="44" />
+          <Property Name="uuidFichaOriginadora" Type="uniqueidentifier" />
           <Property Name="tipoDeImovel" Type="int" Nullable="false" />
           <Property Name="instituicaoPermanencia" Type="uniqueidentifier" />
           <Property Name="headerTransport" Type="uniqueidentifier" Nullable="false" />
@@ -68,7 +68,7 @@ warning 6002: The table/view 'SIGSM.api.ASSMED_CadastroIndividualVinc' does not 
           <Property Name="informacoesSocioDemograficas" Type="uniqueidentifier" />
           <Property Name="statusTermoRecusaCadastroIndividualAtencaoBasica" Type="bit" Nullable="false" />
           <Property Name="tpCdsOrigem" Type="int" Nullable="false" />
-          <Property Name="uuidFichaOriginadora" Type="nchar" MaxLength="44" />
+          <Property Name="uuidFichaOriginadora" Type="uniqueidentifier" />
           <Property Name="saidaCidadaoCadastro" Type="uniqueidentifier" />
           <Property Name="headerTransport" Type="uniqueidentifier" Nullable="false" />
           <Property Name="latitude" Type="nvarchar" MaxLength="20" />
@@ -2602,7 +2602,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="stAnimaisNoDomicilio" Type="Boolean" Nullable="false" />
           <Property Name="statusTermoRecusa" Type="Boolean" Nullable="false" />
           <Property Name="tpCdsOrigem" Type="Int32" Nullable="false" />
-          <Property Name="uuidFichaOriginadora" Type="String" MaxLength="44" FixedLength="false" Unicode="true" />
+          <Property Name="uuidFichaOriginadora" Type="Guid" />
           <Property Name="tipoDeImovel" Type="Int32" Nullable="false" />
           <Property Name="instituicaoPermanencia" Type="Guid" />
           <Property Name="headerTransport" Type="Guid" Nullable="false" />
@@ -2629,7 +2629,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="informacoesSocioDemograficas" Type="Guid" />
           <Property Name="statusTermoRecusaCadastroIndividualAtencaoBasica" Type="Boolean" Nullable="false" />
           <Property Name="tpCdsOrigem" Type="Int32" Nullable="false" />
-          <Property Name="uuidFichaOriginadora" Type="String" MaxLength="44" FixedLength="true" Unicode="true" />
+          <Property Name="uuidFichaOriginadora" Type="Guid" />
           <Property Name="saidaCidadaoCadastro" Type="Guid" />
           <Property Name="headerTransport" Type="Guid" Nullable="false" />
           <Property Name="latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />

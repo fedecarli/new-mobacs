@@ -98,7 +98,6 @@ namespace Softpark.WS.ViewModels
         /// Motivos da visita
         /// </summary>
         [DataMember(Name = nameof(FichaVisitaDomiciliarChildCadastroViewModel.motivosVisita))]
-        [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
         public ICollection<SIGSM_MotivoVisita> MotivosVisita { get; set; } = new HashSet<SIGSM_MotivoVisita>();
 
         /// <summary>
@@ -223,25 +222,19 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Token da transmissão
         /// </summary>
-        [Required]
         [DataMember(Name = nameof(OrigemVisita.token))]
         public Guid? token { get; set; }
 
         /// <summary>
         /// Turno da visita
         /// </summary>
-        [Required]
         [DataMember(Name = nameof(turno))]
-        [RegularExpression(@"^([123])$", ErrorMessage = "O campo turno espera pelos valores 1, 2 ou 3.")]
-        [Range(1, 3, ErrorMessage = "O campo turno espera pelos valores 1, 2 ou 3.")]
         // ReSharper disable once InconsistentNaming
         public long turno { get; set; }
 
         /// <summary>
         /// Número do prontuário
         /// </summary>
-        [RegularExpression(@"^([a-zA-Z0-9]*)$", ErrorMessage = "O campo numProntuario aceita somente letras e números.")]
-        [StringLength(30, MinimumLength = 0, ErrorMessage = "O campo numProntuario deve ter entre 0 e 30 caracteres.")]
         [DataMember(Name = nameof(numProntuario))]
         // ReSharper disable once InconsistentNaming
         public string numProntuario { get; set; }
@@ -249,10 +242,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Cns do Cidadão
         /// </summary>
-        [RegularExpression(@"^([12789])([0-9]+)$", ErrorMessage = "O campo cnsCidadao deve iniciar com 1, 2, 7, 8 ou 9 e deve conter somente números.")]
-        [StringLength(15, MinimumLength = 15, ErrorMessage = "O campo cnsCidadao deve ter exatamente 15 caracteres")]
         [DataMember(Name = nameof(cnsCidadao))]
-        [CnsValidation(true, ErrorMessage = "CNS inválido")]
         // ReSharper disable once InconsistentNaming
         public string cnsCidadao { get; set; }
 
@@ -260,7 +250,6 @@ namespace Softpark.WS.ViewModels
         /// Data de Nascimento
         /// </summary>
         [DataMember(Name = nameof(dtNascimento))]
-        [CustomValidation(typeof(Epoch), nameof(Epoch.ValidateESUSDate), ErrorMessage = "Data de nascimento inválida.")]
         // ReSharper disable once InconsistentNaming
         public long? dtNascimento { get; set; }
 
@@ -268,7 +257,6 @@ namespace Softpark.WS.ViewModels
         /// Sexo do cidadão
         /// </summary>
         [DataMember(Name = nameof(sexo))]
-        [RegularExpression(@"^([014])$", ErrorMessage = "O campo sexo espera pelos valores 0, 1 ou 4.")]
         // ReSharper disable once InconsistentNaming
         public long? sexo { get; set; }
 
@@ -276,16 +264,13 @@ namespace Softpark.WS.ViewModels
         /// Motivos da visita
         /// </summary>
         [DataMember(Name = nameof(motivosVisita))]
-        [MotivoVisitaValidation(ErrorMessage = "Um ou mais motivos estão inválidos.")]
         // ReSharper disable once InconsistentNaming
-        public ISet<long> motivosVisita { get; set; } = new HashSet<long>();
+        public long[] motivosVisita { get; set; } = new long[0];
 
         /// <summary>
         /// Desfecho da visita
         /// </summary>
         [DataMember(Name = nameof(desfecho))]
-        [Required]
-        [Range(1, 3, ErrorMessage = "O campo desfecho espera pelos valores 1, 2 ou 3.")]
         // ReSharper disable once InconsistentNaming
         public long desfecho { get; set; }
 
@@ -293,7 +278,6 @@ namespace Softpark.WS.ViewModels
         /// Micro área do atendimento
         /// </summary>
         [DataMember(Name = nameof(microarea))]
-        [StringLength(2, MinimumLength = 2, ErrorMessage = "O campo microarea deve ter exatamente 2 digitos.")]
         // ReSharper disable once InconsistentNaming
         public string microarea { get; set; }
 
@@ -308,8 +292,6 @@ namespace Softpark.WS.ViewModels
         /// Tipo de imóvel da visita
         /// </summary>
         [DataMember(Name = nameof(tipoDeImovel))]
-        [Required]
-        [RegularExpression(@"^([1-9]|1[012]|99)$", ErrorMessage = "O campo tipoDeImovel espera um tipo válido. Consulte http://esusab.github.io/integracao/docs/dicionario/dicionario.html#tipodeimovel.")]
         // ReSharper disable once InconsistentNaming
         public long tipoDeImovel { get; set; }
 
@@ -317,19 +299,17 @@ namespace Softpark.WS.ViewModels
         /// Peso do paciente
         /// </summary>
         [DataMember(Name = nameof(pesoAcompanhamentoNutricional))]
-        [Range(0.5, 500, ErrorMessage = "O campo pesoAcompanhamentoNutricional deve ter entre 0.5 e 500 Kg.")]
         [DefaultValue(null)]
         // ReSharper disable once InconsistentNaming
-        public double? pesoAcompanhamentoNutricional { get; set; }
+        public double? pesoAcompanhamentoNutricional { get; set; } = null;
 
         /// <summary>
         /// Altura do paciente
         /// </summary>
         [DataMember(Name = nameof(alturaAcompanhamentoNutricional))]
-        [Range(20, 250, ErrorMessage = "O campo alturaAcompanhamentoNutricional deve ter entre 20 e 250 cm.")]
         [DefaultValue(null)]
         // ReSharper disable once InconsistentNaming
-        public double? alturaAcompanhamentoNutricional { get; set; }
+        public double? alturaAcompanhamentoNutricional { get; set; } = null;
 
         /// <summary>
         /// Visita compartilhada

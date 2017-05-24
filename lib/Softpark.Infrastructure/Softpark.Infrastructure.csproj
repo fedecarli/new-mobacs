@@ -70,6 +70,7 @@
     <Compile Include="IDTO.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Versions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="key.snk" />

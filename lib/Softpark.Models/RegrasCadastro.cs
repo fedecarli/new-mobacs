@@ -52,7 +52,7 @@ namespace Softpark.Models
             nome = nome.Trim().RemoveDiacritics().ToUpperInvariant();
             var words = nome.SplitWords();
             return !(nome.Length < 3 || nome.Length > 70 || words.Length == 1
-            || words.Any(x => x.Length == 1 && (x != "E" && x != "Y")) || words.First().Length < 3 || words.Last().Length < 3
+            || words.Any(x => x.Length == 1 && (x != "E" && x != "Y"))
             || Regex.IsMatch(nome, "([^a-zA-Z '])") || (words.Length == 2 && words.All(x => x.Length == 2)));
         }
 
@@ -80,7 +80,7 @@ namespace Softpark.Models
             if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != header.ine.Trim()))
                 throw new ValidationException("INE não encontrado.");
 
-            var validEpoch = Epoch.ValidateESUSDate(header.dataAtendimento.ToUnix());
+            var validEpoch = Epoch.ValidateESUSDateTime(header.dataAtendimento);
 
             if (validEpoch != ValidationResult.Success)
                 throw new ValidationException("Data do Atendimento inválida.");
@@ -143,7 +143,7 @@ namespace Softpark.Models
             if (child.dtNascimento != null && proibido)
                 throw new ValidationException("A data de nascimento não deve ser fornecido para o tipo de imóvel selecionado.");
 
-            if (child.dtNascimento != null && !child.dtNascimento.Value.ToUnix().IsValidBirthDate(child.FichaVisitaDomiciliarMaster.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
+            if (child.dtNascimento != null && !child.dtNascimento.Value.IsValidBirthDateTime(child.FichaVisitaDomiciliarMaster.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("Data de nascimento inválida.");
 
             if (child.dtNascimento == null && obrigatorio)
@@ -406,7 +406,7 @@ namespace Softpark.Models
                     throw new ValidationException("O código IBGE do município de nascimento é inválido ou não está cadastrado.");
             }
 
-            if (!cond.dataNascimentoCidadao.ToUnix().IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
+            if (!cond.dataNascimentoCidadao.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("A data de nascimento do cidadão é inválida.");
 
             try
@@ -639,17 +639,12 @@ namespace Softpark.Models
 
             if (!cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift)
             {
-                cad.uuidFichaOriginadora = cad.UnicaLotacaoTransport.cnes + '-' + cad.id;
+                cad.uuidFichaOriginadora = cad.id;
                 cad.fichaAtualizada = false;
             }
 
             if (cad.uuidFichaOriginadora == null && cad.fichaAtualizada)
                 throw new ValidationException("Informe o Uuid da ficha originadora.");
-
-            if (cad.uuidFichaOriginadora != null &&
-                (cad.uuidFichaOriginadora != cad.UnicaLotacaoTransport.cnes + '-' + cad.id && (cad.uuidFichaOriginadora.Trim().Length != 44 ||
-                cad.uuidFichaOriginadora.Substring(0, 7) != cad.UnicaLotacaoTransport.cnes)))
-                throw new ValidationException("Uuid inválido. O CNES informado não corresponde ao cabeçalho.");
 
             cad.SaidaCidadaoCadastro1?.Validar();
         }
@@ -733,7 +728,7 @@ namespace Softpark.Models
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this FamiliaRow cond, CadastroDomiciliar cad)
         {
-            if (cond.dataNascimentoResponsavel != null && !cond.dataNascimentoResponsavel.Value.ToUnix().IsValidBirthDate(cad.UnicaLotacaoTransport.dataAtendimento.ToUnix()))
+            if (cond.dataNascimentoResponsavel != null && !cond.dataNascimentoResponsavel.Value.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("A data de nascimento do responsável está incorreta.");
 
             if (cond.numeroCnsResponsavel == null || !cond.numeroCnsResponsavel.isValidCns())
@@ -866,17 +861,14 @@ namespace Softpark.Models
             if (cad.stAnimaisNoDomicilio && (cad.tipoDeImovel != 1 || cad.statusTermoRecusa))
                 throw new ValidationException("Não pode ser informados animais neste cadastro domiciliar.");
 
-            if (cad.uuidFichaOriginadora == null)
+            if (!cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift)
             {
-                if (!cad.fichaAtualizada)
-                    cad.uuidFichaOriginadora = (cad.UnicaLotacaoTransport.cnes + '-' + cad.id);
-                else
-                    throw new ValidationException("Informe o Uuid da ficha originadora.");
+                cad.uuidFichaOriginadora = cad.id;
+                cad.fichaAtualizada = false;
             }
 
-            if (cad.uuidFichaOriginadora != cad.UnicaLotacaoTransport.cnes + '-' + cad.id && (cad.uuidFichaOriginadora.Trim().Length != 44 ||
-                cad.uuidFichaOriginadora.Substring(0, 7) != cad.UnicaLotacaoTransport.cnes))
-                throw new ValidationException("Uuid inválido. O CNES informado não corresponde ao cabeçalho.");
+            if (cad.uuidFichaOriginadora == null && cad.fichaAtualizada)
+                throw new ValidationException("Informe o Uuid da ficha originadora.");
 
             if (cad.InstituicaoPermanencia1 != null && !((new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel) || cad.statusTermoRecusa))
                 throw new ValidationException("A instituição de permanência não pode ser informada.");
