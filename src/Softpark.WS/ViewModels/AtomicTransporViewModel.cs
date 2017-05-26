@@ -1,4 +1,7 @@
-﻿namespace Softpark.WS.ViewModels
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace Softpark.WS.ViewModels
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class AtomicTransporViewModel

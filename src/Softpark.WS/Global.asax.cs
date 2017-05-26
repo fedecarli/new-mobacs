@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Text;
 
 #pragma warning disable 1591
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace Softpark.WS
 {
     public class WebApiApplication : HttpApplication
@@ -28,7 +29,6 @@ namespace Softpark.WS
             UnityConfig.RegisterComponents();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
 

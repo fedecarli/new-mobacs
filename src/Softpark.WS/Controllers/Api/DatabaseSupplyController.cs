@@ -521,11 +521,11 @@ namespace Softpark.WS.Controllers.Api
                             Descricao = "Ausente"
                         }
                     }.ToList();
-                    break;
-                default:
-                    throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
-            }
-
+                        break;
+                    default:
+                        throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
+                }
+            
             return Ok(model.ToArray());
         }
 
@@ -675,7 +675,7 @@ namespace Softpark.WS.Controllers.Api
                     x.DataCarregado == null &&
                     x.FichaGerada == true &&
                     x.ProfCidadaoVinc.IdProfissional == idProf);
-
+            
             var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
 
             var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
@@ -762,7 +762,7 @@ namespace Softpark.WS.Controllers.Api
                 //    x.DataCarregadoDomiciliar == null &&
                 //    x.FichaDomiciliarGerada == true &&
                 //    x.ProfCidadaoVinc.IdProfissional == idProf);
-
+                
                 //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
 
                 //var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
@@ -793,10 +793,9 @@ namespace Softpark.WS.Controllers.Api
                     Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
                 });
 
-                await Domain.SaveChangesAsync();
+                //await Domain.SaveChangesAsync();
 
                 return Ok(results.ToArray());
-
             }
             catch (Exception ex)
             {
