@@ -46,43 +46,7 @@ namespace Softpark.Models
         /// </summary>
         public Language Language
             => _current.Set<Language>().SqlQuery("SELECT lcid, name FROM SYS.SYSLANGUAGES WHERE NAME =(SELECT @@LANGUAGE)").SingleOrDefault();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static DomainContainer Current => InstallApp();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static DomainContainer InstallApp()
-        {
-            var db = _current ?? (_current = new DomainContainer());
-
-            //var dir = HttpContext.Current.Server.MapPath("~/installation");
-
-            //var path = Directory.GetFiles(dir, "api.sql").First();
-            //var locked = Directory.GetFiles(dir, "lock").Any();
-
-            //if (File.Exists(path) && !locked)
-            //{
-            //    db.Database.ExecuteSqlCommand(File.ReadAllText(path));
-
-            //    File.Create($"{dir}/lock").Close();
-            //}
-
-            return db;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static void Reopen()
-        {
-            _current = new DomainContainer();
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>

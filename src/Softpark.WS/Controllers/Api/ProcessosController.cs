@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,6 +21,12 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class ProcessosController : BaseApiController
     {
+        protected ProcessosController() : base(new DomainContainer()) { }
+
+        public ProcessosController(DomainContainer domain) : base(domain)
+        {
+        }
+
         private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(ProcessosController));
 
         private async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
@@ -74,13 +81,13 @@ namespace Softpark.WS.Controllers.Api
 
             Domain.OrigemVisita.Add(origem);
 
-            var transport = header.ToModel();
+            var transport = header.ToModel(Domain);
 
             transport.id = Guid.NewGuid();
             transport.OrigemVisita = origem;
             transport.token = origem.token;
 
-            transport.Validar();
+            transport.Validar(Domain);
 
             Domain.UnicaLotacaoTransport.Add(transport);
 
@@ -105,7 +112,7 @@ namespace Softpark.WS.Controllers.Api
 
             var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
 
-            var ficha = child.ToModel();
+            var ficha = child.ToModel(Domain);
 
             foreach (var motivoId in child.motivosVisita)
             {
@@ -130,8 +137,15 @@ namespace Softpark.WS.Controllers.Api
             }
             catch (Exception e)
             {
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                Log.Fatal(e.Message);
+
+                if (e is DbEntityValidationException)
+                {
+                    var ex = (e as DbEntityValidationException).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
+
+                throw e;
             }
 
             return Ok(true);
@@ -162,16 +176,16 @@ namespace Softpark.WS.Controllers.Api
 
             await ProcessarIndividuos(new[] { cadInd }, header, true);
 
-            var cad = await cadInd.ToModel();
+            var cad = await cadInd.ToModel(Domain);
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = header;
 
-            cad.Validar();
+            cad.Validar(Domain);
 
             Domain.CadastroIndividual.Add(cad);
-            
+
             await Domain.SaveChangesAsync();
-            
+
             return Ok(true);
         }
 
@@ -203,7 +217,7 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var header = origem.UnicaLotacaoTransport.FirstOrDefault();
-            var cad = await cadDom.ToModel();
+            var cad = await cadDom.ToModel(Domain);
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = header;
             if (header == null)
@@ -212,12 +226,12 @@ namespace Softpark.WS.Controllers.Api
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
 
-            await cad.Validar();
+            await cad.Validar(Domain);
 
             Domain.CadastroDomiciliar.Add(cad);
-            
+
             await Domain.SaveChangesAsync();
-            
+
             return Ok(true);
         }
 
@@ -248,12 +262,12 @@ namespace Softpark.WS.Controllers.Api
             {
                 foreach (var cadastro in cadastros)
                 {
-                    var header = cadastro.cabecalho.ToModel();
+                    var header = cadastro.cabecalho.ToModel(Domain);
 
                     header.id = Guid.NewGuid();
                     header.OrigemVisita = origem;
                     header.token = origem.token;
-                    
+
                     Domain.UnicaLotacaoTransport.Add(header);
 
                     await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null &&
@@ -264,7 +278,7 @@ namespace Softpark.WS.Controllers.Api
 
                     foreach (var domicilio in cadastro.domicilios)
                     {
-                        var cad = await domicilio.ToModel();
+                        var cad = await domicilio.ToModel(Domain);
                         cad.tpCdsOrigem = 3;
                         cad.UnicaLotacaoTransport = header;
 
@@ -293,7 +307,7 @@ namespace Softpark.WS.Controllers.Api
                     {
                         var master = getOrCreateMaster();
 
-                        var ficha = child.ToModel();
+                        var ficha = child.ToModel(Domain);
 
                         foreach (var motivoId in child.motivosVisita)
                         {
@@ -314,11 +328,17 @@ namespace Softpark.WS.Controllers.Api
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Fatal(e.Message);
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+
+                if (e is DbEntityValidationException)
+                {
+                    var ex = (e as DbEntityValidationException).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
+
+                throw e;
             }
 
             try
@@ -330,8 +350,14 @@ namespace Softpark.WS.Controllers.Api
             catch (Exception e)
             {
                 Log.Fatal(e.Message);
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+
+                if (e is DbEntityValidationException)
+                {
+                    var ex = (e as DbEntityValidationException).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
+
+                throw e;
             }
 
             return Ok(true);
@@ -342,12 +368,12 @@ namespace Softpark.WS.Controllers.Api
         {
             foreach (var individuo in individuos)
             {
-                var cad = await individuo.ToModel();
+                var cad = await individuo.ToModel(Domain);
                 cad.tpCdsOrigem = 3;
                 cad.UnicaLotacaoTransport = header;
 
-                if (validar) cad.Validar();
-                
+                if (validar) cad.Validar(Domain);
+
                 Domain.CadastroIndividual.Add(cad);
             }
         }
@@ -367,8 +393,22 @@ namespace Softpark.WS.Controllers.Api
             {
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
-
-            Domain.PR_ProcessarFichasAPI(token);
+            else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
+            {
+                Domain.PR_ProcessarFichasAPI(token);
+            }
+            else
+            {
+                try
+                {
+                    origem.finalizado = true;
+                    await Domain.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Log.Warn("Erro ao tentar finalizar token.", e);
+                }
+            }
 
             return Ok(true);
         }
