@@ -1,6 +1,5 @@
 ﻿using Softpark.Infrastructure.Extras;
 using Softpark.Models;
-using Softpark.WS.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,38 +41,41 @@ namespace Softpark.WS.ViewModels
 
     public class PrimitiveCadastroDomiciliarViewModel
     {
-        public virtual Guid? token { get; set; }
-        public CondicaoMoradiaViewModel condicaoMoradia { get; set; }
-        public EnderecoLocalPermanenciaViewModel enderecoLocalPermanencia { get; set; }
+        public virtual Guid? token { get; set; } = null;
+        public CondicaoMoradiaViewModel condicaoMoradia { get; set; } = null;
+        public EnderecoLocalPermanenciaViewModel enderecoLocalPermanencia { get; set; } = null;
         public bool fichaAtualizada { get; set; }
-        public int? quantosAnimaisNoDomicilio { get; set; }
+        public int? quantosAnimaisNoDomicilio { get; set; } = null;
         public bool stAnimaisNoDomicilio { get; set; }
         public bool statusTermoRecusa { get; set; }
-        public string uuidFichaOriginadora { get; set; }
-        [TipoImovelValidation]
+        public Guid? uuidFichaOriginadora { get; set; } = null;
         public int tipoDeImovel { get; set; }
-        public InstituicaoPermanenciaViewModel instituicaoPermanencia { get; set; }
+        public InstituicaoPermanenciaViewModel instituicaoPermanencia { get; set; } = null;
 
-        public List<int> animalNoDomicilio { get; set; } = new List<int>();
-        public List<FamiliaRowViewModel> familiaRow { get; set; } = new List<FamiliaRowViewModel>();
-
-        /// <summary>
-        /// Latitude de demarcação do início do cadastro
-        /// </summary>
-        public string latitude { get; set; }
+        public int[] animalNoDomicilio { get; set; } = new int[0];
+        public FamiliaRowViewModel[] familiaRow { get; set; } = new FamiliaRowViewModel[0];
 
         /// <summary>
         /// Latitude de demarcação do início do cadastro
         /// </summary>
-        public string longitude { get; set; }
+        public string latitude { get; set; } = null;
 
-        public async Task<CadastroDomiciliar> ToModel()
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string longitude { get; set; } = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<CadastroDomiciliar> ToModel(DomainContainer domain)
         {
-            var dc = DomainContainer.Current.CadastroDomiciliar.Create();
+            var dc = domain.CadastroDomiciliar.Create();
 
             dc.id = Guid.NewGuid();
-            dc.CondicaoMoradia1 = condicaoMoradia?.ToModel();
-            dc.EnderecoLocalPermanencia1 = enderecoLocalPermanencia?.ToModel();
+            dc.CondicaoMoradia1 = condicaoMoradia?.ToModel(domain);
+            dc.EnderecoLocalPermanencia1 = enderecoLocalPermanencia?.ToModel(domain);
             dc.fichaAtualizada = fichaAtualizada;
             dc.quantosAnimaisNoDomicilio = quantosAnimaisNoDomicilio;
             dc.stAnimaisNoDomicilio = stAnimaisNoDomicilio;
@@ -81,24 +83,24 @@ namespace Softpark.WS.ViewModels
             dc.tpCdsOrigem = 3;
             dc.uuidFichaOriginadora = uuidFichaOriginadora;
             dc.tipoDeImovel = tipoDeImovel;
-            dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel();
+            dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel(domain);
             dc.latitude = latitude;
             dc.longitude = longitude;
 
             TP_Animais an;
             foreach (var a in animalNoDomicilio)
-                if ((an = await DomainContainer.Current.TP_Animais.FirstOrDefaultAsync(x => x.codigo == a)) != null)
+                if ((an = await domain.TP_Animais.FirstOrDefaultAsync(x => x.codigo == a)) != null)
                 {
-                    var animal = DomainContainer.Current.AnimalNoDomicilio.Create();
+                    var animal = domain.AnimalNoDomicilio.Create();
                     animal.id_tp_animal = an.codigo;
                     animal.CadastroDomiciliar = dc;
                     dc.AnimalNoDomicilio.Add(animal);
-                    DomainContainer.Current.AnimalNoDomicilio.Add(animal);
+                    domain.AnimalNoDomicilio.Add(animal);
                 }
 
             foreach (var fr in familiaRow)
             {
-                dc.FamiliaRow.Add(fr.ToModel());
+                dc.FamiliaRow.Add(fr.ToModel(domain));
             }
 
             return dc;
@@ -121,8 +123,6 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            var db = DomainContainer.Current;
-
             token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
             condicaoMoradia = model.CondicaoMoradia1;
             enderecoLocalPermanencia = model.EnderecoLocalPermanencia1;
@@ -136,11 +136,11 @@ namespace Softpark.WS.ViewModels
             latitude = model.latitude;
             longitude = model.longitude;
 
-            animalNoDomicilio.AddRange(model.AnimalNoDomicilio.Select(a => a.id_tp_animal));
+            animalNoDomicilio = model.AnimalNoDomicilio.Select(a => a.id_tp_animal).ToArray();
 
             FamiliaRowViewModelCollection rows = model.FamiliaRow.ToArray();
 
-            familiaRow.AddRange(rows);
+            familiaRow = rows.ToArray();
         }
     }
 
@@ -165,7 +165,7 @@ namespace Softpark.WS.ViewModels
 
     public class GetCadastroDomiciliarViewModel : CadastroDomiciliarViewModel
     {
-        public string uuid { get; set; }
+        public Guid uuid { get; set; }
 
         /// <summary>
         /// 
@@ -173,7 +173,7 @@ namespace Softpark.WS.ViewModels
         /// <param name="model"></param>
         public static implicit operator GetCadastroDomiciliarViewModel(CadastroDomiciliar model)
         {
-            var vm = new GetCadastroDomiciliarViewModel { uuid = model.UnicaLotacaoTransport.cnes + "-" + model.id };
+            var vm = new GetCadastroDomiciliarViewModel { uuid = model.id };
 
             vm.ApplyModel(model);
 
@@ -202,17 +202,17 @@ namespace Softpark.WS.ViewModels
 
     public class FamiliaRowViewModel
     {
-        public long? dataNascimentoResponsavel { get; set; }
-        public string numeroCnsResponsavel { get; set; }
-        public int? numeroMembrosFamilia { get; set; }
-        public string numeroProntuario { get; set; }
-        public int? rendaFamiliar { get; set; }
-        public long? resideDesde { get; set; }
+        public long? dataNascimentoResponsavel { get; set; } = null;
+        public string numeroCnsResponsavel { get; set; } = null;
+        public int? numeroMembrosFamilia { get; set; } = null;
+        public string numeroProntuario { get; set; } = null;
+        public int? rendaFamiliar { get; set; } = null;
+        public long? resideDesde { get; set; } = null;
         public bool stMudanca { get; set; }
 
-        public FamiliaRow ToModel()
+        public FamiliaRow ToModel(DomainContainer domain)
         {
-            var fr = DomainContainer.Current.FamiliaRow.Create();
+            var fr = domain.FamiliaRow.Create();
 
             fr.id = Guid.NewGuid();
             fr.dataNascimentoResponsavel = dataNascimentoResponsavel?.FromUnix();
@@ -223,7 +223,7 @@ namespace Softpark.WS.ViewModels
             fr.resideDesde = resideDesde?.FromUnix();
             fr.stMudanca = stMudanca;
 
-            DomainContainer.Current.FamiliaRow.Add(fr);
+            domain.FamiliaRow.Add(fr);
 
             return fr;
         }
@@ -257,16 +257,16 @@ namespace Softpark.WS.ViewModels
 
     public class InstituicaoPermanenciaViewModel
     {
-        public string nomeInstituicaoPermanencia { get; set; }
+        public string nomeInstituicaoPermanencia { get; set; } = null;
         public bool stOutrosProfissionaisVinculados { get; set; }
-        public string nomeResponsavelTecnico { get; set; }
-        public string cnsResponsavelTecnico { get; set; }
-        public string cargoInstituicao { get; set; }
-        public string telefoneResponsavelTecnico { get; set; }
+        public string nomeResponsavelTecnico { get; set; } = null;
+        public string cnsResponsavelTecnico { get; set; } = null;
+        public string cargoInstituicao { get; set; } = null;
+        public string telefoneResponsavelTecnico { get; set; } = null;
 
-        internal InstituicaoPermanencia ToModel()
+        internal InstituicaoPermanencia ToModel(DomainContainer domain)
         {
-            var ip = DomainContainer.Current.InstituicaoPermanencia.Create();
+            var ip = domain.InstituicaoPermanencia.Create();
 
             ip.id = Guid.NewGuid();
             ip.nomeInstituicaoPermanencia = nomeInstituicaoPermanencia;
@@ -276,7 +276,7 @@ namespace Softpark.WS.ViewModels
             ip.cargoInstituicao = cargoInstituicao;
             ip.telefoneResponsavelTecnico = telefoneResponsavelTecnico;
 
-            DomainContainer.Current.InstituicaoPermanencia.Add(ip);
+            domain.InstituicaoPermanencia.Add(ip);
 
             return ip;
         }
@@ -309,24 +309,24 @@ namespace Softpark.WS.ViewModels
 
     public class EnderecoLocalPermanenciaViewModel
     {
-        public string bairro { get; set; }
-        public string cep { get; set; }
-        public string codigoIbgeMunicipio { get; set; }
-        public string complemento { get; set; }
-        public string nomeLogradouro { get; set; }
-        public string numero { get; set; }
-        public string numeroDneUf { get; set; }
-        public string telefoneContato { get; set; }
-        public string telelefoneResidencia { get; set; }
-        public string tipoLogradouroNumeroDne { get; set; }
+        public string bairro { get; set; } = null;
+        public string cep { get; set; } = null;
+        public string codigoIbgeMunicipio { get; set; } = null;
+        public string complemento { get; set; } = null;
+        public string nomeLogradouro { get; set; } = null;
+        public string numero { get; set; } = null;
+        public string numeroDneUf { get; set; } = null;
+        public string telefoneContato { get; set; } = null;
+        public string telelefoneResidencia { get; set; } = null;
+        public string tipoLogradouroNumeroDne { get; set; } = null;
         public bool stSemNumero { get; set; }
-        public string pontoReferencia { get; set; }
-        public string microarea { get; set; }
+        public string pontoReferencia { get; set; } = null;
+        public string microarea { get; set; } = null;
         public bool stForaArea { get; set; }
 
-        internal EnderecoLocalPermanencia ToModel()
+        internal EnderecoLocalPermanencia ToModel(DomainContainer domain)
         {
-            var elp = DomainContainer.Current.EnderecoLocalPermanencia.Create();
+            var elp = domain.EnderecoLocalPermanencia.Create();
 
             elp.id = Guid.NewGuid();
             elp.bairro = bairro;
@@ -344,7 +344,7 @@ namespace Softpark.WS.ViewModels
             elp.microarea = microarea;
             elp.stForaArea = stForaArea;
 
-            DomainContainer.Current.EnderecoLocalPermanencia.Add(elp);
+            domain.EnderecoLocalPermanencia.Add(elp);
 
             return elp;
         }
@@ -385,23 +385,23 @@ namespace Softpark.WS.ViewModels
 
     public class CondicaoMoradiaViewModel
     {
-        public int? abastecimentoAgua { get; set; }
-        public int? areaProducaoRural { get; set; }
-        public int? destinoLixo { get; set; }
-        public int? formaEscoamentoBanheiro { get; set; }
-        public int? localizacao { get; set; }
-        public int? materialPredominanteParedesExtDomicilio { get; set; }
-        public int? nuComodos { get; set; }
-        public int? nuMoradores { get; set; }
-        public int? situacaoMoradiaPosseTerra { get; set; }
+        public int? abastecimentoAgua { get; set; } = null;
+        public int? areaProducaoRural { get; set; } = null;
+        public int? destinoLixo { get; set; } = null;
+        public int? formaEscoamentoBanheiro { get; set; } = null;
+        public int? localizacao { get; set; } = null;
+        public int? materialPredominanteParedesExtDomicilio { get; set; } = null;
+        public int? nuComodos { get; set; } = null;
+        public int? nuMoradores { get; set; } = null;
+        public int? situacaoMoradiaPosseTerra { get; set; } = null;
         public bool stDisponibilidadeEnergiaEletrica { get; set; }
-        public int? tipoAcessoDomicilio { get; set; }
-        public int? tipoDomicilio { get; set; }
-        public int? aguaConsumoDomicilio { get; set; }
+        public int? tipoAcessoDomicilio { get; set; } = null;
+        public int? tipoDomicilio { get; set; } = null;
+        public int? aguaConsumoDomicilio { get; set; } = null;
 
-        internal CondicaoMoradia ToModel()
+        internal CondicaoMoradia ToModel(DomainContainer domain)
         {
-            var cm = DomainContainer.Current.CondicaoMoradia.Create();
+            var cm = domain.CondicaoMoradia.Create();
 
             cm.id = Guid.NewGuid();
             cm.abastecimentoAgua = abastecimentoAgua;
@@ -418,7 +418,7 @@ namespace Softpark.WS.ViewModels
             cm.tipoDomicilio = tipoDomicilio;
             cm.aguaConsumoDomicilio = aguaConsumoDomicilio;
 
-            DomainContainer.Current.CondicaoMoradia.Add(cm);
+            domain.CondicaoMoradia.Add(cm);
 
             return cm;
         }
