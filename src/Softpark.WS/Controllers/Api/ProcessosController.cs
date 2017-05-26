@@ -169,9 +169,44 @@ namespace Softpark.WS.Controllers.Api
             cad.Validar();
 
             Domain.CadastroIndividual.Add(cad);
-            
+
+            int? idAgendaProd = null;
+
+            if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
+            {
+                var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
+
+                var cnsProfissional = header.profissionalCNS;
+
+                var prod = Domain.VW_profissional_cns.FirstOrDefault(
+                    x => x.cnsCidadao == cnsCidadao && x.cnsProfissional == cnsProfissional);
+
+                if (prod == null)
+                {
+                    throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                }
+
+                var agenda = Domain.ProfCidadaoVincAgendaProd
+                    .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == prod.IdCidadao
+                                         && x.ProfCidadaoVinc.IdProfissional == prod.IdProfissional);
+
+                if (agenda?.IdAgendaProd == null)
+                {
+                    throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
+                }
+
+                idAgendaProd = agenda.IdAgendaProd;
+
+                agenda.DataRetorno = DateTime.Now;
+            }
+
             await Domain.SaveChangesAsync();
-            
+
+            if (idAgendaProd != null)
+            {
+                Domain.PR_EncerrarAgenda(idAgendaProd, true, false);
+            }
+
             return Ok(true);
         }
 
