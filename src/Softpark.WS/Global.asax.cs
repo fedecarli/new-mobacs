@@ -24,8 +24,9 @@ namespace Softpark.WS
             CultureInfo.DefaultThreadCurrentUICulture =
             Thread.CurrentThread.CurrentUICulture =
             Thread.CurrentThread.CurrentCulture = custom;
-
+            
             AreaRegistration.RegisterAllAreas();
+            UnityConfig.RegisterComponents();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
         }

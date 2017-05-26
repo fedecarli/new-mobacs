@@ -19,6 +19,12 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class DatabaseSupplyController : BaseApiController
     {
+        protected DatabaseSupplyController() : base(new DomainContainer()) { }
+
+        public DatabaseSupplyController(DomainContainer domain) : base(domain)
+        {
+        }
+
         private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(DatabaseSupplyController));
 
         /// <summary>

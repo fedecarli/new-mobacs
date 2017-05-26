@@ -1,4 +1,4 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Softpark.WS.App_Start.NinjectWeb), "Start")]
+//[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Softpark.WS.App_Start.NinjectWeb), "Start")]
 
 #pragma warning disable 1591
 namespace Softpark.WS.App_Start

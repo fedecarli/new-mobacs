@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,6 +21,45 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class ProcessosController : BaseApiController
     {
+        protected ProcessosController() : base(new DomainContainer()) { }
+
+        public ProcessosController(DomainContainer domain) : base(domain)
+        {
+        }
+
+        private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(ProcessosController));
+
+        private async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
+        {
+            var origem = await Domain.OrigemVisita.FindAsync(token);
+
+            if (origem == null || origem.finalizado)
+            {
+                throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
+            }
+
+            var header = await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(h => h.token == token);
+
+            if (header == null)
+            {
+                throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
+            }
+
+            var master = header.FichaVisitaDomiciliarMaster.FirstOrDefault(m => m.FichaVisitaDomiciliarChild.Count < 99) ??
+                         Domain.FichaVisitaDomiciliarMaster.Create();
+
+            if (master.uuidFicha != null) return master;
+            master.tpCdsOrigem = 3;
+            master.UnicaLotacaoTransport = header;
+
+            master.uuidFicha = header.cnes + '-' + Guid.NewGuid();
+            Domain.FichaVisitaDomiciliarMaster.Add(master);
+
+            await Domain.SaveChangesAsync();
+
+            return master;
+        }
+
         /// <summary>
         /// Cadastrar cabeçalho das fichas
         /// </summary>
@@ -32,43 +72,28 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
-            using (var Domain = Repository)
-            {
-                var origem = Domain.Create(c => c.OrigemVisita, async (db, o) =>
-                {
-                    return await Task.Run(() =>
-                    {
-                        o.token = Guid.NewGuid();
-                        o.id_tipo_origem = 1;
-                        o.enviarParaThrift = true;
-                        o.enviado = false;
+            var origem = Domain.OrigemVisita.Create();
 
-                        return o;
-                    });
-                });
+            origem.token = Guid.NewGuid();
+            origem.id_tipo_origem = 1;
+            origem.enviarParaThrift = true;
+            origem.enviado = false;
 
-                var headerTransport = Domain.Create(c => c.UnicaLotacaoTransport, async (c, ult) =>
-                {
-                    return await Task.Run(async () =>
-                    {
-                        var transport = header.ToModel(ref ult);
+            Domain.OrigemVisita.Add(origem);
 
-                        transport.id = Guid.NewGuid();
-                        origem.Wait();
-                        var o = await origem;
-                        transport.OrigemVisita = o;
-                        transport.token = o.token;
+            var transport = header.ToModel(Domain);
 
-                        return transport;
-                    });
-                });
+            transport.id = Guid.NewGuid();
+            transport.OrigemVisita = origem;
+            transport.token = origem.token;
 
-                await Task.WhenAll(origem, headerTransport);
+            transport.Validar(Domain);
 
-                var cabecalho = await headerTransport;
+            Domain.UnicaLotacaoTransport.Add(transport);
 
-                return Ok(cabecalho.token);
-            }
+            await Domain.SaveChangesAsync();
+
+            return Ok(origem.token);
         }
 
         /// <summary>
@@ -85,19 +110,42 @@ namespace Softpark.WS.Controllers.Api
                 return BadRequest(ModelState);
             }
 
-            using (var Domain = Repository)
-            {   
-                try
-                {
-                    await Domain.CreateFichasVisita(child.token ?? Guid.Empty, new[] { child });
+            var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
 
-                    await Domain.SaveChanges();
-                }
-                catch (Exception e)
+            var ficha = child.ToModel(Domain);
+
+            foreach (var motivoId in child.motivosVisita)
+            {
+                var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
+
+                if (motivo != null)
+                    ficha.SIGSM_MotivoVisita.Add(motivo);
+            }
+
+            Domain.FichaVisitaDomiciliarChild.Add(ficha);
+
+            if (ficha.dtNascimento != null)
+                ficha.dtNascimento.Value.IsValidBirthDateTime(master.UnicaLotacaoTransport.dataAtendimento);
+
+            ficha.FichaVisitaDomiciliarMaster = master;
+
+            ficha.Validar();
+
+            try
+            {
+                await Domain.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.Message);
+
+                if (e is DbEntityValidationException)
                 {
-                    var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
+                    var ex = (e as DbEntityValidationException).EntityValidationErrors;
                     throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
                 }
+
+                throw e;
             }
 
             return Ok(true);
@@ -128,50 +176,15 @@ namespace Softpark.WS.Controllers.Api
 
             await ProcessarIndividuos(new[] { cadInd }, header, true);
 
-            var cad = await cadInd.ToModel();
+            var cad = await cadInd.ToModel(Domain);
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = header;
 
-            cad.Validar();
+            cad.Validar(Domain);
 
             Domain.CadastroIndividual.Add(cad);
 
-            int? idAgendaProd = null;
-
-            if (cad.IdentificacaoUsuarioCidadao1 != null && cad.fichaAtualizada)
-            {
-                var cnsCidadao = cad.IdentificacaoUsuarioCidadao1.cnsCidadao;
-
-                var cnsProfissional = header.profissionalCNS;
-
-                var prod = Domain.VW_profissional_cns.FirstOrDefault(
-                    x => x.cnsCidadao == cnsCidadao && x.cnsProfissional == cnsProfissional);
-
-                if (prod == null)
-                {
-                    throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
-                }
-
-                var agenda = Domain.ProfCidadaoVincAgendaProd
-                    .FirstOrDefault(x => x.ProfCidadaoVinc.IdCidadao == prod.IdCidadao
-                                         && x.ProfCidadaoVinc.IdProfissional == prod.IdProfissional);
-
-                if (agenda?.IdAgendaProd == null)
-                {
-                    throw new ValidationException("Não foi encontrado uma ficha préviamente preenchida para a atualização desse cadastro.");
-                }
-
-                idAgendaProd = agenda.IdAgendaProd;
-
-                agenda.DataRetorno = DateTime.Now;
-            }
-
             await Domain.SaveChangesAsync();
-
-            if (idAgendaProd != null)
-            {
-                Domain.PR_EncerrarAgenda(idAgendaProd, true, false);
-            }
 
             return Ok(true);
         }
@@ -204,7 +217,7 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var header = origem.UnicaLotacaoTransport.FirstOrDefault();
-            var cad = await cadDom.ToModel();
+            var cad = await cadDom.ToModel(Domain);
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = header;
             if (header == null)
@@ -213,12 +226,12 @@ namespace Softpark.WS.Controllers.Api
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
 
-            await cad.Validar();
+            await cad.Validar(Domain);
 
             Domain.CadastroDomiciliar.Add(cad);
-            
+
             await Domain.SaveChangesAsync();
-            
+
             return Ok(true);
         }
 
@@ -249,12 +262,12 @@ namespace Softpark.WS.Controllers.Api
             {
                 foreach (var cadastro in cadastros)
                 {
-                    var header = cadastro.cabecalho.ToModel();
+                    var header = cadastro.cabecalho.ToModel(Domain);
 
                     header.id = Guid.NewGuid();
                     header.OrigemVisita = origem;
                     header.token = origem.token;
-                    
+
                     Domain.UnicaLotacaoTransport.Add(header);
 
                     await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null &&
@@ -265,7 +278,7 @@ namespace Softpark.WS.Controllers.Api
 
                     foreach (var domicilio in cadastro.domicilios)
                     {
-                        var cad = await domicilio.ToModel();
+                        var cad = await domicilio.ToModel(Domain);
                         cad.tpCdsOrigem = 3;
                         cad.UnicaLotacaoTransport = header;
 
@@ -294,7 +307,7 @@ namespace Softpark.WS.Controllers.Api
                     {
                         var master = getOrCreateMaster();
 
-                        var ficha = child.ToModel();
+                        var ficha = child.ToModel(Domain);
 
                         foreach (var motivoId in child.motivosVisita)
                         {
@@ -310,14 +323,22 @@ namespace Softpark.WS.Controllers.Api
                             Epoch.ValidateBirthDate(child.dtNascimento ?? 0, master.UnicaLotacaoTransport.dataAtendimento.ToUnix());
 
                         ficha.FichaVisitaDomiciliarMaster = master;
+
+                        //ficha.Validar();
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Fatal(e.Message);
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+
+                if (e is DbEntityValidationException)
+                {
+                    var ex = (e as DbEntityValidationException).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
+
+                throw e;
             }
 
             try
@@ -329,8 +350,14 @@ namespace Softpark.WS.Controllers.Api
             catch (Exception e)
             {
                 Log.Fatal(e.Message);
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+
+                if (e is DbEntityValidationException)
+                {
+                    var ex = (e as DbEntityValidationException).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
+
+                throw e;
             }
 
             return Ok(true);
@@ -341,12 +368,12 @@ namespace Softpark.WS.Controllers.Api
         {
             foreach (var individuo in individuos)
             {
-                var cad = await individuo.ToModel();
+                var cad = await individuo.ToModel(Domain);
                 cad.tpCdsOrigem = 3;
                 cad.UnicaLotacaoTransport = header;
 
-                if (validar) cad.Validar();
-                
+                if (validar) cad.Validar(Domain);
+
                 Domain.CadastroIndividual.Add(cad);
             }
         }
@@ -372,8 +399,15 @@ namespace Softpark.WS.Controllers.Api
             }
             else
             {
-                origem.finalizado = true;
-                await Domain.SaveChangesAsync();
+                try
+                {
+                    origem.finalizado = true;
+                    await Domain.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Log.Warn("Erro ao tentar finalizar token.", e);
+                }
             }
 
             return Ok(true);

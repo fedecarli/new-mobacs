@@ -61,12 +61,12 @@ namespace Softpark.Models
         /// </summary>
         /// <param name="header"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this UnicaLotacaoTransport header)
+        public static void Validar(this UnicaLotacaoTransport header, DomainContainer domain)
         {
             if (!header.profissionalCNS.isValidCns())
                 throw new ValidationException("CNS inválido.");
 
-            var profissional = DomainContainer.Current.VW_Profissional.Where(x => x.CNS != null && x.CNS.Trim() == header.profissionalCNS.Trim()).ToArray();
+            var profissional = domain.VW_Profissional.Where(x => x.CNS != null && x.CNS.Trim() == header.profissionalCNS.Trim()).ToArray();
 
             if (profissional.Length == 0)
                 throw new ValidationException("CNS não encontrado.");
@@ -85,7 +85,7 @@ namespace Softpark.Models
             if (validEpoch != ValidationResult.Success)
                 throw new ValidationException("Data do Atendimento inválida.");
 
-            if (DomainContainer.Current.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
+            if (domain.Cidade.All(x => x.CodIbge == null || x.CodIbge.Trim() != header.codigoIbgeMunicipio.Trim()))
                 throw new ValidationException("Município não encontrado.");
         }
 
@@ -226,7 +226,7 @@ namespace Softpark.Models
         /// <param name="cond"></param>
         /// <param name="cad"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this CondicoesDeSaude cond, CadastroIndividual cad)
+        public static void Validar(this CondicoesDeSaude cond, CadastroIndividual cad, DomainContainer domain)
         {
             if (cond.descricaoCausaInternacaoEm12Meses != null)
             {
@@ -285,7 +285,7 @@ namespace Softpark.Models
                     throw new ValidationException("A maternidade aceita no máximo 100 caracteres.");
             }
 
-            if (cond.situacaoPeso != null && !DomainContainer.Current.TP_Consideracao_Peso.Any(x => x.codigo == cond.situacaoPeso))
+            if (cond.situacaoPeso != null && !domain.TP_Consideracao_Peso.Any(x => x.codigo == cond.situacaoPeso))
                 throw new ValidationException("Situação de Peso não encontrada.");
 
             var nasc = cad.IdentificacaoUsuarioCidadao1?.dataNascimentoCidadao;
@@ -313,7 +313,7 @@ namespace Softpark.Models
         /// </summary>
         /// <param name="cond"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this EmSituacaoDeRua cond)
+        public static void Validar(this EmSituacaoDeRua cond, DomainContainer domain)
         {
             if (cond.grauParentescoFamiliarFrequentado != null && (!cond.statusSituacaoRua || !cond.statusVisitaFamiliarFrequentemente))
                 throw new ValidationException("O grau de parentesco não pode ser preenchido para este caso.");
@@ -326,7 +326,7 @@ namespace Softpark.Models
             if (cond.HigienePessoalSituacaoRua.Count > 4)
                 throw new ValidationException("Somente 4 condições de higiene pessoal podem ser informadas por cadastro.");
 
-            if (cond.HigienePessoalSituacaoRua.Any(x => DomainContainer.Current.TP_Higiene_Pessoal.All(y => y.codigo != x.codigo_higiene_pessoal)))
+            if (cond.HigienePessoalSituacaoRua.Any(x => domain.TP_Higiene_Pessoal.All(y => y.codigo != x.codigo_higiene_pessoal)))
                 throw new ValidationException("Uma ou mais condições de higiene pessoal não foram encontradas.");
 
             if (cond.OrigemAlimentoSituacaoRua.Count > 0 && !cond.statusSituacaoRua)
@@ -335,7 +335,7 @@ namespace Softpark.Models
             if (cond.OrigemAlimentoSituacaoRua.Count > 5)
                 throw new ValidationException("Somente 5 origens de alimentos podem ser informadas por cadastro.");
 
-            if (cond.OrigemAlimentoSituacaoRua.Any(x => DomainContainer.Current.TP_Origem_Alimentacao.All(y => y.codigo != x.id_tp_origem_alimento)))
+            if (cond.OrigemAlimentoSituacaoRua.Any(x => domain.TP_Origem_Alimentacao.All(y => y.codigo != x.id_tp_origem_alimento)))
                 throw new ValidationException("Uma ou mais condições de higiene pessoal não foram encontradas.");
 
             if (cond.outraInstituicaoQueAcompanha != null)
@@ -350,7 +350,7 @@ namespace Softpark.Models
             if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && !cond.statusSituacaoRua)
                 throw new ValidationException("A quantidade de alimentações ao dia não deve ser informada para este caso.");
 
-            if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && DomainContainer.Current.TP_Quantas_Vezes_Alimentacao.Any(x => x.codigo != cond.quantidadeAlimentacoesAoDiaSituacaoRua))
+            if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && domain.TP_Quantas_Vezes_Alimentacao.Any(x => x.codigo != cond.quantidadeAlimentacoesAoDiaSituacaoRua))
                 throw new ValidationException("A quantidade de alimentações ao dia é inválida.");
 
             if (cond.statusAcompanhadoPorOutraInstituicao && !cond.statusSituacaoRua)
@@ -371,7 +371,7 @@ namespace Softpark.Models
             if (cond.tempoSituacaoRua != null && !cond.statusSituacaoRua)
                 throw new ValidationException("O tempo de situação de rua não deve ser informado para este caso.");
 
-            if (cond.tempoSituacaoRua != null && DomainContainer.Current.TP_Sit_Rua.Any(x => x.codigo != cond.tempoSituacaoRua))
+            if (cond.tempoSituacaoRua != null && domain.TP_Sit_Rua.Any(x => x.codigo != cond.tempoSituacaoRua))
                 throw new ValidationException("O tempo de situação de rua é inválido.");
         }
 
@@ -382,7 +382,7 @@ namespace Softpark.Models
         /// <param name="cad"></param>
         /// <exception cref="ValidationException"></exception>
         /// <exception cref="Exception"></exception>
-        public static void Validar(this IdentificacaoUsuarioCidadao cond, CadastroIndividual cad)
+        public static void Validar(this IdentificacaoUsuarioCidadao cond, CadastroIndividual cad, DomainContainer domain)
         {
             var header = cad.UnicaLotacaoTransport;
 
@@ -402,7 +402,7 @@ namespace Softpark.Models
                 if (cond.nacionalidadeCidadao != 1)
                     throw new ValidationException("O código IBGE do município de nascimento só deve ser informado para brasileiros.");
 
-                if (DomainContainer.Current.Cidade.All(x => x.CodIbge != cond.codigoIbgeMunicipioNascimento))
+                if (domain.Cidade.All(x => x.CodIbge != cond.codigoIbgeMunicipioNascimento))
                     throw new ValidationException("O código IBGE do município de nascimento é inválido ou não está cadastrado.");
             }
 
@@ -420,7 +420,7 @@ namespace Softpark.Models
                 throw new ValidationException("O email do cidadão é inválido.");
             }
 
-            if (DomainContainer.Current.TP_Nacionalidade.All(x => x.codigo != cond.nacionalidadeCidadao))
+            if (domain.TP_Nacionalidade.All(x => x.codigo != cond.nacionalidadeCidadao))
                 throw new ValidationException("A nacionalidade informada é inválida.");
 
             if (cond.nomeCidadao == null || !cond.nomeCidadao.NomeValido())
@@ -479,13 +479,13 @@ namespace Softpark.Models
             else if (cond.nacionalidadeCidadao == 1)
                 throw new ValidationException("O país de nascimento do cidadão é inválido para a nacionalidade informada.");
 
-            if (DomainContainer.Current.TP_Raca_Cor.All(x => x.id_tp_raca_cor != cond.racaCorCidadao))
+            if (domain.TP_Raca_Cor.All(x => x.id_tp_raca_cor != cond.racaCorCidadao))
                 throw new ValidationException("A Raça/Cor do cidadão é inválida.");
 
-            if (DomainContainer.Current.TP_Sexo.All(x => x.codigo != cond.sexoCidadao))
+            if (domain.TP_Sexo.All(x => x.codigo != cond.sexoCidadao))
                 throw new ValidationException("O Sexo do cidadão é inválido.");
 
-            if (cond.racaCorCidadao == 5 && (cond.etnia == null || DomainContainer.Current.Etnia.All(x => x.CodEtnia != cond.etnia)))
+            if (cond.racaCorCidadao == 5 && (cond.etnia == null || domain.Etnia.All(x => x.CodEtnia != cond.etnia)))
                 throw new ValidationException("A etnia do cidadão é inválida.");
 
             if (cond.racaCorCidadao != 5 && cond.etnia != null)
@@ -536,7 +536,7 @@ namespace Softpark.Models
         /// <param name="cond"></param>
         /// <param name="cad"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this InformacoesSocioDemograficas cond, CadastroIndividual cad)
+        public static void Validar(this InformacoesSocioDemograficas cond, CadastroIndividual cad, DomainContainer domain)
         {
             if (cond.DeficienciasCidadao.Count == 0 && cond.statusTemAlgumaDeficiencia)
                 throw new ValidationException("Ao menos uma deficiência deve ser informada.");
@@ -547,19 +547,19 @@ namespace Softpark.Models
             if (cond.DeficienciasCidadao.Count > 5)
                 throw new ValidationException("Apenas 5 deficiências podem ser informadas.");
 
-            if (cond.DeficienciasCidadao.Any(x => DomainContainer.Current.TP_Deficiencia.All(y => y.codigo != x.id_tp_deficiencia_cidadao)))
+            if (cond.DeficienciasCidadao.Any(x => domain.TP_Deficiencia.All(y => y.codigo != x.id_tp_deficiencia_cidadao)))
                 throw new ValidationException("Uma ou mais deficiências estão incorretas.");
 
-            if (cond.grauInstrucaoCidadao != null && DomainContainer.Current.TP_Curso.All(x => x.codigo != cond.grauInstrucaoCidadao))
+            if (cond.grauInstrucaoCidadao != null && domain.TP_Curso.All(x => x.codigo != cond.grauInstrucaoCidadao))
                 throw new ValidationException("O grau de instrução do cidadão é inválido.");
 
-            if (cond.ocupacaoCodigoCbo2002 != null && DomainContainer.Current.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != cond.ocupacaoCodigoCbo2002.Trim()))
+            if (cond.ocupacaoCodigoCbo2002 != null && domain.AS_ProfissoesTab.ToList().All(x => x.CodProfTab == null || x.CodProfTab.Trim() != cond.ocupacaoCodigoCbo2002.Trim()))
                 throw new ValidationException("O CBO do cidadão é inválido.");
 
             if (cond.orientacaoSexualCidadao != null && !cond.statusDesejaInformarOrientacaoSexual)
                 throw new ValidationException("A orientação sexual do cidadão não deve ser informada.");
 
-            if (cond.orientacaoSexualCidadao != null && DomainContainer.Current.TP_Orientacao_Sexual.All(x => x.codigo != cond.orientacaoSexualCidadao))
+            if (cond.orientacaoSexualCidadao != null && domain.TP_Orientacao_Sexual.All(x => x.codigo != cond.orientacaoSexualCidadao))
                 throw new ValidationException("A orientação sexual do cidadão é inválida.");
 
             if (cond.povoComunidadeTradicional != null && !cond.statusMembroPovoComunidadeTradicional)
@@ -571,11 +571,11 @@ namespace Softpark.Models
             if (cond.relacaoParentescoCidadao != null && cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
                 throw new ValidationException("A relação de parentesco não pode ser preenchida.");
 
-            if (cond.relacaoParentescoCidadao != null && DomainContainer.Current.TP_Relacao_Parentesco.All(x => x.codigo != cond.relacaoParentescoCidadao)
+            if (cond.relacaoParentescoCidadao != null && domain.TP_Relacao_Parentesco.All(x => x.codigo != cond.relacaoParentescoCidadao)
                     && !cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel)
                 throw new ValidationException("A relação de parentesco é inválida.");
 
-            if (cond.situacaoMercadoTrabalhoCidadao != null && DomainContainer.Current.TP_Sit_Mercado.All(x => x.codigo != cond.situacaoMercadoTrabalhoCidadao))
+            if (cond.situacaoMercadoTrabalhoCidadao != null && domain.TP_Sit_Mercado.All(x => x.codigo != cond.situacaoMercadoTrabalhoCidadao))
                 throw new ValidationException("A situação no mercado de trabalho é inválida.");
 
             if (cond.identidadeGeneroCidadao != null && !cond.statusDesejaInformarIdentidadeGenero)
@@ -612,7 +612,7 @@ namespace Softpark.Models
         /// </summary>
         /// <param name="cad"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this CadastroIndividual cad)
+        public static void Validar(this CadastroIndividual cad, DomainContainer domain)
         {
             if (cad.UnicaLotacaoTransport == null)
                 throw new ValidationException("Cabeçalho não encontrado.");
@@ -620,22 +620,22 @@ namespace Softpark.Models
             if (cad.statusTermoRecusaCadastroIndividualAtencaoBasica && cad.CondicoesDeSaude1 != null)
                 throw new ValidationException("Não é possível informar as condições de saúde para os casos de recusa.");
 
-            cad.CondicoesDeSaude1?.Validar(cad);
+            cad.CondicoesDeSaude1?.Validar(cad, domain);
 
             if (cad.statusTermoRecusaCadastroIndividualAtencaoBasica && cad.EmSituacaoDeRua1 != null)
                 throw new ValidationException("Não é possível informar as situações de rua para os casos de recusa.");
 
-            cad.EmSituacaoDeRua1?.Validar();
+            cad.EmSituacaoDeRua1?.Validar(domain);
 
             if (!cad.statusTermoRecusaCadastroIndividualAtencaoBasica && cad.IdentificacaoUsuarioCidadao1 == null)
                 throw new ValidationException("A identificação do cidadão é obrigatória.");
 
-            cad.IdentificacaoUsuarioCidadao1?.Validar(cad);
+            cad.IdentificacaoUsuarioCidadao1?.Validar(cad, domain);
 
             if (!cad.statusTermoRecusaCadastroIndividualAtencaoBasica && cad.InformacoesSocioDemograficas1 == null)
                 throw new ValidationException("As informações sociodemográficas do cidadão são obrigatórias.");
 
-            cad.InformacoesSocioDemograficas1?.Validar(cad);
+            cad.InformacoesSocioDemograficas1?.Validar(cad, domain);
 
             if (!cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift)
             {
@@ -655,29 +655,29 @@ namespace Softpark.Models
         /// <param name="cond"></param>
         /// <param name="cad"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this CondicaoMoradia cond, CadastroDomiciliar cad)
+        public static void Validar(this CondicaoMoradia cond, CadastroDomiciliar cad, DomainContainer domain)
         {
             var proibido = (new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel);
 
-            if (cond.abastecimentoAgua != null && DomainContainer.Current.TP_Abastecimento_Agua.All(x => x.codigo != cond.abastecimentoAgua))
+            if (cond.abastecimentoAgua != null && domain.TP_Abastecimento_Agua.All(x => x.codigo != cond.abastecimentoAgua))
                 throw new ValidationException("O abastecimento de água da condição de moradia é inválido.");
 
             if (cond.areaProducaoRural != null && (proibido || cond.localizacao == 83))
                 throw new ValidationException("A área de produção rural não deve ser definida para este imóvel.");
 
-            if (cond.destinoLixo != null && DomainContainer.Current.TP_Destino_Lixo.All(x => x.codigo != cond.destinoLixo))
+            if (cond.destinoLixo != null && domain.TP_Destino_Lixo.All(x => x.codigo != cond.destinoLixo))
                 throw new ValidationException("O destino do lixo é inválido.");
 
-            if (cond.formaEscoamentoBanheiro != null && DomainContainer.Current.TP_Escoamento_Esgoto.All(x => x.codigo != cond.formaEscoamentoBanheiro))
+            if (cond.formaEscoamentoBanheiro != null && domain.TP_Escoamento_Esgoto.All(x => x.codigo != cond.formaEscoamentoBanheiro))
                 throw new ValidationException("A forma de escoamento do banheiro ou sanitário é inválida.");
 
-            if (cond.localizacao != null && DomainContainer.Current.TP_Localizacao.All(x => x.codigo != cond.localizacao))
+            if (cond.localizacao != null && domain.TP_Localizacao.All(x => x.codigo != cond.localizacao))
                 throw new ValidationException("A localização da moradia é inválida.");
 
             if (cond.materialPredominanteParedesExtDomicilio != null && proibido)
                 throw new ValidationException("O material predominante das paredes externas do domicílio não pode ser informado para este tipo de imóvel.");
 
-            if (cond.materialPredominanteParedesExtDomicilio != null && DomainContainer.Current.TP_Construcao_Domicilio.All(x => x.codigo != cond.materialPredominanteParedesExtDomicilio))
+            if (cond.materialPredominanteParedesExtDomicilio != null && domain.TP_Construcao_Domicilio.All(x => x.codigo != cond.materialPredominanteParedesExtDomicilio))
                 throw new ValidationException("O material predominante das paredes externas do domicílio é inválido.");
 
             if (cond.nuComodos != null && proibido)
@@ -694,7 +694,7 @@ namespace Softpark.Models
                 if (proibido)
                     throw new ValidationException("A situação de moradia não pode ser informada para este tipo de imóvel.");
 
-                if (DomainContainer.Current.TP_Situacao_Moradia.All(x => x.codigo != cond.situacaoMoradiaPosseTerra))
+                if (domain.TP_Situacao_Moradia.All(x => x.codigo != cond.situacaoMoradiaPosseTerra))
                     throw new ValidationException("A situação de moradia é inválida.");
             }
 
@@ -703,7 +703,7 @@ namespace Softpark.Models
                 if (proibido)
                     throw new ValidationException("O tipo de acesso ao domicílio não pode ser informado para este tipo de imóvel.");
 
-                if (DomainContainer.Current.TP_Acesso_Domicilio.All(x => x.codigo != cond.tipoAcessoDomicilio))
+                if (domain.TP_Acesso_Domicilio.All(x => x.codigo != cond.tipoAcessoDomicilio))
                     throw new ValidationException("O tipo de acesso ao domicílio é inválido.");
             }
 
@@ -712,11 +712,11 @@ namespace Softpark.Models
                 if (proibido)
                     throw new ValidationException("O tipo de domicílio não pode ser informado para este tipo de imóvel.");
 
-                if (DomainContainer.Current.TP_Domicilio.All(x => x.codigo != cond.tipoDomicilio))
+                if (domain.TP_Domicilio.All(x => x.codigo != cond.tipoDomicilio))
                     throw new ValidationException("O tipo de domicílio é inválido.");
             }
 
-            if (cond.aguaConsumoDomicilio != null && DomainContainer.Current.TP_Tratamento_Agua.All(x => x.codigo != cond.aguaConsumoDomicilio))
+            if (cond.aguaConsumoDomicilio != null && domain.TP_Tratamento_Agua.All(x => x.codigo != cond.aguaConsumoDomicilio))
                 throw new ValidationException("O tipo de água de consumo no domicílio é inválido.");
         }
 
@@ -744,7 +744,7 @@ namespace Softpark.Models
         /// <param name="cond"></param>
         /// <param name="cad"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this EnderecoLocalPermanencia cond, CadastroDomiciliar cad)
+        public static void Validar(this EnderecoLocalPermanencia cond, CadastroDomiciliar cad, DomainContainer domain)
         {
             if (string.IsNullOrEmpty(cond.bairro) || string.IsNullOrWhiteSpace(cond.bairro) || cond.bairro.Length < 1 || cond.bairro.Length > 72)
                 throw new ValidationException("O bairro deve ter entre 1 e 72 caracteres.");
@@ -752,7 +752,7 @@ namespace Softpark.Models
             if (string.IsNullOrEmpty(cond.cep) || string.IsNullOrWhiteSpace(cond.cep) || !Regex.IsMatch(cond.cep, "^([0-9]{8})$"))
                 throw new ValidationException("O cep deve ter 8 caracteres numéricos.");
 
-            if (cond.codigoIbgeMunicipio == null || DomainContainer.Current.Cidade.All(x => x.CodIbge != cond.codigoIbgeMunicipio))
+            if (cond.codigoIbgeMunicipio == null || domain.Cidade.All(x => x.CodIbge != cond.codigoIbgeMunicipio))
                 throw new ValidationException("O código IBGE do município do local de permanência é inválido ou não está cadastrado.");
 
             if (cond.complemento != null && cond.complemento.Length > 30)
@@ -770,7 +770,7 @@ namespace Softpark.Models
             if (cond.numero != null && (Regex.IsMatch(cond.numero, "([^0-9])") || cond.numero.Length < 1 || cond.numero.Length > 10))
                 throw new ValidationException("O número do local de permanência deve ter entre 1 e 10 caracteres numéricos.");
 
-            if (cond.numeroDneUf == null || DomainContainer.Current.UF.OrderBy(x => x.DesUF).Select(RowNumberPad('0', 2)).All(x => x != cond.numeroDneUf))
+            if (cond.numeroDneUf == null || domain.UF.OrderBy(x => x.DesUF).Select(RowNumberPad('0', 2)).All(x => x != cond.numeroDneUf))
                 throw new ValidationException("O número DNE da UF é inválido.");
 
             if (cond.telefoneContato != null && (cond.telefoneContato.Length < 10 || cond.telefoneContato.Length > 11))
@@ -779,7 +779,7 @@ namespace Softpark.Models
             if (cond.telelefoneResidencia != null && (cond.telelefoneResidencia.Length < 10 || cond.telelefoneResidencia.Length > 11))
                 throw new ValidationException("O telefone da residência é inválido.");
 
-            if (cond.tipoLogradouroNumeroDne == null || DomainContainer.Current.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO == null || x.CO_TIPO_LOGRADOURO.Trim() != cond.tipoLogradouroNumeroDne))
+            if (cond.tipoLogradouroNumeroDne == null || domain.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO == null || x.CO_TIPO_LOGRADOURO.Trim() != cond.tipoLogradouroNumeroDne))
                 throw new ValidationException("O tipo de logradouro é inválido.");
 
             if (cond.pontoReferencia != null && cond.pontoReferencia.Length > 40)
@@ -808,9 +808,9 @@ namespace Softpark.Models
         /// <param name="cad"></param>
         /// <returns></returns>
         /// <exception cref="ValidationException"></exception>
-        public static async Task Validar(this CadastroDomiciliar cad)
+        public static async Task Validar(this CadastroDomiciliar cad, DomainContainer domain)
         {
-            if (await DomainContainer.Current.TP_Imovel.AllAsync(x => x.codigo != cad.tipoDeImovel))
+            if (await domain.TP_Imovel.AllAsync(x => x.codigo != cad.tipoDeImovel))
                 throw new ValidationException("O tipo de imóvel é inválido.");
 
             var proibido = (new long[] { 2, 3, 4, 5, 6, 12 }).Contains(cad.tipoDeImovel);
@@ -831,12 +831,12 @@ namespace Softpark.Models
             if (cad.CondicaoMoradia1 != null && (proibido || cad.statusTermoRecusa))
                 throw new ValidationException("A condição de moradia não pode ser definida para este imóvel.");
 
-            cad.CondicaoMoradia1?.Validar(cad);
+            cad.CondicaoMoradia1?.Validar(cad, domain);
 
             if (cad.EnderecoLocalPermanencia1 != null && cad.statusTermoRecusa)
                 throw new ValidationException("O endereço do local de permanência não deve ser informado para este cadastro domiciliar.");
 
-            cad.EnderecoLocalPermanencia1?.Validar(cad);
+            cad.EnderecoLocalPermanencia1?.Validar(cad, domain);
 
             if (cad.FamiliaRow.Count > 0 && cad.statusTermoRecusa)
                 throw new ValidationException("Este cadastro domiciliar não deve conter famílias.");

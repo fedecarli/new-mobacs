@@ -1,5 +1,5 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Softpark.WS.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Softpark.WS.App_Start.NinjectWebCommon), "Stop")]
+//[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Softpark.WS.App_Start.NinjectWebCommon), "Start")]
+//[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(Softpark.WS.App_Start.NinjectWebCommon), "Stop")]
 
 #pragma warning disable 1591
 namespace Softpark.WS.App_Start

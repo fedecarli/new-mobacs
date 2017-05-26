@@ -67,8 +67,10 @@ namespace Softpark.WS.ViewModels
         [DataMember(Name = nameof(codigoIbgeMunicipio))]
         public string codigoIbgeMunicipio { get; set; }
         
-        internal UnicaLotacaoTransport ToModel(ref UnicaLotacaoTransport ult)
+        internal UnicaLotacaoTransport ToModel(DomainContainer domain)
         {
+            var ult = domain.UnicaLotacaoTransport.Create();
+
             ult.id = Guid.NewGuid();
             ult.profissionalCNS = profissionalCNS;
             ult.cboCodigo_2002 = cboCodigo_2002;
