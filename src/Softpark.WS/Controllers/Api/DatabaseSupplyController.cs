@@ -9,6 +9,7 @@ using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -521,11 +522,11 @@ namespace Softpark.WS.Controllers.Api
                             Descricao = "Ausente"
                         }
                     }.ToList();
-                        break;
-                    default:
-                        throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
-                }
-            
+                    break;
+                default:
+                    throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
+            }
+
             return Ok(model.ToArray());
         }
 
@@ -675,7 +676,7 @@ namespace Softpark.WS.Controllers.Api
                     x.DataCarregado == null &&
                     x.FichaGerada == true &&
                     x.ProfCidadaoVinc.IdProfissional == idProf);
-            
+
             var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
 
             var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
@@ -705,6 +706,9 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(results.ToArray()));
+
             return data;
         }
 
@@ -721,8 +725,8 @@ namespace Softpark.WS.Controllers.Api
         {
             try
             {
-                Log.Debug("----");
-                Log.Debug($"api/dados/domicilio/{token}");
+                Log.Info("----");
+                Log.Info($"api/dados/domicilio/{token}");
 
                 var headerToken = await GetHeader(token);
 
@@ -762,7 +766,7 @@ namespace Softpark.WS.Controllers.Api
                 //    x.DataCarregadoDomiciliar == null &&
                 //    x.FichaDomiciliarGerada == true &&
                 //    x.ProfCidadaoVinc.IdProfissional == idProf);
-                
+
                 //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
 
                 //var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
@@ -793,9 +797,13 @@ namespace Softpark.WS.Controllers.Api
                     Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
                 });
 
-                //await Domain.SaveChangesAsync();
+                await Domain.SaveChangesAsync();
+
+                var serializer = new JavaScriptSerializer();
+                Log.Info(serializer.Serialize(results.ToArray()));
 
                 return Ok(results.ToArray());
+
             }
             catch (Exception ex)
             {
@@ -815,6 +823,9 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
         public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
+            Log.Info("----");
+            Log.Info($"api/dados/visita/{token}");
+
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
@@ -826,6 +837,9 @@ namespace Softpark.WS.Controllers.Api
             {
                 results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
             }
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(results.ToArray()));
 
             return Ok(results.ToArray());
         }
