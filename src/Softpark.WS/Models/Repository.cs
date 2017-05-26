@@ -1,4 +1,5 @@
-﻿using Softpark.Models;
+﻿using Softpark.Infrastructure.Extras;
+using Softpark.Models;
 using Softpark.WS.Controllers.Api;
 using Softpark.WS.ViewModels;
 using System;
@@ -15,7 +16,7 @@ namespace Softpark.WS
     {
         private readonly bool _autodispose = false;
         private readonly Lazy<DomainContainer> _context = new Lazy<DomainContainer>(CreateContext);
-        
+
         public Repository(bool autodispose = false)
         {
             _autodispose = autodispose;
@@ -69,7 +70,7 @@ namespace Softpark.WS
             await Task.WhenAll(profs);
 
             var profissionais = await profs;
-            
+
             var ps = new Dictionary<string, ProfissionalViewModel>();
 
             Func<VW_Profissional, ProfissionalViewModel> __ = prof =>
@@ -97,6 +98,35 @@ namespace Softpark.WS
             return ps.Values.ToArray();
         }
 
+        public async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
+        {
+            var transport = GetHeader(token);
+
+            var masterVisita = await GetModel(c => c.FichaVisitaDomiciliarMaster.FirstOrDefaultAsync(m => m.FichaVisitaDomiciliarChild.Count < 99), async r =>
+            {
+                if (r == null)
+                {
+                    return await Create(c => c.FichaVisitaDomiciliarMaster, async (c, e) =>
+                    {
+                        transport.Wait();
+
+                        var header = await transport;
+
+                        e.tpCdsOrigem = 3;
+                        e.headerTransport = header.id;
+                        e.uuidFicha = header.cnes + '-' + Guid.NewGuid();
+                        return e;
+                    });
+                }
+
+                return r;
+            });
+
+            await Task.WhenAll(transport, masterVisita);
+
+            return await masterVisita;
+        }
+
         public async Task<TE> GetModel<T, TE>(Func<DomainContainer, Task<T>> func, Func<T, TE> f2)
         {
             var models = GetModel(func);
@@ -110,10 +140,10 @@ namespace Softpark.WS
             return te;
         }
 
-        public async Task<TE> GetModel<T,TE>(Func<DomainContainer, DbSet<T>> func, Func<List<T>, TE> f2) where T : class
+        public async Task<TE> GetModel<T, TE>(Func<DomainContainer, DbSet<T>> func, Func<List<T>, TE> f2) where T : class
         {
             var models = GetModel(func);
-            
+
             await Task.WhenAll(models);
 
             var results = await models;
@@ -145,10 +175,10 @@ namespace Softpark.WS
         {
             var header = GetHeader(token);
 
-            await Task.WhenAll(header);
+            header.Wait();
 
             var headerTransport = await header;
-            
+
             var profissionalCNS = headerTransport.profissionalCNS;
 
             var ids = WithContext(c => c.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id).ToListAsync());
@@ -160,9 +190,7 @@ namespace Softpark.WS
                              where pc.cnsProfissional.Trim() == profissionalCNS.Trim()
                              select new { pc, cad }).ToListAsync());
 
-            await Task.WhenAll(ids);
-
-            await Task.WhenAll(pessoas);
+            await Task.WhenAll(ids, pessoas);
 
             var people = await pessoas;
 
@@ -175,7 +203,7 @@ namespace Softpark.WS
                     x.FichaGerada == true &&
                     x.ProfCidadaoVinc.IdProfissional == idProf).ToListAsync());
 
-            await Task.WhenAll(profs);
+            profs.Wait();
 
             var profissionais = await profs;
 
@@ -190,7 +218,7 @@ namespace Softpark.WS
                 .Where(x => x.identificacaoUsuarioCidadao != null && aIds.Contains(x.identificacaoUsuarioCidadao.Value)
                             && cads.Contains(x.id)).ToListAsync());
 
-            await Task.WhenAll(cadastros);
+            cadastros.Wait();
 
             CadastroIndividualViewModelCollection results = await cadastros;
 
@@ -203,11 +231,13 @@ namespace Softpark.WS
 
             var ps = profissionais.Where(x => people.Any(z => x.IdVinc == z.pc.IdVinc)).ToList();
 
-            var procs = WithContext(c => ps.ForEach(x => { c.PR_EncerrarAgenda(x.IdAgendaProd, false, false); c.SaveChangesAsync(); }));
+            var _save = SaveChanges();
 
-            await Task.WhenAll(procs);
+            _save.Wait();
 
-            await procs;
+            await _save;
+
+            await WithContext(c => ps.ForEach(x => c.PR_EncerrarAgenda(x.IdAgendaProd, false, false)));
 
             return rs;
         }
@@ -216,27 +246,30 @@ namespace Softpark.WS
         {
             var header = GetHeader(token);
 
-            await Task.WhenAll(header);
-
-            var headerToken = await header;
-
             //Alteração Cristiano, David 
-            var doms = WithContext(Domain => (from pc in Domain.VW_profissional_cns
-                                                    join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
-                                                    join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
-                                                    join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
-                                                    join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
-                                                    join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
-                                                    join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
-                                                    join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
-                                                    where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
-                                                      agenda.AgendamentoMarcado == true &&
-                                                      agenda.DataCarregadoDomiciliar == null &&
-                                                      agenda.FichaDomiciliarGerada == true &&
-                                                      idtUserCid.cnsResponsavelFamiliar == null
-                                                    select new { cd, agenda }).ToListAsync());
+            var doms = WithContext(async Domain =>
+            {
+                header.Wait();
 
-            await Task.WhenAll(doms);
+                var headerToken = await header;
+
+                return await (from pc in Domain.VW_profissional_cns
+                              join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
+                              join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
+                              join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
+                              join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
+                              join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
+                              join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
+                              join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
+                              where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
+                                agenda.AgendamentoMarcado == true &&
+                                agenda.DataCarregadoDomiciliar == null &&
+                                agenda.FichaDomiciliarGerada == true &&
+                                idtUserCid.cnsResponsavelFamiliar == null
+                              select new { cd, agenda }).ToListAsync();
+            });
+
+            doms.Wait();
 
             var domicilios = await doms;
 
@@ -249,97 +282,93 @@ namespace Softpark.WS
                 results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
             }
 
-            var procs = WithContext(c => domicilios.ForEach(x => { c.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true); c.SaveChangesAsync(); }));
+            var _save = SaveChanges();
 
-            await Task.WhenAll(procs);
+            _save.Wait();
 
-            await procs;
+            await _save;
+
+            await WithContext(c => domicilios.ForEach(x => c.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true)));
 
             return results.ToArray();
         }
-        
-        private async Task<T> WithContext<T>(Func<DomainContainer, Task<T>> func)
+
+        public async Task CreateFichasVisita(Guid token, IEnumerable<FichaVisitaDomiciliarChildCadastroViewModel> fichas, bool validar = true)
         {
-            if (_autodispose)
+            var tfichas = new List<Task<FichaVisitaDomiciliarChild>>();
+
+            foreach (var child in fichas)
             {
-                using (var c = CreateContext())
+                var masterVisita = GetOrCreateMaster(token);
+
+                masterVisita.Wait();
+
+                var master = await masterVisita;
+
+                var fichaVisita = Create(c => c.FichaVisitaDomiciliarChild, async (c, f) =>
                 {
-                    return await func(c);
-                }
+                    var ficha = child.ToModel(ref f);
+
+                    foreach (var motivoId in child.motivosVisita)
+                    {
+                        var model = c.SIGSM_MotivoVisita.FindAsync(motivoId);
+
+                        model.Wait();
+
+                        var motivo = await model;
+
+                        if (motivo != null)
+                            ficha.SIGSM_MotivoVisita.Add(motivo);
+                    }
+
+                    if (ficha.dtNascimento != null)
+                        ficha.dtNascimento.Value.IsValidBirthDateTime(master.UnicaLotacaoTransport.dataAtendimento);
+
+                    ficha.uuidFicha = master.uuidFicha;
+
+                    if (validar) ficha.Validar();
+
+                    return ficha;
+                });
+
+                tfichas.Add(fichaVisita);
             }
-            else
-            {
-                return await func(_context.Value);
-            }
+
+            await Task.WhenAll(tfichas);
+
+            tfichas.ForEach(async f => await f);
         }
 
-        private async Task<bool> WithContext(Action<DomainContainer> func)
+        private Task<T> WithContext<T>(Func<DomainContainer, Task<T>> func)
         {
-            return await Task.Run(() =>
-            {
-                if (_autodispose)
-                {
-                    using (var c = CreateContext())
-                    {
-                        func(c);
-                    }
-                }
-                else
-                {
-                    func(_context.Value);
-                }
+            return func(_context.Value);
+        }
 
-                return true;
+        private Task WithContext(Action<DomainContainer> func)
+        {
+            return Task.Run(() =>
+            {
+                func(_context.Value);
             });
         }
 
-        public async Task<T> Create<T>(Func<DomainContainer, DbSet<T>> func, Func<DomainContainer, T, Task<T>> then) where T : class
+        public Task<T> Create<T>(Func<DomainContainer, DbSet<T>> func, Func<DomainContainer, T, Task<T>> then) where T : class
         {
-            return await Task.Run(async () => {
-                DbSet<T> table;
+            return Task.Run(() =>
+            {
+                DbSet<T> table = func(_context.Value);
 
-                if (_autodispose)
-                {
-                    using (var c = CreateContext())
-                    {
-                        table = func(c);
+                var entity = table.Create();
 
-                        var entity = table.Create();
+                table.Add(entity);
 
-                        table.Add(entity);
-
-                        var _then = then(c, entity);
-
-                        var _save = c.SaveChangesAsync();
-
-                        await Task.WhenAll(_then, _save);
-
-                        entity = await _then;
-                        await _save;
-
-                        return entity;
-                    }
-                }
-                else
-                {
-                    table = func(_context.Value);
-
-                    var entity = table.Create();
-
-                    table.Add(entity);
-
-                    var _then = then(_context.Value, entity);
-
-                    var _save = _context.Value.SaveChangesAsync();
-
-                    await Task.WhenAll(_then, _save);
-
-                    entity = await _then;
-                    await _save;
-
-                    return entity;
-                }
+                return then(_context.Value, entity);
             });
+        }
+
+        public Task SaveChanges()
+        {
+            return _context.Value.SaveChangesAsync();
         }
 
         private static DomainContainer CreateContext()
@@ -348,7 +377,7 @@ namespace Softpark.WS
             c.Configuration.LazyLoadingEnabled = false;
             return c;
         }
-        
+
         public void Dispose()
         {
             if (_context.IsValueCreated)

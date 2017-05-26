@@ -20,37 +20,6 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class ProcessosController : BaseApiController
     {
-        private async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
-        {
-            var origem = await Domain.OrigemVisita.FindAsync(token);
-
-            if (origem == null || origem.finalizado)
-            {
-                throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
-            }
-
-            var header = await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(h => h.token == token);
-
-            if (header == null)
-            {
-                throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
-            }
-
-            var master = header.FichaVisitaDomiciliarMaster.FirstOrDefault(m => m.FichaVisitaDomiciliarChild.Count < 99) ??
-                         Domain.FichaVisitaDomiciliarMaster.Create();
-
-            if (master.uuidFicha != null) return master;
-            master.tpCdsOrigem = 3;
-            master.UnicaLotacaoTransport = header;
-
-            master.uuidFicha = header.cnes + '-' + Guid.NewGuid();
-            Domain.FichaVisitaDomiciliarMaster.Add(master);
-
-            await Domain.SaveChangesAsync();
-
-            return master;
-        }
-
         /// <summary>
         /// Cadastrar cabeçalho das fichas
         /// </summary>
@@ -63,37 +32,43 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
-            var origem = Domain.Create(c => c.OrigemVisita, async (db, o) => {
-                return await Task.Run(() =>
+            using (var Domain = Repository)
+            {
+                var origem = Domain.Create(c => c.OrigemVisita, async (db, o) =>
                 {
-                    o.token = Guid.NewGuid();
-                    o.id_tipo_origem = 1;
-                    o.enviarParaThrift = true;
-                    o.enviado = false;
+                    return await Task.Run(() =>
+                    {
+                        o.token = Guid.NewGuid();
+                        o.id_tipo_origem = 1;
+                        o.enviarParaThrift = true;
+                        o.enviado = false;
 
-                    return o;
+                        return o;
+                    });
                 });
-            });
 
-            var headerTransport = Domain.Create(c => c.UnicaLotacaoTransport, async (c, ult) => {
-                return await Task.Run(async () =>
+                var headerTransport = Domain.Create(c => c.UnicaLotacaoTransport, async (c, ult) =>
                 {
-                    var transport = header.ToModel(ref ult);
+                    return await Task.Run(async () =>
+                    {
+                        var transport = header.ToModel(ref ult);
 
-                    transport.id = Guid.NewGuid();
-                    var o = await origem;
-                    transport.OrigemVisita = o;
-                    transport.token = o.token;
+                        transport.id = Guid.NewGuid();
+                        origem.Wait();
+                        var o = await origem;
+                        transport.OrigemVisita = o;
+                        transport.token = o.token;
 
-                    return transport;
+                        return transport;
+                    });
                 });
-            });
 
-            await Task.WhenAll(origem, headerTransport);
+                await Task.WhenAll(origem, headerTransport);
 
-            var cabecalho = await headerTransport;
+                var cabecalho = await headerTransport;
 
-            return Ok(cabecalho.token);
+                return Ok(cabecalho.token);
+            }
         }
 
         /// <summary>
@@ -110,35 +85,19 @@ namespace Softpark.WS.Controllers.Api
                 return BadRequest(ModelState);
             }
 
-            var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
+            using (var Domain = Repository)
+            {   
+                try
+                {
+                    await Domain.CreateFichasVisita(child.token ?? Guid.Empty, new[] { child });
 
-            var ficha = child.ToModel();
-
-            foreach (var motivoId in child.motivosVisita)
-            {
-                var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
-
-                if (motivo != null)
-                    ficha.SIGSM_MotivoVisita.Add(motivo);
-            }
-
-            Domain.FichaVisitaDomiciliarChild.Add(ficha);
-
-            if (ficha.dtNascimento != null)
-                ficha.dtNascimento.Value.IsValidBirthDateTime(master.UnicaLotacaoTransport.dataAtendimento);
-
-            ficha.FichaVisitaDomiciliarMaster = master;
-
-            ficha.Validar();
-
-            try
-            {
-                await Domain.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
-                throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                    await Domain.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    var ex = ((System.Data.Entity.Validation.DbEntityValidationException)e).EntityValidationErrors;
+                    throw new Exception(ex.First().ValidationErrors.First().ErrorMessage, e);
+                }
             }
 
             return Ok(true);
@@ -407,8 +366,15 @@ namespace Softpark.WS.Controllers.Api
             {
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
-
-            Domain.PR_ProcessarFichasAPI(token);
+            else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
+            {
+                Domain.PR_ProcessarFichasAPI(token);
+            }
+            else
+            {
+                origem.finalizado = true;
+                await Domain.SaveChangesAsync();
+            }
 
             return Ok(true);
         }

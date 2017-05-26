@@ -363,10 +363,8 @@ namespace Softpark.WS.ViewModels
             longitude = model.longitude;
         }
 
-        internal FichaVisitaDomiciliarChild ToModel()
+        internal FichaVisitaDomiciliarChild ToModel(ref FichaVisitaDomiciliarChild fvdc)
         {
-            var fvdc = DomainContainer.Current.FichaVisitaDomiciliarChild.Create();
-
             fvdc.childId = Guid.NewGuid();
             fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
             fvdc.cnsCidadao = cnsCidadao;
