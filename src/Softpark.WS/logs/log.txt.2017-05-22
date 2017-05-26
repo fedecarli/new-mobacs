@@ -1,0 +1,21 @@
+2017-05-22 16:47:19,591 [14] INFO  Softpark.WS.Controllers.BaseApiController - -----
+2017-05-22 16:47:20,812 [14] INFO  Softpark.WS.Controllers.BaseApiController - POST api/processos/enviar/cadastro/atomico
+2017-05-22 16:50:06,616 [14] FATAL Softpark.WS.Controllers.BaseApiController - Referência de objeto não definida para uma instância de um objeto.
+2017-05-22 16:50:06,701 [14] ERROR Softpark.WS.Validators.ExceptionHandlingAttribute - Unhandled exception thrown in POST for request http://localhost/Softpark.WS/api/processos/enviar/cadastro/atomico: System.InvalidCastException: Não é possível converter um objeto do tipo 'System.NullReferenceException' no tipo 'System.Data.Entity.Validation.DbEntityValidationException'.
+   em Softpark.WS.Controllers.Api.ProcessosController.<CadastramentoAtomico>d__5.MoveNext() na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\ProcessosController.cs:linha 318
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Threading.Tasks.TaskHelpersExtensions.<CastToObject>d__3`1.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()

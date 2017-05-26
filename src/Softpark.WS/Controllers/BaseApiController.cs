@@ -1,4 +1,4 @@
-﻿using Softpark.Models;
+﻿using log4net;
 using System.Web.Http;
 
 namespace Softpark.WS.Controllers
@@ -9,9 +9,13 @@ namespace Softpark.WS.Controllers
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public abstract class BaseApiController : ApiController
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        protected static ILog Log => log;
+        
         /// <summary>
         /// Domain models
         /// </summary>
-        protected DomainContainer Domain => DomainContainer.Current;
+        protected Repository Repository => new Repository();
     }
 }
