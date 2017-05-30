@@ -31,6 +31,7 @@ namespace Softpark.Models
         public string NomeSocial { get; set; }
         public Nullable<int> CodMunicipe { get; set; }
         public Nullable<System.DateTime> DtAtualizacao { get; set; }
+        public Nullable<int> CodTpHomologacao { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadastroDocPessoal> ASSMED_CadastroDocPessoal { get; set; }

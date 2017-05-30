@@ -432,6 +432,7 @@ warning 6002: The table/view 'SIGSM.api.ASSMED_CadastroIndividualVinc' does not 
           <Property Name="NomeSocial" Type="varchar" MaxLength="100" />
           <Property Name="CodMunicipe" Type="int" />
           <Property Name="DtAtualizacao" Type="datetime" />
+          <Property Name="CodTpHomologacao" Type="int" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroDocPessoal">
           <Key>
@@ -2992,6 +2993,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="ASSMED_CadastroDocPessoal" Relationship="Domain.FK__ASSMED_CadastroD__0A7378A9" FromRole="ASSMED_Cadastro" ToRole="ASSMED_CadastroDocPessoal" />
           <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_Endereco__6CE315C2" FromRole="ASSMED_Cadastro" ToRole="ASSMED_Endereco" />
           <NavigationProperty Name="ASSMED_PesFisica" Relationship="Domain.FK__ASSMED_PesFisica__56F3D4A3" FromRole="ASSMED_Cadastro" ToRole="ASSMED_PesFisica" />
+          <Property Name="CodTpHomologacao" Type="Int32" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroDocPessoal">
           <Key>
@@ -4716,6 +4718,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="ASSMED_Cadastro">
             <EntityTypeMapping TypeName="Domain.ASSMED_Cadastro">
               <MappingFragment StoreEntitySet="ASSMED_Cadastro">
+                <ScalarProperty Name="CodTpHomologacao" ColumnName="CodTpHomologacao" />
                 <ScalarProperty Name="DtAtualizacao" ColumnName="DtAtualizacao" />
                 <ScalarProperty Name="CodMunicipe" ColumnName="CodMunicipe" />
                 <ScalarProperty Name="NomeSocial" ColumnName="NomeSocial" />
