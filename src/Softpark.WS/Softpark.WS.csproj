@@ -441,10 +441,7 @@
     <None Include="installation\lock" />
     <Content Include="key.snk" />
     <Content Include="pk.snk" />
-    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\SoftparkWS.pubxml" />
     <EmbeddedResource Include="SwaggerExtensions\loadTest.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -529,11 +526,12 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIISExpress>True</UseIISExpress>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISExpressUrl>http://localhost:63272/</IISExpressUrl>
+          <IISUrl>
+          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
