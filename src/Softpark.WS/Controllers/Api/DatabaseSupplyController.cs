@@ -9,6 +9,7 @@ using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -705,6 +706,9 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(results.ToArray()));
+
             return data;
         }
 
@@ -721,8 +725,8 @@ namespace Softpark.WS.Controllers.Api
         {
             try
             {
-                Log.Debug("----");
-                Log.Debug($"api/dados/domicilio/{token}");
+                Log.Info("----");
+                Log.Info($"api/dados/domicilio/{token}");
 
                 var headerToken = await GetHeader(token);
 
@@ -795,6 +799,9 @@ namespace Softpark.WS.Controllers.Api
 
                 await Domain.SaveChangesAsync();
 
+                var serializer = new JavaScriptSerializer();
+                Log.Info(serializer.Serialize(results.ToArray()));
+
                 return Ok(results.ToArray());
 
             }
@@ -816,6 +823,9 @@ namespace Softpark.WS.Controllers.Api
         [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
         public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
+            Log.Info("----");
+            Log.Info($"api/dados/visita/{token}");
+
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
@@ -827,6 +837,9 @@ namespace Softpark.WS.Controllers.Api
             {
                 results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
             }
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(results.ToArray()));
 
             return Ok(results.ToArray());
         }

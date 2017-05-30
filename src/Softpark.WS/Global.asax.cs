@@ -29,6 +29,9 @@ namespace Softpark.WS
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            //Log4Net
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 

@@ -81,6 +81,16 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; } = null;
 
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string latitude { get; set; } = null;
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string longitude { get; set; } = null;
+
         internal async Task<CadastroIndividual> ToModel(DomainContainer domain)
         {
             var ci = domain.CadastroIndividual.Create();
@@ -94,6 +104,8 @@ namespace Softpark.WS.ViewModels
             ci.statusTermoRecusaCadastroIndividualAtencaoBasica = statusTermoRecusaCadastroIndividualAtencaoBasica;
             ci.uuidFichaOriginadora = uuidFichaOriginadora;
             ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel(domain);
+            ci.latitude = latitude;
+            ci.longitude = longitude;
 
             return ci;
         }

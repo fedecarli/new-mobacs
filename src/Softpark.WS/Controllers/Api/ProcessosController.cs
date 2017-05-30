@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Script.Serialization;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -72,6 +73,11 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
+            Log.Info("----");
+            Log.Info("enviar/cabecalho");
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(header));
+
             var origem = Domain.OrigemVisita.Create();
 
             origem.token = Guid.NewGuid();
@@ -93,6 +99,7 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            Log.Info(origem.token);
             return Ok(origem.token);
         }
 
@@ -105,6 +112,12 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
+            Log.Info("-----");
+            Log.Info($"GET api/visita/child/");
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(child));
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -148,6 +161,7 @@ namespace Softpark.WS.Controllers.Api
                 throw e;
             }
 
+            Log.Info(Ok(true));
             return Ok(true);
         }
 
@@ -160,6 +174,12 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
+            Log.Info("-----");
+            Log.Info($"GET api/cadastro/individual/{cadInd.token}");
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(cadInd));
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -186,6 +206,7 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            Log.Info(Ok(true));
             return Ok(true);
         }
 
@@ -201,6 +222,9 @@ namespace Softpark.WS.Controllers.Api
             Log.Info("-----");
             Log.Info("POST enviar/cadastro/domiciliar");
             Log.Info($"TOKEN {cadDom.token}");
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(cadDom));
 
             if (!ModelState.IsValid)
             {
@@ -232,6 +256,7 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            Log.Info(Ok(true));
             return Ok(true);
         }
 
@@ -246,6 +271,9 @@ namespace Softpark.WS.Controllers.Api
         {
             Log.Info("-----");
             Log.Info("POST api/processos/enviar/cadastro/atomico");
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(cadastros));
 
             var origem = Domain.OrigemVisita.Create();
 
@@ -387,6 +415,12 @@ namespace Softpark.WS.Controllers.Api
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> FinalizarTransmissao([FromUri, Required] Guid token)
         {
+            Log.Info("-----");
+            Log.Info("POST api/encerrar/token");
+
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(token));
+
             var origem = await Domain.OrigemVisita.FindAsync(token);
 
             if (origem == null || origem.finalizado)
@@ -409,7 +443,8 @@ namespace Softpark.WS.Controllers.Api
                     Log.Warn("Erro ao tentar finalizar token.", e);
                 }
             }
-
+            
+            Log.Info(Ok(true));
             return Ok(true);
         }
     }
