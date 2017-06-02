@@ -738,11 +738,15 @@ namespace Softpark.WS.Controllers.Api
                                   join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
                                   join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
                                   join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
+                                  join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
+                                  join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
+                                  join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
                                   where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
                                     agenda.AgendamentoMarcado == true &&
                                     agenda.DataCarregadoDomiciliar == null &&
-                                    agenda.FichaDomiciliarGerada == true
-                                  select new { pc, cad, cd, pcv, agenda }).ToList();
+                                    agenda.FichaDomiciliarGerada == true &&
+                                    idtUserCid.cnsResponsavelFamiliar == null
+                                  select new { cd, agenda }).ToList();
 
                 var cadastros = domicilios.Select(x => x.cd).ToArray();
 
@@ -760,10 +764,12 @@ namespace Softpark.WS.Controllers.Api
 
                 await Domain.SaveChangesAsync();
 
-                var serializer = new JavaScriptSerializer();
-                Log.Info(serializer.Serialize(results.ToArray()));
+                var resultados = results.ToArray();
 
-                return Ok(results.ToArray());
+                var serializer = new JavaScriptSerializer();
+                Log.Info(serializer.Serialize(resultados));
+
+                return Ok(resultados);
 
             }
             catch (Exception ex)
