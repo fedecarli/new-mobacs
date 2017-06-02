@@ -145,6 +145,8 @@ namespace Softpark.WS.ViewModels
             statusTermoRecusaCadastroIndividualAtencaoBasica = model.statusTermoRecusaCadastroIndividualAtencaoBasica;
             uuidFichaOriginadora = model.uuidFichaOriginadora;
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
+            latitude = model.latitude;
+            longitude = model.longitude;
         }
     }
 
