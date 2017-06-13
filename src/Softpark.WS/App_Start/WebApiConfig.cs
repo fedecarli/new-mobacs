@@ -1,5 +1,10 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Softpark.WS.Validators;
+using Softpark.WS.ViewModels;
+using System.Globalization;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -27,6 +32,9 @@ namespace Softpark.WS
                 new { token = RouteParameter.Optional }
             );
 
+            config.Formatters.JsonFormatter.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+            config.Formatters.JsonFormatter.SerializerSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ssZ";
+            
             ((DefaultContractResolver)config.Formatters.JsonFormatter.SerializerSettings.ContractResolver).IgnoreSerializableAttribute = true;
         }
     }

@@ -385,6 +385,7 @@
     <Compile Include="Controllers\Api\ProcessosController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
     <Compile Include="ViewModels\Parametros.cs" />
     <Compile Include="ViewModels\UsuarioLoginViewModel.cs" />
@@ -400,6 +401,7 @@
     <Compile Include="ViewModels\UnicaLotacaoTransportViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="apidate.js" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

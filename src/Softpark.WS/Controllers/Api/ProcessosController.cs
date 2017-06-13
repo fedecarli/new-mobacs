@@ -348,7 +348,7 @@ namespace Softpark.WS.Controllers.Api
                         Domain.FichaVisitaDomiciliarChild.Add(ficha);
 
                         if (ficha.dtNascimento != null)
-                            Epoch.ValidateBirthDate(child.dtNascimento ?? 0, master.UnicaLotacaoTransport.dataAtendimento.ToUnix());
+                            Epoch.ValidateBirthDateTime(ficha.dtNascimento.Value, master.UnicaLotacaoTransport.dataAtendimento);
 
                         ficha.FichaVisitaDomiciliarMaster = master;
 

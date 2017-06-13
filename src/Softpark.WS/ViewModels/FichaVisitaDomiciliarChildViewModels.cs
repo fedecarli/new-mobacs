@@ -101,7 +101,7 @@ namespace Softpark.WS.ViewModels
         /// Data de Nascimento
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public long? dtNascimento { get; set; }
+        public DateTime? dtNascimento { get; set; }
 
         /// <summary>
         /// Sexo do cidadão
@@ -187,7 +187,7 @@ namespace Softpark.WS.ViewModels
             alturaAcompanhamentoNutricional = model.alturaAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(model.alturaAcompanhamentoNutricional));
             cnsCidadao = model.cnsCidadao;
             desfecho = model.desfecho;
-            dtNascimento = model.dtNascimento?.ToUnix();
+            dtNascimento = model.dtNascimento;
             microarea = model.microarea;
             numProntuario = model.numProntuario;
             pesoAcompanhamentoNutricional = model.pesoAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(pesoAcompanhamentoNutricional));
@@ -208,7 +208,7 @@ namespace Softpark.WS.ViewModels
             fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
             fvdc.cnsCidadao = cnsCidadao;
             fvdc.desfecho = desfecho;
-            fvdc.dtNascimento = dtNascimento?.FromUnix();
+            fvdc.dtNascimento = dtNascimento;
             fvdc.microarea = microarea;
             fvdc.numProntuario = numProntuario;
             fvdc.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional == null || pesoAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(pesoAcompanhamentoNutricional);

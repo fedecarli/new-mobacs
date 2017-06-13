@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using Softpark.Infrastructure.Extras;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -24,6 +26,19 @@ namespace Softpark.WS.Controllers.Api
 
         public DatabaseSupplyController(DomainContainer domain) : base(domain)
         {
+        }
+        
+        /// <summary>
+        /// Pega o epoch de uma data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/epoch", Name = "GetEpochURI")]
+        [ResponseType(typeof(long))]
+        public IHttpActionResult GetEpoch([FromUri] DateTime data)
+        {
+            return Ok(data.ToUnix());
         }
 
         private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(DatabaseSupplyController));

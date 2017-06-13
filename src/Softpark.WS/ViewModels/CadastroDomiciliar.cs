@@ -1,4 +1,5 @@
-﻿using Softpark.Infrastructure.Extras;
+﻿using Newtonsoft.Json;
+using Softpark.Infrastructure.Extras;
 using Softpark.Models;
 using System;
 using System.Collections.Generic;
@@ -202,12 +203,12 @@ namespace Softpark.WS.ViewModels
 
     public class FamiliaRowViewModel
     {
-        public long? dataNascimentoResponsavel { get; set; } = null;
+        public DateTime? dataNascimentoResponsavel { get; set; } = null;
         public string numeroCnsResponsavel { get; set; } = null;
         public int? numeroMembrosFamilia { get; set; } = null;
         public string numeroProntuario { get; set; } = null;
         public int? rendaFamiliar { get; set; } = null;
-        public long? resideDesde { get; set; } = null;
+        public DateTime? resideDesde { get; set; } = null;
         public bool stMudanca { get; set; }
 
         public FamiliaRow ToModel(DomainContainer domain)
@@ -215,12 +216,12 @@ namespace Softpark.WS.ViewModels
             var fr = domain.FamiliaRow.Create();
 
             fr.id = Guid.NewGuid();
-            fr.dataNascimentoResponsavel = dataNascimentoResponsavel?.FromUnix();
+            fr.dataNascimentoResponsavel = dataNascimentoResponsavel;
             fr.numeroCnsResponsavel = numeroCnsResponsavel;
             fr.numeroMembrosFamilia = numeroMembrosFamilia;
             fr.numeroProntuario = numeroProntuario;
             fr.rendaFamiliar = rendaFamiliar;
-            fr.resideDesde = resideDesde?.FromUnix();
+            fr.resideDesde = resideDesde;
             fr.stMudanca = stMudanca;
 
             domain.FamiliaRow.Add(fr);
@@ -245,12 +246,12 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            dataNascimentoResponsavel = model.dataNascimentoResponsavel?.ToUnix();
+            dataNascimentoResponsavel = model.dataNascimentoResponsavel;
             numeroCnsResponsavel = model.numeroCnsResponsavel;
             numeroMembrosFamilia = model.numeroMembrosFamilia;
             numeroProntuario = model.numeroProntuario;
             rendaFamiliar = model.rendaFamiliar;
-            resideDesde = model.resideDesde?.ToUnix();
+            resideDesde = model.resideDesde;
             stMudanca = model.stMudanca;
         }
     }
