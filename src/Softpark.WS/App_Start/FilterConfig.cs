@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using Softpark.WS.Validators;
+using System.Web.Mvc;
 
 #pragma warning disable 1591
 namespace Softpark.WS
@@ -8,6 +9,7 @@ namespace Softpark.WS
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new AddCustomHeaderFilter());
         }
     }
 }

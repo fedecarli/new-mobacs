@@ -100,6 +100,18 @@ namespace Softpark.Infrastructure.Extras
         /// <param name="epoch"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
+        public static ValidationResult ValidateBirthDateTime(DateTime epoch, DateTime limit)
+        {
+            return epoch.IsValidBirthDateTime(limit) ? ValidationResult.Success :
+                new ValidationResult($"A data de nascimento não pode ser maior ou igual à data de atendimento. Nascimento: {epoch:dd/MM/yyyy}, Limite: {limit:dd/MM/yyyy}");
+        }
+
+        /// <summary>
+        /// Valida data nascimento
+        /// </summary>
+        /// <param name="epoch"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         public static bool IsValidBirthEpoch(this long epoch, long limit)
         {
             var e = epoch.FromUnix();

@@ -54,7 +54,7 @@ namespace Softpark.WS.ViewModels
         /// https://pt.wikipedia.org/wiki/Era_Unix
         /// </remarks>
         [DataMember(Name = nameof(dataAtendimento))]
-        public long dataAtendimento { get; set; }
+        public DateTime dataAtendimento { get; set; }
 
         /// <summary>
         /// Código IBGE do município
@@ -76,7 +76,7 @@ namespace Softpark.WS.ViewModels
             ult.cboCodigo_2002 = cboCodigo_2002;
             ult.cnes = cnes;
             ult.ine = ine;
-            ult.dataAtendimento = dataAtendimento.FromUnix();
+            ult.dataAtendimento = dataAtendimento;
             ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
 
             return ult;
@@ -88,7 +88,7 @@ namespace Softpark.WS.ViewModels
                 cboCodigo_2002 = model.cboCodigo_2002,
                 cnes = model.cnes,
                 codigoIbgeMunicipio = model.codigoIbgeMunicipio,
-                dataAtendimento = model.dataAtendimento.ToUnix(),
+                dataAtendimento = model.dataAtendimento,
                 ine = model.ine,
                 profissionalCNS = model.profissionalCNS
             };

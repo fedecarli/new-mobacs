@@ -145,6 +145,8 @@ namespace Softpark.WS.ViewModels
             statusTermoRecusaCadastroIndividualAtencaoBasica = model.statusTermoRecusaCadastroIndividualAtencaoBasica;
             uuidFichaOriginadora = model.uuidFichaOriginadora;
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
+            latitude = model.latitude;
+            longitude = model.longitude;
         }
     }
 
@@ -206,7 +208,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data de óbito
         /// </summary>
-        public long? dataObito { get; set; } = null;
+        public DateTime? dataObito { get; set; } = null;
         /// <summary>
         /// Número da Declaração
         /// </summary>
@@ -230,7 +232,7 @@ namespace Softpark.WS.ViewModels
             if (model == null) return;
 
             motivoSaidaCidadao = model.motivoSaidaCidadao;
-            dataObito = model.dataObito?.ToUnix();
+            dataObito = model.dataObito;
             numeroDO = model.numeroDO;
         }
 
@@ -240,7 +242,7 @@ namespace Softpark.WS.ViewModels
 
             scc.id = Guid.NewGuid();
             scc.motivoSaidaCidadao = motivoSaidaCidadao;
-            scc.dataObito = dataObito?.FromUnix();
+            scc.dataObito = dataObito;
             scc.numeroDO = numeroDO;
 
             return scc;
@@ -427,7 +429,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// data de nascimento
         /// </summary>
-        public long dataNascimentoCidadao { get; set; }
+        public DateTime dataNascimentoCidadao { get; set; }
         /// <summary>
         /// desconhece o nome da mãe
         /// </summary>
@@ -495,7 +497,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data da naturalização
         /// </summary>
-        public long? dtNaturalizacao { get; set; } = null;
+        public DateTime? dtNaturalizacao { get; set; } = null;
         /// <summary>
         /// Portaria da Naturalização
         /// </summary>
@@ -503,7 +505,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data de entrada no Brasil
         /// </summary>
-        public long? dtEntradaBrasil { get; set; } = null;
+        public DateTime? dtEntradaBrasil { get; set; } = null;
         /// <summary>
         /// Microárea
         /// </summary>
@@ -546,7 +548,7 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao?.ToUnix() ?? 0;
+            dataNascimentoCidadao = model.dataNascimentoCidadao??(0L).FromUnix();
             desconheceNomeMae = model.desconheceNomeMae ?? false;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao ?? 1;
@@ -563,9 +565,9 @@ namespace Softpark.WS.ViewModels
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
             desconheceNomePai = model.desconheceNomePai ?? false;
-            dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
+            dtNaturalizacao = model.dtNaturalizacao;
             portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
+            dtEntradaBrasil = model.dtEntradaBrasil;
             microarea = model.microarea;
             stForaArea = model.stForaArea ?? false;
         }
@@ -577,7 +579,7 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao.ToUnix();
+            dataNascimentoCidadao = model.dataNascimentoCidadao;
             desconheceNomeMae = model.desconheceNomeMae;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao;
@@ -594,9 +596,9 @@ namespace Softpark.WS.ViewModels
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
             desconheceNomePai = model.desconheceNomePai;
-            dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
+            dtNaturalizacao = model.dtNaturalizacao;
             portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
+            dtEntradaBrasil = model.dtEntradaBrasil;
             microarea = model.microarea;
             stForaArea = model.stForaArea;
         }
@@ -608,7 +610,7 @@ namespace Softpark.WS.ViewModels
             iuc.id = Guid.NewGuid();
             iuc.nomeSocial = nomeSocial;
             iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
-            iuc.dataNascimentoCidadao = dataNascimentoCidadao.FromUnix();
+            iuc.dataNascimentoCidadao = dataNascimentoCidadao;
             iuc.desconheceNomeMae = desconheceNomeMae;
             iuc.emailCidadao = emailCidadao;
             iuc.nacionalidadeCidadao = nacionalidadeCidadao;
@@ -625,9 +627,9 @@ namespace Softpark.WS.ViewModels
             iuc.etnia = etnia;
             iuc.nomePaiCidadao = nomePaiCidadao;
             iuc.desconheceNomePai = desconheceNomePai;
-            iuc.dtNaturalizacao = dtNaturalizacao?.FromUnix();
+            iuc.dtNaturalizacao = dtNaturalizacao;
             iuc.portariaNaturalizacao = portariaNaturalizacao;
-            iuc.dtEntradaBrasil = dtEntradaBrasil?.FromUnix();
+            iuc.dtEntradaBrasil = dtEntradaBrasil;
             iuc.microarea = microarea;
             iuc.stForaArea = stForaArea;
 

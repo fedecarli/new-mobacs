@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using Softpark.Infrastructure.Extras;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -24,6 +26,27 @@ namespace Softpark.WS.Controllers.Api
 
         public DatabaseSupplyController(DomainContainer domain) : base(domain)
         {
+        }
+        
+        [HttpGet]
+        [Route("api/version")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult GetVersion()
+        {
+            return Ok(Versions.Version);
+        }
+
+        /// <summary>
+        /// Pega o epoch de uma data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/dados/epoch", Name = "GetEpochURI")]
+        [ResponseType(typeof(long))]
+        public IHttpActionResult GetEpoch([FromUri] DateTime data)
+        {
+            return Ok(data.ToUnix());
         }
 
         private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(DatabaseSupplyController));
@@ -712,7 +735,7 @@ namespace Softpark.WS.Controllers.Api
             return data;
         }
 
-        /// <summary>
+                /// <summary>
         /// Buscar domicílios atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
@@ -732,48 +755,21 @@ namespace Softpark.WS.Controllers.Api
 
                 if (headerToken == null) return BadRequest("Token Inválido.");
 
-                //var ids = Domain.VW_ultimo_cadastroDomiciliar
-                //    .Select(x => x.idCadastroDomiciliar).ToArray();
-
-                //var domicilios = (from pc in Domain.VW_profissional_cns
-                //                  join ut in Domain.UnicaLotacaoTransport
-                //                  on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
-                //                  join cad in Domain.VW_ultimo_cadastroDomiciliar
-                //                  on ut.token equals cad.token
-                //                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                //                  && pc.CodigoCidadao == cad.Codigo
-                //                  select new { pc, cad }).ToArray();
-
                 //Alteração Cristiano, David 
                 var domicilios = (from pc in Domain.VW_profissional_cns
                                   join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
                                   join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
                                   join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
                                   join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
+                                  join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
+                                  join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
+                                  join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
                                   where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
                                     agenda.AgendamentoMarcado == true &&
                                     agenda.DataCarregadoDomiciliar == null &&
-                                    agenda.FichaDomiciliarGerada == true
-                                  select new { pc, cad, cd, pcv, agenda }).ToList();
-
-                //var dom = domicilios.FirstOrDefault();
-
-                //var idProf = dom?.pc.IdProfissional;
-
-                //var profs = Domain.ProfCidadaoVincAgendaProd
-                //.Where(x =>
-                //    x.AgendamentoMarcado == true &&
-                //    x.DataCarregadoDomiciliar == null &&
-                //    x.FichaDomiciliarGerada == true &&
-                //    x.ProfCidadaoVinc.IdProfissional == idProf);
-
-                //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-                //var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                //    .Select(x => x.cad.idCadastroDomiciliar).ToArray();
-
-                //var cadastros = Domain.CadastroDomiciliar
-                //   .Where(x => ids.Contains(x.id) && cads.Contains(x.id)).ToArray();
+                                    agenda.FichaDomiciliarGerada == true &&
+                                    idtUserCid.cnsResponsavelFamiliar == null
+                                  select new { cd, agenda }).ToList();
 
                 var cadastros = domicilios.Select(x => x.cd).ToArray();
 
@@ -784,14 +780,6 @@ namespace Softpark.WS.Controllers.Api
                     results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
                 }
 
-                //var ps = profs.Where(x => domicilios.Any(y => y.pc.IdVinc == x.IdVinc)).ToList();
-
-                //ps.ForEach(x =>
-                //{
-                //    x.DataCarregadoDomiciliar = DateTime.Now;
-                //    Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, true);
-                //});
-
                 domicilios.ForEach(x =>
                 {
                     Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
@@ -799,10 +787,12 @@ namespace Softpark.WS.Controllers.Api
 
                 await Domain.SaveChangesAsync();
 
-                var serializer = new JavaScriptSerializer();
-                Log.Info(serializer.Serialize(results.ToArray()));
+                var resultados = results.ToArray();
 
-                return Ok(results.ToArray());
+                var serializer = new JavaScriptSerializer();
+                Log.Info(serializer.Serialize(resultados));
+
+                return Ok(resultados);
 
             }
             catch (Exception ex)
