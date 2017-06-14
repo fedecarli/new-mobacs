@@ -28,6 +28,14 @@ namespace Softpark.WS.Controllers.Api
         {
         }
         
+        [HttpGet]
+        [Route("api/version")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult GetVersion()
+        {
+            return Ok(Versions.Version);
+        }
+
         /// <summary>
         /// Pega o epoch de uma data
         /// </summary>
