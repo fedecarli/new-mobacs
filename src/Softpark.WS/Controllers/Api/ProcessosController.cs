@@ -385,6 +385,8 @@ namespace Softpark.WS.Controllers.Api
                     DadoAtual = await Request.Content.ReadAsStringAsync()
                 });
 
+                await Domain.SaveChangesAsync();
+
                 //Domain.PR_ProcessarFichasAPI(origem.token);
             }
             catch (Exception e)
@@ -452,6 +454,9 @@ namespace Softpark.WS.Controllers.Api
                     OrigemVisita = origem,
                     token = origem.token
                 });
+
+                await Domain.SaveChangesAsync();
+
                 //Domain.PR_ProcessarFichasAPI(token);
             }
             else
