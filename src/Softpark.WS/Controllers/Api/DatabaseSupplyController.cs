@@ -65,6 +65,16 @@ namespace Softpark.WS.Controllers.Api
 
             switch (modelo.ToLowerInvariant())
             {
+                case "estadocivil":
+                    model = Domain.TP_EstadoCivil
+                        .Select(x => new BasicViewModel
+                        {
+                            Modelo = "EstadoCivil",
+                            Codigo = x.codigo,
+                            Descricao = x.descricao,
+                            Observacao = null
+                        }).ToList();
+                    break;
                 case "doencacardiaca":
                     model = Domain.TP_Doenca_Cardiaca
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
@@ -137,7 +147,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "quantasvezesalimentacao":
                     model = Domain.TP_Quantas_Vezes_Alimentacao
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "QuantasVezesAlimentacao",
@@ -644,6 +653,7 @@ namespace Softpark.WS.Controllers.Api
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Turno", Descricao = "Turno", Observacao = "/api/dados/Turno" },
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoVisita", Descricao = "MotivoVisita", Observacao = "/api/dados/MotivoVisita" },
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = "/api/dados/Desfecho" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "EstadoCivil", Descricao = "EstadoCivil", Observacao = "/api/dados/EstadoCivil" },
                 new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
             }.OrderBy(x => x.Codigo).ToArray());
         }

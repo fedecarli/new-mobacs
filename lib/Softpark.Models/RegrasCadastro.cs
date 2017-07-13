@@ -406,7 +406,7 @@ namespace Softpark.Models
                     throw new ValidationException("O código IBGE do município de nascimento é inválido ou não está cadastrado.");
             }
 
-            if (!cond.dataNascimentoCidadao.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (cond.dataNascimentoCidadao != null && !cond.dataNascimentoCidadao.Value.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("A data de nascimento do cidadão é inválida.");
 
             try
@@ -776,7 +776,7 @@ namespace Softpark.Models
             if (cond.telefoneContato != null && (cond.telefoneContato.Length < 10 || cond.telefoneContato.Length > 11))
                 throw new ValidationException("O telefone de contato é inválido.");
 
-            if (cond.telelefoneResidencia != null && (cond.telelefoneResidencia.Length < 10 || cond.telelefoneResidencia.Length > 11))
+            if (cond.telefoneResidencia != null && (cond.telefoneResidencia.Length < 10 || cond.telefoneResidencia.Length > 11))
                 throw new ValidationException("O telefone da residência é inválido.");
 
             if (cond.tipoLogradouroNumeroDne == null || domain.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO == null || x.CO_TIPO_LOGRADOURO.Trim() != cond.tipoLogradouroNumeroDne))

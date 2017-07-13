@@ -52,6 +52,12 @@ namespace Softpark.WS.ViewModels
         public Guid? uuidFichaOriginadora { get; set; } = null;
         public int tipoDeImovel { get; set; }
         public InstituicaoPermanenciaViewModel instituicaoPermanencia { get; set; } = null;
+        public string Justificativa { get; set; } = null;
+
+        /// <summary>
+        /// Data de registro da ficha no app
+        /// </summary>
+        public DateTime? DataRegistro { get; set; } = null;
 
         public int[] animalNoDomicilio { get; set; } = new int[0];
         public FamiliaRowViewModel[] familiaRow { get; set; } = new FamiliaRowViewModel[0];
@@ -87,6 +93,8 @@ namespace Softpark.WS.ViewModels
             dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel(domain);
             dc.latitude = latitude;
             dc.longitude = longitude;
+            dc.Justificativa = Justificativa;
+            dc.DataRegistro = DataRegistro;
 
             TP_Animais an;
             foreach (var a in animalNoDomicilio)
@@ -124,7 +132,7 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
+            token = model.UnicaLotacaoTransport.token;
             condicaoMoradia = model.CondicaoMoradia1;
             enderecoLocalPermanencia = model.EnderecoLocalPermanencia1;
             fichaAtualizada = model.fichaAtualizada;
@@ -136,6 +144,8 @@ namespace Softpark.WS.ViewModels
             instituicaoPermanencia = model.InstituicaoPermanencia1;
             latitude = model.latitude;
             longitude = model.longitude;
+            Justificativa = model.Justificativa;
+            DataRegistro = model.DataRegistro;
 
             animalNoDomicilio = model.AnimalNoDomicilio.Select(a => a.id_tp_animal).ToArray();
 
@@ -319,6 +329,7 @@ namespace Softpark.WS.ViewModels
         public string numeroDneUf { get; set; } = null;
         public string telefoneContato { get; set; } = null;
         public string telelefoneResidencia { get; set; } = null;
+        public string telefoneResidencia { get; set; } = null;
         public string tipoLogradouroNumeroDne { get; set; } = null;
         public bool stSemNumero { get; set; }
         public string pontoReferencia { get; set; } = null;
@@ -338,7 +349,7 @@ namespace Softpark.WS.ViewModels
             elp.numero = numero;
             elp.numeroDneUf = numeroDneUf;
             elp.telefoneContato = telefoneContato;
-            elp.telelefoneResidencia = telelefoneResidencia;
+            elp.telefoneResidencia = telefoneResidencia ?? telelefoneResidencia;
             elp.tipoLogradouroNumeroDne = tipoLogradouroNumeroDne;
             elp.stSemNumero = stSemNumero;
             elp.pontoReferencia = pontoReferencia;
@@ -375,7 +386,7 @@ namespace Softpark.WS.ViewModels
             numero = model.numero;
             numeroDneUf = model.numeroDneUf;
             telefoneContato = model.telefoneContato;
-            telelefoneResidencia = model.telelefoneResidencia;
+            telefoneResidencia = telelefoneResidencia = model.telefoneResidencia;
             tipoLogradouroNumeroDne = model.tipoLogradouroNumeroDne;
             stSemNumero = model.stSemNumero;
             pontoReferencia = model.pontoReferencia;

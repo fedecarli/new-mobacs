@@ -73,6 +73,22 @@ namespace Softpark.Infrastructure.Extras
         /// <summary>
         /// Valida data eSUS
         /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ValidationResult ValidateESUSDateTime(DateTime? data)
+        {
+            var past = DateTime.Now.Date.AddYears(-1);
+
+            if (data == null)
+                return new ValidationResult("Informe uma data.");
+
+            return data >= past ? ValidationResult.Success :
+                new ValidationResult($"A data de atendimento tem mais de 1 (um) ano ou é inválida. Data atual: {DateTime.UtcNow}, Data limite: {past}, Data informada: {data}");
+        }
+
+        /// <summary>
+        /// Valida data eSUS
+        /// </summary>
         /// <param name="epoch"></param>
         /// <returns></returns>
         public static ValidationResult ValidateESUSEpoch(long epoch)

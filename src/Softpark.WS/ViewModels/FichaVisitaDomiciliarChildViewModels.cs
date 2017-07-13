@@ -168,6 +168,16 @@ namespace Softpark.WS.ViewModels
         public string longitude { get; set; } = null;
 
         /// <summary>
+        /// Justificativa
+        /// </summary>
+        public string Justificativa { get; set; } = null;
+
+        /// <summary>
+        /// Data de registro da ficha no app
+        /// </summary>
+        public DateTime? DataRegistro { get; set; } = null;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="model"></param>
@@ -198,6 +208,8 @@ namespace Softpark.WS.ViewModels
             turno = model.turno;
             latitude = model.latitude;
             longitude = model.longitude;
+            Justificativa = model.Justificativa;
+            DataRegistro = model.DataRegistro;
         }
 
         internal FichaVisitaDomiciliarChild ToModel(DomainContainer domain)
@@ -219,6 +231,8 @@ namespace Softpark.WS.ViewModels
             fvdc.turno = turno;
             fvdc.latitude = latitude;
             fvdc.longitude = longitude;
+            fvdc.Justificativa = Justificativa;
+            fvdc.DataRegistro = DataRegistro;
 
             domain.FichaVisitaDomiciliarChild.Add(fvdc);
 

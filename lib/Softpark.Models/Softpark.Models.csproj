@@ -193,6 +193,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RastroFicha.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="RegrasCadastro.cs" />
     <Compile Include="Classes.cs" />
     <Compile Include="ResponsavelPorCrianca.cs">
@@ -208,9 +211,6 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SIGSM_MotivoVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SituacaoFamiliar.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TB_MS_TIPO_LOGRADOURO.cs">
@@ -271,6 +271,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TP_Escoamento_Esgoto.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TP_EstadoCivil.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TP_Exames.cs">

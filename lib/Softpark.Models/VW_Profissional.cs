@@ -15,5 +15,6 @@ namespace Softpark.Models
         public string Nome { get; set; }
         public string Profissao { get; set; }
         public string Unidade { get; set; }
+        public int CodUsu { get; set; }
     }
 }

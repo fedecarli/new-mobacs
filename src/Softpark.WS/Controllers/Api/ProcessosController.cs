@@ -373,7 +373,19 @@ namespace Softpark.WS.Controllers.Api
             {
                 await Domain.SaveChangesAsync();
 
-                Domain.PR_ProcessarFichasAPI(origem.token);
+                var uni = origem.UnicaLotacaoTransport.First();
+
+                var usuario = Domain.VW_Profissional.FirstOrDefault(x => x.CNS == uni.profissionalCNS);
+
+                Domain.RastroFicha.Add(new RastroFicha
+                {
+                    CodUsu = usuario.CodUsu,
+                    DataModificacao = DateTime.Now,
+                    token = origem.token,
+                    DadoAtual = await Request.Content.ReadAsStringAsync()
+                });
+
+                //Domain.PR_ProcessarFichasAPI(origem.token);
             }
             catch (Exception e)
             {
@@ -429,7 +441,18 @@ namespace Softpark.WS.Controllers.Api
             }
             else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
             {
-                Domain.PR_ProcessarFichasAPI(token);
+                var uni = origem.UnicaLotacaoTransport.First();
+
+                var usuario = Domain.VW_Profissional.FirstOrDefault(x => x.CNS == uni.profissionalCNS);
+
+                Domain.RastroFicha.Add(new RastroFicha
+                {
+                    CodUsu = usuario.CodUsu,
+                    DataModificacao = DateTime.Now,
+                    OrigemVisita = origem,
+                    token = origem.token
+                });
+                //Domain.PR_ProcessarFichasAPI(token);
             }
             else
             {

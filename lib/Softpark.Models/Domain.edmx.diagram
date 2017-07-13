@@ -4,33 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="64" >
+      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="40" >
         <EntityTypeShape EntityType="Domain.VW_IdentificacaoUsuarioCidadao" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_profissional_cns" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_ultimo_cadastroDomiciliar" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_ultimo_cadastroIndividual" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="Domain.AnimalNoDomicilio" Width="1.5" PointX="17.75" PointY="15.625" />
-        <EntityTypeShape EntityType="Domain.CadastroDomiciliar" Width="1.5" PointX="15.5" PointY="10.125" />
-        <EntityTypeShape EntityType="Domain.CadastroIndividual" Width="1.5" PointX="12.5" PointY="10.25" />
-        <EntityTypeShape EntityType="Domain.CondicaoMoradia" Width="1.5" PointX="13.25" PointY="27.875" />
-        <EntityTypeShape EntityType="Domain.CondicoesDeSaude" Width="1.5" PointX="10.25" PointY="20.625" />
-        <EntityTypeShape EntityType="Domain.DeficienciasCidadao" Width="1.5" PointX="12.5" PointY="52.125" />
-        <EntityTypeShape EntityType="Domain.DoencaCardiaca" Width="1.5" PointX="12.5" PointY="41.375" />
-        <EntityTypeShape EntityType="Domain.DoencaRespiratoria" Width="1.5" PointX="12.5" PointY="43.75" />
-        <EntityTypeShape EntityType="Domain.DoencaRins" Width="1.5" PointX="12.5" PointY="39.125" />
-        <EntityTypeShape EntityType="Domain.EmSituacaoDeRua" Width="1.5" PointX="10.25" PointY="32.5" />
-        <EntityTypeShape EntityType="Domain.EnderecoLocalPermanencia" Width="1.5" PointX="13.25" PointY="5.375" />
-        <EntityTypeShape EntityType="Domain.FamiliaRow" Width="1.5" PointX="17.75" PointY="11.25" />
-        <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarChild" Width="1.5" PointX="14.75" PointY="22.125" />
-        <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarMaster" Width="1.5" PointX="12.5" PointY="23.375" />
-        <EntityTypeShape EntityType="Domain.HigienePessoalSituacaoRua" Width="1.5" PointX="12.5" PointY="35.75" />
-        <EntityTypeShape EntityType="Domain.IdentificacaoUsuarioCidadao" Width="1.5" PointX="10.25" PointY="38.5" />
-        <EntityTypeShape EntityType="Domain.InformacoesSocioDemograficas" Width="1.5" PointX="10.25" PointY="51.5" />
-        <EntityTypeShape EntityType="Domain.InstituicaoPermanencia" Width="1.5" PointX="13.25" PointY="18.625" />
-        <EntityTypeShape EntityType="Domain.OrigemAlimentoSituacaoRua" Width="1.5" PointX="12.5" PointY="33.375" />
-        <EntityTypeShape EntityType="Domain.OrigemVisita" Width="1.5" PointX="8" PointY="11.5" />
-        <EntityTypeShape EntityType="Domain.ResponsavelPorCrianca" Width="1.5" PointX="12.5" PointY="54.5" />
-        <EntityTypeShape EntityType="Domain.SaidaCidadaoCadastro" Width="1.5" PointX="10.25" PointY="47.75" />
         <EntityTypeShape EntityType="Domain.TipoOrigem" Width="1.5" PointX="5.75" PointY="11.875" />
         <EntityTypeShape EntityType="Domain.UnicaLotacaoTransport" Width="1.5" PointX="10.25" PointY="11" />
         <EntityTypeShape EntityType="Domain.ASSMED_Cadastro" Width="1.5" PointX="0.75" PointY="23.75" />
@@ -45,7 +23,6 @@
         <EntityTypeShape EntityType="Domain.ProfCidadaoVincAgendaProd" Width="1.5" PointX="13" PointY="1" />
         <EntityTypeShape EntityType="Domain.Setores" Width="1.5" PointX="5.75" PointY="4" />
         <EntityTypeShape EntityType="Domain.SetoresINEs" Width="1.5" PointX="8" PointY="4.375" />
-        <EntityTypeShape EntityType="Domain.SituacaoFamiliar" Width="1.5" PointX="7.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.TP_Abastecimento_Agua" Width="1.5" PointX="3.75" PointY="7.75" />
         <EntityTypeShape EntityType="Domain.TP_Acesso_Domicilio" Width="1.5" PointX="5.75" PointY="7.75" />
         <EntityTypeShape EntityType="Domain.TP_Animais" Width="1.5" PointX="2.75" PointY="11.75" />
@@ -87,6 +64,44 @@
         <EntityTypeShape EntityType="Domain.TipoLogradouro" Width="1.5" PointX="23.75" PointY="15.75" />
         <EntityTypeShape EntityType="Domain.TP_Conduta" Width="1.5" PointX="23.75" PointY="18.75" />
         <EntityTypeShape EntityType="Domain.TP_Nasf" Width="1.5" PointX="23.75" PointY="21.75" />
+        <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__0A7378A9" />
+        <AssociationConnector Association="Domain.FK__ASSMED_Endereco__6CE315C2" />
+        <AssociationConnector Association="Domain.FK__ASSMED_PesFisica__56F3D4A3" />
+        <AssociationConnector Association="Domain.FK_ProfCidadaoVinc" />
+        <AssociationConnector Association="Domain.FK_SetoresINEs_Setores" />
+        <EntityTypeShape EntityType="Domain.SIGSM_MotivoVisita" Width="1.5" PointX="5.375" PointY="24.75" />
+        <EntityTypeShape EntityType="Domain.AS_Profissoes" Width="1.5" PointX="24.375" PointY="25.125" />
+        <EntityTypeShape EntityType="Domain.AS_ProfissoesTab" Width="1.5" PointX="26.625" PointY="24.875" />
+        <AssociationConnector Association="Domain.FK__AS_ProfissoesTab__2062B9C8" />
+        <EntityTypeShape EntityType="Domain.TB_MS_TIPO_LOGRADOURO" Width="1.5" PointX="17.375" PointY="23.75" />
+        <EntityTypeShape EntityType="Domain.AS_SetoresPar" Width="1.5" PointX="8" PointY="20" />
+        <AssociationConnector Association="Domain.FK__AS_SetoresPar__1D864D1D" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadastroDomiciliarVinc" Width="1.5" PointX="7.375" PointY="24.75" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadastroIndividualVinc" Width="1.5" PointX="26.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.TP_EstadoCivil" Width="1.5" PointX="26.375" PointY="3.75" />
+        <EntityTypeShape EntityType="Domain.AnimalNoDomicilio" Width="1.5" PointX="17.75" PointY="26.375" />
+        <EntityTypeShape EntityType="Domain.CadastroDomiciliar" Width="1.5" PointX="15.5" PointY="11.625" />
+        <EntityTypeShape EntityType="Domain.CadastroIndividual" Width="1.5" PointX="12.5" PointY="10" />
+        <EntityTypeShape EntityType="Domain.CondicaoMoradia" Width="1.5" PointX="13.25" PointY="33.5" />
+        <EntityTypeShape EntityType="Domain.CondicoesDeSaude" Width="1.5" PointX="10.25" PointY="20.625" />
+        <EntityTypeShape EntityType="Domain.DeficienciasCidadao" Width="1.5" PointX="12.5" PointY="41.5" />
+        <EntityTypeShape EntityType="Domain.DoencaCardiaca" Width="1.5" PointX="12.5" PointY="44.375" />
+        <EntityTypeShape EntityType="Domain.DoencaRespiratoria" Width="1.5" PointX="12.5" PointY="21" />
+        <EntityTypeShape EntityType="Domain.DoencaRins" Width="1.5" PointX="12.5" PointY="51.75" />
+        <EntityTypeShape EntityType="Domain.EmSituacaoDeRua" Width="1.5" PointX="10.25" PointY="47" />
+        <EntityTypeShape EntityType="Domain.EnderecoLocalPermanencia" Width="1.5" PointX="13.25" PointY="28.625" />
+        <EntityTypeShape EntityType="Domain.FamiliaRow" Width="1.5" PointX="26.75" PointY="10.5" />
+        <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarChild" Width="1.5" PointX="14.75" PointY="22.625" />
+        <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarMaster" Width="1.5" PointX="12.5" PointY="24" />
+        <EntityTypeShape EntityType="Domain.HigienePessoalSituacaoRua" Width="1.5" PointX="12.5" PointY="46.875" />
+        <EntityTypeShape EntityType="Domain.IdentificacaoUsuarioCidadao" Width="1.5" PointX="10.25" PointY="38.5" />
+        <EntityTypeShape EntityType="Domain.InformacoesSocioDemograficas" Width="1.5" PointX="10.25" PointY="32.5" />
+        <EntityTypeShape EntityType="Domain.InstituicaoPermanencia" Width="1.5" PointX="13.25" PointY="6.25" />
+        <EntityTypeShape EntityType="Domain.OrigemAlimentoSituacaoRua" Width="1.5" PointX="12.5" PointY="49.25" />
+        <EntityTypeShape EntityType="Domain.OrigemVisita" Width="1.5" PointX="8" PointY="61.375" />
+        <EntityTypeShape EntityType="Domain.RastroFicha" Width="1.5" PointX="10.25" PointY="58.75" />
+        <EntityTypeShape EntityType="Domain.ResponsavelPorCrianca" Width="1.5" PointX="12.5" PointY="39.125" />
+        <EntityTypeShape EntityType="Domain.SaidaCidadaoCadastro" Width="1.5" PointX="10.25" PointY="51.5" />
         <AssociationConnector Association="Domain.FK_AnimalNoDomicilio_CadastroDomiciliar" />
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_CondicaoMoradia" />
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia" />
@@ -118,24 +133,11 @@
         <AssociationConnector Association="Domain.FK_InformacoesSocioDemograficas_TP_Relacao_Parentesco" />
         <AssociationConnector Association="Domain.FK_ResponsavelPorCrianca_InformacoesSocioDemograficas" />
         <AssociationConnector Association="Domain.FK_OrigemVisita_TipoOrigem_Id" />
+        <AssociationConnector Association="Domain.FK_RastroFicha_OrigemVisita" />
         <AssociationConnector Association="Domain.FK_UnicaLotacaoTransport_OrigemVisita" />
         <AssociationConnector Association="Domain.FK_SaidaCidadaoCadastro_TP_Motivo_Saida" />
-        <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__0A7378A9" />
-        <AssociationConnector Association="Domain.FK__ASSMED_Endereco__6CE315C2" />
-        <AssociationConnector Association="Domain.FK__ASSMED_PesFisica__56F3D4A3" />
-        <AssociationConnector Association="Domain.FK_ProfCidadaoVinc" />
-        <AssociationConnector Association="Domain.FK_SetoresINEs_Setores" />
         <AssociationConnector Association="Domain.Familias" />
-        <EntityTypeShape EntityType="Domain.SIGSM_MotivoVisita" Width="1.5" PointX="5.375" PointY="24.75" />
         <AssociationConnector Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita" />
-        <EntityTypeShape EntityType="Domain.AS_Profissoes" Width="1.5" PointX="24.375" PointY="25.125" />
-        <EntityTypeShape EntityType="Domain.AS_ProfissoesTab" Width="1.5" PointX="26.625" PointY="24.875" />
-        <AssociationConnector Association="Domain.FK__AS_ProfissoesTab__2062B9C8" />
-        <EntityTypeShape EntityType="Domain.TB_MS_TIPO_LOGRADOURO" Width="1.5" PointX="17.375" PointY="23.75" />
-        <EntityTypeShape EntityType="Domain.AS_SetoresPar" Width="1.5" PointX="8" PointY="20" />
-        <AssociationConnector Association="Domain.FK__AS_SetoresPar__1D864D1D" />
-        <EntityTypeShape EntityType="Domain.ASSMED_CadastroDomiciliarVinc" Width="1.5" PointX="7.375" PointY="24.75" />
-        <EntityTypeShape EntityType="Domain.ASSMED_CadastroIndividualVinc" Width="1.5" PointX="26.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

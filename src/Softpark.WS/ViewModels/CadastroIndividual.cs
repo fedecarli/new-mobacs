@@ -2,6 +2,7 @@
 using Softpark.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
@@ -100,6 +101,16 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public string longitude { get; set; } = null;
 
+        /// <summary>
+        /// Data de registro da ficha no app
+        /// </summary>
+        public DateTime? DataRegistro { get; set; } = null;
+
+        /// <summary>
+        /// Justificativa
+        /// </summary>
+        public string Justificativa { get; set; } = null;
+
         internal async Task<CadastroIndividual> ToModel(DomainContainer domain)
         {
             var ci = domain.CadastroIndividual.Create();
@@ -115,6 +126,8 @@ namespace Softpark.WS.ViewModels
             ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel(domain);
             ci.latitude = latitude;
             ci.longitude = longitude;
+            ci.Justificativa = Justificativa;
+            ci.DataRegistro = DataRegistro;
 
             return ci;
         }
@@ -136,7 +149,7 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
+            token = model.UnicaLotacaoTransport.token;
             condicoesDeSaude = model.CondicoesDeSaude1;
             emSituacaoDeRua = model.EmSituacaoDeRua1;
             fichaAtualizada = model.fichaAtualizada;
@@ -147,6 +160,8 @@ namespace Softpark.WS.ViewModels
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
             latitude = model.latitude;
             longitude = model.longitude;
+            Justificativa = model.Justificativa;
+            DataRegistro = model.DataRegistro;
         }
     }
 
@@ -429,7 +444,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// data de nascimento
         /// </summary>
-        public DateTime dataNascimentoCidadao { get; set; }
+        public DateTime? dataNascimentoCidadao { get; set; }
         /// <summary>
         /// desconhece o nome da mãe
         /// </summary>
@@ -514,6 +529,23 @@ namespace Softpark.WS.ViewModels
         /// Fora de área
         /// </summary>
         public bool stForaArea { get; set; }
+        /// <summary>
+        /// RG do cidadão
+        /// </summary>
+        public string RG { get; set; } = null;
+        /// <summary>
+        /// CPF do cidadão
+        /// </summary>
+        public string CPF { get; set; } = null;
+        /// <summary>
+        /// Cidadão é beneficiário do bolsa família?
+        /// </summary>
+        public bool beneficiarioBolsaFamilia { get; set; } = false;
+        /// <summary>
+        /// Estado Civil
+        /// </summary>
+        [Required(AllowEmptyStrings = false), DefaultValue("I")]
+        public string EstadoCivil { get; set; } = "I";
 
         /// <summary>
         /// 
@@ -548,7 +580,7 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao??(0L).FromUnix();
+            dataNascimentoCidadao = model.dataNascimentoCidadao;
             desconheceNomeMae = model.desconheceNomeMae ?? false;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao ?? 1;
@@ -570,6 +602,10 @@ namespace Softpark.WS.ViewModels
             dtEntradaBrasil = model.dtEntradaBrasil;
             microarea = model.microarea;
             stForaArea = model.stForaArea ?? false;
+            RG = model.RG;
+            CPF = model.CPF;
+            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
+            EstadoCivil = model.EstadoCivil;
         }
 
         private void ApplyModel(IdentificacaoUsuarioCidadao model)
@@ -601,6 +637,10 @@ namespace Softpark.WS.ViewModels
             dtEntradaBrasil = model.dtEntradaBrasil;
             microarea = model.microarea;
             stForaArea = model.stForaArea;
+            RG = model.RG;
+            CPF = model.CPF;
+            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
+            EstadoCivil = model.EstadoCivil;
         }
 
         internal IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
@@ -632,6 +672,10 @@ namespace Softpark.WS.ViewModels
             iuc.dtEntradaBrasil = dtEntradaBrasil;
             iuc.microarea = microarea;
             iuc.stForaArea = stForaArea;
+            iuc.RG = RG;
+            iuc.CPF = CPF;
+            iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
+            iuc.EstadoCivil = EstadoCivil;
 
             return iuc;
         }

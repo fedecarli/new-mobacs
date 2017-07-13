@@ -15,22 +15,12 @@ namespace Softpark.Models
 using System;
     using System.Collections.Generic;
     
-public partial class SetoresINEs
+public partial class TP_EstadoCivil
 {
 
-    public int CodINE { get; set; }
+    public string codigo { get; set; }
 
-    public Nullable<int> NumContrato { get; set; }
-
-    public Nullable<int> CodSetor { get; set; }
-
-    public string Numero { get; set; }
-
-    public string Descricao { get; set; }
-
-
-
-    public virtual Setores Setores { get; set; }
+    public string descricao { get; set; }
 
 }
 
