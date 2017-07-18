@@ -2,6 +2,7 @@
 using System.Web.Http.Dependencies;
 using Ninject;
 using Ninject.Syntax;
+using System.Runtime.InteropServices;
 
 #pragma warning disable 1591
 // ReSharper disable once CheckNamespace
@@ -35,15 +36,37 @@ namespace Softpark.WS.App_Start
             return _resolver.GetAll(serviceType);
         }
 
+        private IntPtr nativeResource = Marshal.AllocHGlobal(100);
+
         public void Dispose()
         {
-            var disposable = _resolver as IDisposable;
-            disposable?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            _resolver = null;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                var disposable = _resolver as IDisposable;
+                disposable?.Dispose();
+                _resolver = null;
+            }
+            // free native resources if there are any.  
+            if (nativeResource != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(nativeResource);
+                nativeResource = IntPtr.Zero;
+            }
+        }
+
+        ~NinjectDependencyScope()
+        {
+            Dispose(false);
         }
     }
-
+    
+#pragma warning disable CA1063
     // This class is the resolver, but it is also the global scope
     // so we derive from NinjectScope.
     public class NinjectDependencyResolver : NinjectDependencyScope, IDependencyResolver
@@ -60,4 +83,5 @@ namespace Softpark.WS.App_Start
             return new NinjectDependencyScope(_kernel.BeginBlock());
         }
     }
+#pragma warning restore CA1063
 }

@@ -14,8 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class SetoresINEs
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class SetoresINEs
 {
 
     public int CodINE { get; set; }

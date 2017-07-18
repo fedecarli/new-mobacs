@@ -14,8 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class ResponsavelPorCrianca
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class ResponsavelPorCrianca
 {
 
     public System.Guid id_informacoes_sociodemograficas { get; set; }

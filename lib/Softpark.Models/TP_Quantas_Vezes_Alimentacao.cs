@@ -14,8 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class TP_Quantas_Vezes_Alimentacao
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class TP_Quantas_Vezes_Alimentacao
 {
 
     public int id_tp_quantas_vezes_alimentacao { get; set; }

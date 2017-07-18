@@ -14,8 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class VW_ultimo_cadastroIndividual
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class VW_ultimo_cadastroIndividual
 {
 
     public decimal Codigo { get; set; }

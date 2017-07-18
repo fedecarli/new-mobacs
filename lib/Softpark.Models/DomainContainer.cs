@@ -38,14 +38,6 @@ namespace Softpark.Models
             : base(nameOrConnectionString)
         {
         }
-
-        private static DomainContainer _current;
-
-        /// <summary>
-        /// Linguagem do sistema
-        /// </summary>
-        public Language Language
-            => _current.Set<Language>().SqlQuery("SELECT lcid, name FROM SYS.SYSLANGUAGES WHERE NAME =(SELECT @@LANGUAGE)").SingleOrDefault();
         
         /// <summary>
         /// Coleção de profissionais

@@ -14,8 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class ASSMED_CadastroDomiciliarVinc
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class ASSMED_CadastroDomiciliarVinc
 {
 
     public int id { get; set; }
@@ -26,6 +27,7 @@ public partial class ASSMED_CadastroDomiciliarVinc
 
     public Nullable<System.DateTime> Data { get; set; }
 
-}
+    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 }

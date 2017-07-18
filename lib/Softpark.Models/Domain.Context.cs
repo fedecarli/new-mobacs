@@ -21,7 +21,8 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 
 
-public partial class DomainContainer : DbContext
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class DomainContainer : DbContext
 {
     public DomainContainer()
         : base("name=DomainContainer")

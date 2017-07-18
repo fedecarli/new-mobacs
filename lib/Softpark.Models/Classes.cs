@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Softpark.Models
 {
+    /// <summary>
+    /// Ficha de Visita
+    /// </summary>
     public partial class FichaVisitaDomiciliarChild
     {
         /// <summary>
@@ -17,6 +20,9 @@ namespace Softpark.Models
         }
     }
 
+    /// <summary>
+    /// Cabeçalho
+    /// </summary>
     public partial class UnicaLotacaoTransport
     {
         /// <summary>

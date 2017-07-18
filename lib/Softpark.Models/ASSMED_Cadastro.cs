@@ -14,9 +14,10 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class ASSMED_Cadastro
-{
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class ASSMED_Cadastro
+    {
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
     public ASSMED_Cadastro()
@@ -67,6 +68,7 @@ public partial class ASSMED_Cadastro
 
     public virtual ASSMED_PesFisica ASSMED_PesFisica { get; set; }
 
-}
+    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 }

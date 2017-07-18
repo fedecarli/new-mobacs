@@ -14,9 +14,10 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class AnimalNoDomicilio
-{
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class AnimalNoDomicilio
+    {
 
     public System.Guid id_cadastro_domiciliar { get; set; }
 
@@ -28,4 +29,5 @@ public partial class AnimalNoDomicilio
 
 }
 
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

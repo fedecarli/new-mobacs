@@ -14,8 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-    
-public partial class ASSMED_CadastroPF
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public partial class ASSMED_CadastroPF
 {
 
     public int NumContrato { get; set; }
@@ -96,6 +97,7 @@ public partial class ASSMED_CadastroPF
 
     public Nullable<int> GENERO { get; set; }
 
-}
+    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 }
