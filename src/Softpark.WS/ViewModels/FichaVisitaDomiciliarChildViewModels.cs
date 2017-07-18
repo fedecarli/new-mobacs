@@ -10,7 +10,7 @@ using Softpark.Infrastructure.Extras;
 namespace Softpark.WS.ViewModels
 {
     /// <summary>
-    /// 
+    /// ViewModel Collection de fichas de visita
     /// </summary>
     public class FichaVisitaDomiciliarChildCadastroViewModelCollection : List<FichaVisitaDomiciliarChildCadastroViewModel>
     {
@@ -178,7 +178,7 @@ namespace Softpark.WS.ViewModels
         public DateTime? DataRegistro { get; set; } = null;
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator FichaVisitaDomiciliarChildCadastroViewModel(FichaVisitaDomiciliarChild model)
@@ -190,6 +190,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(FichaVisitaDomiciliarChild model)
         {
             if (model == null) return;
@@ -212,6 +216,10 @@ namespace Softpark.WS.ViewModels
             DataRegistro = model.DataRegistro;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal FichaVisitaDomiciliarChild ToModel(DomainContainer domain)
         {
             var fvdc = domain.FichaVisitaDomiciliarChild.Create();

@@ -6,6 +6,9 @@ namespace Softpark.Models
 {
     public partial class FichaVisitaDomiciliarChild
     {
+        /// <summary>
+        /// Data de Nascimento em Epoch
+        /// </summary>
         [NotMapped]
         public virtual long? DataNascimento
         {
@@ -16,6 +19,9 @@ namespace Softpark.Models
 
     public partial class UnicaLotacaoTransport
     {
+        /// <summary>
+        /// Data de atendiemnto em Epoch
+        /// </summary>
         [NotMapped]
         public virtual long DataDeAtendimento
         {

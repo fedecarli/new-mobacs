@@ -6,8 +6,14 @@ using Unity.WebApi;
 
 namespace Softpark.WS
 {
+    /// <summary>
+    /// Configuração de Unidade de Trabalho
+    /// </summary>
     public static class UnityConfig
     {
+        /// <summary>
+        /// Método que executa a configuração
+        /// </summary>
         public static void RegisterComponents()
         {
 			var container = new UnityContainer();

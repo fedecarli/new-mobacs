@@ -7,6 +7,9 @@ using Ninject.Syntax;
 // ReSharper disable once CheckNamespace
 namespace Softpark.WS.App_Start
 {
+    /// <summary>
+    /// Configuração de injeção de dependência
+    /// </summary>
     public class NinjectDependencyScope : IDependencyScope
     {
         private IResolutionRoot _resolver;

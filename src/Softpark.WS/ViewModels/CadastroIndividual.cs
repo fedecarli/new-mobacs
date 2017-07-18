@@ -10,8 +10,12 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    /// <summary>
+    /// ViewModel Collection de cadastros individuais
+    /// </summary>
     public class CadastroIndividualViewModelCollection : List<GetCadastroIndividualViewModel>
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public CadastroIndividualViewModelCollection() { }
 
         public CadastroIndividualViewModelCollection(CadastroIndividual[] models)
@@ -47,6 +51,7 @@ namespace Softpark.WS.ViewModels
                 Add(model);
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
     /// <summary>
@@ -111,6 +116,11 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public string Justificativa { get; set; } = null;
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
         internal async Task<CadastroIndividual> ToModel(DomainContainer domain)
         {
             var ci = domain.CadastroIndividual.Create();
@@ -133,7 +143,7 @@ namespace Softpark.WS.ViewModels
         }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator PrimitiveCadastroIndividualViewModel(CadastroIndividual model)
@@ -145,6 +155,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         internal void ApplyModel(CadastroIndividual model)
         {
             if (model == null) return;
@@ -177,7 +191,7 @@ namespace Softpark.WS.ViewModels
         public new Guid token { get; set; }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator CadastroIndividualViewModel(CadastroIndividual model)
@@ -190,12 +204,18 @@ namespace Softpark.WS.ViewModels
         }
     }
 
+    /// <summary>
+    /// ViewModel de consulta de cadastro individual
+    /// </summary>
     public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         public Guid uuid { get; set; }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator GetCadastroIndividualViewModel(CadastroIndividual model)
@@ -230,7 +250,7 @@ namespace Softpark.WS.ViewModels
         public string numeroDO { get; set; } = null;
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator SaidaCidadaoCadastroViewModel(SaidaCidadaoCadastro model)
@@ -242,6 +262,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(SaidaCidadaoCadastro model)
         {
             if (model == null) return;
@@ -251,6 +275,10 @@ namespace Softpark.WS.ViewModels
             numeroDO = model.numeroDO;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal SaidaCidadaoCadastro ToModel(DomainContainer domain)
         {
             var scc = domain.SaidaCidadaoCadastro.Create();
@@ -339,7 +367,7 @@ namespace Softpark.WS.ViewModels
         public int[] responsavelPorCrianca { get; set; } = new int[0];
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator InformacoesSocioDemograficasViewModel(InformacoesSocioDemograficas model)
@@ -351,6 +379,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(InformacoesSocioDemograficas model)
         {
             if (model == null) return;
@@ -375,6 +407,10 @@ namespace Softpark.WS.ViewModels
             responsavelPorCrianca = model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca).ToArray();
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal async Task<InformacoesSocioDemograficas> ToModel(DomainContainer domain)
         {
             var isd = domain.InformacoesSocioDemograficas.Create();
@@ -548,7 +584,7 @@ namespace Softpark.WS.ViewModels
         public string EstadoCivil { get; set; } = "I";
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator IdentificacaoUsuarioCidadaoViewModel(IdentificacaoUsuarioCidadao model)
@@ -561,7 +597,7 @@ namespace Softpark.WS.ViewModels
         }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator IdentificacaoUsuarioCidadaoViewModel(VW_IdentificacaoUsuarioCidadao model)
@@ -573,6 +609,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(VW_IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
@@ -608,6 +648,10 @@ namespace Softpark.WS.ViewModels
             EstadoCivil = model.EstadoCivil;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
@@ -643,6 +687,10 @@ namespace Softpark.WS.ViewModels
             EstadoCivil = model.EstadoCivil;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
         {
             var iuc = domain.IdentificacaoUsuarioCidadao.Create();
@@ -736,7 +784,7 @@ namespace Softpark.WS.ViewModels
         public int[] origemAlimentoSituacaoRua { get; set; } = new int[0];
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator EmSituacaoDeRuaViewModel(EmSituacaoDeRua model)
@@ -748,6 +796,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(EmSituacaoDeRua model)
         {
             if (model == null) return;
@@ -767,6 +819,10 @@ namespace Softpark.WS.ViewModels
             origemAlimentoSituacaoRua = model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento).ToArray();
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal async Task<EmSituacaoDeRua> ToModel(DomainContainer domain)
         {
             var esdr = domain.EmSituacaoDeRua.Create();
@@ -938,7 +994,7 @@ namespace Softpark.WS.ViewModels
         public int[] doencaRins { get; set; } = new int[0];
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator CondicoesDeSaudeViewModel(CondicoesDeSaude model)
@@ -950,6 +1006,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(CondicoesDeSaude model)
         {
             if (model == null) return;
@@ -987,6 +1047,10 @@ namespace Softpark.WS.ViewModels
             doencaRins = model.DoencaRins.Select(x => x.id_tp_doenca_rins).ToArray();
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal async Task<CondicoesDeSaude> ToModel(DomainContainer domain)
         {
             var cds = domain.CondicoesDeSaude.Create();

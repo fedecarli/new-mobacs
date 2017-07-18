@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.Test
 {
+    /// <summary>
+    /// Teste da controller DatabaseSupply
+    /// </summary>
     [TestClass]
     public class UnitTest_DatabaseSupplyController
     {

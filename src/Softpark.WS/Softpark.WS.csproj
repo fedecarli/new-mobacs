@@ -387,7 +387,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
-    <Compile Include="ViewModels\Parametros.cs" />
     <Compile Include="ViewModels\UsuarioLoginViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

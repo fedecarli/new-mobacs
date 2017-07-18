@@ -351,20 +351,16 @@
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_IdentificacaoUsuarioCidadao_bkp.cs" />
     <Compile Include="VW_Profissional.cs" />
     <Compile Include="VW_profissional_cns.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_profissional_cns_bkp.cs" />
     <Compile Include="VW_ultimo_cadastroDomiciliar.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_ultimo_cadastroDomiciliar_bkp.cs" />
     <Compile Include="VW_ultimo_cadastroIndividual.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_ultimo_cadastroIndividual_bkp.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

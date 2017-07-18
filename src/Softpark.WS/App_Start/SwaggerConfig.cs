@@ -8,6 +8,9 @@ using System;
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 namespace Softpark.WS
 {
+    /// <summary>
+    /// Configuração do swagger
+    /// </summary>
     public class SwaggerConfig
     {
         public static void Register()
