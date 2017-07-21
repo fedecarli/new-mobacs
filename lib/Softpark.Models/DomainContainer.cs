@@ -8,7 +8,7 @@ using System.Linq;
 namespace Softpark.Models
 {
     /// <summary>
-    /// 
+    /// Linguagem do sistema
     /// </summary>
     [Table("SYSLANGUAGES", Schema = "sys")]
     public class Language
@@ -26,7 +26,7 @@ namespace Softpark.Models
     }
 
     /// <summary>
-    /// 
+    /// Dominio da aplicação
     /// </summary>
     public partial class DomainContainer
     {
@@ -38,20 +38,12 @@ namespace Softpark.Models
             : base(nameOrConnectionString)
         {
         }
-
-        private static DomainContainer _current;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Language Language
-            => _current.Set<Language>().SqlQuery("SELECT lcid, name FROM SYS.SYSLANGUAGES WHERE NAME =(SELECT @@LANGUAGE)").SingleOrDefault();
         
         /// <summary>
-        /// 
+        /// Coleção de profissionais
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public virtual DbRawSqlQuery<VW_Profissional> VW_Profissional =>
-            Database.SqlQuery<VW_Profissional>("SELECT CBO, CNES, CNS, INE, Equipe, Nome, Profissao, Unidade FROM [api].[VW_Profissional]");
+            Database.SqlQuery<VW_Profissional>("SELECT CBO, CNES, CNS, INE, Equipe, Nome, Profissao, Unidade, CodUsu FROM [api].[VW_Profissional]");
     }
 }

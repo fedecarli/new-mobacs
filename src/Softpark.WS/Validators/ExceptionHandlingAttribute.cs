@@ -9,10 +9,17 @@ using System.Web.Http.Filters;
 
 namespace Softpark.WS.Validators
 {
+    /// <summary>
+    /// Track de exceções não tratadas
+    /// </summary>
     public class ExceptionHandlingAttribute : ExceptionFilterAttribute
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Realiza o log das exceções
+        /// </summary>
+        /// <param name="context"></param>
         public override void OnException(HttpActionExecutedContext context)
         {
             //Log Critical errors

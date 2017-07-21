@@ -2,6 +2,7 @@
 using Softpark.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
@@ -9,8 +10,12 @@ using System.Threading.Tasks;
 
 namespace Softpark.WS.ViewModels
 {
+    /// <summary>
+    /// ViewModel Collection de cadastros individuais
+    /// </summary>
     public class CadastroIndividualViewModelCollection : List<GetCadastroIndividualViewModel>
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public CadastroIndividualViewModelCollection() { }
 
         public CadastroIndividualViewModelCollection(CadastroIndividual[] models)
@@ -46,6 +51,7 @@ namespace Softpark.WS.ViewModels
                 Add(model);
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
     /// <summary>
@@ -90,6 +96,31 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public SaidaCidadaoCadastroViewModel saidaCidadaoCadastro { get; set; } = null;
 
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string latitude { get; set; } = null;
+
+        /// <summary>
+        /// Latitude de demarcação do início do cadastro
+        /// </summary>
+        public string longitude { get; set; } = null;
+
+        /// <summary>
+        /// Data de registro da ficha no app
+        /// </summary>
+        public DateTime? DataRegistro { get; set; } = null;
+
+        /// <summary>
+        /// Justificativa
+        /// </summary>
+        public string Justificativa { get; set; } = null;
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
         internal async Task<CadastroIndividual> ToModel(DomainContainer domain)
         {
             var ci = domain.CadastroIndividual.Create();
@@ -103,12 +134,16 @@ namespace Softpark.WS.ViewModels
             ci.statusTermoRecusaCadastroIndividualAtencaoBasica = statusTermoRecusaCadastroIndividualAtencaoBasica;
             ci.uuidFichaOriginadora = uuidFichaOriginadora;
             ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel(domain);
+            ci.latitude = latitude;
+            ci.longitude = longitude;
+            ci.Justificativa = Justificativa;
+            ci.DataRegistro = DataRegistro;
 
             return ci;
         }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator PrimitiveCadastroIndividualViewModel(CadastroIndividual model)
@@ -120,11 +155,15 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         internal void ApplyModel(CadastroIndividual model)
         {
             if (model == null) return;
 
-            token = model.UnicaLotacaoTransport.token ?? Guid.Empty;
+            token = model.UnicaLotacaoTransport.token;
             condicoesDeSaude = model.CondicoesDeSaude1;
             emSituacaoDeRua = model.EmSituacaoDeRua1;
             fichaAtualizada = model.fichaAtualizada;
@@ -133,6 +172,10 @@ namespace Softpark.WS.ViewModels
             statusTermoRecusaCadastroIndividualAtencaoBasica = model.statusTermoRecusaCadastroIndividualAtencaoBasica;
             uuidFichaOriginadora = model.uuidFichaOriginadora;
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
+            latitude = model.latitude;
+            longitude = model.longitude;
+            Justificativa = model.Justificativa;
+            DataRegistro = model.DataRegistro;
         }
     }
 
@@ -148,7 +191,7 @@ namespace Softpark.WS.ViewModels
         public new Guid token { get; set; }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator CadastroIndividualViewModel(CadastroIndividual model)
@@ -161,12 +204,18 @@ namespace Softpark.WS.ViewModels
         }
     }
 
+    /// <summary>
+    /// ViewModel de consulta de cadastro individual
+    /// </summary>
     public class GetCadastroIndividualViewModel : CadastroIndividualViewModel
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         public Guid uuid { get; set; }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator GetCadastroIndividualViewModel(CadastroIndividual model)
@@ -194,14 +243,14 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data de óbito
         /// </summary>
-        public long? dataObito { get; set; } = null;
+        public DateTime? dataObito { get; set; } = null;
         /// <summary>
         /// Número da Declaração
         /// </summary>
         public string numeroDO { get; set; } = null;
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator SaidaCidadaoCadastroViewModel(SaidaCidadaoCadastro model)
@@ -213,22 +262,30 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(SaidaCidadaoCadastro model)
         {
             if (model == null) return;
 
             motivoSaidaCidadao = model.motivoSaidaCidadao;
-            dataObito = model.dataObito?.ToUnix();
+            dataObito = model.dataObito;
             numeroDO = model.numeroDO;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal SaidaCidadaoCadastro ToModel(DomainContainer domain)
         {
             var scc = domain.SaidaCidadaoCadastro.Create();
 
             scc.id = Guid.NewGuid();
             scc.motivoSaidaCidadao = motivoSaidaCidadao;
-            scc.dataObito = dataObito?.FromUnix();
+            scc.dataObito = dataObito;
             scc.numeroDO = numeroDO;
 
             return scc;
@@ -310,7 +367,7 @@ namespace Softpark.WS.ViewModels
         public int[] responsavelPorCrianca { get; set; } = new int[0];
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator InformacoesSocioDemograficasViewModel(InformacoesSocioDemograficas model)
@@ -322,6 +379,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(InformacoesSocioDemograficas model)
         {
             if (model == null) return;
@@ -346,6 +407,10 @@ namespace Softpark.WS.ViewModels
             responsavelPorCrianca = model.ResponsavelPorCrianca.Select(d => d.id_tp_crianca).ToArray();
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal async Task<InformacoesSocioDemograficas> ToModel(DomainContainer domain)
         {
             var isd = domain.InformacoesSocioDemograficas.Create();
@@ -415,7 +480,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// data de nascimento
         /// </summary>
-        public long dataNascimentoCidadao { get; set; }
+        public DateTime? dataNascimentoCidadao { get; set; }
         /// <summary>
         /// desconhece o nome da mãe
         /// </summary>
@@ -483,7 +548,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data da naturalização
         /// </summary>
-        public long? dtNaturalizacao { get; set; } = null;
+        public DateTime? dtNaturalizacao { get; set; } = null;
         /// <summary>
         /// Portaria da Naturalização
         /// </summary>
@@ -491,7 +556,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// Data de entrada no Brasil
         /// </summary>
-        public long? dtEntradaBrasil { get; set; } = null;
+        public DateTime? dtEntradaBrasil { get; set; } = null;
         /// <summary>
         /// Microárea
         /// </summary>
@@ -500,9 +565,26 @@ namespace Softpark.WS.ViewModels
         /// Fora de área
         /// </summary>
         public bool stForaArea { get; set; }
+        /// <summary>
+        /// RG do cidadão
+        /// </summary>
+        public string RG { get; set; } = null;
+        /// <summary>
+        /// CPF do cidadão
+        /// </summary>
+        public string CPF { get; set; } = null;
+        /// <summary>
+        /// Cidadão é beneficiário do bolsa família?
+        /// </summary>
+        public bool beneficiarioBolsaFamilia { get; set; } = false;
+        /// <summary>
+        /// Estado Civil
+        /// </summary>
+        [Required(AllowEmptyStrings = false), DefaultValue("I")]
+        public string EstadoCivil { get; set; } = "I";
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator IdentificacaoUsuarioCidadaoViewModel(IdentificacaoUsuarioCidadao model)
@@ -515,7 +597,7 @@ namespace Softpark.WS.ViewModels
         }
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator IdentificacaoUsuarioCidadaoViewModel(VW_IdentificacaoUsuarioCidadao model)
@@ -527,6 +609,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(VW_IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
@@ -534,7 +620,7 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao?.ToUnix() ?? 0;
+            dataNascimentoCidadao = model.dataNascimentoCidadao;
             desconheceNomeMae = model.desconheceNomeMae ?? false;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao ?? 1;
@@ -551,13 +637,21 @@ namespace Softpark.WS.ViewModels
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
             desconheceNomePai = model.desconheceNomePai ?? false;
-            dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
+            dtNaturalizacao = model.dtNaturalizacao;
             portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
+            dtEntradaBrasil = model.dtEntradaBrasil;
             microarea = model.microarea;
             stForaArea = model.stForaArea ?? false;
+            RG = model.RG;
+            CPF = model.CPF;
+            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
+            EstadoCivil = model.EstadoCivil;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
@@ -565,7 +659,7 @@ namespace Softpark.WS.ViewModels
             id = model.id;
             nomeSocial = model.nomeSocial;
             codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao.ToUnix();
+            dataNascimentoCidadao = model.dataNascimentoCidadao;
             desconheceNomeMae = model.desconheceNomeMae;
             emailCidadao = model.emailCidadao;
             nacionalidadeCidadao = model.nacionalidadeCidadao;
@@ -582,13 +676,21 @@ namespace Softpark.WS.ViewModels
             etnia = model.etnia;
             nomePaiCidadao = model.nomePaiCidadao;
             desconheceNomePai = model.desconheceNomePai;
-            dtNaturalizacao = model.dtNaturalizacao?.ToUnix();
+            dtNaturalizacao = model.dtNaturalizacao;
             portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil?.ToUnix();
+            dtEntradaBrasil = model.dtEntradaBrasil;
             microarea = model.microarea;
             stForaArea = model.stForaArea;
+            RG = model.RG;
+            CPF = model.CPF;
+            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
+            EstadoCivil = model.EstadoCivil;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
         {
             var iuc = domain.IdentificacaoUsuarioCidadao.Create();
@@ -596,7 +698,7 @@ namespace Softpark.WS.ViewModels
             iuc.id = Guid.NewGuid();
             iuc.nomeSocial = nomeSocial;
             iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
-            iuc.dataNascimentoCidadao = dataNascimentoCidadao.FromUnix();
+            iuc.dataNascimentoCidadao = dataNascimentoCidadao;
             iuc.desconheceNomeMae = desconheceNomeMae;
             iuc.emailCidadao = emailCidadao;
             iuc.nacionalidadeCidadao = nacionalidadeCidadao;
@@ -613,11 +715,15 @@ namespace Softpark.WS.ViewModels
             iuc.etnia = etnia;
             iuc.nomePaiCidadao = nomePaiCidadao;
             iuc.desconheceNomePai = desconheceNomePai;
-            iuc.dtNaturalizacao = dtNaturalizacao?.FromUnix();
+            iuc.dtNaturalizacao = dtNaturalizacao;
             iuc.portariaNaturalizacao = portariaNaturalizacao;
-            iuc.dtEntradaBrasil = dtEntradaBrasil?.FromUnix();
+            iuc.dtEntradaBrasil = dtEntradaBrasil;
             iuc.microarea = microarea;
             iuc.stForaArea = stForaArea;
+            iuc.RG = RG;
+            iuc.CPF = CPF;
+            iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
+            iuc.EstadoCivil = EstadoCivil;
 
             return iuc;
         }
@@ -678,7 +784,7 @@ namespace Softpark.WS.ViewModels
         public int[] origemAlimentoSituacaoRua { get; set; } = new int[0];
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator EmSituacaoDeRuaViewModel(EmSituacaoDeRua model)
@@ -690,6 +796,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(EmSituacaoDeRua model)
         {
             if (model == null) return;
@@ -709,6 +819,10 @@ namespace Softpark.WS.ViewModels
             origemAlimentoSituacaoRua = model.OrigemAlimentoSituacaoRua.Select(o => o.id_tp_origem_alimento).ToArray();
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal async Task<EmSituacaoDeRua> ToModel(DomainContainer domain)
         {
             var esdr = domain.EmSituacaoDeRua.Create();
@@ -880,7 +994,7 @@ namespace Softpark.WS.ViewModels
         public int[] doencaRins { get; set; } = new int[0];
 
         /// <summary>
-        /// 
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator CondicoesDeSaudeViewModel(CondicoesDeSaude model)
@@ -892,6 +1006,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(CondicoesDeSaude model)
         {
             if (model == null) return;
@@ -929,6 +1047,10 @@ namespace Softpark.WS.ViewModels
             doencaRins = model.DoencaRins.Select(x => x.id_tp_doenca_rins).ToArray();
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal async Task<CondicoesDeSaude> ToModel(DomainContainer domain)
         {
             var cds = domain.CondicoesDeSaude.Create();

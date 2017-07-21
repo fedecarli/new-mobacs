@@ -5,12 +5,30 @@ using System.Text;
 
 namespace Softpark.Infrastructure.Extensions
 {
+    /// <summary>
+    /// Extensões de string
+    /// </summary>
     public static class String
     {
+        /// <summary>
+        /// Hash de senha
+        /// </summary>
         public static string PasswordHash { get; private set; } = ":cO^k5Fa%lGQpG<";
+        /// <summary>
+        /// Salto de hash
+        /// </summary>
         public static string SaltKey { get; private set; } = "WQ0J5.Q8";
+        /// <summary>
+        /// Chave de verificação
+        /// </summary>
         public static string VIKey { get; private set; } = "0X8c;e3KD<af.Hj^";
 
+        /// <summary>
+        /// Criptografa um texto
+        /// </summary>
+        /// <param name="plainText"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public static string Encrypt(this string plainText, string password = null)
         {
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -35,6 +53,12 @@ namespace Softpark.Infrastructure.Extensions
             return Convert.ToBase64String(cipherTextBytes);
         }
 
+        /// <summary>
+        /// Decriptografa um texto
+        /// </summary>
+        /// <param name="encryptedText"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public static string Decrypt(this string encryptedText, string password = null)
         {
             byte[] cipherTextBytes = Convert.FromBase64String(encryptedText);

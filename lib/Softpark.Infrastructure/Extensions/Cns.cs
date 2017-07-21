@@ -6,8 +6,9 @@ using System.Linq;
 namespace Softpark.Infrastructure.Extensions
 {
     /// <summary>
-    /// Checks http://esusab.github.io/integracao/docs/algoritmo_CNS.html
+    /// Esta extenção é para validar um CNS
     /// </summary>
+    /// <remarks>http://esusab.github.io/integracao/docs/algoritmo_CNS.html</remarks>
     public static class Cns
     {
         private static dynamic _service;

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Softpark.Models.xml</DocumentationFile>
@@ -193,6 +193,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RastroFicha.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="RegrasCadastro.cs" />
     <Compile Include="Classes.cs" />
     <Compile Include="ResponsavelPorCrianca.cs">
@@ -208,9 +211,6 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SIGSM_MotivoVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SituacaoFamiliar.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TB_MS_TIPO_LOGRADOURO.cs">
@@ -271,6 +271,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TP_Escoamento_Esgoto.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TP_EstadoCivil.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TP_Exames.cs">
@@ -348,20 +351,16 @@
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_IdentificacaoUsuarioCidadao_bkp.cs" />
     <Compile Include="VW_Profissional.cs" />
     <Compile Include="VW_profissional_cns.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_profissional_cns_bkp.cs" />
     <Compile Include="VW_ultimo_cadastroDomiciliar.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_ultimo_cadastroDomiciliar_bkp.cs" />
     <Compile Include="VW_ultimo_cadastroIndividual.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_ultimo_cadastroIndividual_bkp.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -384,8 +383,6 @@
     <None Include="pk.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="changes\VW_INDIVIDUAIS.sql" />
-    <Content Include="changes\VW_Profissional.sql" />
     <Content Include="Domain.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Domain.Context.cs</LastGenOutput>
@@ -403,9 +400,7 @@
       <Name>Softpark.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

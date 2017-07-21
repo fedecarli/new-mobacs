@@ -9,6 +9,9 @@ using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using Softpark.Infrastructure.Extras;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -19,19 +22,56 @@ namespace Softpark.WS.Controllers.Api
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class DatabaseSupplyController : BaseApiController
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Este construtor é usado para o sistema de documentação poder gerar o swagger e o Help
+        /// </summary>
         protected DatabaseSupplyController() : base(new DomainContainer()) { }
 
+        /// <summary>
+        /// Este construtor é inicializado pelo asp.net usando injeção de dependência
+        /// </summary>
+        /// <param name="domain">Domínio do banco inicializado por injeção de dependência</param>
         public DatabaseSupplyController(DomainContainer domain) : base(domain)
         {
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+        /// <summary>
+        /// Endpoint para retornar a versão atual da API
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/version")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult GetVersion()
+        {
+            return Ok(Versions.Version);
+        }
+
+        /// <summary>
+        /// Endpoint para conversão de DateTime para Epoch
+        /// </summary>
+        /// <param name="data">Data no formato DateTime (yyyy-MM-ddTHH:mm:ssZ)</param>
+        /// <returns>Epoch</returns>
+        [HttpGet]
+        [Route("api/dados/epoch", Name = "GetEpochURI")]
+        [ResponseType(typeof(long))]
+        public IHttpActionResult GetEpoch([FromUri] DateTime data)
+        {
+            return Ok(data.ToUnix());
+        }
+
+        /// <summary>
+        /// Log4Net
+        /// </summary>
         private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(DatabaseSupplyController));
 
         /// <summary>
         /// Endpoint para download de dados básicos para carga de trabalho
         /// </summary>
-        /// <param name="modelo">O nome da view model que deseja consultar.</param>
-        /// <returns></returns>
+        /// <param name="modelo">O nome do modelo de dados que deseja consultar.</param>
+        /// <returns>Retorna uma coleção de dados básicos</returns>
         [HttpGet]
         [Route("api/dados/{modelo}", Name = "BasicSupplyAction")]
         [ResponseType(typeof(BasicViewModel[]))]
@@ -41,6 +81,16 @@ namespace Softpark.WS.Controllers.Api
 
             switch (modelo.ToLowerInvariant())
             {
+                case "estadocivil":
+                    model = Domain.TP_EstadoCivil
+                        .Select(x => new BasicViewModel
+                        {
+                            Modelo = "EstadoCivil",
+                            Codigo = x.codigo,
+                            Descricao = x.descricao,
+                            Observacao = null
+                        }).ToList();
+                    break;
                 case "doencacardiaca":
                     model = Domain.TP_Doenca_Cardiaca
                         .Where(x => x.ativo == 1).Select(x => new BasicViewModel
@@ -113,7 +163,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "quantasvezesalimentacao":
                     model = Domain.TP_Quantas_Vezes_Alimentacao
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "QuantasVezesAlimentacao",
@@ -177,7 +226,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "sexo":
                     model = Domain.TP_Sexo
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "Sexo",
@@ -188,7 +236,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "etnia":
                     model = Domain.Etnia
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "Etnia",
@@ -221,7 +268,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "cbo":
                     model = Domain.AS_ProfissoesTab
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "CBO",
@@ -232,7 +278,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "orientacaosexual":
                     model = Domain.TP_Orientacao_Sexual
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "OrientacaoSexual",
@@ -243,7 +288,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "relacaoparentesco":
                     model = Domain.TP_Relacao_Parentesco
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "RelacaoParentesco",
@@ -265,7 +309,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "identidadegenerocidadao":
                     model = Domain.TP_Identidade_Genero_Cidadao
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "identidadeGeneroCidadao",
@@ -287,7 +330,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "motivosaida":
                     model = Domain.TP_Motivo_Saida
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "MotivoSaida",
@@ -344,7 +386,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "condicaodeposseeusodaterra":
                     model = Domain.TP_Cond_Posse_Uso_Terra
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "CondicaoDePosseEUsoDaTerra",
@@ -435,7 +476,6 @@ namespace Softpark.WS.Controllers.Api
 
                     model = Domain.UF.ToList()
                         .OrderBy(x => x.DesUF)
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "UF",
@@ -447,7 +487,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "tipodelogradouro":
                     model = Domain.TB_MS_TIPO_LOGRADOURO
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "TipoDeLogradouro",
@@ -458,7 +497,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "rendafamiliar":
                     model = Domain.TP_Renda_Familiar
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "RendaFamiliar",
@@ -469,7 +507,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "tipodeimovel":
                     model = Domain.TP_Imovel
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "tipoDeImovel",
@@ -496,7 +533,6 @@ namespace Softpark.WS.Controllers.Api
                     break;
                 case "motivovisita":
                     model = Domain.SIGSM_MotivoVisita
-                        //.Where(x => x.ativo == 1)
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "MotivoVisita",
@@ -521,18 +557,18 @@ namespace Softpark.WS.Controllers.Api
                             Descricao = "Ausente"
                         }
                     }.ToList();
-                        break;
-                    default:
-                        throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
-                }
-            
+                    break;
+                default:
+                    throw new ArgumentException("O modelo solicitado é inválido.", nameof(modelo));
+            }
+
             return Ok(model.ToArray());
         }
 
         /// <summary>
         /// Endpoint para download de dados dos profissionais
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Coleção com os dados dos profissionais</returns>
         [HttpGet]
         [Route("api/dados/profissional", Name = "ProfessionalSupplyAction")]
         [ResponseType(typeof(ProfissionalViewModel[]))]
@@ -570,7 +606,7 @@ namespace Softpark.WS.Controllers.Api
         /// <summary>
         /// Endpoint para listar os modelos de dados consultáveis
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Coleção de modelos de dados</returns>
         [HttpGet]
         [Route("api/dados/modelos", Name = "ModelSupplyAction")]
         [ResponseType(typeof(BasicViewModel[]))]
@@ -620,26 +656,37 @@ namespace Softpark.WS.Controllers.Api
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Turno", Descricao = "Turno", Observacao = "/api/dados/Turno" },
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoVisita", Descricao = "MotivoVisita", Observacao = "/api/dados/MotivoVisita" },
                 new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = "/api/dados/Desfecho" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "EstadoCivil", Descricao = "EstadoCivil", Observacao = "/api/dados/EstadoCivil" },
                 new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
             }.OrderBy(x => x.Codigo).ToArray());
         }
 
+        /// <summary>
+        /// Método para buscar o cabeçalho
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         private async Task<UnicaLotacaoTransport> GetHeader(Guid token)
         {
             return await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(u => u.token == token && !u.OrigemVisita.finalizado);
         }
 
+        /// <summary>
+        /// Método para buscar todos os cabeçalhos de um profissional
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
         private IQueryable<UnicaLotacaoTransport> GetHeadersBy(UnicaLotacaoTransport header)
         {
             return Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == header.profissionalCNS && u.OrigemVisita.finalizado);
         }
 
         /// <summary>
-        /// Buscar pacientes atendidos pelo profissional informado
+        /// Endpoint para buscar pacientes atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
-        /// <param name="microarea"></param>
-        /// <returns></returns>
+        /// <param name="microarea">microárea</param>
+        /// <returns>Coleção de Pacientes</returns>
         [HttpGet]
         [Route("api/dados/paciente/{token:guid}", Name = "PacienteSupplyAction")]
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
@@ -670,12 +717,12 @@ namespace Softpark.WS.Controllers.Api
             var idProf = pessoas.FirstOrDefault()?.pc.IdProfissional;
 
             var profs = Domain.ProfCidadaoVincAgendaProd
-                .Where(x => //x.DataAgendadamento <= DateTime.Now &&
+                .Where(x =>
                     x.AgendamentoMarcado == true &&
                     x.DataCarregado == null &&
                     x.FichaGerada == true &&
                     x.ProfCidadaoVinc.IdProfissional == idProf);
-            
+
             var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
 
             var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
@@ -705,15 +752,18 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(results.ToArray()));
+
             return data;
         }
 
         /// <summary>
-        /// Buscar domicílios atendidos pelo profissional informado
+        /// Endpoint para buscar os domicílios atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
-        /// <param name="microarea"></param>
-        /// <returns></returns>
+        /// <param name="microarea">Microárea</param>
+        /// <returns>Coleção de domicilios</returns>
         [HttpGet]
         [Route("api/dados/domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
         [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
@@ -721,24 +771,12 @@ namespace Softpark.WS.Controllers.Api
         {
             try
             {
-                Log.Debug("----");
-                Log.Debug($"api/dados/domicilio/{token}");
+                Log.Info("----");
+                Log.Info($"api/dados/domicilio/{token}");
 
                 var headerToken = await GetHeader(token);
 
                 if (headerToken == null) return BadRequest("Token Inválido.");
-
-                //var ids = Domain.VW_ultimo_cadastroDomiciliar
-                //    .Select(x => x.idCadastroDomiciliar).ToArray();
-
-                //var domicilios = (from pc in Domain.VW_profissional_cns
-                //                  join ut in Domain.UnicaLotacaoTransport
-                //                  on pc.cnsProfissional.Trim() equals ut.profissionalCNS.Trim()
-                //                  join cad in Domain.VW_ultimo_cadastroDomiciliar
-                //                  on ut.token equals cad.token
-                //                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                //                  && pc.CodigoCidadao == cad.Codigo
-                //                  select new { pc, cad }).ToArray();
 
                 //Alteração Cristiano, David 
                 var domicilios = (from pc in Domain.VW_profissional_cns
@@ -746,30 +784,15 @@ namespace Softpark.WS.Controllers.Api
                                   join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
                                   join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
                                   join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
+                                  join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
+                                  join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
+                                  join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
                                   where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
                                     agenda.AgendamentoMarcado == true &&
                                     agenda.DataCarregadoDomiciliar == null &&
-                                    agenda.FichaDomiciliarGerada == true
-                                  select new { pc, cad, cd, pcv, agenda }).ToList();
-
-                //var dom = domicilios.FirstOrDefault();
-
-                //var idProf = dom?.pc.IdProfissional;
-
-                //var profs = Domain.ProfCidadaoVincAgendaProd
-                //.Where(x =>
-                //    x.AgendamentoMarcado == true &&
-                //    x.DataCarregadoDomiciliar == null &&
-                //    x.FichaDomiciliarGerada == true &&
-                //    x.ProfCidadaoVinc.IdProfissional == idProf);
-                
-                //var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-                //var cads = domicilios.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                //    .Select(x => x.cad.idCadastroDomiciliar).ToArray();
-
-                //var cadastros = Domain.CadastroDomiciliar
-                //   .Where(x => ids.Contains(x.id) && cads.Contains(x.id)).ToArray();
+                                    agenda.FichaDomiciliarGerada == true &&
+                                    idtUserCid.cnsResponsavelFamiliar == null
+                                  select new { cd, agenda }).ToList();
 
                 var cadastros = domicilios.Select(x => x.cd).ToArray();
 
@@ -780,22 +803,20 @@ namespace Softpark.WS.Controllers.Api
                     results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
                 }
 
-                //var ps = profs.Where(x => domicilios.Any(y => y.pc.IdVinc == x.IdVinc)).ToList();
-
-                //ps.ForEach(x =>
-                //{
-                //    x.DataCarregadoDomiciliar = DateTime.Now;
-                //    Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, true);
-                //});
-
                 domicilios.ForEach(x =>
                 {
                     Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
                 });
 
-                //await Domain.SaveChangesAsync();
+                await Domain.SaveChangesAsync();
 
-                return Ok(results.ToArray());
+                var resultados = results.ToArray();
+
+                var serializer = new JavaScriptSerializer();
+                Log.Info(serializer.Serialize(resultados));
+
+                return Ok(resultados);
+
             }
             catch (Exception ex)
             {
@@ -805,16 +826,19 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
-        /// Buscar visitas realizadas pelo profissional informado
+        /// Endpoint para buscar as visitas realizadas pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
-        /// <param name="microarea"></param>
-        /// <returns></returns>
+        /// <param name="microarea">Microárea</param>
+        /// <returns>Coleção de visitas</returns>
         [HttpGet]
         [Route("api/dados/visita/{token:guid}", Name = "VisitaSupplyAction")]
         [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
         public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
+            Log.Info("----");
+            Log.Info($"api/dados/visita/{token}");
+
             var headerToken = await GetHeader(token);
 
             if (headerToken == null) return BadRequest("Token Inválido.");
@@ -827,41 +851,44 @@ namespace Softpark.WS.Controllers.Api
                 results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
             }
 
+            var serializer = new JavaScriptSerializer();
+            Log.Info(serializer.Serialize(results.ToArray()));
+
             return Ok(results.ToArray());
         }
     }
 
     /// <summary>
-    /// Profissional
+    /// ViewModel de Profissional
     /// </summary>
     public class ProfissionalViewModel
     {
         /// <summary>
-        /// CBO
+        /// Coleção de CBOs
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public List<BasicViewModel> CBOs { get; set; } = new List<BasicViewModel>();
 
         /// <summary>
-        /// CNES
+        /// Coleção de CNESs
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public List<BasicViewModel> CNESs { get; set; } = new List<BasicViewModel>();
 
         /// <summary>
-        /// INE
+        /// Coleção de INEs
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public List<BasicViewModel> INEs { get; set; } = new List<BasicViewModel>();
 
         /// <summary>
-        /// CNS
+        /// CNS do profissional
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public string CNS { get; set; }
 
         /// <summary>
-        /// Nome
+        /// Nome do profissional
         /// </summary>
         public string Nome { get; set; }
 
@@ -897,7 +924,7 @@ namespace Softpark.WS.Controllers.Api
     }
 
     /// <summary>
-    /// Dados básicos no padrão e-SUS
+    /// ViewModel de Dados básicos no padrão e-SUS
     /// </summary>
     public class BasicViewModel
     {

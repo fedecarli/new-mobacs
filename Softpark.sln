@@ -1,42 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.WS", "src\Softpark.WS\Softpark.WS.csproj", "{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{33F4AD7F-D10D-4139-85EF-5188FF5AE42B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5DD02F4C-6A2F-4834-96EF-C65D5098F33D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.WS.Test", "test\Softpark.WS.Test\Softpark.WS.Test.csproj", "{9971033F-2DFB-4849-BEC2-AD2911027D09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.Models", "lib\Softpark.Models\Softpark.Models.csproj", "{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.Infrastructure", "lib\Softpark.Infrastructure\Softpark.Infrastructure.csproj", "{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}"
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SIGSM", "http://localhost/SIGSM", "{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv2.0"
-		Debug.AspNetCompiler.VirtualPath = "/SIGSM"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\..\..\..\inetpub\wwwroot\SIGSM\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\SIGSM\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/SIGSM"
-		Release.AspNetCompiler.PhysicalPath = "..\..\..\..\..\inetpub\wwwroot\SIGSM\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\SIGSM\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "..\..\..\..\..\inetpub\wwwroot\SIGSM\"
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +26,6 @@ Global
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Santana|Any CPU.Build.0 = Santana|Any CPU
-		{9971033F-2DFB-4849-BEC2-AD2911027D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9971033F-2DFB-4849-BEC2-AD2911027D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9971033F-2DFB-4849-BEC2-AD2911027D09}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,18 +38,13 @@ Global
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Santana|Any CPU.Build.0 = Santana|Any CPU
-		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A}.Santana|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56} = {33F4AD7F-D10D-4139-85EF-5188FF5AE42B}
-		{9971033F-2DFB-4849-BEC2-AD2911027D09} = {5DD02F4C-6A2F-4834-96EF-C65D5098F33D}
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
-		{F927B858-AF29-4F85-8F54-BC1DE4FEF11A} = {33F4AD7F-D10D-4139-85EF-5188FF5AE42B}
 	EndGlobalSection
 EndGlobal
