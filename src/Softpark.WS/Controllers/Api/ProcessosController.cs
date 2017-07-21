@@ -98,6 +98,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="header">ViewModel com os dados do cabeçalho</param>
         /// <returns>Token para envio das fichas não atômicas</returns>
         [Route("enviar/cabecalho")]
+        [Route("api/processos/enviar/cabecalho")]
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
@@ -145,6 +146,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="child">ViewModel com os dados da ficha</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/visita/child")]
+        [Route("api/processos/enviar/visita/child")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
@@ -218,6 +220,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="cadInd">ViewModel contendo os dados de cadastro individual</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/cadastro/individual")]
+        [Route("api/processos/enviar/cadastro/individual")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
@@ -273,6 +276,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="cadDom">ViewModel contendo os dados de cadastro domiciliar</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/cadastro/domiciliar")]
+        [Route("api/processos/enviar/cadastro/domiciliar")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroDomiciliar([FromBody, Required] CadastroDomiciliarViewModel cadDom)
         {
@@ -501,6 +505,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="token">Token gerado anteriormente</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("encerrar/{token}")]
+        [Route("api/processos/encerrar/{token}")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> FinalizarTransmissao([FromUri, Required] Guid token)
         {

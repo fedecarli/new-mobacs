@@ -383,8 +383,6 @@
     <None Include="pk.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="changes\VW_INDIVIDUAIS.sql" />
-    <Content Include="changes\VW_Profissional.sql" />
     <Content Include="Domain.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Domain.Context.cs</LastGenOutput>
@@ -402,9 +400,7 @@
       <Name>Softpark.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
