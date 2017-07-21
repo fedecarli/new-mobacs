@@ -5,6 +5,9 @@ using System.Web.Routing;
 #pragma warning disable 1591
 namespace Softpark.WS
 {
+    /// <summary>
+    /// Configuração de rotas
+    /// </summary>
     public class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)

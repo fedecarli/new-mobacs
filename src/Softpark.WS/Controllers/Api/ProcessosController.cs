@@ -15,23 +15,41 @@ using System.Web.Script.Serialization;
 namespace Softpark.WS.Controllers.Api
 {
     /// <summary>
-    /// Endpoints dos processos de importação de dados
+    /// Endpoints dos processos de transmissão de dados provenientes do APP
     /// </summary>
     [Route("/api/processos")]
     [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class ProcessosController : BaseApiController
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Este construtor é usado para o sistema de documentação poder gerar o swagger e o Help
+        /// </summary>
         protected ProcessosController() : base(new DomainContainer()) { }
 
+        /// <summary>
+        /// Este construtor é inicializado pelo asp.net usando injeção de dependência
+        /// </summary>
+        /// <param name="domain">Domínio do banco inicializado por injeção de dependência</param>
         public ProcessosController(DomainContainer domain) : base(domain)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
         }
 
+        /// <summary>
+        /// Propriedade de registro do log4net
+        /// </summary>
         private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(ProcessosController));
 
+        /// <summary>
+        /// Este método busca uma FichaVisitaDomiciliarMaster com menos de 99 registros com o mesmo cabeçalho ou cria uma se não encontrar
+        /// </summary>
+        /// <param name="token">Token de origem</param>
+        /// <returns></returns>
         private async Task<FichaVisitaDomiciliarMaster> GetOrCreateMaster(Guid token)
         {
+            // busca o token
             var origem = await Domain.OrigemVisita.FindAsync(token);
 
             if (origem == null || origem.finalizado)
@@ -39,6 +57,7 @@ namespace Softpark.WS.Controllers.Api
                 throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
             }
 
+            // busca um cabeçalho no token
             var header = await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(h => h.token == token);
 
             if (header == null)
@@ -46,38 +65,52 @@ namespace Softpark.WS.Controllers.Api
                 throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
             }
 
+            // busca ou cria uma ficha
             var master = header.FichaVisitaDomiciliarMaster.FirstOrDefault(m => m.FichaVisitaDomiciliarChild.Count < 99) ??
                          Domain.FichaVisitaDomiciliarMaster.Create();
 
+            // verifica se é uma nova ficha, se não, retorna a encontrada
             if (master.uuidFicha != null) return master;
+
+            // o tipo de origem do cds é sempre 3 (sistema externo)
             master.tpCdsOrigem = 3;
+            // atrela o cabeçalho à ficha
             master.UnicaLotacaoTransport = header;
 
+            // gera o ID da ficha master
             master.uuidFicha = header.cnes + '-' + Guid.NewGuid();
+            // adiciona a ficha ao banco de dados
             Domain.FichaVisitaDomiciliarMaster.Add(master);
 
+            // salva a transação do banco de dados
             await Domain.SaveChangesAsync();
 
+            // retorna a ficha
             return master;
         }
 
         /// <summary>
-        /// Cadastrar cabeçalho das fichas
+        /// Endpoint para registro do cabeçalho para os cadastros não atômicos
         /// </summary>
         /// <remarks>
         /// Todas as fichas usarão esse cabeçalho
         /// </remarks>
-        /// <param name="header">Dados à serem enviados</param>
-        /// <returns>Token para envio das fichas</returns>
+        /// <param name="header">ViewModel com os dados do cabeçalho</param>
+        /// <returns>Token para envio das fichas não atômicas</returns>
         [Route("enviar/cabecalho")]
+        [Route("api/processos/enviar/cabecalho")]
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
+            #region LOG4NET
+            // registra no l4n a chamada do endpoint
             Log.Info("----");
             Log.Info("enviar/cabecalho");
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(header));
+            #endregion
 
+            // cria um novo token
             var origem = Domain.OrigemVisita.Create();
 
             origem.token = Guid.NewGuid();
@@ -87,6 +120,7 @@ namespace Softpark.WS.Controllers.Api
 
             Domain.OrigemVisita.Add(origem);
 
+            // cria um cabeçalho
             var transport = header.ToModel(Domain);
 
             transport.id = Guid.NewGuid();
@@ -99,34 +133,44 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
+            // registra o token no l4n
             Log.Info(origem.token);
+
+            // retorna o token gerado
             return Ok(origem.token);
         }
 
         /// <summary>
-        /// Envia uma ficha de visita (child) para cadastro
+        /// Endpoint para enviar uma ficha de visita (child) para cadastro não atômico
         /// </summary>
-        /// <param name="child"></param>
-        /// <returns></returns>
+        /// <param name="child">ViewModel com os dados da ficha</param>
+        /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/visita/child")]
+        [Route("api/processos/enviar/visita/child")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
+            #region L4N
             Log.Info("-----");
             Log.Info($"GET api/visita/child/");
 
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(child));
+            #endregion
 
+            // valida o modelo de dados
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            // busca ou cria uma ficha master
             var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
 
+            // realiza o DataBinding da ViewModel para a Model
             var ficha = child.ToModel(Domain);
 
+            // filtra os dados dos Motivos de Visita
             foreach (var motivoId in child.motivosVisita)
             {
                 var motivo = await Domain.SIGSM_MotivoVisita.FindAsync(motivoId);
@@ -135,21 +179,26 @@ namespace Softpark.WS.Controllers.Api
                     ficha.SIGSM_MotivoVisita.Add(motivo);
             }
 
+            // registra a ficha
             Domain.FichaVisitaDomiciliarChild.Add(ficha);
 
             if (ficha.dtNascimento != null)
                 ficha.dtNascimento.Value.IsValidBirthDateTime(master.UnicaLotacaoTransport.dataAtendimento);
 
+            // atribui uma ficha master
             ficha.FichaVisitaDomiciliarMaster = master;
 
+            // valida a ficha
             ficha.Validar();
 
             try
             {
+                // salva a ficha em banco
                 await Domain.SaveChangesAsync();
             }
             catch (Exception e)
             {
+                // em caso de erro, registra no l4n
                 Log.Fatal(e.Message);
 
                 if (e is DbEntityValidationException)
@@ -166,27 +215,33 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
-        /// Cadastro Individual
+        /// Endpoint para enviar uma ficha de Cadastro Individual não atômico
         /// </summary>
-        /// <param name="cadInd"></param>
-        /// <returns></returns>
+        /// <param name="cadInd">ViewModel contendo os dados de cadastro individual</param>
+        /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/cadastro/individual")]
+        [Route("api/processos/enviar/cadastro/individual")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
+            #region L4N
             Log.Info("-----");
             Log.Info($"GET api/cadastro/individual/{cadInd.token}");
 
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(cadInd));
+            #endregion
 
+            // valida o modelo de dados
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            // busca o token
             var origem = await Domain.OrigemVisita.FindAsync(cadInd.token);
 
+            // busca o cabeçalho
             var header = origem?.UnicaLotacaoTransport?.FirstOrDefault();
 
             if (origem == null || origem.finalizado || header == null)
@@ -194,16 +249,21 @@ namespace Softpark.WS.Controllers.Api
                 throw new InvalidOperationException("Token inválido. Inicie o processo de transmissão.");
             }
 
+            // processa o modelo de dados
             await ProcessarIndividuos(new[] { cadInd }, header, true);
 
+            // realiza o DataBind da ViewModel para a Model
             var cad = await cadInd.ToModel(Domain);
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = header;
 
+            // valida o cadastro
             cad.Validar(Domain);
 
+            // registra o cadastro
             Domain.CadastroIndividual.Add(cad);
 
+            // salva o cadastro no banco de dados
             await Domain.SaveChangesAsync();
 
             Log.Info(Ok(true));
@@ -211,27 +271,32 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
-        /// Cadastro Domiciliar
+        /// Endpoint para envio da ficha de Cadastro Domiciliar não atômico
         /// </summary>
-        /// <param name="cadDom"></param>
-        /// <returns></returns>
+        /// <param name="cadDom">ViewModel contendo os dados de cadastro domiciliar</param>
+        /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/cadastro/domiciliar")]
+        [Route("api/processos/enviar/cadastro/domiciliar")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroDomiciliar([FromBody, Required] CadastroDomiciliarViewModel cadDom)
         {
+            #region L4N
             Log.Info("-----");
             Log.Info("POST enviar/cadastro/domiciliar");
             Log.Info($"TOKEN {cadDom.token}");
 
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(cadDom));
+            #endregion
 
+            //Validate o modelo de dados
             if (!ModelState.IsValid)
             {
                 Log.Fatal(ModelState);
                 return BadRequest(ModelState);
             }
 
+            // busca o token
             var origem = await Domain.OrigemVisita.FindAsync(cadDom.token);
 
             if (origem == null || origem.finalizado)
@@ -240,7 +305,10 @@ namespace Softpark.WS.Controllers.Api
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
 
+            // busca o cabeçalho
             var header = origem.UnicaLotacaoTransport.FirstOrDefault();
+
+            // realiza o DataBind da ViewModel para a Model
             var cad = await cadDom.ToModel(Domain);
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = header;
@@ -250,10 +318,13 @@ namespace Softpark.WS.Controllers.Api
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
 
+            // valida o modelo
             await cad.Validar(Domain);
 
+            // registra o model
             Domain.CadastroDomiciliar.Add(cad);
 
+            // salva em banco de dados
             await Domain.SaveChangesAsync();
 
             Log.Info(Ok(true));
@@ -261,20 +332,23 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
-        /// Cadastro Atômico
+        /// Endpoint para cadastramento atômico
         /// </summary>
-        /// <param name="cadastros"></param>
-        /// <returns></returns>
+        /// <param name="cadastros">ViewModel Collection com os dados de cabeçalhos, fichas de visitas, cadastros individuais e cadastros domiciliares</param>
+        /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("api/processos/enviar/cadastro/atomico")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> CadastramentoAtomico([FromBody, Required] AtomicTransporViewModel[] cadastros)
         {
+            #region L4N
             Log.Info("-----");
             Log.Info("POST api/processos/enviar/cadastro/atomico");
 
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(cadastros));
+            #endregion
 
+            // cria um token
             var origem = Domain.OrigemVisita.Create();
 
             origem.token = Guid.NewGuid();
@@ -288,8 +362,10 @@ namespace Softpark.WS.Controllers.Api
 
             try
             {
+                // percorre a coleção de ViewModels
                 foreach (var cadastro in cadastros)
                 {
+                    // realiza o DataBind do cabeçalho
                     var header = cadastro.cabecalho.ToModel(Domain);
 
                     header.id = Guid.NewGuid();
@@ -298,12 +374,15 @@ namespace Softpark.WS.Controllers.Api
 
                     Domain.UnicaLotacaoTransport.Add(header);
 
+                    // processa os cadastros individuais de responsáveis
                     await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null &&
                     x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
 
+                    // processa os cadastros individuais de dependentes
                     await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao == null ||
                     !x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
 
+                    // processa os cadastros domiciliares
                     foreach (var domicilio in cadastro.domicilios)
                     {
                         var cad = await domicilio.ToModel(Domain);
@@ -315,6 +394,7 @@ namespace Softpark.WS.Controllers.Api
 
                     var masters = new List<FichaVisitaDomiciliarMaster>();
 
+                    // função para buscar ou gerar uma ficha master em memória
                     Func<FichaVisitaDomiciliarMaster> getOrCreateMaster = () =>
                     {
                         var master = masters.FirstOrDefault(x => x.FichaVisitaDomiciliarChild.Count < 99) ?? Domain.FichaVisitaDomiciliarMaster.Create();
@@ -331,6 +411,7 @@ namespace Softpark.WS.Controllers.Api
                         return master;
                     };
 
+                    // processa as fichas de visitas
                     foreach (var child in cadastro.visitas)
                     {
                         var master = getOrCreateMaster();
@@ -351,13 +432,12 @@ namespace Softpark.WS.Controllers.Api
                             Epoch.ValidateBirthDateTime(ficha.dtNascimento.Value, master.UnicaLotacaoTransport.dataAtendimento);
 
                         ficha.FichaVisitaDomiciliarMaster = master;
-
-                        //ficha.Validar();
                     }
                 }
             }
             catch (Exception e)
             {
+                // em caso de falha, registra no L4N
                 Log.Fatal(e.Message);
 
                 if (e is DbEntityValidationException)
@@ -371,12 +451,15 @@ namespace Softpark.WS.Controllers.Api
 
             try
             {
+                // salva as fichas em banco de dados
                 await Domain.SaveChangesAsync();
-
+                
+                // finaliza o token
                 Domain.PR_ProcessarFichasAPI(origem.token);
             }
             catch (Exception e)
             {
+                // em caso de falha, registra no L4N
                 Log.Fatal(e.Message);
 
                 if (e is DbEntityValidationException)
@@ -391,50 +474,67 @@ namespace Softpark.WS.Controllers.Api
             return Ok(true);
         }
 
+        /// <summary>
+        /// Este método é responsável por tratar e processar os cadastros individuais
+        /// </summary>
+        /// <param name="individuos">ViewModel Collection de individuos</param>
+        /// <param name="header">Cabeçalho</param>
+        /// <param name="validar">Indicador para realizar ou não a validação de dados</param>
+        /// <returns></returns>
         private async Task ProcessarIndividuos(IEnumerable<PrimitiveCadastroIndividualViewModel> individuos,
             UnicaLotacaoTransport header, bool validar = false)
         {
+            // percorre os individuos
             foreach (var individuo in individuos)
             {
+                // realiza o DataBind
                 var cad = await individuo.ToModel(Domain);
                 cad.tpCdsOrigem = 3;
                 cad.UnicaLotacaoTransport = header;
 
                 if (validar) cad.Validar(Domain);
 
+                // registra o modelo
                 Domain.CadastroIndividual.Add(cad);
             }
         }
 
         /// <summary>
-        /// Finaliza a transmissão de dados (encerra o token)
+        /// Endpoitn para finalizar a transmissão de dados (encerrar o token) de cadastros não atômicos
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="token">Token gerado anteriormente</param>
+        /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("encerrar/{token}")]
+        [Route("api/processos/encerrar/{token}")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> FinalizarTransmissao([FromUri, Required] Guid token)
         {
+            #region L4N
             Log.Info("-----");
             Log.Info("POST api/encerrar/token");
 
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(token));
+            #endregion
 
             var origem = await Domain.OrigemVisita.FindAsync(token);
 
+            // verifica pela integridade do token informado
             if (origem == null || origem.finalizado)
             {
                 throw new ValidationException("Token inválido. Inicie o processo de transmissão.");
             }
+            // verifica se há fichas no token
             else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
             {
+                // finaliza o token
                 Domain.PR_ProcessarFichasAPI(token);
             }
             else
             {
                 try
                 {
+                    // finaliza o token sem processar fichas
                     origem.finalizado = true;
                     await Domain.SaveChangesAsync();
                 }

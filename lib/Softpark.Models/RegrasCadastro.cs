@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 namespace Softpark.Models
 {
     /// <summary>
-    /// 
+    /// Regras de cadastro
     /// </summary>
     public static class RegrasCadastro
     {
         /// <summary>
-        /// 
+        /// limpa string
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
@@ -31,7 +31,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// divide string em palavras
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
@@ -41,7 +41,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida nome
         /// </summary>
         /// <param name="nome"></param>
         /// <returns></returns>
@@ -57,9 +57,10 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida cabeçalho
         /// </summary>
         /// <param name="header"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this UnicaLotacaoTransport header, DomainContainer domain)
         {
@@ -90,7 +91,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida ficha master
         /// </summary>
         /// <param name="master"></param>
         /// <exception cref="ValidationException"></exception>
@@ -108,7 +109,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida ficha child
         /// </summary>
         /// <param name="child"></param>
         /// <exception cref="ValidationException"></exception>
@@ -221,10 +222,11 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida condições de saúde
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this CondicoesDeSaude cond, CadastroIndividual cad, DomainContainer domain)
         {
@@ -309,9 +311,10 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida situação de rua
         /// </summary>
         /// <param name="cond"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this EmSituacaoDeRua cond, DomainContainer domain)
         {
@@ -376,10 +379,11 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida os dados de um cidadão
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         /// <exception cref="Exception"></exception>
         public static void Validar(this IdentificacaoUsuarioCidadao cond, CadastroIndividual cad, DomainContainer domain)
@@ -406,7 +410,7 @@ namespace Softpark.Models
                     throw new ValidationException("O código IBGE do município de nascimento é inválido ou não está cadastrado.");
             }
 
-            if (!cond.dataNascimentoCidadao.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (cond.dataNascimentoCidadao != null && !cond.dataNascimentoCidadao.Value.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 throw new ValidationException("A data de nascimento do cidadão é inválida.");
 
             try
@@ -531,10 +535,11 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida informações sociodemograficas
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this InformacoesSocioDemograficas cond, CadastroIndividual cad, DomainContainer domain)
         {
@@ -591,7 +596,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida a saida do cadastro
         /// </summary>
         /// <param name="cond"></param>
         /// <exception cref="ValidationException"></exception>
@@ -608,9 +613,10 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida um cadastro individual
         /// </summary>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this CadastroIndividual cad, DomainContainer domain)
         {
@@ -650,10 +656,11 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida a condição de moradia
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this CondicaoMoradia cond, CadastroDomiciliar cad, DomainContainer domain)
         {
@@ -721,7 +728,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida uma familia
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>
@@ -739,10 +746,11 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida um endereço
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this EnderecoLocalPermanencia cond, CadastroDomiciliar cad, DomainContainer domain)
         {
@@ -776,7 +784,7 @@ namespace Softpark.Models
             if (cond.telefoneContato != null && (cond.telefoneContato.Length < 10 || cond.telefoneContato.Length > 11))
                 throw new ValidationException("O telefone de contato é inválido.");
 
-            if (cond.telelefoneResidencia != null && (cond.telelefoneResidencia.Length < 10 || cond.telelefoneResidencia.Length > 11))
+            if (cond.telefoneResidencia != null && (cond.telefoneResidencia.Length < 10 || cond.telefoneResidencia.Length > 11))
                 throw new ValidationException("O telefone da residência é inválido.");
 
             if (cond.tipoLogradouroNumeroDne == null || domain.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO == null || x.CO_TIPO_LOGRADOURO.Trim() != cond.tipoLogradouroNumeroDne))
@@ -795,6 +803,12 @@ namespace Softpark.Models
                 throw new ValidationException("A microárea é inválida. Informe 2 digitos numéricos.");
         }
 
+        /// <summary>
+        /// PadLeft
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="l"></param>
+        /// <returns></returns>
         private static Func<UF, string> RowNumberPad(char c, int l)
         {
             var row = 1;
@@ -803,9 +817,10 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida um cadastro domiciliar
         /// </summary>
         /// <param name="cad"></param>
+        /// <param name="domain"></param>
         /// <returns></returns>
         /// <exception cref="ValidationException"></exception>
         public static async Task Validar(this CadastroDomiciliar cad, DomainContainer domain)
@@ -877,7 +892,7 @@ namespace Softpark.Models
         }
 
         /// <summary>
-        /// 
+        /// valida uma instituição
         /// </summary>
         /// <param name="cond"></param>
         /// <param name="cad"></param>

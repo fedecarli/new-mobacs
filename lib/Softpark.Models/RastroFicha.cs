@@ -16,24 +16,22 @@ using System;
     using System.Collections.Generic;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class TP_Tratamento_Agua
+    public partial class RastroFicha
 {
 
-    public int id_tp_tratamento_agua { get; set; }
+    public System.Guid token { get; set; }
 
-    public string descricao { get; set; }
+    public int CodUsu { get; set; }
 
-    public Nullable<int> id_user_cadastro { get; set; }
+    public System.DateTime DataModificacao { get; set; }
 
-    public Nullable<int> ativo { get; set; }
+    public string DadoAnterior { get; set; }
 
-    public Nullable<System.DateTime> data_cadastro { get; set; }
+    public string DadoAtual { get; set; }
 
-    public Nullable<int> id_user_alteracao { get; set; }
 
-    public Nullable<System.DateTime> data_alteracao { get; set; }
 
-    public int codigo { get; set; }
+    public virtual OrigemVisita OrigemVisita { get; set; }
 
 }
 

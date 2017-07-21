@@ -10,7 +10,7 @@ using Softpark.Infrastructure.Extras;
 namespace Softpark.WS.ViewModels
 {
     /// <summary>
-    /// 
+    /// ViewModel Collection de fichas de visita
     /// </summary>
     public class FichaVisitaDomiciliarChildCadastroViewModelCollection : List<FichaVisitaDomiciliarChildCadastroViewModel>
     {
@@ -168,7 +168,17 @@ namespace Softpark.WS.ViewModels
         public string longitude { get; set; } = null;
 
         /// <summary>
-        /// 
+        /// Justificativa
+        /// </summary>
+        public string Justificativa { get; set; } = null;
+
+        /// <summary>
+        /// Data de registro da ficha no app
+        /// </summary>
+        public DateTime? DataRegistro { get; set; } = null;
+
+        /// <summary>
+        /// DataBind
         /// </summary>
         /// <param name="model"></param>
         public static implicit operator FichaVisitaDomiciliarChildCadastroViewModel(FichaVisitaDomiciliarChild model)
@@ -180,6 +190,10 @@ namespace Softpark.WS.ViewModels
             return vm;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         private void ApplyModel(FichaVisitaDomiciliarChild model)
         {
             if (model == null) return;
@@ -198,8 +212,14 @@ namespace Softpark.WS.ViewModels
             turno = model.turno;
             latitude = model.latitude;
             longitude = model.longitude;
+            Justificativa = model.Justificativa;
+            DataRegistro = model.DataRegistro;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal FichaVisitaDomiciliarChild ToModel(DomainContainer domain)
         {
             var fvdc = domain.FichaVisitaDomiciliarChild.Create();
@@ -219,6 +239,8 @@ namespace Softpark.WS.ViewModels
             fvdc.turno = turno;
             fvdc.latitude = latitude;
             fvdc.longitude = longitude;
+            fvdc.Justificativa = Justificativa;
+            fvdc.DataRegistro = DataRegistro;
 
             domain.FichaVisitaDomiciliarChild.Add(fvdc);
 

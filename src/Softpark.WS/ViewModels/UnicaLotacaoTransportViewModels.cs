@@ -66,7 +66,11 @@ namespace Softpark.WS.ViewModels
         /// </remarks>
         [DataMember(Name = nameof(codigoIbgeMunicipio))]
         public string codigoIbgeMunicipio { get; set; }
-        
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="domain"></param>
         internal UnicaLotacaoTransport ToModel(DomainContainer domain)
         {
             var ult = domain.UnicaLotacaoTransport.Create();
@@ -82,6 +86,10 @@ namespace Softpark.WS.ViewModels
             return ult;
         }
 
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
         internal static UnicaLotacaoTransportCadastroViewModel ApplyModel(UnicaLotacaoTransport model)
         {
             return new UnicaLotacaoTransportCadastroViewModel {
