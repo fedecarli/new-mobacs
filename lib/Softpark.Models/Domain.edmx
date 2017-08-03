@@ -24,17 +24,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_Cadastro
           <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Data" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_CadastroIndividualVinc' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="ASSMED_CadastroIndividualVinc">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="idCadastroIndividual" Type="uniqueidentifier" />
-          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Data" Type="datetime" />
-        </EntityType>
         <EntityType Name="CadastroDomiciliar">
           <Key>
             <PropertyRef Name="id" />
@@ -300,6 +289,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_Cadastro
           <Property Name="CPF" Type="char" MaxLength="11" />
           <Property Name="beneficiarioBolsaFamilia" Type="bit" />
           <Property Name="EstadoCivil" Type="char" MaxLength="1" />
+          <Property Name="ComplementoRG" Type="varchar" MaxLength="4" />
         </EntityType>
         <EntityType Name="InformacoesSocioDemograficas">
           <Key>
@@ -478,6 +468,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_Cadastro
           <Property Name="CodUsu" Type="int" />
           <Property Name="DtSistema" Type="datetime" />
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
+          <Property Name="ComplementoRG" Type="varchar" MaxLength="4" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroPF">
           <Key>
@@ -1081,6 +1072,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TP_Nasf' does n
           <Property Name="codigo" Type="int" Nullable="false" />
           <Property Name="descricao" Type="nvarchar" MaxLength="60" Nullable="false" />
           <Property Name="observacao" Type="nvarchar" MaxLength="512" />
+          <Property Name="sigla" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="TP_Sexo_Genero">
           <Key>
@@ -1213,6 +1205,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.VW_Identificaca
           <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Justificativa" Type="varchar" MaxLength="500" />
           <Property Name="RG" Type="varchar" MaxLength="50" />
+          <Property Name="ComplementoRG" Type="varchar" MaxLength="4" />
           <Property Name="CPF" Type="char" MaxLength="14" />
           <Property Name="EstadoCivil" Type="varchar" MaxLength="1" />
           <Property Name="beneficiarioBolsaFamilia" Type="bit" />
@@ -1826,18 +1819,6 @@ warning 6035: The relationship 'FK_OrigemAlimentoSituacaoRua_TP_Origem_Alimentac
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RastroFicha_OrigemVisita">
-          <End Role="OrigemVisita" Type="Self.OrigemVisita" Multiplicity="1" />
-          <End Role="RastroFicha" Type="Self.RastroFicha" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrigemVisita">
-              <PropertyRef Name="token" />
-            </Principal>
-            <Dependent Role="RastroFicha">
-              <PropertyRef Name="token" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ResponsavelPorCrianca_InformacoesSocioDemograficas">
           <End Role="InformacoesSocioDemograficas" Type="Self.InformacoesSocioDemograficas" Multiplicity="1" />
           <End Role="ResponsavelPorCrianca" Type="Self.ResponsavelPorCrianca" Multiplicity="*" />
@@ -1990,14 +1971,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
     [ASSMED_CadastroDomiciliarVinc].[Data] AS [Data]
     FROM [api].[ASSMED_CadastroDomiciliarVinc] AS [ASSMED_CadastroDomiciliarVinc]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="ASSMED_CadastroIndividualVinc" EntityType="Self.ASSMED_CadastroIndividualVinc" store:Type="Tables" store:Schema="api">
-            <DefiningQuery>SELECT 
-    [ASSMED_CadastroIndividualVinc].[id] AS [id], 
-    [ASSMED_CadastroIndividualVinc].[idCadastroIndividual] AS [idCadastroIndividual], 
-    [ASSMED_CadastroIndividualVinc].[Codigo] AS [Codigo], 
-    [ASSMED_CadastroIndividualVinc].[Data] AS [Data]
-    FROM [api].[ASSMED_CadastroIndividualVinc] AS [ASSMED_CadastroIndividualVinc]</DefiningQuery>
-          </EntitySet>
           <EntitySet Name="TB_MS_TIPO_LOGRADOURO" EntityType="Self.TB_MS_TIPO_LOGRADOURO" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [TB_MS_TIPO_LOGRADOURO].[CO_TIPO_LOGRADOURO] AS [CO_TIPO_LOGRADOURO], 
@@ -2061,6 +2034,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
     [VW_IdentificacaoUsuarioCidadao].[Codigo] AS [Codigo], 
     [VW_IdentificacaoUsuarioCidadao].[Justificativa] AS [Justificativa], 
     [VW_IdentificacaoUsuarioCidadao].[RG] AS [RG], 
+    [VW_IdentificacaoUsuarioCidadao].[ComplementoRG] AS [ComplementoRG], 
     [VW_IdentificacaoUsuarioCidadao].[CPF] AS [CPF], 
     [VW_IdentificacaoUsuarioCidadao].[EstadoCivil] AS [EstadoCivil], 
     [VW_IdentificacaoUsuarioCidadao].[beneficiarioBolsaFamilia] AS [beneficiarioBolsaFamilia]
@@ -2257,10 +2231,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="ProfCidadaoVinc" EntitySet="ProfCidadaoVinc" />
             <End Role="ProfCidadaoVincAgendaProd" EntitySet="ProfCidadaoVincAgendaProd" />
           </AssociationSet>
-          <AssociationSet Name="FK_RastroFicha_OrigemVisita" Association="Self.FK_RastroFicha_OrigemVisita">
-            <End Role="OrigemVisita" EntitySet="OrigemVisita" />
-            <End Role="RastroFicha" EntitySet="RastroFicha" />
-          </AssociationSet>
           <AssociationSet Name="FK_ResponsavelPorCrianca_InformacoesSocioDemograficas" Association="Self.FK_ResponsavelPorCrianca_InformacoesSocioDemograficas">
             <End Role="InformacoesSocioDemograficas" EntitySet="InformacoesSocioDemograficas" />
             <End Role="ResponsavelPorCrianca" EntitySet="ResponsavelPorCrianca" />
@@ -2384,7 +2354,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="AS_SetoresPar" EntitySet="AS_SetoresPar" />
           </AssociationSet>
           <EntitySet Name="ASSMED_CadastroDomiciliarVinc" EntityType="Domain.ASSMED_CadastroDomiciliarVinc" />
-          <EntitySet Name="ASSMED_CadastroIndividualVinc" EntityType="Domain.ASSMED_CadastroIndividualVinc" />
           <EntitySet Name="TP_EstadoCivil" EntityType="Domain.TP_EstadoCivil" />
           <EntitySet Name="AnimalNoDomicilio" EntityType="Domain.AnimalNoDomicilio" />
           <EntitySet Name="CadastroDomiciliar" EntityType="Domain.CadastroDomiciliar" />
@@ -2401,7 +2370,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="FichaVisitaDomiciliarChild" EntityType="Domain.FichaVisitaDomiciliarChild" />
           <EntitySet Name="FichaVisitaDomiciliarMaster" EntityType="Domain.FichaVisitaDomiciliarMaster" />
           <EntitySet Name="HigienePessoalSituacaoRua" EntityType="Domain.HigienePessoalSituacaoRua" />
-          <EntitySet Name="IdentificacaoUsuarioCidadao" EntityType="Domain.IdentificacaoUsuarioCidadao" />
           <EntitySet Name="InformacoesSocioDemograficas" EntityType="Domain.InformacoesSocioDemograficas" />
           <EntitySet Name="InstituicaoPermanencia" EntityType="Domain.InstituicaoPermanencia" />
           <EntitySet Name="OrigemAlimentoSituacaoRua" EntityType="Domain.OrigemAlimentoSituacaoRua" />
@@ -2439,10 +2407,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           </AssociationSet>
           <AssociationSet Name="FK_CadastroIndividual_EmSituacaoDeRua" Association="Domain.FK_CadastroIndividual_EmSituacaoDeRua">
             <End Role="EmSituacaoDeRua" EntitySet="EmSituacaoDeRua" />
-            <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CadastroIndividual_IdentificacaoUsuarioCidadao" Association="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao">
-            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
             <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
           </AssociationSet>
           <AssociationSet Name="FK_CadastroIndividual_InformacoesSocioDemograficas" Association="Domain.FK_CadastroIndividual_InformacoesSocioDemograficas">
@@ -2497,22 +2461,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="UnicaLotacaoTransport" EntitySet="UnicaLotacaoTransport" />
             <End Role="FichaVisitaDomiciliarMaster" EntitySet="FichaVisitaDomiciliarMaster" />
           </AssociationSet>
-          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_Etnia" Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia">
-            <End Role="Etnia" EntitySet="Etnia" />
-            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_Paises" Association="Domain.FK_IdentificacaoUsuarioCidadao_Paises">
-            <End Role="Paises" EntitySet="Paises" />
-            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor">
-            <End Role="TP_Raca_Cor" EntitySet="TP_Raca_Cor" />
-            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_TP_Sexo" Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo">
-            <End Role="TP_Sexo" EntitySet="TP_Sexo" />
-            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
-          </AssociationSet>
           <AssociationSet Name="FK_InformacoesSocioDemograficas_TP_Identidade_Genero_Cidadao" Association="Domain.FK_InformacoesSocioDemograficas_TP_Identidade_Genero_Cidadao">
             <End Role="TP_Identidade_Genero_Cidadao" EntitySet="TP_Identidade_Genero_Cidadao" />
             <End Role="InformacoesSocioDemograficas" EntitySet="InformacoesSocioDemograficas" />
@@ -2552,6 +2500,27 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FichaVisitaDomiciliarChild_MotivoVisita" Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita">
             <End Role="FichaVisitaDomiciliarChild" EntitySet="FichaVisitaDomiciliarChild" />
             <End Role="SIGSM_MotivoVisita" EntitySet="SIGSM_MotivoVisita" />
+          </AssociationSet>
+          <EntitySet Name="IdentificacaoUsuarioCidadao" EntityType="Domain.IdentificacaoUsuarioCidadao" />
+          <AssociationSet Name="FK_CadastroIndividual_IdentificacaoUsuarioCidadao" Association="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao">
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+            <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_Etnia" Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia">
+            <End Role="Etnia" EntitySet="Etnia" />
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_Paises" Association="Domain.FK_IdentificacaoUsuarioCidadao_Paises">
+            <End Role="Paises" EntitySet="Paises" />
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor">
+            <End Role="TP_Raca_Cor" EntitySet="TP_Raca_Cor" />
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_TP_Sexo" Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo">
+            <End Role="TP_Sexo" EntitySet="TP_Sexo" />
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
@@ -2597,6 +2566,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="CPF" Type="String" MaxLength="14" FixedLength="true" Unicode="false" />
           <Property Name="EstadoCivil" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="beneficiarioBolsaFamilia" Type="Boolean" />
+          <Property Name="ComplementoRG" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="VW_profissional_cns">
           <Key>
@@ -2708,6 +2678,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="DtSistema" Type="DateTime" Precision="3" />
           <Property Name="NumIP" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_CadastroD__0A7378A9" FromRole="ASSMED_CadastroDocPessoal" ToRole="ASSMED_Cadastro" />
+          <Property Name="ComplementoRG" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroPF">
           <Key>
@@ -3271,6 +3242,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="codigo" Type="Int32" Nullable="false" />
           <Property Name="descricao" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
           <Property Name="observacao" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="sigla" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" FromRole="TP_Sexo" ToRole="IdentificacaoUsuarioCidadao" />
         </EntityType>
         <EntityType Name="TP_Sexo_Genero">
@@ -3547,15 +3519,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Data" Type="DateTime" Precision="3" />
         </EntityType>
-        <EntityType Name="ASSMED_CadastroIndividualVinc">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idCadastroIndividual" Type="Guid" />
-          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Data" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="TP_EstadoCivil">
           <Key>
             <PropertyRef Name="codigo" />
@@ -3623,10 +3586,10 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="DataRegistro" Type="DateTime" Precision="3" />
           <NavigationProperty Name="CondicoesDeSaude1" Relationship="Domain.FK_CadastroIndividual_CondicoesDeSaude" FromRole="CadastroIndividual" ToRole="CondicoesDeSaude" />
           <NavigationProperty Name="EmSituacaoDeRua1" Relationship="Domain.FK_CadastroIndividual_EmSituacaoDeRua" FromRole="CadastroIndividual" ToRole="EmSituacaoDeRua" />
-          <NavigationProperty Name="IdentificacaoUsuarioCidadao1" Relationship="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" FromRole="CadastroIndividual" ToRole="IdentificacaoUsuarioCidadao" />
           <NavigationProperty Name="InformacoesSocioDemograficas1" Relationship="Domain.FK_CadastroIndividual_InformacoesSocioDemograficas" FromRole="CadastroIndividual" ToRole="InformacoesSocioDemograficas" />
           <NavigationProperty Name="SaidaCidadaoCadastro1" Relationship="Domain.FK_CadastroIndividual_SaidaCidadaoCadastro" FromRole="CadastroIndividual" ToRole="SaidaCidadaoCadastro" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_CadastroIndividual_UnicaLotacaoTransport" FromRole="CadastroIndividual" ToRole="UnicaLotacaoTransport" />
+          <NavigationProperty Name="IdentificacaoUsuarioCidadao1" Relationship="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" FromRole="CadastroIndividual" ToRole="IdentificacaoUsuarioCidadao" />
         </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
@@ -3821,46 +3784,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="codigo_higiene_pessoal" Type="Int32" Nullable="false" />
           <NavigationProperty Name="EmSituacaoDeRua" Relationship="Domain.FK_HigienePessoalSituacaoRua_EmSituacaoDeRua" FromRole="HigienePessoalSituacaoRua" ToRole="EmSituacaoDeRua" />
         </EntityType>
-        <EntityType Name="IdentificacaoUsuarioCidadao">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="nomeSocial" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="codigoIbgeMunicipioNascimento" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
-          <Property Name="desconheceNomeMae" Type="Boolean" Nullable="false" />
-          <Property Name="emailCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="nacionalidadeCidadao" Type="Int32" Nullable="false" />
-          <Property Name="nomeCidadao" Type="String" Nullable="false" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="nomeMaeCidadao" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="cnsCidadao" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
-          <Property Name="cnsResponsavelFamiliar" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
-          <Property Name="telefoneCelular" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
-          <Property Name="numeroNisPisPasep" Type="String" MaxLength="11" FixedLength="true" Unicode="true" />
-          <Property Name="paisNascimento" Type="Int32" />
-          <Property Name="racaCorCidadao" Type="Int32" Nullable="false" />
-          <Property Name="sexoCidadao" Type="Int32" Nullable="false" />
-          <Property Name="statusEhResponsavel" Type="Boolean" Nullable="false" />
-          <Property Name="etnia" Type="Int32" />
-          <Property Name="num_contrato" Type="Int32" />
-          <Property Name="nomePaiCidadao" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="desconheceNomePai" Type="Boolean" Nullable="false" />
-          <Property Name="portariaNaturalizacao" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
-          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
-          <Property Name="dataNascimentoCidadao" Type="DateTime" Precision="3" />
-          <Property Name="dtNaturalizacao" Type="DateTime" Precision="3" />
-          <Property Name="dtEntradaBrasil" Type="DateTime" Precision="3" />
-          <Property Name="RG" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CPF" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
-          <Property Name="beneficiarioBolsaFamilia" Type="Boolean" />
-          <Property Name="EstadoCivil" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="CadastroIndividual" Relationship="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" FromRole="IdentificacaoUsuarioCidadao" ToRole="CadastroIndividual" />
-          <NavigationProperty Name="Etnia1" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" FromRole="IdentificacaoUsuarioCidadao" ToRole="Etnia" />
-          <NavigationProperty Name="Paises" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Paises" FromRole="IdentificacaoUsuarioCidadao" ToRole="Paises" />
-          <NavigationProperty Name="TP_Raca_Cor" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Raca_Cor" />
-          <NavigationProperty Name="TP_Sexo" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Sexo" />
-        </EntityType>
         <EntityType Name="InformacoesSocioDemograficas">
           <Key>
             <PropertyRef Name="id" />
@@ -4052,18 +3975,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CadastroIndividual_IdentificacaoUsuarioCidadao">
-          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="0..1" />
-          <End Type="Domain.CadastroIndividual" Role="CadastroIndividual" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="IdentificacaoUsuarioCidadao">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="CadastroIndividual">
-              <PropertyRef Name="identificacaoUsuarioCidadao" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CadastroIndividual_InformacoesSocioDemograficas">
           <End Type="Domain.InformacoesSocioDemograficas" Role="InformacoesSocioDemograficas" Multiplicity="0..1" />
           <End Type="Domain.CadastroIndividual" Role="CadastroIndividual" Multiplicity="*" />
@@ -4220,56 +4131,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_IdentificacaoUsuarioCidadao_Etnia">
-          <End Type="Domain.Etnia" Role="Etnia" Multiplicity="0..1" />
-          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Etnia">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="CodEtnia" />
-            </Principal>
-            <Dependent Role="IdentificacaoUsuarioCidadao">
-              <PropertyRef Name="etnia" />
-              <PropertyRef Name="num_contrato" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IdentificacaoUsuarioCidadao_Paises">
-          <End Type="Domain.Paises" Role="Paises" Multiplicity="0..1" />
-          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Paises">
-              <PropertyRef Name="codigo" />
-            </Principal>
-            <Dependent Role="IdentificacaoUsuarioCidadao">
-              <PropertyRef Name="paisNascimento" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor">
-          <End Type="Domain.TP_Raca_Cor" Role="TP_Raca_Cor" Multiplicity="1" />
-          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TP_Raca_Cor">
-              <PropertyRef Name="id_tp_raca_cor" />
-            </Principal>
-            <Dependent Role="IdentificacaoUsuarioCidadao">
-              <PropertyRef Name="racaCorCidadao" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IdentificacaoUsuarioCidadao_TP_Sexo">
-          <End Type="Domain.TP_Sexo" Role="TP_Sexo" Multiplicity="1" />
-          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TP_Sexo">
-              <PropertyRef Name="codigo" />
-            </Principal>
-            <Dependent Role="IdentificacaoUsuarioCidadao">
-              <PropertyRef Name="sexoCidadao" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_InformacoesSocioDemograficas_TP_Identidade_Genero_Cidadao">
           <End Type="Domain.TP_Identidade_Genero_Cidadao" Role="TP_Identidade_Genero_Cidadao" Multiplicity="0..1" />
           <End Type="Domain.InformacoesSocioDemograficas" Role="InformacoesSocioDemograficas" Multiplicity="*" />
@@ -4374,6 +4235,109 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <End Type="Domain.FichaVisitaDomiciliarChild" Role="FichaVisitaDomiciliarChild" Multiplicity="*" />
           <End Type="Domain.SIGSM_MotivoVisita" Role="SIGSM_MotivoVisita" Multiplicity="*" />
         </Association>
+        <EntityType Name="IdentificacaoUsuarioCidadao">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="nomeSocial" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="codigoIbgeMunicipioNascimento" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
+          <Property Name="desconheceNomeMae" Type="Boolean" Nullable="false" />
+          <Property Name="emailCidadao" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="nacionalidadeCidadao" Type="Int32" Nullable="false" />
+          <Property Name="nomeCidadao" Type="String" Nullable="false" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="nomeMaeCidadao" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="cnsCidadao" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="cnsResponsavelFamiliar" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="telefoneCelular" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="numeroNisPisPasep" Type="String" MaxLength="11" FixedLength="true" Unicode="true" />
+          <Property Name="paisNascimento" Type="Int32" />
+          <Property Name="racaCorCidadao" Type="Int32" Nullable="false" />
+          <Property Name="sexoCidadao" Type="Int32" Nullable="false" />
+          <Property Name="statusEhResponsavel" Type="Boolean" Nullable="false" />
+          <Property Name="etnia" Type="Int32" />
+          <Property Name="num_contrato" Type="Int32" />
+          <Property Name="nomePaiCidadao" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="desconheceNomePai" Type="Boolean" Nullable="false" />
+          <Property Name="portariaNaturalizacao" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
+          <Property Name="dataNascimentoCidadao" Type="DateTime" Precision="3" />
+          <Property Name="dtNaturalizacao" Type="DateTime" Precision="3" />
+          <Property Name="dtEntradaBrasil" Type="DateTime" Precision="3" />
+          <Property Name="RG" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CPF" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+          <Property Name="beneficiarioBolsaFamilia" Type="Boolean" />
+          <Property Name="EstadoCivil" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ComplementoRG" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CadastroIndividual" Relationship="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" FromRole="IdentificacaoUsuarioCidadao" ToRole="CadastroIndividual" />
+          <NavigationProperty Name="Etnia1" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" FromRole="IdentificacaoUsuarioCidadao" ToRole="Etnia" />
+          <NavigationProperty Name="Paises" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Paises" FromRole="IdentificacaoUsuarioCidadao" ToRole="Paises" />
+          <NavigationProperty Name="TP_Raca_Cor" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Raca_Cor" />
+          <NavigationProperty Name="TP_Sexo" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Sexo" />
+        </EntityType>
+        <Association Name="FK_CadastroIndividual_IdentificacaoUsuarioCidadao">
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="0..1" />
+          <End Type="Domain.CadastroIndividual" Role="CadastroIndividual" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CadastroIndividual">
+              <PropertyRef Name="identificacaoUsuarioCidadao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IdentificacaoUsuarioCidadao_Etnia">
+          <End Type="Domain.Etnia" Role="Etnia" Multiplicity="0..1" />
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Etnia">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodEtnia" />
+            </Principal>
+            <Dependent Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="etnia" />
+              <PropertyRef Name="num_contrato" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IdentificacaoUsuarioCidadao_Paises">
+          <End Type="Domain.Paises" Role="Paises" Multiplicity="0..1" />
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paises">
+              <PropertyRef Name="codigo" />
+            </Principal>
+            <Dependent Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="paisNascimento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor">
+          <End Type="Domain.TP_Raca_Cor" Role="TP_Raca_Cor" Multiplicity="1" />
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TP_Raca_Cor">
+              <PropertyRef Name="id_tp_raca_cor" />
+            </Principal>
+            <Dependent Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="racaCorCidadao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IdentificacaoUsuarioCidadao_TP_Sexo">
+          <End Type="Domain.TP_Sexo" Role="TP_Sexo" Multiplicity="1" />
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TP_Sexo">
+              <PropertyRef Name="codigo" />
+            </Principal>
+            <Dependent Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="sexoCidadao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4387,6 +4351,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="VW_IdentificacaoUsuarioCidadao">
             <EntityTypeMapping TypeName="Domain.VW_IdentificacaoUsuarioCidadao">
               <MappingFragment StoreEntitySet="VW_IdentificacaoUsuarioCidadao">
+                <ScalarProperty Name="ComplementoRG" ColumnName="ComplementoRG" />
                 <ScalarProperty Name="beneficiarioBolsaFamilia" ColumnName="beneficiarioBolsaFamilia" />
                 <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
                 <ScalarProperty Name="CPF" ColumnName="CPF" />
@@ -4507,6 +4472,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="ASSMED_CadastroDocPessoal">
             <EntityTypeMapping TypeName="Domain.ASSMED_CadastroDocPessoal">
               <MappingFragment StoreEntitySet="ASSMED_CadastroDocPessoal">
+                <ScalarProperty Name="ComplementoRG" ColumnName="ComplementoRG" />
                 <ScalarProperty Name="NumIP" ColumnName="NumIP" />
                 <ScalarProperty Name="DtSistema" ColumnName="DtSistema" />
                 <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
@@ -5098,6 +5064,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="TP_Sexo">
             <EntityTypeMapping TypeName="Domain.TP_Sexo">
               <MappingFragment StoreEntitySet="TP_Sexo">
+                <ScalarProperty Name="sigla" ColumnName="sigla" />
                 <ScalarProperty Name="observacao" ColumnName="observacao" />
                 <ScalarProperty Name="descricao" ColumnName="descricao" />
                 <ScalarProperty Name="codigo" ColumnName="codigo" />
@@ -5284,16 +5251,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="idCadastroDomiciliar" ColumnName="idCadastroDomiciliar" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ASSMED_CadastroIndividualVinc">
-            <EntityTypeMapping TypeName="Domain.ASSMED_CadastroIndividualVinc">
-              <MappingFragment StoreEntitySet="ASSMED_CadastroIndividualVinc">
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="idCadastroIndividual" ColumnName="idCadastroIndividual" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -5538,42 +5495,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="IdentificacaoUsuarioCidadao">
-            <EntityTypeMapping TypeName="Domain.IdentificacaoUsuarioCidadao">
-              <MappingFragment StoreEntitySet="IdentificacaoUsuarioCidadao">
-                <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
-                <ScalarProperty Name="beneficiarioBolsaFamilia" ColumnName="beneficiarioBolsaFamilia" />
-                <ScalarProperty Name="CPF" ColumnName="CPF" />
-                <ScalarProperty Name="RG" ColumnName="RG" />
-                <ScalarProperty Name="dtEntradaBrasil" ColumnName="dtEntradaBrasil" />
-                <ScalarProperty Name="dtNaturalizacao" ColumnName="dtNaturalizacao" />
-                <ScalarProperty Name="dataNascimentoCidadao" ColumnName="dataNascimentoCidadao" />
-                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
-                <ScalarProperty Name="microarea" ColumnName="microarea" />
-                <ScalarProperty Name="portariaNaturalizacao" ColumnName="portariaNaturalizacao" />
-                <ScalarProperty Name="desconheceNomePai" ColumnName="desconheceNomePai" />
-                <ScalarProperty Name="nomePaiCidadao" ColumnName="nomePaiCidadao" />
-                <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
-                <ScalarProperty Name="etnia" ColumnName="etnia" />
-                <ScalarProperty Name="statusEhResponsavel" ColumnName="statusEhResponsavel" />
-                <ScalarProperty Name="sexoCidadao" ColumnName="sexoCidadao" />
-                <ScalarProperty Name="racaCorCidadao" ColumnName="racaCorCidadao" />
-                <ScalarProperty Name="paisNascimento" ColumnName="paisNascimento" />
-                <ScalarProperty Name="numeroNisPisPasep" ColumnName="numeroNisPisPasep" />
-                <ScalarProperty Name="telefoneCelular" ColumnName="telefoneCelular" />
-                <ScalarProperty Name="cnsResponsavelFamiliar" ColumnName="cnsResponsavelFamiliar" />
-                <ScalarProperty Name="cnsCidadao" ColumnName="cnsCidadao" />
-                <ScalarProperty Name="nomeMaeCidadao" ColumnName="nomeMaeCidadao" />
-                <ScalarProperty Name="nomeCidadao" ColumnName="nomeCidadao" />
-                <ScalarProperty Name="nacionalidadeCidadao" ColumnName="nacionalidadeCidadao" />
-                <ScalarProperty Name="emailCidadao" ColumnName="emailCidadao" />
-                <ScalarProperty Name="desconheceNomeMae" ColumnName="desconheceNomeMae" />
-                <ScalarProperty Name="codigoIbgeMunicipioNascimento" ColumnName="codigoIbgeMunicipioNascimento" />
-                <ScalarProperty Name="nomeSocial" ColumnName="nomeSocial" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="InformacoesSocioDemograficas">
             <EntityTypeMapping TypeName="Domain.InformacoesSocioDemograficas">
               <MappingFragment StoreEntitySet="InformacoesSocioDemograficas">
@@ -5673,6 +5594,43 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               <ScalarProperty Name="childId" ColumnName="childId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="IdentificacaoUsuarioCidadao">
+            <EntityTypeMapping TypeName="Domain.IdentificacaoUsuarioCidadao">
+              <MappingFragment StoreEntitySet="IdentificacaoUsuarioCidadao">
+                <ScalarProperty Name="ComplementoRG" ColumnName="ComplementoRG" />
+                <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
+                <ScalarProperty Name="beneficiarioBolsaFamilia" ColumnName="beneficiarioBolsaFamilia" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="RG" ColumnName="RG" />
+                <ScalarProperty Name="dtEntradaBrasil" ColumnName="dtEntradaBrasil" />
+                <ScalarProperty Name="dtNaturalizacao" ColumnName="dtNaturalizacao" />
+                <ScalarProperty Name="dataNascimentoCidadao" ColumnName="dataNascimentoCidadao" />
+                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
+                <ScalarProperty Name="microarea" ColumnName="microarea" />
+                <ScalarProperty Name="portariaNaturalizacao" ColumnName="portariaNaturalizacao" />
+                <ScalarProperty Name="desconheceNomePai" ColumnName="desconheceNomePai" />
+                <ScalarProperty Name="nomePaiCidadao" ColumnName="nomePaiCidadao" />
+                <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
+                <ScalarProperty Name="etnia" ColumnName="etnia" />
+                <ScalarProperty Name="statusEhResponsavel" ColumnName="statusEhResponsavel" />
+                <ScalarProperty Name="sexoCidadao" ColumnName="sexoCidadao" />
+                <ScalarProperty Name="racaCorCidadao" ColumnName="racaCorCidadao" />
+                <ScalarProperty Name="paisNascimento" ColumnName="paisNascimento" />
+                <ScalarProperty Name="numeroNisPisPasep" ColumnName="numeroNisPisPasep" />
+                <ScalarProperty Name="telefoneCelular" ColumnName="telefoneCelular" />
+                <ScalarProperty Name="cnsResponsavelFamiliar" ColumnName="cnsResponsavelFamiliar" />
+                <ScalarProperty Name="cnsCidadao" ColumnName="cnsCidadao" />
+                <ScalarProperty Name="nomeMaeCidadao" ColumnName="nomeMaeCidadao" />
+                <ScalarProperty Name="nomeCidadao" ColumnName="nomeCidadao" />
+                <ScalarProperty Name="nacionalidadeCidadao" ColumnName="nacionalidadeCidadao" />
+                <ScalarProperty Name="emailCidadao" ColumnName="emailCidadao" />
+                <ScalarProperty Name="desconheceNomeMae" ColumnName="desconheceNomeMae" />
+                <ScalarProperty Name="codigoIbgeMunicipioNascimento" ColumnName="codigoIbgeMunicipioNascimento" />
+                <ScalarProperty Name="nomeSocial" ColumnName="nomeSocial" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

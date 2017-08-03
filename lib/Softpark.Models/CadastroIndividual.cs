@@ -14,9 +14,8 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class CadastroIndividual
+    
+public partial class CadastroIndividual
 {
 
     public long idAuto { get; set; }
@@ -57,13 +56,13 @@ using System;
 
     public virtual EmSituacaoDeRua EmSituacaoDeRua1 { get; set; }
 
-    public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao1 { get; set; }
-
     public virtual InformacoesSocioDemograficas InformacoesSocioDemograficas1 { get; set; }
 
     public virtual SaidaCidadaoCadastro SaidaCidadaoCadastro1 { get; set; }
 
     public virtual UnicaLotacaoTransport UnicaLotacaoTransport { get; set; }
+
+    public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao1 { get; set; }
 
 }
 

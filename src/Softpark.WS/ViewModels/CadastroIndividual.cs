@@ -570,6 +570,10 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         public string RG { get; set; } = null;
         /// <summary>
+        /// RG do cidadão
+        /// </summary>
+        public string ComplementoRG { get; set; } = null;
+        /// <summary>
         /// CPF do cidadão
         /// </summary>
         public string CPF { get; set; } = null;
@@ -643,6 +647,7 @@ namespace Softpark.WS.ViewModels
             microarea = model.microarea;
             stForaArea = model.stForaArea ?? false;
             RG = model.RG;
+            ComplementoRG = model.ComplementoRG;
             CPF = model.CPF;
             beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
             EstadoCivil = model.EstadoCivil;
@@ -682,6 +687,7 @@ namespace Softpark.WS.ViewModels
             microarea = model.microarea;
             stForaArea = model.stForaArea;
             RG = model.RG;
+            ComplementoRG = model.ComplementoRG;
             CPF = model.CPF;
             beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
             EstadoCivil = model.EstadoCivil;
@@ -721,6 +727,7 @@ namespace Softpark.WS.ViewModels
             iuc.microarea = microarea;
             iuc.stForaArea = stForaArea;
             iuc.RG = RG;
+            iuc.ComplementoRG = ComplementoRG;
             iuc.CPF = CPF;
             iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
             iuc.EstadoCivil = EstadoCivil;

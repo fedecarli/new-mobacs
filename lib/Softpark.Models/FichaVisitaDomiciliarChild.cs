@@ -12,8 +12,7 @@
 namespace Softpark.Models
 {
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    using System;
+using System;
     using System.Collections.Generic;
     
 public partial class FichaVisitaDomiciliarChild
