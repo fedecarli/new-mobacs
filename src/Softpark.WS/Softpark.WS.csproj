@@ -439,6 +439,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="installation\api-1.3-final.sql" />
+    <Content Include="installation\api-1.6.0.1.sql" />
     <None Include="installation\lock" />
     <Content Include="key.snk" />
     <Content Include="pk.snk" />
