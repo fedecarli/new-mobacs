@@ -107,6 +107,9 @@
     <Compile Include="CadastroIndividual.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="CadastroIndividual_recusa.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="Cidade.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

@@ -213,6 +213,8 @@ public partial class DomainContainer : DbContext
 
     public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
 
+    public virtual DbSet<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
+
 
     public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
     {

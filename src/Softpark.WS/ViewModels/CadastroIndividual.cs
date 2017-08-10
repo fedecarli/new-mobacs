@@ -1,5 +1,4 @@
-﻿using Softpark.Infrastructure.Extras;
-using Softpark.Models;
+﻿using Softpark.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -117,11 +116,16 @@ namespace Softpark.WS.ViewModels
         public string Justificativa { get; set; } = null;
 
         /// <summary>
+        /// Em caso de recusa, preencher os dados de recusa
+        /// </summary>
+        public CadastroIndividualRecusaViewModel Recusa { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        internal async Task<CadastroIndividual> ToModel(DomainContainer domain)
+        internal virtual async Task<CadastroIndividual> ToModel(DomainContainer domain)
         {
             var ci = domain.CadastroIndividual.Create();
 
@@ -138,6 +142,12 @@ namespace Softpark.WS.ViewModels
             ci.longitude = longitude;
             ci.Justificativa = Justificativa;
             ci.DataRegistro = DataRegistro;
+
+            if (Recusa != null)
+            {
+                var rec = Recusa.ToModel(domain, ci);
+                ci.CadastroIndividual_recusa.Add(rec);
+            }
 
             return ci;
         }
@@ -201,6 +211,102 @@ namespace Softpark.WS.ViewModels
             vm.ApplyModel(model);
 
             return vm;
+        }
+    }
+
+    /// <summary>
+    /// Endereço da recusa
+    /// </summary>
+    public class CadastroIndividualRecusaViewModel
+    {
+        /// <summary>
+        /// Preenchido na consulta
+        /// </summary>
+        public int? Id { get; set; }
+
+        /// <summary>
+        /// Id do Cadastro Individual
+        /// </summary>
+        public Guid? IdCadastroIndividual { get; set; }
+
+        /// <summary>
+        /// Bairro
+        /// </summary>
+        [Required]
+        public string Bairro { get; set; }
+
+        /// <summary>
+        /// Cep
+        /// </summary>
+        [Required]
+        public string Cep { get; set; }
+
+        /// <summary>
+        /// Codigo IBGE do Municipio
+        /// </summary>
+        [Required]
+        public string CodigoIbgeMunicipio { get; set; }
+
+        /// <summary>
+        /// Complemento
+        /// </summary>
+        public string Complemento { get; set; }
+
+        /// <summary>
+        /// Logradouro
+        /// </summary>
+        [Required]
+        public string NomeLogradouro { get; set; }
+
+        /// <summary>
+        /// Número
+        /// </summary>
+        public string Numero { get; set; }
+
+        /// <summary>
+        /// Número DNE da UF
+        /// </summary>
+        [Required]
+        public string NumeroDneUf { get; set; }
+
+        /// <summary>
+        /// Residência sem número?
+        /// </summary>
+        [Required]
+        public bool StSemNumero { get; set; }
+
+        /// <summary>
+        /// Ponto de referência da residência
+        /// </summary>
+        public string PontoReferencia { get; set; }
+
+        /// <summary>
+        /// Data da recusa
+        /// </summary>
+        [Required]
+        public DateTime Data { get; set; }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <returns></returns>
+        public CadastroIndividual_recusa ToModel(DomainContainer domain, CadastroIndividual cad)
+        {
+            var model = domain.CadastroIndividual_recusa.Create();
+
+            model.CadastroIndividual = cad;
+            model.bairro = Bairro;
+            model.cep = Cep;
+            model.codigoIbgeMunicipio = CodigoIbgeMunicipio;
+            model.complemento = Complemento;
+            model.Data = Data;
+            model.nomeLogradouro = NomeLogradouro;
+            model.numero = Numero;
+            model.numeroDneUf = NumeroDneUf;
+            model.pontoReferencia = PontoReferencia;
+            model.stSemNumero = StSemNumero;
+
+            return model;
         }
     }
 
@@ -649,7 +755,7 @@ namespace Softpark.WS.ViewModels
             RG = model.RG;
             ComplementoRG = model.ComplementoRG;
             CPF = model.CPF;
-            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
+            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia ?? false;
             EstadoCivil = model.EstadoCivil;
         }
 
@@ -689,7 +795,7 @@ namespace Softpark.WS.ViewModels
             RG = model.RG;
             ComplementoRG = model.ComplementoRG;
             CPF = model.CPF;
-            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia??false;
+            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia ?? false;
             EstadoCivil = model.EstadoCivil;
         }
 

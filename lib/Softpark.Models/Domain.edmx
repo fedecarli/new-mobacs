@@ -67,6 +67,23 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_Cadastro
           <Property Name="Justificativa" Type="varchar" MaxLength="500" />
           <Property Name="DataRegistro" Type="datetime" />
         </EntityType>
+        <EntityType Name="CadastroIndividual_recusa">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idCadastroIndividual" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="bairro" Type="nvarchar" MaxLength="77" Nullable="false" />
+          <Property Name="cep" Type="nchar" MaxLength="8" Nullable="false" />
+          <Property Name="codigoIbgeMunicipio" Type="nchar" MaxLength="7" Nullable="false" />
+          <Property Name="complemento" Type="nvarchar" MaxLength="30" />
+          <Property Name="nomeLogradouro" Type="nvarchar" MaxLength="77" Nullable="false" />
+          <Property Name="numero" Type="nvarchar" MaxLength="10" />
+          <Property Name="numeroDneUf" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="stSemNumero" Type="bit" Nullable="false" />
+          <Property Name="pontoReferencia" Type="nvarchar" MaxLength="40" />
+          <Property Name="Data" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
             <PropertyRef Name="id" />
@@ -1454,6 +1471,18 @@ warning 6035: The relationship 'FK_AnimalNoDomicilio_TP_Animais' has columns tha
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CadastroIndividual_recusa_Cadastro">
+          <End Role="CadastroIndividual" Type="Self.CadastroIndividual" Multiplicity="1" />
+          <End Role="CadastroIndividual_recusa" Type="Self.CadastroIndividual_recusa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CadastroIndividual">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CadastroIndividual_recusa">
+              <PropertyRef Name="idCadastroIndividual" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CadastroIndividual_SaidaCidadaoCadastro">
           <End Role="SaidaCidadaoCadastro" Type="Self.SaidaCidadaoCadastro" Multiplicity="0..1" />
           <End Role="CadastroIndividual" Type="Self.CadastroIndividual" Multiplicity="*" />
@@ -1884,6 +1913,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="AnimalNoDomicilio" EntityType="Self.AnimalNoDomicilio" Schema="api" store:Type="Tables" />
           <EntitySet Name="CadastroDomiciliar" EntityType="Self.CadastroDomiciliar" Schema="api" store:Type="Tables" />
           <EntitySet Name="CadastroIndividual" EntityType="Self.CadastroIndividual" Schema="api" store:Type="Tables" />
+          <EntitySet Name="CadastroIndividual_recusa" EntityType="Self.CadastroIndividual_recusa" Schema="api" store:Type="Tables" />
           <EntitySet Name="CondicaoMoradia" EntityType="Self.CondicaoMoradia" Schema="api" store:Type="Tables" />
           <EntitySet Name="CondicoesDeSaude" EntityType="Self.CondicoesDeSaude" Schema="api" store:Type="Tables" />
           <EntitySet Name="DeficienciasCidadao" EntityType="Self.DeficienciasCidadao" Schema="api" store:Type="Tables" />
@@ -2130,6 +2160,10 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK_CadastroIndividual_InformacoesSocioDemograficas" Association="Self.FK_CadastroIndividual_InformacoesSocioDemograficas">
             <End Role="InformacoesSocioDemograficas" EntitySet="InformacoesSocioDemograficas" />
             <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CadastroIndividual_recusa_Cadastro" Association="Self.FK_CadastroIndividual_recusa_Cadastro">
+            <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
+            <End Role="CadastroIndividual_recusa" EntitySet="CadastroIndividual_recusa" />
           </AssociationSet>
           <AssociationSet Name="FK_CadastroIndividual_SaidaCidadaoCadastro" Association="Self.FK_CadastroIndividual_SaidaCidadaoCadastro">
             <End Role="SaidaCidadaoCadastro" EntitySet="SaidaCidadaoCadastro" />
@@ -2521,6 +2555,11 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_TP_Sexo" Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo">
             <End Role="TP_Sexo" EntitySet="TP_Sexo" />
             <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+          </AssociationSet>
+          <EntitySet Name="CadastroIndividual_recusa" EntityType="Domain.CadastroIndividual_recusa" />
+          <AssociationSet Name="FK_CadastroIndividual_recusa_Cadastro" Association="Domain.FK_CadastroIndividual_recusa_Cadastro">
+            <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
+            <End Role="CadastroIndividual_recusa" EntitySet="CadastroIndividual_recusa" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
@@ -3590,6 +3629,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="SaidaCidadaoCadastro1" Relationship="Domain.FK_CadastroIndividual_SaidaCidadaoCadastro" FromRole="CadastroIndividual" ToRole="SaidaCidadaoCadastro" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_CadastroIndividual_UnicaLotacaoTransport" FromRole="CadastroIndividual" ToRole="UnicaLotacaoTransport" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao1" Relationship="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" FromRole="CadastroIndividual" ToRole="IdentificacaoUsuarioCidadao" />
+          <NavigationProperty Name="CadastroIndividual_recusa" Relationship="Domain.FK_CadastroIndividual_recusa_Cadastro" FromRole="CadastroIndividual" ToRole="CadastroIndividual_recusa" />
         </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
@@ -4335,6 +4375,36 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Principal>
             <Dependent Role="IdentificacaoUsuarioCidadao">
               <PropertyRef Name="sexoCidadao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CadastroIndividual_recusa">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idCadastroIndividual" Type="Guid" Nullable="false" />
+          <Property Name="bairro" Type="String" Nullable="false" MaxLength="77" FixedLength="false" Unicode="true" />
+          <Property Name="cep" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="true" />
+          <Property Name="codigoIbgeMunicipio" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="true" />
+          <Property Name="complemento" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="nomeLogradouro" Type="String" Nullable="false" MaxLength="77" FixedLength="false" Unicode="true" />
+          <Property Name="numero" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="numeroDneUf" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="stSemNumero" Type="Boolean" Nullable="false" />
+          <Property Name="pontoReferencia" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CadastroIndividual" Relationship="Domain.FK_CadastroIndividual_recusa_Cadastro" FromRole="CadastroIndividual_recusa" ToRole="CadastroIndividual" />
+        </EntityType>
+        <Association Name="FK_CadastroIndividual_recusa_Cadastro">
+          <End Type="Domain.CadastroIndividual" Role="CadastroIndividual" Multiplicity="1" />
+          <End Type="Domain.CadastroIndividual_recusa" Role="CadastroIndividual_recusa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CadastroIndividual">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CadastroIndividual_recusa">
+              <PropertyRef Name="idCadastroIndividual" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5627,6 +5697,24 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="desconheceNomeMae" ColumnName="desconheceNomeMae" />
                 <ScalarProperty Name="codigoIbgeMunicipioNascimento" ColumnName="codigoIbgeMunicipioNascimento" />
                 <ScalarProperty Name="nomeSocial" ColumnName="nomeSocial" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CadastroIndividual_recusa">
+            <EntityTypeMapping TypeName="Domain.CadastroIndividual_recusa">
+              <MappingFragment StoreEntitySet="CadastroIndividual_recusa">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="pontoReferencia" ColumnName="pontoReferencia" />
+                <ScalarProperty Name="stSemNumero" ColumnName="stSemNumero" />
+                <ScalarProperty Name="numeroDneUf" ColumnName="numeroDneUf" />
+                <ScalarProperty Name="numero" ColumnName="numero" />
+                <ScalarProperty Name="nomeLogradouro" ColumnName="nomeLogradouro" />
+                <ScalarProperty Name="complemento" ColumnName="complemento" />
+                <ScalarProperty Name="codigoIbgeMunicipio" ColumnName="codigoIbgeMunicipio" />
+                <ScalarProperty Name="cep" ColumnName="cep" />
+                <ScalarProperty Name="bairro" ColumnName="bairro" />
+                <ScalarProperty Name="idCadastroIndividual" ColumnName="idCadastroIndividual" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

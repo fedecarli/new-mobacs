@@ -18,6 +18,15 @@ using System;
 public partial class CadastroIndividual
 {
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public CadastroIndividual()
+    {
+
+        this.CadastroIndividual_recusa = new HashSet<CadastroIndividual_recusa>();
+
+    }
+
+
     public long idAuto { get; set; }
 
     public System.Guid id { get; set; }
@@ -63,6 +72,10 @@ public partial class CadastroIndividual
     public virtual UnicaLotacaoTransport UnicaLotacaoTransport { get; set; }
 
     public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao1 { get; set; }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+
+    public virtual ICollection<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
 
 }
 
