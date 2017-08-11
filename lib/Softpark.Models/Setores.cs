@@ -14,9 +14,8 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class Setores
+    
+public partial class Setores
 {
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

@@ -455,7 +455,7 @@ namespace Softpark.WS.Controllers.Api
                 await Domain.SaveChangesAsync();
                 
                 // finaliza o token
-                Domain.PR_ProcessarFichasAPI(origem.token);
+                //Domain.PR_ProcessarFichasAPI(origem.token);
             }
             catch (Exception e)
             {
@@ -536,7 +536,7 @@ namespace Softpark.WS.Controllers.Api
                 {
                     // finaliza o token sem processar fichas
                     origem.finalizado = true;
-                    await Domain.SaveChangesAsync();
+                    //await Domain.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
