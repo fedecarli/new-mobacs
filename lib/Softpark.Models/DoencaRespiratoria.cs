@@ -14,9 +14,8 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class DoencaRespiratoria
+    
+public partial class DoencaRespiratoria
 {
 
     public int id_tp_doenca_respiratoria { get; set; }

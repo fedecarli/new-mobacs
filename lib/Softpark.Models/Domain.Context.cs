@@ -21,8 +21,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class DomainContainer : DbContext
+public partial class DomainContainer : DbContext
 {
     public DomainContainer()
         : base("name=DomainContainer")
@@ -166,8 +165,6 @@ using System.Linq;
 
     public virtual DbSet<ASSMED_CadastroDomiciliarVinc> ASSMED_CadastroDomiciliarVinc { get; set; }
 
-    public virtual DbSet<ASSMED_CadastroIndividualVinc> ASSMED_CadastroIndividualVinc { get; set; }
-
     public virtual DbSet<TP_EstadoCivil> TP_EstadoCivil { get; set; }
 
     public virtual DbSet<AnimalNoDomicilio> AnimalNoDomicilio { get; set; }
@@ -200,8 +197,6 @@ using System.Linq;
 
     public virtual DbSet<HigienePessoalSituacaoRua> HigienePessoalSituacaoRua { get; set; }
 
-    public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
-
     public virtual DbSet<InformacoesSocioDemograficas> InformacoesSocioDemograficas { get; set; }
 
     public virtual DbSet<InstituicaoPermanencia> InstituicaoPermanencia { get; set; }
@@ -215,6 +210,10 @@ using System.Linq;
     public virtual DbSet<ResponsavelPorCrianca> ResponsavelPorCrianca { get; set; }
 
     public virtual DbSet<SaidaCidadaoCadastro> SaidaCidadaoCadastro { get; set; }
+
+    public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
+
+    public virtual DbSet<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
 
 
     public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)

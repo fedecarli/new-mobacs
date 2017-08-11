@@ -14,10 +14,18 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class CadastroIndividual
+    
+public partial class CadastroIndividual
 {
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public CadastroIndividual()
+    {
+
+        this.CadastroIndividual_recusa = new HashSet<CadastroIndividual_recusa>();
+
+    }
+
 
     public long idAuto { get; set; }
 
@@ -57,13 +65,17 @@ using System;
 
     public virtual EmSituacaoDeRua EmSituacaoDeRua1 { get; set; }
 
-    public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao1 { get; set; }
-
     public virtual InformacoesSocioDemograficas InformacoesSocioDemograficas1 { get; set; }
 
     public virtual SaidaCidadaoCadastro SaidaCidadaoCadastro1 { get; set; }
 
     public virtual UnicaLotacaoTransport UnicaLotacaoTransport { get; set; }
+
+    public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao1 { get; set; }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+
+    public virtual ICollection<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
 
 }
 

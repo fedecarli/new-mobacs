@@ -14,10 +14,9 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class ASSMED_CadastroDocPessoal
-    {
+    
+public partial class ASSMED_CadastroDocPessoal
+{
 
     public int NumContrato { get; set; }
 
@@ -47,11 +46,12 @@ using System;
 
     public string NumIP { get; set; }
 
+    public string ComplementoRG { get; set; }
+
 
 
     public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
 
-    }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+}
 
 }

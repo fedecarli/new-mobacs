@@ -14,9 +14,8 @@ namespace Softpark.Models
 
 using System;
     using System.Collections.Generic;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public partial class IdentificacaoUsuarioCidadao
+    
+public partial class IdentificacaoUsuarioCidadao
 {
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -87,6 +86,8 @@ using System;
     public Nullable<bool> beneficiarioBolsaFamilia { get; set; }
 
     public string EstadoCivil { get; set; }
+
+    public string ComplementoRG { get; set; }
 
 
 

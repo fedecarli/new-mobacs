@@ -15,19 +15,12 @@ namespace Softpark.Models
 using System;
     using System.Collections.Generic;
     
-public partial class EnderecoLocalPermanencia
+public partial class CadastroIndividual_recusa
 {
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public EnderecoLocalPermanencia()
-    {
+    public int id { get; set; }
 
-        this.CadastroDomiciliar = new HashSet<CadastroDomiciliar>();
-
-    }
-
-
-    public System.Guid id { get; set; }
+    public System.Guid idCadastroIndividual { get; set; }
 
     public string bairro { get; set; }
 
@@ -43,25 +36,15 @@ public partial class EnderecoLocalPermanencia
 
     public string numeroDneUf { get; set; }
 
-    public string telefoneContato { get; set; }
-
-    public string telefoneResidencia { get; set; }
-
-    public string tipoLogradouroNumeroDne { get; set; }
-
     public bool stSemNumero { get; set; }
 
     public string pontoReferencia { get; set; }
 
-    public string microarea { get; set; }
-
-    public bool stForaArea { get; set; }
+    public System.DateTime Data { get; set; }
 
 
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-
-    public virtual ICollection<CadastroDomiciliar> CadastroDomiciliar { get; set; }
+    public virtual CadastroIndividual CadastroIndividual { get; set; }
 
 }
 
