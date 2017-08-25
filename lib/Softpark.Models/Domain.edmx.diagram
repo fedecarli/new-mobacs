@@ -4,17 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="75" >
+      <Diagram DiagramId="6f096bbbc1604b5f8101293f850777bc" Name="Diagram1" ZoomLevel="71" >
         <EntityTypeShape EntityType="Domain.VW_IdentificacaoUsuarioCidadao" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_profissional_cns" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_ultimo_cadastroDomiciliar" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="Domain.VW_ultimo_cadastroIndividual" Width="1.5" PointX="2.75" PointY="4.75" />
         <EntityTypeShape EntityType="Domain.TipoOrigem" Width="1.5" PointX="5.75" PointY="11.875" />
         <EntityTypeShape EntityType="Domain.UnicaLotacaoTransport" Width="1.5" PointX="10.25" PointY="11" />
-        <EntityTypeShape EntityType="Domain.ASSMED_Cadastro" Width="1.5" PointX="0.75" PointY="23.75" />
         <EntityTypeShape EntityType="Domain.ASSMED_CadastroDocPessoal" Width="1.5" PointX="3" PointY="31.25" />
         <EntityTypeShape EntityType="Domain.ASSMED_CadastroPF" Width="1.5" PointX="5.75" PointY="14.75" />
-        <EntityTypeShape EntityType="Domain.ASSMED_Endereco" Width="1.5" PointX="3" PointY="15.75" />
         <EntityTypeShape EntityType="Domain.ASSMED_PesFisica" Width="1.5" PointX="3" PointY="21.75" />
         <EntityTypeShape EntityType="Domain.Cidade" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="Domain.Etnia" Width="1.5" PointX="8" PointY="40.25" />
@@ -64,9 +62,6 @@
         <EntityTypeShape EntityType="Domain.TipoLogradouro" Width="1.5" PointX="23.75" PointY="15.75" />
         <EntityTypeShape EntityType="Domain.TP_Conduta" Width="1.5" PointX="23.75" PointY="18.75" />
         <EntityTypeShape EntityType="Domain.TP_Nasf" Width="1.5" PointX="23.75" PointY="21.75" />
-        <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__0A7378A9" />
-        <AssociationConnector Association="Domain.FK__ASSMED_Endereco__6CE315C2" />
-        <AssociationConnector Association="Domain.FK__ASSMED_PesFisica__56F3D4A3" />
         <AssociationConnector Association="Domain.FK_ProfCidadaoVinc" />
         <AssociationConnector Association="Domain.FK_SetoresINEs_Setores" />
         <EntityTypeShape EntityType="Domain.SIGSM_MotivoVisita" Width="1.5" PointX="5.375" PointY="24.75" />
@@ -88,7 +83,6 @@
         <EntityTypeShape EntityType="Domain.DoencaRespiratoria" Width="1.5" PointX="12.5" PointY="21" />
         <EntityTypeShape EntityType="Domain.DoencaRins" Width="1.5" PointX="12.5" PointY="51.75" />
         <EntityTypeShape EntityType="Domain.EmSituacaoDeRua" Width="1.5" PointX="10.25" PointY="47" />
-        <EntityTypeShape EntityType="Domain.EnderecoLocalPermanencia" Width="1.5" PointX="13.25" PointY="28.625" />
         <EntityTypeShape EntityType="Domain.FamiliaRow" Width="1.5" PointX="26.75" PointY="10.5" />
         <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarChild" Width="1.5" PointX="14.75" PointY="22.625" />
         <EntityTypeShape EntityType="Domain.FichaVisitaDomiciliarMaster" Width="1.5" PointX="12.5" PointY="24" />
@@ -102,7 +96,6 @@
         <EntityTypeShape EntityType="Domain.SaidaCidadaoCadastro" Width="1.5" PointX="10.25" PointY="51.5" />
         <AssociationConnector Association="Domain.FK_AnimalNoDomicilio_CadastroDomiciliar" />
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_CondicaoMoradia" />
-        <AssociationConnector Association="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia" />
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_InstituicaoPermanencia" />
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_TP_Imovel" />
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_UnicaLotacaoTransport" />
@@ -131,14 +124,27 @@
         <AssociationConnector Association="Domain.FK_SaidaCidadaoCadastro_TP_Motivo_Saida" />
         <AssociationConnector Association="Domain.Familias" />
         <AssociationConnector Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita" />
-        <EntityTypeShape EntityType="Domain.IdentificacaoUsuarioCidadao" Width="1.5" PointX="15.25" PointY="39.125" />
+        <EntityTypeShape EntityType="Domain.CadastroIndividual_recusa" Width="1.5" PointX="14.75" PointY="48" />
+        <AssociationConnector Association="Domain.FK_CadastroIndividual_recusa_Cadastro" />
+        <EntityTypeShape EntityType="Domain.EnderecoLocalPermanencia" Width="1.5" PointX="21.125" PointY="39.5" />
+        <EntityTypeShape EntityType="Domain.IdentificacaoUsuarioCidadao" Width="1.5" PointX="16.625" PointY="37.875" />
+        <EntityTypeShape EntityType="Domain.ASSMED_Cadastro" Width="1.5" PointX="18.875" PointY="39.625" />
+        <EntityTypeShape EntityType="Domain.ASSMED_Endereco" Width="1.5" PointX="23.375" PointY="39.25" />
+        <EntityTypeShape EntityType="Domain.VW_Domicilios" Width="1.5" PointX="0.75" PointY="15.75" />
+        <AssociationConnector Association="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia" />
         <AssociationConnector Association="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao" />
+        <AssociationConnector Association="Domain.FK__ASSMED_En__IdFic__3B8EDEAC" />
+        <AssociationConnector Association="Domain.FK_Local_Endereco" />
+        <AssociationConnector Association="Domain.FK_Local_Endereco_Cadastro" />
+        <AssociationConnector Association="Domain.FK__ASSMED_Ca__IdFic__3A9ABA73" />
+        <AssociationConnector Association="Domain.FK_Identificacao_Cadastro" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Paises" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" />
-        <EntityTypeShape EntityType="Domain.CadastroIndividual_recusa" Width="1.5" PointX="14.75" PointY="48" />
-        <AssociationConnector Association="Domain.FK_CadastroIndividual_recusa_Cadastro" />
+        <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__719CDDE7" />
+        <AssociationConnector Association="Domain.FK__ASSMED_Endereco__5649C92D" />
+        <AssociationConnector Association="Domain.FK__ASSMED_PesFisica__7BE56230" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -348,6 +348,9 @@
     <Compile Include="UnicaLotacaoTransport.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_Domicilios.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

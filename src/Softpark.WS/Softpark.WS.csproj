@@ -341,6 +341,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Services\" />
     <Folder Include="Views\Helpers\" />
   </ItemGroup>
   <ItemGroup>
@@ -380,12 +381,17 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="ASPSessionVar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controllers\Api\DatabaseSupplyController.cs" />
+    <Compile Include="Controllers\Api\SIGSMController.cs" />
     <Compile Include="Controllers\Api\ProcessosController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
+    <Compile Include="ViewModels\SIGSM\CadastroIndividual.cs" />
     <Compile Include="ViewModels\UsuarioLoginViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -445,6 +451,7 @@
     <Content Include="pk.snk" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <EmbeddedResource Include="SwaggerExtensions\loadTest.js" />
+    <Content Include="SessionVar.asp" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -489,6 +496,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\lib\DataTables.AspNet.WebApi2\DataTables.AspNet.WebApi2.csproj">
+      <Project>{1d71601c-f383-4ff0-b409-c01140247525}</Project>
+      <Name>DataTables.AspNet.WebApi2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\lib\Softpark.Infrastructure\Softpark.Infrastructure.csproj">
       <Project>{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}</Project>
       <Name>Softpark.Infrastructure</Name>
@@ -528,12 +539,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/sigsm/v2/ESUS/fichas</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

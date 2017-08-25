@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.Models", "lib\Soft
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.Infrastructure", "lib\Softpark.Infrastructure\Softpark.Infrastructure.csproj", "{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTables.AspNet.WebApi2", "lib\DataTables.AspNet.WebApi2\DataTables.AspNet.WebApi2.csproj", "{1D71601C-F383-4FF0-B409-C01140247525}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,12 @@ Global
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Santana|Any CPU.Build.0 = Santana|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.Santana|Any CPU.ActiveCfg = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.Santana|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +54,6 @@ Global
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56} = {33F4AD7F-D10D-4139-85EF-5188FF5AE42B}
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
+		{1D71601C-F383-4FF0-B409-C01140247525} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 	EndGlobalSection
 EndGlobal

@@ -497,3 +497,211 @@ ERROR 2017-07-18 16:28:02,918 235329ms ptionHandlingAttribute OnException       
    em System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
    em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
    em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 15:26:42,057   998ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual: System.Exception: http://localhost/sigsm/v2/ESUS/fichas/SessionVar.asp?SessionVar=acesso
+   at Softpark.WS.ASPSessionVar.Read(String varName) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\ASPSessionVar.cs:line 91
+   at Softpark.WS.Controllers.BaseApiController.Autenticado() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\BaseApiController.cs:line 29
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 36
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 15:29:35,135   781ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual: System.Exception: http://localhost/sigsm/v2/ESUS/SessionVar.asp?SessionVar=acesso
+   at Softpark.WS.ASPSessionVar.Read(String varName) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\ASPSessionVar.cs:line 91
+   at Softpark.WS.Controllers.BaseApiController.Autenticado() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\BaseApiController.cs:line 29
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 36
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 15:32:16,425   967ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual: System.Exception: http://localhost/sigsm/v2/SessionVar.asp?SessionVar=acesso
+   at Softpark.WS.ASPSessionVar.Read(String varName) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\ASPSessionVar.cs:line 91
+   at Softpark.WS.Controllers.BaseApiController.Autenticado() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\BaseApiController.cs:line 29
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 36
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 17:33:16,939 14117ms ptionHandlingAttribute OnException        - Unhandled exception thrown in POST for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual: System.IO.FileLoadException: Não foi possível carregar arquivo ou assembly 'Softpark.DataTables, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' ou uma de suas dependências. É necessário um assembly de nome forte. (Exceção de HRESULT: 0x80131044)
+Nome do arquivo: 'Softpark.DataTables, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'
+   em Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual()
+   em lambda_method(Closure , Object , Object[] )
+   em System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   em System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+
+
+ERROR 2017-08-25 18:47:55,398 18327ms ptionHandlingAttribute OnException        - Unhandled exception thrown in POST for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual?request.draw=1&request.length=10&request.start=0: System.Exception: http://localhost/sigsm/v2/SessionVar.asp?SessionVar=acesso
+   em Softpark.WS.ASPSessionVar.Read(String varName) na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\ASPSessionVar.cs:linha 87
+   em Softpark.WS.Controllers.BaseApiController.Autenticado() na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\BaseApiController.cs:linha 29
+   em Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual(DataTablesRequest request) na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:linha 40
+   em lambda_method(Closure , Object , Object[] )
+   em System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   em System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 18:50:12,602  1189ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual?request.draw=1&request.length=10&request.start=0: System.NullReferenceException: Object reference not set to an instance of an object.
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual(DataTablesRequest request) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 45
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 18:52:37,509  1449ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual?request.draw=1&request.length=10&request.start=0: System.MissingMethodException: Nenhum construtor sem parâmetros foi definido para este objeto.
+   em System.RuntimeTypeHandle.CreateInstance(RuntimeType type, Boolean publicOnly, Boolean noCheck, Boolean& canBeCached, RuntimeMethodHandleInternal& ctor, Boolean& bNeedSecurityCheck)
+   em System.RuntimeType.CreateInstanceSlow(Boolean publicOnly, Boolean skipCheckThis, Boolean fillCache, StackCrawlMark& stackMark)
+   em System.Activator.CreateInstance(Type type, Boolean nonPublic)
+   em System.Activator.CreateInstance(Type type)
+   em System.Web.Http.ModelBinding.Binders.MutableObjectModelBinder.EnsureModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+   em System.Web.Http.ModelBinding.Binders.MutableObjectModelBinder.BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+   em System.Web.Http.Controllers.HttpActionContextExtensions.Bind(HttpActionContext actionContext, ModelBindingContext bindingContext, IEnumerable`1 binders)
+   em System.Web.Http.ModelBinding.Binders.CompositeModelBinder.BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+   em System.Web.Http.ModelBinding.ModelBinderParameterBinding.ExecuteBindingAsync(ModelMetadataProvider metadataProvider, HttpActionContext actionContext, CancellationToken cancellationToken)
+   em System.Web.Http.Controllers.HttpActionBinding.<ExecuteBindingAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 18:53:39,906  4287ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual?request.draw=1&request.length=10&request.start=0: System.NullReferenceException: Object reference not set to an instance of an object.
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual(DataTablesRequest request) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 61
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 19:01:59,905  3153ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual?request.draw=1&request.length=10&request.start=0: System.NotSupportedException: Cannot compare elements of type 'System.Collections.Generic.ICollection`1[[Softpark.Models.ASSMED_CadastroDocPessoal, Softpark.Models, Version=1.6.0.2, Culture=neutral, PublicKeyToken=469855f73e7bc1e1]]'. Only primitive types, enumeration types and entity types are supported.
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.VerifyTypeSupportedForComparison(Type clrType, TypeUsage edmType, Stack`1 memberPath)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.CreateIsNullExpression(DbExpression operand, Type operandClrType)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.TranslateExpression(Expression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.ConditionalTranslator.TypedTranslate(ExpressionConverter parent, ConditionalExpression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.TranslateExpression(Expression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.MemberInitTranslator.TypedTranslate(ExpressionConverter parent, MemberInitExpression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.TranslateExpression(Expression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.TranslateLambda(LambdaExpression lambda, DbExpression input)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.MethodCallTranslator.OneLambdaTranslator.Translate(ExpressionConverter parent, MethodCallExpression call, DbExpression& source, DbExpressionBinding& sourceBinding, DbExpression& lambda)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.MethodCallTranslator.SelectTranslator.Translate(ExpressionConverter parent, MethodCallExpression call)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.MethodCallTranslator.TypedTranslate(ExpressionConverter parent, MethodCallExpression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.TranslateExpression(Expression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.MethodCallTranslator.AggregateTranslator.Translate(ExpressionConverter parent, MethodCallExpression call)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.MethodCallTranslator.TypedTranslate(ExpressionConverter parent, MethodCallExpression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.TranslateExpression(Expression linq)
+   at System.Data.Entity.Core.Objects.ELinq.ExpressionConverter.Convert()
+   at System.Data.Entity.Core.Objects.ELinq.ELinqQueryState.GetExecutionPlan(Nullable`1 forMergeOption)
+   at System.Data.Entity.Core.Objects.ObjectQuery`1.<>c__DisplayClass7.<GetResults>b__6()
+   at System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   at System.Data.Entity.Core.Objects.ObjectQuery`1.<>c__DisplayClass7.<GetResults>b__5()
+   at System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   at System.Data.Entity.Core.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   at System.Data.Entity.Core.Objects.ObjectQuery`1.<System.Collections.Generic.IEnumerable<T>.GetEnumerator>b__0()
+   at System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   at System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual(DataTablesRequest request) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 78
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+ERROR 2017-08-25 19:15:38,484  1055ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/CadastroIndividual: System.NullReferenceException: Object reference not set to an instance of an object.
+   at Softpark.WS.Controllers.Api.SIGSMController.ListarCadastroIndividual(DataTablesRequest request) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:line 46
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
