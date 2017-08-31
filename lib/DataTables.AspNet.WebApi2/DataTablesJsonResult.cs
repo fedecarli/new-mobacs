@@ -31,6 +31,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using System.Web;
 
 namespace DataTables.AspNet.WebApi2
 {
@@ -48,15 +49,18 @@ namespace DataTables.AspNet.WebApi2
 		/// </summary>
 		private static readonly System.Text.Encoding DefaultContentEncoding = System.Text.Encoding.UTF8;
 
-
-
-		public DataTablesJsonResult(IDataTablesResponse response, HttpRequestMessage requestMessage)
+        public DataTablesJsonResult(IDataTablesResponse response, HttpRequestMessage requestMessage)
 			: this(response, DefaultContentEncoding, requestMessage)
 		{
         }
 
-		public DataTablesJsonResult(IDataTablesResponse response, Encoding contentEncoding, HttpRequestMessage requestMessage)
-			: base(response, DefaultJsonSettings, contentEncoding, requestMessage)
+        public DataTablesJsonResult(IDataTablesResponse response, HttpRequestBase request)
+            : base(response, DefaultJsonSettings, DefaultContentEncoding, new HttpRequestMessage(new HttpMethod(request.HttpMethod), request.Url))
+        {
+        }
+
+        public DataTablesJsonResult(IDataTablesResponse response, Encoding contentEncoding, HttpRequestMessage requestMessage)
+			: base(response, DefaultJsonSettings, contentEncoding??DefaultContentEncoding, requestMessage)
 		{
 		}
 
@@ -70,7 +74,7 @@ namespace DataTables.AspNet.WebApi2
 
 				if (cancellationToken.IsCancellationRequested) return Request.CreateErrorResponse(System.Net.HttpStatusCode.NoContent, "Request was cancelled");
 
-				var data = Encoding.GetBytes(Content.ToString());
+				var data = Content == null ? new byte[0] : Encoding.GetBytes(Content.ToString());
 
 				if (cancellationToken.IsCancellationRequested) return Request.CreateErrorResponse(System.Net.HttpStatusCode.NoContent, "Request was cancelled");
 

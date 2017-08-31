@@ -31,10 +31,16 @@ namespace Softpark.WS
         private UrlHelper _helper;
 
         private static Dictionary<string, string> _vars = new Dictionary<string, string>();
+        private System.Web.Mvc.UrlHelper url;
 
         public ASPSessionVar(UrlHelper helper)
         {
             _helper = helper;
+        }
+
+        public ASPSessionVar(System.Web.Mvc.UrlHelper url)
+        {
+            this.url = url;
         }
 
         public static string Read(string varName, UrlHelper helper)
@@ -42,16 +48,28 @@ namespace Softpark.WS
             return (new ASPSessionVar(helper).Read(varName));
         }
 
+        public static string Read(string varName, System.Web.Mvc.UrlHelper url)
+        {
+            return (new ASPSessionVar(url).Read(varName));
+        }
+
         public string Read(string varName)
         {
             if (_vars.ContainsKey(varName)) return _vars[varName];
 
-            if (_helper == null) return null;
+            var uri = "";
 
-            var url = _helper.Content($"~/../../SessionVar.asp?SessionVar={varName}");
-            
+            if (_helper != null)
+            {
+                uri = _helper.Content($"~/../../SessionVar.asp?SessionVar={varName}");
+            }
+            else if (url != null)
+            {
+                uri = url.Content($"~/../../SessionVar.asp?SessionVar={varName}");
+            }
+
             var client = new WebServiceClient();
-            
+
             for (int i = 0; i < HttpContext.Current.Request.Headers.Keys.Count; i++)
             {
                 var key = HttpContext.Current.Request.Headers.Keys[i];
@@ -68,7 +86,7 @@ namespace Softpark.WS
 
             try
             {
-                using (var s = client.OpenRead(url))
+                using (var s = client.OpenRead(uri))
                 using (var sr = new StreamReader(s))
                 {
                     data = sr.ReadToEnd();
@@ -78,9 +96,10 @@ namespace Softpark.WS
 
                 return data;
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                throw e;
+
             }
         }
     }

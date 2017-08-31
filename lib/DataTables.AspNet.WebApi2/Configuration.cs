@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using DataTables.AspNet.Core;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Controllers;
-using System.Web.Http.ValueProviders;
 using System.Web.Http;
 
 namespace DataTables.AspNet.WebApi2

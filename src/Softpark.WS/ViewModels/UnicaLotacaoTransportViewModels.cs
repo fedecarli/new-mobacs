@@ -101,5 +101,24 @@ namespace Softpark.WS.ViewModels
                 profissionalCNS = model.profissionalCNS
             };
         }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator UnicaLotacaoTransportCadastroViewModel(UnicaLotacaoTransport model)
+        {
+            return ApplyModel(model);
+        }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator UnicaLotacaoTransport(UnicaLotacaoTransportCadastroViewModel model)
+        {
+            return model.ToModel(DomainContainer.Current);
+        }
+
     }
 }

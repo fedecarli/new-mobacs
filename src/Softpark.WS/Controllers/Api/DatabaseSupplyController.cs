@@ -204,12 +204,12 @@ namespace Softpark.WS.Controllers.Api
                         }).ToList();
                     break;
                 case "pais":
-                    model = Domain.Paises
+                    model = Domain.Nacionalidade
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "Pais",
                             Codigo = x.codigo.ToString(),
-                            Descricao = x.nome,
+                            Descricao = x.DesNacao,
                             Observacao = null
                         }).ToList();
                     break;

@@ -86,6 +86,15 @@
     <Compile Include="ASSMED_CadastroPF.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ASSMED_CadEmails.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_CadTelefones.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_Contratos.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ASSMED_Endereco.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -177,13 +186,13 @@
     <Compile Include="InstituicaoPermanencia.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="Nacionalidade.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="OrigemAlimentoSituacaoRua.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="OrigemVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Paises.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="ProfCidadaoVinc.cs">
@@ -346,6 +355,12 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="UnicaLotacaoTransport.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_ConsultaCadastrosDomiciliares.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_ConsultaCadastrosIndividuais.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_Domicilios.cs">

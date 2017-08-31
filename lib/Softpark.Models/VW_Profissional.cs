@@ -42,9 +42,5 @@ namespace Softpark.Models
         /// Unidade
         /// </summary>
         public string Unidade { get; set; }
-        /// <summary>
-        /// Código SIGSM
-        /// </summary>
-        public int CodUsu { get; set; }
     }
 }

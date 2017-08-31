@@ -353,7 +353,7 @@ namespace Softpark.Models
             if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && !cond.statusSituacaoRua)
                 throw new ValidationException("A quantidade de alimentações ao dia não deve ser informada para este caso.");
 
-            if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && domain.TP_Quantas_Vezes_Alimentacao.Any(x => x.codigo != cond.quantidadeAlimentacoesAoDiaSituacaoRua))
+            if (cond.quantidadeAlimentacoesAoDiaSituacaoRua != null && domain.TP_Quantas_Vezes_Alimentacao.All(x => x.codigo != cond.quantidadeAlimentacoesAoDiaSituacaoRua))
                 throw new ValidationException("A quantidade de alimentações ao dia é inválida.");
 
             if (cond.statusAcompanhadoPorOutraInstituicao && !cond.statusSituacaoRua)
@@ -374,7 +374,7 @@ namespace Softpark.Models
             if (cond.tempoSituacaoRua != null && !cond.statusSituacaoRua)
                 throw new ValidationException("O tempo de situação de rua não deve ser informado para este caso.");
 
-            if (cond.tempoSituacaoRua != null && domain.TP_Sit_Rua.Any(x => x.codigo != cond.tempoSituacaoRua))
+            if (cond.tempoSituacaoRua != null && domain.TP_Sit_Rua.All(x => x.codigo != cond.tempoSituacaoRua))
                 throw new ValidationException("O tempo de situação de rua é inválido.");
         }
 

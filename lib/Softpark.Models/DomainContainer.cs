@@ -30,6 +30,17 @@ namespace Softpark.Models
     /// </summary>
     public partial class DomainContainer
     {
+        private static DomainContainer _current;
+
+        /// <summary>
+        /// Static Instance
+        /// </summary>
+        public static DomainContainer Current
+        {
+            get => _current ?? (_current = new DomainContainer());
+            set => _current = value;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -38,12 +49,12 @@ namespace Softpark.Models
             : base(nameOrConnectionString)
         {
         }
-        
+
         /// <summary>
         /// Coleção de profissionais
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public virtual DbRawSqlQuery<VW_Profissional> VW_Profissional =>
-            Database.SqlQuery<VW_Profissional>("SELECT CBO, CNES, CNS, INE, Equipe, Nome, Profissao, Unidade, CodUsu FROM [api].[VW_Profissional]");
+            Database.SqlQuery<VW_Profissional>("SELECT CBO, CNES, CNS, INE, Equipe, Nome, Profissao, Unidade FROM [api].[VW_Profissional]");
     }
 }

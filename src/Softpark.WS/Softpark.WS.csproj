@@ -391,6 +391,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
+    <Compile Include="ViewModels\SIGSM\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroIndividual.cs" />
     <Compile Include="ViewModels\UsuarioLoginViewModel.cs" />
     <Compile Include="Global.asax.cs">
@@ -487,6 +488,7 @@
     <Content Include="Views\Shared\_menu_old.vbhtml" />
     <Content Include="Views\Shared\_LayoutHelp.cshtml" />
     <Content Include="Views\Shared\Common\_Cabecalho.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

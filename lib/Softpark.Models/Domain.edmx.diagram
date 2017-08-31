@@ -16,11 +16,10 @@
         <EntityTypeShape EntityType="Domain.ASSMED_PesFisica" Width="1.5" PointX="3" PointY="21.75" />
         <EntityTypeShape EntityType="Domain.Cidade" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="Domain.Etnia" Width="1.5" PointX="8" PointY="40.25" />
-        <EntityTypeShape EntityType="Domain.Paises" Width="1.5" PointX="8" PointY="42.875" />
         <EntityTypeShape EntityType="Domain.ProfCidadaoVinc" Width="1.5" PointX="10.75" PointY="1.5" />
         <EntityTypeShape EntityType="Domain.ProfCidadaoVincAgendaProd" Width="1.5" PointX="13" PointY="1" />
         <EntityTypeShape EntityType="Domain.Setores" Width="1.5" PointX="5.75" PointY="4" />
-        <EntityTypeShape EntityType="Domain.SetoresINEs" Width="1.5" PointX="8" PointY="4.375" />
+        <EntityTypeShape EntityType="Domain.SetoresINEs" Width="1.5" PointX="8.625" PointY="4.375" />
         <EntityTypeShape EntityType="Domain.TP_Abastecimento_Agua" Width="1.5" PointX="3.75" PointY="7.75" />
         <EntityTypeShape EntityType="Domain.TP_Acesso_Domicilio" Width="1.5" PointX="5.75" PointY="7.75" />
         <EntityTypeShape EntityType="Domain.TP_Animais" Width="1.5" PointX="2.75" PointY="11.75" />
@@ -139,12 +138,20 @@
         <AssociationConnector Association="Domain.FK__ASSMED_Ca__IdFic__3A9ABA73" />
         <AssociationConnector Association="Domain.FK_Identificacao_Cadastro" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" />
-        <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Paises" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" />
         <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" />
         <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__719CDDE7" />
         <AssociationConnector Association="Domain.FK__ASSMED_Endereco__5649C92D" />
         <AssociationConnector Association="Domain.FK__ASSMED_PesFisica__7BE56230" />
+        <EntityTypeShape EntityType="Domain.ASSMED_Contratos" Width="1.5" PointX="26.375" PointY="15" />
+        <AssociationConnector Association="Domain.FK__EnderecoL__num_c__3F5F6F90" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadEmails" Width="1.5" PointX="21.125" PointY="45.875" />
+        <AssociationConnector Association="Domain.FK__ASSMED_CadEmails__4CC05EF3" />
+        <EntityTypeShape EntityType="Domain.Nacionalidade" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadTelefones" Width="1.5" PointX="21.125" PointY="35.75" />
+        <AssociationConnector Association="Domain.FK__ASSMED_CadTelefo__47FBA9D6" />
+        <EntityTypeShape EntityType="Domain.VW_ConsultaCadastrosIndividuais" Width="1.5" PointX="26.375" PointY="6.75" />
+        <EntityTypeShape EntityType="Domain.VW_ConsultaCadastrosDomiciliares" Width="1.5" PointX="26.375" PointY="20.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

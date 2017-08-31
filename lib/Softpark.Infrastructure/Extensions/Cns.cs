@@ -104,7 +104,7 @@ namespace Softpark.Infrastructure.Extensions
 
         public static bool isValidCns(this string cns)
         {
-            if (cns.Trim().Length != 15 || !(new[] { '1', '2', '7', '8', '9' }).Contains(cns[0]))
+            if (cns == null || cns.Trim().Length != 15 || !(new[] { '1', '2', '7', '8', '9' }).Contains(cns[0]))
             {
                 return (false);
             }

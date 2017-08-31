@@ -46,5 +46,6 @@ namespace Softpark.Models
         public virtual ICollection<ASSMED_Endereco> ASSMED_Endereco { get; set; }
         public virtual ASSMED_Endereco ASSMED_Endereco1 { get; set; }
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
+        public virtual ASSMED_Contratos ASSMED_Contratos { get; set; }
     }
 }
