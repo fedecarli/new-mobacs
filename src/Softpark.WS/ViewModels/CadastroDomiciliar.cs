@@ -139,7 +139,7 @@ namespace Softpark.WS.ViewModels
         /// DataBind
         /// </summary>
         /// <returns></returns>
-        public async Task<CadastroDomiciliar> ToModel(DomainContainer domain)
+        public virtual async Task<CadastroDomiciliar> ToModel(DomainContainer domain)
         {
             var dc = domain.CadastroDomiciliar.Create();
 
@@ -548,7 +548,7 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        internal EnderecoLocalPermanencia ToModel(DomainContainer domain)
+        internal virtual EnderecoLocalPermanencia ToModel(DomainContainer domain)
         {
             var elp = domain.EnderecoLocalPermanencia.Create();
 

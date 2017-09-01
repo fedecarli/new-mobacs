@@ -124,7 +124,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/sigsm/detalhar/CadastroIndividual/{codigo}")]
         [ResponseType(typeof(FormCadastroIndividual))]
-        public IHttpActionResult DetalharCadastroIndividual(decimal codigo)
+        public async Task<IHttpActionResult> DetalharCadastroIndividual(decimal codigo)
         {
             if (!Autenticado())
             {
@@ -157,77 +157,36 @@ namespace Softpark.WS.Controllers.Api
 
             if (data == null)
             {
-                data = new CadastroIndividual
+                var origem = new OrigemVisita
                 {
-                    IdentificacaoUsuarioCidadao1 = new IdentificacaoUsuarioCidadao
-                    {
-                        Codigo = codigo,
-                        beneficiarioBolsaFamilia = false,
-                        cnsCidadao = cns,
-                        cnsResponsavelFamiliar = null,
-                        codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge ?? cont.CodigoIbgeMunicipio,
-                        ComplementoRG = rg?.ComplementoRG,
-                        CPF = cad.ASSMED_PesFisica?.CPF,
-                        dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc,
-                        desconheceNomeMae = cad.ASSMED_PesFisica?.NomeMae == null,
-                        desconheceNomePai = cad.ASSMED_PesFisica?.NomePai == null,
-                        nomeCidadao = cad.Nome,
-                        nomeMaeCidadao = cad.ASSMED_PesFisica?.NomeMae,
-                        nomePaiCidadao = cad.ASSMED_PesFisica?.NomePai,
-                        nomeSocial = cad.NomeSocial,
-                        dtEntradaBrasil = cad.ASSMED_PesFisica?.ESTRANGEIRADATA,
-                        dtNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZADADATA,
-                        emailCidadao = cad.ASSMED_CadEmails.OrderByDescending(x => x.DtSistema).FirstOrDefault()?.EMail,
-                        EstadoCivil = cad.ASSMED_PesFisica?.EstCivil ?? "I",
-                        etnia = cad.ASSMED_PesFisica?.CodEtnia,
-                        id = Guid.Empty,
-                        microarea = null,
-                        nacionalidadeCidadao = nac == 10 || nac == 0 ? 1 : 2,
-                        paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == nac)?.codigo,
-                        numeroNisPisPasep = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero,
-                        num_contrato = 22,
-                        portariaNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA,
-                        racaCorCidadao = cad.ASSMED_PesFisica?.CodCor ?? 0,
-                        telefoneCelular = cad.ASSMED_CadTelefones.Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}".Trim()).FirstOrDefault(),
-                        RG = rg?.Numero,
-                        sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4,
-                        statusEhResponsavel = true,
-                        stForaArea = true
-                    },
-                    CondicoesDeSaude1 = null,
-                    DataRegistro = null,
-                    EmSituacaoDeRua1 = null,
-                    fichaAtualizada = false,
-                    id = Guid.Empty,
-                    idAuto = 0,
-                    InformacoesSocioDemograficas1 = null,
-                    Justificativa = null,
-                    SaidaCidadaoCadastro1 = null,
-                    statusTermoRecusaCadastroIndividualAtencaoBasica = false,
-                    uuidFichaOriginadora = Guid.Empty,
-                    tpCdsOrigem = 3,
-                    UnicaLotacaoTransport = new UnicaLotacaoTransport
-                    {
-                        cnes = setor?.CNES,
-                        codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
-                        dataAtendimento = DateTime.Now,
-                        id = Guid.Empty,
-                        token = Guid.Empty,
-                        OrigemVisita = new OrigemVisita
-                        {
-                            enviado = false,
-                            enviarParaThrift = false,
-                            finalizado = false,
-                            id_tipo_origem = 2,
-                            token = Guid.Empty
-                        }
-                    }
+                    enviado = false,
+                    enviarParaThrift = false,
+                    finalizado = true,
+                    id_tipo_origem = 2,
+                    token = Guid.NewGuid()
                 };
-            }
 
-            if (data.IdentificacaoUsuarioCidadao1 == null)
-            {
-                data.IdentificacaoUsuarioCidadao1 = new IdentificacaoUsuarioCidadao
+                Domain.OrigemVisita.Add(origem);
+
+                var header = new UnicaLotacaoTransport
+                {
+                    cnes = setor?.CNES,
+                    codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
+                    dataAtendimento = DateTime.Now,
+                    id = Guid.NewGuid(),
+                    token = origem.token,
+                    OrigemVisita = origem,
+                    profissionalCNS = string.Empty,
+                    cboCodigo_2002 = string.Empty
+                };
+
+                Domain.UnicaLotacaoTransport.Add(header);
+
+                origem.UnicaLotacaoTransport.Add(header);
+
+                var cpf = cad.ASSMED_PesFisica?.CPF?.Trim()?.Replace("([^0-9])", "") ?? "00000000000";
+
+                var iden = new IdentificacaoUsuarioCidadao
                 {
                     Codigo = codigo,
                     beneficiarioBolsaFamilia = false,
@@ -235,7 +194,7 @@ namespace Softpark.WS.Controllers.Api
                     cnsResponsavelFamiliar = null,
                     codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge ?? cont.CodigoIbgeMunicipio,
                     ComplementoRG = rg?.ComplementoRG,
-                    CPF = cad.ASSMED_PesFisica?.CPF,
+                    CPF = cpf.Length == 11 ? cpf : "00000000000",
                     dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc,
                     desconheceNomeMae = cad.ASSMED_PesFisica?.NomeMae == null,
                     desconheceNomePai = cad.ASSMED_PesFisica?.NomePai == null,
@@ -247,21 +206,102 @@ namespace Softpark.WS.Controllers.Api
                     dtNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZADADATA,
                     emailCidadao = cad.ASSMED_CadEmails.OrderByDescending(x => x.DtSistema).FirstOrDefault()?.EMail,
                     EstadoCivil = cad.ASSMED_PesFisica?.EstCivil ?? "I",
-                    etnia = cad.ASSMED_PesFisica?.CodEtnia,
-                    id = Guid.Empty,
+                    etnia = cad.ASSMED_PesFisica?.CodEtnia > 0 ? cad.ASSMED_PesFisica?.CodEtnia : null,
+                    id = Guid.NewGuid(),
                     microarea = null,
                     nacionalidadeCidadao = nac == 10 || nac == 0 ? 1 : 2,
                     paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == nac)?.codigo,
                     numeroNisPisPasep = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero,
                     num_contrato = 22,
                     portariaNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA,
-                    racaCorCidadao = cad.ASSMED_PesFisica?.CodCor ?? 0,
+                    racaCorCidadao = (int)(cad.ASSMED_PesFisica?.CodCor > 0 ? cad.ASSMED_PesFisica?.CodCor : 6),
                     telefoneCelular = cad.ASSMED_CadTelefones.Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}".Trim()).FirstOrDefault(),
                     RG = rg?.Numero,
                     sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4,
                     statusEhResponsavel = true,
                     stForaArea = true
                 };
+
+                Domain.IdentificacaoUsuarioCidadao.Add(iden);
+
+                data = new CadastroIndividual
+                {
+                    IdentificacaoUsuarioCidadao1 = iden,
+                    CondicoesDeSaude1 = null,
+                    DataRegistro = DateTime.Now,
+                    EmSituacaoDeRua1 = null,
+                    fichaAtualizada = false,
+                    id = Guid.NewGuid(),
+                    idAuto = 0,
+                    InformacoesSocioDemograficas1 = null,
+                    Justificativa = null,
+                    SaidaCidadaoCadastro1 = null,
+                    statusTermoRecusaCadastroIndividualAtencaoBasica = false,
+                    uuidFichaOriginadora = Guid.Empty,
+                    tpCdsOrigem = 3,
+                    UnicaLotacaoTransport = header
+                };
+
+                Domain.CadastroIndividual.Add(data);
+
+                iden.CadastroIndividual.Add(data);
+
+                cad.IdFicha = iden.id;
+                cad.IdentificacaoUsuarioCidadao = iden;
+
+                await Domain.SaveChangesAsync();
+            }
+
+            if (data.IdentificacaoUsuarioCidadao1 == null)
+            {
+                var cpf = cad.ASSMED_PesFisica?.CPF?.Trim()?.Replace("([^0-9])", "") ?? "00000000000";
+
+                var iden = new IdentificacaoUsuarioCidadao
+                {
+                    Codigo = codigo,
+                    beneficiarioBolsaFamilia = false,
+                    cnsCidadao = cns,
+                    cnsResponsavelFamiliar = null,
+                    codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge ?? cont.CodigoIbgeMunicipio,
+                    ComplementoRG = rg?.ComplementoRG,
+                    CPF = cpf.Length == 11 ? cpf : "00000000000",
+                    dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc,
+                    desconheceNomeMae = cad.ASSMED_PesFisica?.NomeMae == null,
+                    desconheceNomePai = cad.ASSMED_PesFisica?.NomePai == null,
+                    nomeCidadao = cad.Nome,
+                    nomeMaeCidadao = cad.ASSMED_PesFisica?.NomeMae,
+                    nomePaiCidadao = cad.ASSMED_PesFisica?.NomePai,
+                    nomeSocial = cad.NomeSocial,
+                    dtEntradaBrasil = cad.ASSMED_PesFisica?.ESTRANGEIRADATA,
+                    dtNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZADADATA,
+                    emailCidadao = cad.ASSMED_CadEmails.OrderByDescending(x => x.DtSistema).FirstOrDefault()?.EMail,
+                    EstadoCivil = cad.ASSMED_PesFisica?.EstCivil ?? "I",
+                    etnia = cad.ASSMED_PesFisica?.CodEtnia > 0 ? cad.ASSMED_PesFisica?.CodEtnia : null,
+                    id = Guid.NewGuid(),
+                    microarea = null,
+                    nacionalidadeCidadao = nac == 10 || nac == 0 ? 1 : 2,
+                    paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == nac)?.codigo,
+                    numeroNisPisPasep = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero,
+                    num_contrato = 22,
+                    portariaNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA,
+                    racaCorCidadao = (int)(cad.ASSMED_PesFisica?.CodCor > 0 ? cad.ASSMED_PesFisica?.CodCor : 6),
+                    telefoneCelular = cad.ASSMED_CadTelefones.Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}".Trim()).FirstOrDefault(),
+                    RG = rg?.Numero,
+                    sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4,
+                    statusEhResponsavel = true,
+                    stForaArea = true
+                };
+
+                Domain.IdentificacaoUsuarioCidadao.Add(iden);
+
+                data.IdentificacaoUsuarioCidadao1.CadastroIndividual.Add(data);
+
+                data.IdentificacaoUsuarioCidadao1 = iden;
+
+                cad.IdFicha = iden.id;
+                cad.IdentificacaoUsuarioCidadao = iden;
+
+                await Domain.SaveChangesAsync();
             }
 
             data.IdentificacaoUsuarioCidadao1.Codigo = codigo;
@@ -291,11 +331,7 @@ namespace Softpark.WS.Controllers.Api
             data.IdentificacaoUsuarioCidadao1.RG = rg?.Numero;
             data.IdentificacaoUsuarioCidadao1.sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4;
 
-            return Ok(new FormCadastroIndividual
-            {
-                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(data.UnicaLotacaoTransport),
-                CadastroIndividual = data
-            });
+            return Ok(await FormCadastroIndividual.Apply(data, Domain));
         }
 
         /// <summary>
@@ -311,11 +347,11 @@ namespace Softpark.WS.Controllers.Api
             {
                 return BadRequest("É preciso estar logado.");
             }
-
+            
             var id = await form.LimparESalvarDados(Domain, Url);
 
             Domain.PR_ProcessarFichasAPI(id);
-            
+
             return Ok(true);
         }
         #endregion
@@ -405,7 +441,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/sigsm/detalhar/CadastroDomiciliar/{codigo}")]
         [ResponseType(typeof(FormCadastroDomiciliar))]
-        public IHttpActionResult DetalharCadastroDomiciliar(decimal codigo)
+        public async Task<IHttpActionResult> DetalharCadastroDomiciliar(decimal codigo)
         {
             if (!Autenticado())
             {
@@ -440,68 +476,32 @@ namespace Softpark.WS.Controllers.Api
 
             if (data == null)
             {
-                data = new CadastroDomiciliar
+                var origem = new OrigemVisita
                 {
-                    EnderecoLocalPermanencia1 = new EnderecoLocalPermanencia
-                    {
-                        bairro = cad.Bairro,
-                        cep = cad.CEP,
-                        Codigo = cad.Codigo,
-                        num_contrato = cad.NumContrato,
-                        codigoIbgeMunicipio = m.CodIbge,
-                        complemento = cad.Complemento,
-                        item_end = cad.ItemEnd,
-                        id = Guid.Empty,
-                        microarea = null,
-                        nomeLogradouro = cad.Logradouro,
-                        numero = cad.Numero,
-                        numeroDneUf = m.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0'),
-                        pontoReferencia = cad.ENDREFERENCIA,
-                        stForaArea = cad.ENDSEMAREA == 1,
-                        stSemNumero = cad.SEMNUMERO == 1,
-                        telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                            .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
-                        telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                            .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
-                        tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO
-                    },
-                    FamiliaRow = new FamiliaRow[] {
-                        new FamiliaRow
-                        {
-                            dataNascimentoResponsavel = cad.ASSMED_Cadastro.ASSMED_PesFisica?.DtNasc,
-                            id = Guid.Empty,
-                            numeroCnsResponsavel = cns
-                        }
-                    },
-                    DataRegistro = null,
-                    fichaAtualizada = false,
-                    id = Guid.Empty,
-                    idAuto = 0,
-                    Justificativa = null,
-                    uuidFichaOriginadora = Guid.Empty,
-                    tpCdsOrigem = 3,
-                    UnicaLotacaoTransport = new UnicaLotacaoTransport
-                    {
-                        cnes = setor?.CNES,
-                        codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
-                        dataAtendimento = DateTime.Now,
-                        id = Guid.Empty,
-                        token = Guid.Empty,
-                        OrigemVisita = new OrigemVisita
-                        {
-                            enviado = false,
-                            enviarParaThrift = false,
-                            finalizado = false,
-                            id_tipo_origem = 2,
-                            token = Guid.Empty
-                        }
-                    }
+                    enviado = false,
+                    enviarParaThrift = false,
+                    finalizado = false,
+                    id_tipo_origem = 2,
+                    token = Guid.NewGuid()
                 };
-            }
 
-            if (data.EnderecoLocalPermanencia1 == null)
-            {
-                data.EnderecoLocalPermanencia1 = new EnderecoLocalPermanencia
+                Domain.OrigemVisita.Add(origem);
+
+                var header = new UnicaLotacaoTransport
+                {
+                    cnes = setor?.CNES,
+                    codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
+                    dataAtendimento = DateTime.Now,
+                    id = Guid.NewGuid(),
+                    token = origem.token,
+                    OrigemVisita = origem
+                };
+
+                Domain.UnicaLotacaoTransport.Add(header);
+
+                origem.UnicaLotacaoTransport.Add(header);
+
+                var end = new EnderecoLocalPermanencia
                 {
                     bairro = cad.Bairro,
                     cep = cad.CEP,
@@ -510,7 +510,65 @@ namespace Softpark.WS.Controllers.Api
                     codigoIbgeMunicipio = m.CodIbge,
                     complemento = cad.Complemento,
                     item_end = cad.ItemEnd,
-                    id = Guid.Empty,
+                    id = Guid.NewGuid(),
+                    nomeLogradouro = cad.Logradouro,
+                    numero = cad.Numero,
+                    numeroDneUf = m.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0'),
+                    pontoReferencia = cad.ENDREFERENCIA,
+                    stForaArea = cad.ENDSEMAREA == 1,
+                    stSemNumero = cad.SEMNUMERO == 1,
+                    telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                            .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
+                    telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                            .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
+                    tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO
+                };
+
+                Domain.EnderecoLocalPermanencia.Add(end);
+
+                var fam = new FamiliaRow
+                {
+                    dataNascimentoResponsavel = cad.ASSMED_Cadastro.ASSMED_PesFisica?.DtNasc,
+                    id = Guid.NewGuid(),
+                    numeroCnsResponsavel = cns
+                };
+
+                Domain.FamiliaRow.Add(fam);
+
+                data = new CadastroDomiciliar
+                {
+                    EnderecoLocalPermanencia1 = end,
+                    FamiliaRow = new FamiliaRow[] {
+                        fam
+                    },
+                    DataRegistro = DateTime.Now,
+                    fichaAtualizada = false,
+                    id = Guid.NewGuid(),
+                    uuidFichaOriginadora = Guid.Empty,
+                    tpCdsOrigem = 3,
+                    UnicaLotacaoTransport = header
+                };
+
+                Domain.CadastroDomiciliar.Add(data);
+                fam.CadastroDomiciliar.Add(data);
+                end.CadastroDomiciliar.Add(data);
+                header.CadastroDomiciliar.Add(data);
+
+                await Domain.SaveChangesAsync();
+            }
+
+            if (data.EnderecoLocalPermanencia1 == null)
+            {
+                var end = new EnderecoLocalPermanencia
+                {
+                    bairro = cad.Bairro,
+                    cep = cad.CEP,
+                    Codigo = cad.Codigo,
+                    num_contrato = cad.NumContrato,
+                    codigoIbgeMunicipio = m.CodIbge,
+                    complemento = cad.Complemento,
+                    item_end = cad.ItemEnd,
+                    id = Guid.NewGuid(),
                     microarea = null,
                     nomeLogradouro = cad.Logradouro,
                     numero = cad.Numero,
@@ -524,6 +582,12 @@ namespace Softpark.WS.Controllers.Api
                             .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
                     tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO
                 };
+
+                data.EnderecoLocalPermanencia1 = end;
+                Domain.EnderecoLocalPermanencia.Add(end);
+                end.CadastroDomiciliar.Add(data);
+
+                await Domain.SaveChangesAsync();
             }
 
             data.EnderecoLocalPermanencia1.bairro = cad.Bairro;
@@ -566,9 +630,9 @@ namespace Softpark.WS.Controllers.Api
                 return BadRequest("É preciso estar logado.");
             }
 
-            //var id = await form.LimparESalvarDados(Domain, Url);
-            //
-            //Domain.PR_ProcessarFichasAPI(id);
+            var id = await form.LimparESalvarDados(Domain, Url);
+
+            Domain.PR_ProcessarFichasAPI(id);
 
             return Ok(true);
         }

@@ -287,10 +287,10 @@ namespace Softpark.Models
                     throw new ValidationException("A maternidade aceita no máximo 100 caracteres.");
             }
 
-            if (cond.situacaoPeso != null && !domain.TP_Consideracao_Peso.Any(x => x.codigo == cond.situacaoPeso))
+            if (cond.situacaoPeso != null && domain.TP_Consideracao_Peso.All(x => x.codigo != cond.situacaoPeso))
                 throw new ValidationException("Situação de Peso não encontrada.");
 
-            var nasc = cad.IdentificacaoUsuarioCidadao1?.dataNascimentoCidadao;
+            var nasc = cad.IdentificacaoUsuarioCidadao1?.   dataNascimentoCidadao;
             var sexo = cad.IdentificacaoUsuarioCidadao1?.sexoCidadao;
 
             if (!cond.statusEhGestante) return;
@@ -589,7 +589,7 @@ namespace Softpark.Models
             var resp = cad.UnicaLotacaoTransport.dataAtendimento.Date.AddYears(-9);
 
             if (cond.ResponsavelPorCrianca.Count > 0 && cad.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao < resp)
-                throw new ValidationException("Este cidadão não pode ser reponsável por criança.");
+                throw new ValidationException("Não se deve preencher a responsabilidade por crianças para este cidadão.");
 
             if (cond.ResponsavelPorCrianca.Count > 6)
                 throw new ValidationException("O limite de responsabilidade por criança é de 6.");

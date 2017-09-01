@@ -29,8 +29,7 @@ namespace Softpark.WS
     public class ASPSessionVar
     {
         private UrlHelper _helper;
-
-        private static Dictionary<string, string> _vars = new Dictionary<string, string>();
+        
         private System.Web.Mvc.UrlHelper url;
 
         public ASPSessionVar(UrlHelper helper)
@@ -55,8 +54,6 @@ namespace Softpark.WS
 
         public string Read(string varName)
         {
-            if (_vars.ContainsKey(varName)) return _vars[varName];
-
             var uri = "";
 
             if (_helper != null)
@@ -91,15 +88,12 @@ namespace Softpark.WS
                 {
                     data = sr.ReadToEnd();
                 }
-
-                _vars[varName] = data;
-
+                
                 return data;
             }
             catch (Exception e)
             {
                 throw e;
-
             }
         }
     }
