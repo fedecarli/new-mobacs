@@ -23,6 +23,7 @@ namespace Softpark.Models
         public string NumIP { get; set; }
         public Nullable<int> CodUsu { get; set; }
         public string Observacoes { get; set; }
+        public long IDTelefone { get; set; }
     
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
     }

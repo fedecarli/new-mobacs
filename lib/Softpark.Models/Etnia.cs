@@ -18,6 +18,7 @@ namespace Softpark.Models
         public Etnia()
         {
             this.IdentificacaoUsuarioCidadao = new HashSet<IdentificacaoUsuarioCidadao>();
+            this.IdentificacaoUsuarioCidadao1 = new HashSet<IdentificacaoUsuarioCidadao>();
         }
     
         public int NumContrato { get; set; }
@@ -26,5 +27,7 @@ namespace Softpark.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao1 { get; set; }
     }
 }

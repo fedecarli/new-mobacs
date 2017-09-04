@@ -551,14 +551,9 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_Cadastro
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
           <Property Name="CodUsu" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_CadTelefones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ASSMED_CadTelefones">
           <Key>
-            <PropertyRef Name="NumContrato" />
-            <PropertyRef Name="Codigo" />
-            <PropertyRef Name="DDD" />
-            <PropertyRef Name="NumTel" />
+            <PropertyRef Name="IDTelefone" />
           </Key>
           <Property Name="NumContrato" Type="int" Nullable="false" />
           <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" Nullable="false" />
@@ -569,6 +564,7 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.ASSMED_CadTelef
           <Property Name="NumIP" Type="varchar" MaxLength="60" />
           <Property Name="CodUsu" Type="int" />
           <Property Name="Observacoes" Type="varchar" MaxLength="100" />
+          <Property Name="IDTelefone" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="ASSMED_Contratos">
           <Key>
@@ -1910,8 +1906,8 @@ warning 6035: The relationship 'FK_HigienePessoalSituacaoRua_TP_Higiene_Pessoal'
               <PropertyRef Name="CodEtnia" />
             </Principal>
             <Dependent Role="IdentificacaoUsuarioCidadao">
-              <PropertyRef Name="etnia" />
               <PropertyRef Name="num_contrato" />
+              <PropertyRef Name="etnia" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2162,6 +2158,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="ASSMED_CadastroDocPessoal" EntityType="Self.ASSMED_CadastroDocPessoal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_CadastroPF" EntityType="Self.ASSMED_CadastroPF" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_CadEmails" EntityType="Self.ASSMED_CadEmails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ASSMED_CadTelefones" EntityType="Self.ASSMED_CadTelefones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_Contratos" EntityType="Self.ASSMED_Contratos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_Endereco" EntityType="Self.ASSMED_Endereco" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_PesFisica" EntityType="Self.ASSMED_PesFisica" Schema="dbo" store:Type="Tables" />
@@ -2218,19 +2215,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
     [ASSMED_CadastroDomiciliarVinc].[Codigo] AS [Codigo], 
     [ASSMED_CadastroDomiciliarVinc].[Data] AS [Data]
     FROM [api].[ASSMED_CadastroDomiciliarVinc] AS [ASSMED_CadastroDomiciliarVinc]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="ASSMED_CadTelefones" EntityType="Self.ASSMED_CadTelefones" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [ASSMED_CadTelefones].[NumContrato] AS [NumContrato], 
-    [ASSMED_CadTelefones].[Codigo] AS [Codigo], 
-    [ASSMED_CadTelefones].[DDD] AS [DDD], 
-    [ASSMED_CadTelefones].[NumTel] AS [NumTel], 
-    [ASSMED_CadTelefones].[TipoTel] AS [TipoTel], 
-    [ASSMED_CadTelefones].[DtSistema] AS [DtSistema], 
-    [ASSMED_CadTelefones].[NumIP] AS [NumIP], 
-    [ASSMED_CadTelefones].[CodUsu] AS [CodUsu], 
-    [ASSMED_CadTelefones].[Observacoes] AS [Observacoes]
-    FROM [dbo].[ASSMED_CadTelefones] AS [ASSMED_CadTelefones]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Nacionalidade" EntityType="Self.Nacionalidade" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -2901,13 +2885,17 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="ASSMED_CadEmails" EntitySet="ASSMED_CadEmails" />
           </AssociationSet>
           <EntitySet Name="Nacionalidade" EntityType="Domain.Nacionalidade" />
+          <EntitySet Name="VW_ConsultaCadastrosIndividuais" EntityType="Domain.VW_ConsultaCadastrosIndividuais" />
+          <EntitySet Name="VW_ConsultaCadastrosDomiciliares" EntityType="Domain.VW_ConsultaCadastrosDomiciliares" />
           <EntitySet Name="ASSMED_CadTelefones" EntityType="Domain.ASSMED_CadTelefones" />
+          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_Etnia1" Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia1">
+            <End Role="Etnia" EntitySet="Etnia" />
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+          </AssociationSet>
           <AssociationSet Name="FK__ASSMED_CadTelefo__47FBA9D6" Association="Domain.FK__ASSMED_CadTelefo__47FBA9D6">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_CadTelefones" EntitySet="ASSMED_CadTelefones" />
           </AssociationSet>
-          <EntitySet Name="VW_ConsultaCadastrosIndividuais" EntityType="Domain.VW_ConsultaCadastrosIndividuais" />
-          <EntitySet Name="VW_ConsultaCadastrosDomiciliares" EntityType="Domain.VW_ConsultaCadastrosDomiciliares" />
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
           <Key>
@@ -3167,6 +3155,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="CodEtnia" Type="Int32" Nullable="false" />
           <Property Name="DesEtnia" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" FromRole="Etnia" ToRole="IdentificacaoUsuarioCidadao" />
+          <NavigationProperty Name="IdentificacaoUsuarioCidadao1" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia1" FromRole="Etnia" ToRole="IdentificacaoUsuarioCidadao" />
         </EntityType>
         <EntityType Name="ProfCidadaoVinc">
           <Key>
@@ -4588,6 +4577,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="Etnia1" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" FromRole="IdentificacaoUsuarioCidadao" ToRole="Etnia" />
           <NavigationProperty Name="TP_Raca_Cor" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Raca_Cor" />
           <NavigationProperty Name="TP_Sexo" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Sexo" />
+          <NavigationProperty Name="Etnia11" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia1" FromRole="IdentificacaoUsuarioCidadao" ToRole="Etnia" />
         </EntityType>
         <EntityType Name="ASSMED_Cadastro">
           <Key>
@@ -4920,38 +4910,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="DesNacao" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="codigo" Type="Int32" />
         </EntityType>
-        <EntityType Name="ASSMED_CadTelefones">
-          <Key>
-            <PropertyRef Name="NumContrato" />
-            <PropertyRef Name="Codigo" />
-            <PropertyRef Name="DDD" />
-            <PropertyRef Name="NumTel" />
-          </Key>
-          <Property Name="NumContrato" Type="Int32" Nullable="false" />
-          <Property Name="Codigo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="DDD" Type="Int32" Nullable="false" />
-          <Property Name="NumTel" Type="String" Nullable="false" MaxLength="9" FixedLength="true" Unicode="false" />
-          <Property Name="TipoTel" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="DtSistema" Type="DateTime" Precision="3" />
-          <Property Name="NumIP" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
-          <Property Name="CodUsu" Type="Int32" />
-          <Property Name="Observacoes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_CadTelefo__47FBA9D6" FromRole="ASSMED_CadTelefones" ToRole="ASSMED_Cadastro" />
-        </EntityType>
-        <Association Name="FK__ASSMED_CadTelefo__47FBA9D6">
-          <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="1" />
-          <End Type="Domain.ASSMED_CadTelefones" Role="ASSMED_CadTelefones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Cadastro">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Principal>
-            <Dependent Role="ASSMED_CadTelefones">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="VW_ConsultaCadastrosIndividuais">
           <Key>
             <PropertyRef Name="Codigo" />
@@ -4976,6 +4934,50 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="IdFicha" Type="Guid" />
           <Property Name="Codigo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
         </EntityType>
+        <EntityType Name="ASSMED_CadTelefones">
+          <Key>
+            <PropertyRef Name="IDTelefone" />
+          </Key>
+          <Property Name="NumContrato" Type="Int32" Nullable="false" />
+          <Property Name="Codigo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="DDD" Type="Int32" Nullable="false" />
+          <Property Name="NumTel" Type="String" Nullable="false" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="TipoTel" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DtSistema" Type="DateTime" Precision="3" />
+          <Property Name="NumIP" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="CodUsu" Type="Int32" />
+          <Property Name="Observacoes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IDTelefone" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_CadTelefo__47FBA9D6" FromRole="ASSMED_CadTelefones" ToRole="ASSMED_Cadastro" />
+        </EntityType>
+        <Association Name="FK_IdentificacaoUsuarioCidadao_Etnia1">
+          <End Type="Domain.Etnia" Role="Etnia" Multiplicity="0..1" />
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Etnia">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodEtnia" />
+            </Principal>
+            <Dependent Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="num_contrato" />
+              <PropertyRef Name="etnia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ASSMED_CadTelefo__47FBA9D6">
+          <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="1" />
+          <End Type="Domain.ASSMED_CadTelefones" Role="ASSMED_CadTelefones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASSMED_Cadastro">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="Codigo" />
+            </Principal>
+            <Dependent Role="ASSMED_CadTelefones">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="Codigo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6357,21 +6359,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ASSMED_CadTelefones">
-            <EntityTypeMapping TypeName="Domain.ASSMED_CadTelefones">
-              <MappingFragment StoreEntitySet="ASSMED_CadTelefones">
-                <ScalarProperty Name="Observacoes" ColumnName="Observacoes" />
-                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
-                <ScalarProperty Name="NumIP" ColumnName="NumIP" />
-                <ScalarProperty Name="DtSistema" ColumnName="DtSistema" />
-                <ScalarProperty Name="TipoTel" ColumnName="TipoTel" />
-                <ScalarProperty Name="NumTel" ColumnName="NumTel" />
-                <ScalarProperty Name="DDD" ColumnName="DDD" />
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="VW_ConsultaCadastrosIndividuais">
             <EntityTypeMapping TypeName="Domain.VW_ConsultaCadastrosIndividuais">
               <MappingFragment StoreEntitySet="VW_ConsultaCadastrosIndividuais">
@@ -6395,6 +6382,22 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="Numero" ColumnName="Numero" />
                 <ScalarProperty Name="Responsavel" ColumnName="Responsavel" />
                 <ScalarProperty Name="Complemento" ColumnName="Complemento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASSMED_CadTelefones">
+            <EntityTypeMapping TypeName="Domain.ASSMED_CadTelefones">
+              <MappingFragment StoreEntitySet="ASSMED_CadTelefones">
+                <ScalarProperty Name="IDTelefone" ColumnName="IDTelefone" />
+                <ScalarProperty Name="Observacoes" ColumnName="Observacoes" />
+                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
+                <ScalarProperty Name="NumIP" ColumnName="NumIP" />
+                <ScalarProperty Name="DtSistema" ColumnName="DtSistema" />
+                <ScalarProperty Name="TipoTel" ColumnName="TipoTel" />
+                <ScalarProperty Name="NumTel" ColumnName="NumTel" />
+                <ScalarProperty Name="DDD" ColumnName="DDD" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -72,13 +72,13 @@ namespace Softpark.Models
             if (profissional.Length == 0)
                 throw new ValidationException("CNS não encontrado.");
 
-            if (profissional.All(x => x.CBO == null || x.CBO.Trim() != header.cboCodigo_2002.Trim()))
+            if (profissional.All(x => x.CBO == null || x.CBO.Trim() != header?.cboCodigo_2002?.Trim()))
                 throw new ValidationException("CBO não encontrado.");
 
-            if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header.cnes.Trim()))
+            if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header?.cnes?.Trim()))
                 throw new ValidationException("CNES não encontrado.");
 
-            if (header.ine != null && profissional.All(x => x.INE == null || x.INE.Trim() != header.ine.Trim()))
+            if (header.ine != null && profissional.All(x => x.INE == null || x.INE?.Trim() != header?.ine?.Trim()))
                 throw new ValidationException("INE não encontrado.");
 
             var validEpoch = Epoch.ValidateESUSDateTime(header.dataAtendimento);
@@ -480,7 +480,7 @@ namespace Softpark.Models
             }
             else if (cond.nacionalidadeCidadao == 3)
                 throw new ValidationException("O país de nascimento do cidadão é obrigatório.");
-            else if (cond.nacionalidadeCidadao == 1)
+            else if (cond.nacionalidadeCidadao == 1 && (cond.paisNascimento != null && cond.paisNascimento > 0))
                 throw new ValidationException("O país de nascimento do cidadão é inválido para a nacionalidade informada.");
 
             if (domain.TP_Raca_Cor.All(x => x.id_tp_raca_cor != cond.racaCorCidadao))

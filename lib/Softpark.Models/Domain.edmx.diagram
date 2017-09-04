@@ -148,10 +148,11 @@
         <EntityTypeShape EntityType="Domain.ASSMED_CadEmails" Width="1.5" PointX="21.125" PointY="45.875" />
         <AssociationConnector Association="Domain.FK__ASSMED_CadEmails__4CC05EF3" />
         <EntityTypeShape EntityType="Domain.Nacionalidade" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Domain.ASSMED_CadTelefones" Width="1.5" PointX="21.125" PointY="35.75" />
-        <AssociationConnector Association="Domain.FK__ASSMED_CadTelefo__47FBA9D6" />
         <EntityTypeShape EntityType="Domain.VW_ConsultaCadastrosIndividuais" Width="1.5" PointX="26.375" PointY="6.75" />
         <EntityTypeShape EntityType="Domain.VW_ConsultaCadastrosDomiciliares" Width="1.5" PointX="26.375" PointY="20.75" />
+        <EntityTypeShape EntityType="Domain.ASSMED_CadTelefones" Width="1.5" PointX="21.125" PointY="34.625" />
+        <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia1" />
+        <AssociationConnector Association="Domain.FK__ASSMED_CadTelefo__47FBA9D6" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -6,9 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Routing;
-using System.Net.Http;
-using System.ServiceModel.Channels;
-using System.Web.Http;
 using System.Text.RegularExpressions;
 using static Softpark.Infrastructure.Extensions.WithStatement;
 
@@ -342,13 +339,16 @@ namespace Softpark.WS.ViewModels.SIGSM
             var codigo = CadastroIndividual.identificacaoUsuarioCidadao?.Codigo;
             var cpf = CadastroIndividual.identificacaoUsuarioCidadao?.CPF;
             var rg = CadastroIndividual.identificacaoUsuarioCidadao?.RG;
+            var cns = CadastroIndividual.identificacaoUsuarioCidadao?.cnsCidadao;
             var pis = CadastroIndividual.identificacaoUsuarioCidadao?.numeroNisPisPasep;
 
             var assmedCadastro = await (db.ASSMED_Cadastro.SingleOrDefaultAsync(x => x.Codigo == codigo) ??
+                db.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero.Trim().Length > 0 && x.Numero == cns && x.CodTpDocP == 6)
+                    .Select(x => x.ASSMED_Cadastro).FirstOrDefaultAsync() ??
                 db.ASSMED_PesFisica.Where(x => x.CPF == cpf).Select(x => x.ASSMED_Cadastro).FirstOrDefaultAsync() ??
                 db.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero.Trim().Length > 0 && x.Numero == rg && x.CodTpDocP == 1)
                     .Select(x => x.ASSMED_Cadastro).FirstOrDefaultAsync() ??
-                db.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero.Trim().Length > 0 && x.Numero == pis && x.CodTpDocP == 1)
+                db.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero.Trim().Length > 0 && x.Numero == pis && x.CodTpDocP == 7)
                     .Select(x => x.ASSMED_Cadastro).FirstOrDefaultAsync());
 
             CadastroIndividual.uuid = Guid.NewGuid();
@@ -420,10 +420,6 @@ namespace Softpark.WS.ViewModels.SIGSM
                     .Select(x => x.codigo).Distinct().ToArrayAsync();
 
                 CadastroIndividual.condicoesDeSaude.doencaRins = doencas;
-
-                var peso = await db.TP_Consideracao_Peso.SingleOrDefaultAsync(x => x.id_tp_consideracao_peso == CadastroIndividual.condicoesDeSaude.situacaoPeso);
-
-                CadastroIndividual.condicoesDeSaude.situacaoPeso = peso?.codigo;
             }
 
             if (CadastroIndividual.emSituacaoDeRua != null)
@@ -441,11 +437,6 @@ namespace Softpark.WS.ViewModels.SIGSM
                     .Select(x => x.codigo).Distinct().ToArrayAsync();
 
                 CadastroIndividual.emSituacaoDeRua.origemAlimentoSituacaoRua = ori;
-
-                var qtda = await db.TP_Quantas_Vezes_Alimentacao
-                    .SingleOrDefaultAsync(x => x.id_tp_quantas_vezes_alimentacao == CadastroIndividual.emSituacaoDeRua.quantidadeAlimentacoesAoDiaSituacaoRua);
-
-                CadastroIndividual.emSituacaoDeRua.quantidadeAlimentacoesAoDiaSituacaoRua = qtda?.codigo;
             }
 
             if (CadastroIndividual.informacoesSocioDemograficas != null)
@@ -467,6 +458,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 var merc = await db.TP_Sit_Mercado.SingleOrDefaultAsync(x => x.id_tp_sit_mercado == CadastroIndividual.informacoesSocioDemograficas.situacaoMercadoTrabalhoCidadao);
 
                 CadastroIndividual.informacoesSocioDemograficas.situacaoMercadoTrabalhoCidadao = merc?.codigo;
+
+                CadastroIndividual.informacoesSocioDemograficas.ocupacaoCodigoCbo2002 = CadastroIndividual.informacoesSocioDemograficas.ocupacaoCodigoCbo2002?.Trim();
             }
 
             CleanStrings();
@@ -520,6 +513,8 @@ namespace Softpark.WS.ViewModels.SIGSM
             origem.UnicaLotacaoTransport.Add(header);
             db.OrigemVisita.Add(origem);
 
+            await db.SaveChangesAsync();
+
             await GerarCadastroAssmed(cad, db, url);
 
             await db.SaveChangesAsync();
@@ -540,13 +535,17 @@ namespace Softpark.WS.ViewModels.SIGSM
             var curso = cad.InformacoesSocioDemograficas1?.grauInstrucaoCidadao;
             curso = (await db.TP_Curso.SingleOrDefaultAsync(x => x.codigo == curso))?.id_tp_curso;
 
-            var cidade = (await db.Cidade.FirstOrDefaultAsync(x => x.CodIbge == iden.codigoIbgeMunicipioNascimento));
+            var codigoIbgeMunicipioNascimento = iden?.codigoIbgeMunicipioNascimento;
+
+            var cidade = (await db.Cidade.FirstOrDefaultAsync(x => x.CodIbge == codigoIbgeMunicipioNascimento && x.CodIbge != null));
 
             var deficiencia = (await db.TP_Deficiencia.SingleOrDefaultAsync(x => x.codigo == def))?.id_tp_deficiencia;
 
-            var nacao = (await db.Nacionalidade.FirstOrDefaultAsync(x => x.codigo == iden.paisNascimento)).CodNacao;
+            var paisNascimento = iden?.paisNascimento;
 
-            var cpf = iden.CPF;
+            var nacao = (await db.Nacionalidade.FirstOrDefaultAsync(x => x.codigo == paisNascimento && x.codigo != null))?.CodNacao;
+
+            var cpf = iden?.CPF;
             if (cpf != null)
             {
                 cpf = Regex.Replace(cpf, "([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{2})", "$1.$2.$3-$4");
@@ -560,39 +559,125 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             var idUsuario = Convert.ToInt32(ASPSessionVar.Read("idUsuario", url));
 
-            var telefone = assmed.ASSMED_CadTelefones.LastOrDefault(x => x.TipoTel == "C");
-
-            var email = assmed.ASSMED_CadEmails.LastOrDefault(x => x.TipoEMail == "P");
-
-            var cns = assmed.ASSMED_CadastroDocPessoal.LastOrDefault(x => x.CodTpDocP == 6 && x.Numero != null && x.Numero.Trim().Length > 0);
-
-            var rg = assmed.ASSMED_CadastroDocPessoal.LastOrDefault(x => x.CodTpDocP == 1 && x.Numero != null && x.Numero.Trim().Length > 0);
-
             var novo = codigo == null;
+
+            ASSMED_CadastroDocPessoal cns = null;
+            ASSMED_CadastroDocPessoal rg = null;
+            ASSMED_CadastroDocPessoal pis = null;
 
             if (novo)
             {
-                if(cpf != null)
+                if (iden.cnsCidadao != null)
                 {
-                    var numCpfs = await db.ASSMED_PesFisica.CountAsync(x => x.CPF == cpf || x.CPF == iden.CPF);
+                    var _cns = iden.cnsCidadao;
 
-                    if(numCpfs == 1)
+                    var numCnss = await db.ASSMED_CadastroDocPessoal.CountAsync(x => x.Numero == _cns && x.CodTpDocP == 6);
+
+                    if (numCnss == 1)
                     {
-                        pessoa = await db.ASSMED_PesFisica.FirstOrDefaultAsync(x => x.CPF == cpf || x.CPF == iden.CPF);
+                        cns = await db.ASSMED_CadastroDocPessoal.FirstOrDefaultAsync(x => x.Numero == _cns && x.CodTpDocP == 6);
 
-                        assmed = pessoa.ASSMED_Cadastro;
+                        assmed = cns.ASSMED_Cadastro;
+
+                        pessoa = assmed.ASSMED_PesFisica;
+
+                        codigo = assmed.Codigo;
+
+                        novo = false;
                     }
                 }
 
+                if (novo && cpf != null)
+                {
+                    var numCpfs = await db.ASSMED_PesFisica.CountAsync(x => x.CPF == cpf || x.CPF == iden.CPF);
+
+                    if (numCpfs == 1)
+                    {
+                        pessoa = await db.ASSMED_PesFisica.SingleAsync(x => x.CPF == cpf || x.CPF == iden.CPF);
+
+                        assmed = pessoa.ASSMED_Cadastro;
+
+                        codigo = assmed.Codigo;
+
+                        novo = false;
+                    }
+                }
+
+                if (novo && iden.RG != null)
+                {
+                    var _rg = iden.RG;
+                    var _rg2 = Regex.Replace(@"([.\/-])", "", iden.RG);
+
+                    var numRgs = await db.ASSMED_CadastroDocPessoal.CountAsync(x => (x.Numero == _rg || x.Numero == _rg2) && x.CodTpDocP == 1);
+
+                    if (numRgs == 1)
+                    {
+                        rg = await db.ASSMED_CadastroDocPessoal.SingleAsync(x => (x.Numero == _rg || x.Numero == _rg2) && x.CodTpDocP == 1);
+
+                        assmed = rg.ASSMED_Cadastro;
+
+                        pessoa = assmed.ASSMED_PesFisica;
+
+                        codigo = assmed.Codigo;
+
+                        novo = false;
+                    }
+                }
+
+                if(novo && iden.numeroNisPisPasep != null)
+                {
+                    var _pis = iden.numeroNisPisPasep;
+                    var _pis2 = Regex.Replace(@"([.\/-])", "", iden.numeroNisPisPasep);
+
+                    var numPiss = await db.ASSMED_CadastroDocPessoal.CountAsync(x => (x.Numero == _pis || x.Numero == _pis2) && x.CodTpDocP == 7);
+
+                    if (numPiss == 1)
+                    {
+                        pis = await db.ASSMED_CadastroDocPessoal.SingleAsync(x => (x.Numero == _pis || x.Numero == _pis2) && x.CodTpDocP == 7);
+
+                        assmed = rg.ASSMED_Cadastro;
+
+                        pessoa = assmed.ASSMED_PesFisica;
+
+                        codigo = assmed.Codigo;
+
+                        novo = false;
+                    }
+                }
+
+                if (assmed != null)
+                {
+                    cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmed;
+                    assmed.IdentificacaoUsuarioCidadao = cad.IdentificacaoUsuarioCidadao1;
+                }
+
+                if (assmed?.IdentificacaoUsuarioCidadao != null)
+                {
+                    cad.uuidFichaOriginadora = assmed.IdentificacaoUsuarioCidadao.CadastroIndividual.FirstOrDefault()?.id;
+
+                    cad.fichaAtualizada = true;
+                }
+            }
+
+            if(novo)
+            {
                 codigo = await db.ASSMED_Cadastro.MaxAsync(x => x.Codigo + 1);
             }
+
+            var telefone = assmed?.ASSMED_CadTelefones.LastOrDefault(x => x.TipoTel == "C");
+
+            var email = assmed?.ASSMED_CadEmails.LastOrDefault(x => x.EMail == iden.emailCidadao);
+
+            cns = cns ?? assmed?.ASSMED_CadastroDocPessoal.LastOrDefault(x => x.CodTpDocP == 6);
+
+            rg = rg ?? assmed?.ASSMED_CadastroDocPessoal.LastOrDefault(x => x.CodTpDocP == 1);
+
+            pis = pis ?? assmed?.ASSMED_CadastroDocPessoal.LastOrDefault(x => x.CodTpDocP == 7);
 
             var np = pessoa == null;
 
             With(ref pessoa, () => new ASSMED_PesFisica
             {
-                Codigo = (decimal)codigo,
-                NumContrato = 22,
                 CodCor = iden.racaCorCidadao,
                 CodDeficiencia = deficiencia,
                 CodEscola = curso,
@@ -620,16 +705,17 @@ namespace Softpark.WS.ViewModels.SIGSM
                 ESCOLARIDADE = curso,
                 MuniNacao = cidade?.NomeCidade,
                 ORIENTACAO = cad.InformacoesSocioDemograficas1?.orientacaoSexualCidadao,
-                UfNacao = cidade.UF
+                UfNacao = cidade?.UF
+            }, np ? new string[0] : new[] {
+                nameof(ASSMED_PesFisica.Codigo),
+                nameof(ASSMED_PesFisica.NumContrato),
+                nameof(ASSMED_PesFisica.ASSMED_Cadastro)
             });
 
             With(ref assmed, () => new ASSMED_Cadastro
             {
                 IdentificacaoUsuarioCidadao = iden,
-                Codigo = (decimal)codigo,
-                NumContrato = 22,
                 CodUsu = idUsuario,
-                ASSMED_PesFisica = pessoa,
                 DtAtualizacao = DateTime.Now,
                 DtSistema = DateTime.Now,
                 IdFicha = iden.id,
@@ -637,57 +723,78 @@ namespace Softpark.WS.ViewModels.SIGSM
                 NomeSocial = iden.nomeSocial,
                 NumIP = requester,
                 Tipo = "F"
+            }, novo ? new string[0] : new[] {
+                nameof(ASSMED_Cadastro.Codigo),
+                nameof(ASSMED_Cadastro.NumContrato),
+                nameof(ASSMED_Cadastro.ASSMED_CadastroDocPessoal),
+                nameof(ASSMED_Cadastro.ASSMED_CadEmails),
+                nameof(ASSMED_Cadastro.ASSMED_CadTelefones),
+                nameof(ASSMED_Cadastro.ASSMED_Endereco),
+                nameof(ASSMED_Cadastro.ASSMED_PesFisica),
+                nameof(ASSMED_Cadastro.EnderecoLocalPermanencia),
+                nameof(ASSMED_Cadastro.IdentificacaoUsuarioCidadao),
+                nameof(ASSMED_Cadastro.IdentificacaoUsuarioCidadao1),
+                nameof(ASSMED_Cadastro.IdFicha)
             });
 
-            pessoa.ASSMED_Cadastro = assmed;
+            if (novo)
+            {
+                assmed.Codigo = (decimal)codigo;
+                assmed.NumContrato = 22;
+            }
 
-            if (iden.telefoneCelular != null)
+            if (np)
+            {
+                pessoa.ASSMED_Cadastro = assmed;
+                pessoa.NumContrato = 22;
+                pessoa.Codigo = assmed.Codigo;
+                assmed.ASSMED_PesFisica = pessoa;
+            }
+
+            if (iden.telefoneCelular != null && iden.telefoneCelular.Length >= 10)
             {
                 var n = telefone == null;
 
                 With(ref telefone, () => new ASSMED_CadTelefones
                 {
                     ASSMED_Cadastro = assmed,
-                    Codigo = (decimal)codigo,
                     CodUsu = idUsuario,
                     DDD = Convert.ToInt32(iden.telefoneCelular.Substring(0, 2)),
                     DtSistema = DateTime.Now,
-                    NumContrato = 22,
                     NumIP = requester,
                     NumTel = iden.telefoneCelular.Substring(2),
                     TipoTel = "C"
+                }, n ? new string[0] : new[] {
+                    nameof(ASSMED_CadTelefones.Codigo),
+                    nameof(ASSMED_CadTelefones.NumContrato),
+                    nameof(ASSMED_CadTelefones.IDTelefone)
                 });
 
                 if (n)
                 {
+                    telefone.NumContrato = 22;
+                    telefone.Codigo = assmed.Codigo;
                     assmed.ASSMED_CadTelefones.Add(telefone);
-                    db.ASSMED_CadTelefones.Add(telefone);
                 }
             }
 
-            if (iden.emailCidadao != null)
+            if (email == null)
             {
-                var n = email == null;
-
                 With(ref email, () => new ASSMED_CadEmails
                 {
+                    Codigo = assmed.Codigo,
+                    NumContrato = assmed.NumContrato,
                     ASSMED_Cadastro = assmed,
-                    Codigo = (decimal)codigo,
                     CodUsu = idUsuario,
                     EMail = iden.emailCidadao,
                     TipoEMail = "P",
                     DtSistema = DateTime.Now,
-                    NumContrato = 22,
                     NumIP = requester
                 });
 
-                if (n)
-                {
-                    assmed.ASSMED_CadEmails.Add(email);
-                    db.ASSMED_CadEmails.Add(email);
-                }
+                assmed.ASSMED_CadEmails.Add(email);
             }
-
+            
             if (iden.cnsCidadao != null)
             {
                 var n = cns == null;
@@ -695,22 +802,24 @@ namespace Softpark.WS.ViewModels.SIGSM
                 With(ref cns, () => new ASSMED_CadastroDocPessoal
                 {
                     ASSMED_Cadastro = assmed,
-                    Codigo = (decimal)codigo,
-                    NumContrato = 22,
                     CodTpDocP = 6,
                     CodUsu = idUsuario,
                     DtSistema = DateTime.Now,
                     Numero = iden.cnsCidadao,
                     NumIP = requester
+                }, n ? new string[0] : new[] {
+                    nameof(ASSMED_CadastroDocPessoal.Codigo),
+                    nameof(ASSMED_CadastroDocPessoal.NumContrato)
                 });
 
                 if (n)
                 {
+                    cns.NumContrato = 22;
+                    cns.Codigo = assmed.Codigo;
                     assmed.ASSMED_CadastroDocPessoal.Add(cns);
-                    db.ASSMED_CadastroDocPessoal.Add(cns);
                 }
             }
-
+            
             if (iden.RG != null)
             {
                 var n = rg == null;
@@ -718,36 +827,55 @@ namespace Softpark.WS.ViewModels.SIGSM
                 With(ref rg, () => new ASSMED_CadastroDocPessoal
                 {
                     ASSMED_Cadastro = assmed,
-                    Codigo = (decimal)codigo,
-                    NumContrato = 22,
                     CodTpDocP = 1,
                     CodUsu = idUsuario,
                     DtSistema = DateTime.Now,
                     Numero = iden.RG,
                     NumIP = requester
-                });
+                }, n ? new string[0] : new[] { nameof(ASSMED_CadastroDocPessoal.Codigo), nameof(ASSMED_CadastroDocPessoal.NumContrato) });
 
                 if (n)
                 {
+                    rg.NumContrato = 22;
+                    rg.Codigo = assmed.Codigo;
                     assmed.ASSMED_CadastroDocPessoal.Add(rg);
-                    db.ASSMED_CadastroDocPessoal.Add(rg);
                 }
             }
+
+            if (iden.numeroNisPisPasep != null)
+            {
+                var n = pis == null;
+
+                With(ref pis, () => new ASSMED_CadastroDocPessoal
+                {
+                    ASSMED_Cadastro = assmed,
+                    CodTpDocP = 7,
+                    CodUsu = idUsuario,
+                    DtSistema = DateTime.Now,
+                    Numero = iden.numeroNisPisPasep,
+                    NumIP = requester
+                }, n ? new string[0] : new[] { nameof(ASSMED_CadastroDocPessoal.Codigo), nameof(ASSMED_CadastroDocPessoal.NumContrato) });
+
+                if (n)
+                {
+                    rg.NumContrato = 22;
+                    rg.Codigo = assmed.Codigo;
+                    assmed.ASSMED_CadastroDocPessoal.Add(pis);
+                }
+            }
+
+            pessoa.ASSMED_Cadastro = assmed;
+            assmed.ASSMED_PesFisica = pessoa;
 
             if (novo)
             {
                 db.ASSMED_Cadastro.Add(assmed);
-                pessoa.ASSMED_Cadastro = assmed;
 
                 if (np)
                 {
                     db.ASSMED_PesFisica.Add(pessoa);
                 }
-
-                cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmed;
             }
-            
-            cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmed;
         }
 
         internal static async Task<FormCadastroIndividual> Apply(CadastroIndividual data, DomainContainer db)
@@ -757,6 +885,10 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(data.UnicaLotacaoTransport),
                 CadastroIndividual = data
             };
+
+            form.CabecalhoTransporte.profissionalNome = db.VW_Profissional.FirstOrDefault(x => x.CNS == form.CabecalhoTransporte.profissionalCNS)?.Nome;
+
+            form.CabecalhoTransporte.ine = (await db.SetoresINEs.FirstOrDefaultAsync(x => x.Numero != null && x.Numero == form.CabecalhoTransporte.ine))?.CodINE.ToString();
 
             form.Finalizado = data.UnicaLotacaoTransport.OrigemVisita.finalizado;
 
@@ -768,13 +900,11 @@ namespace Softpark.WS.ViewModels.SIGSM
 
                 iden.codigoIbgeMunicipioNascimento = cidade?.CodCidade.ToString();
 
-                var pais = await db.Nacionalidade.SingleOrDefaultAsync(x => x.codigo == iden.paisNascimento);
+                var pais = await db.Nacionalidade.FirstOrDefaultAsync(x => x.codigo == iden.paisNascimento && x.codigo != null);
 
                 iden.paisNascimento = pais?.CodNacao;
 
-                var nacionalidade = await db.TP_Nacionalidade.SingleOrDefaultAsync(x => x.codigo == iden.nacionalidadeCidadao);
-
-                iden.nacionalidadeCidadao = nacionalidade?.id_tp_nacionalidade ?? 1;
+                form.CadastroIndividual.identificacaoUsuarioCidadao.nacionalidadeCidadao = data.IdentificacaoUsuarioCidadao1.nacionalidadeCidadao;
             }
 
             if (form.CadastroIndividual.condicoesDeSaude != null)
@@ -798,10 +928,6 @@ namespace Softpark.WS.ViewModels.SIGSM
                     .Select(x => x.id_tp_doenca_renal).Distinct().ToArrayAsync();
 
                 cond.doencaRins = doencas;
-
-                var peso = await db.TP_Consideracao_Peso.SingleOrDefaultAsync(x => x.codigo == cond.situacaoPeso);
-
-                cond.situacaoPeso = peso?.id_tp_consideracao_peso;
             }
 
             if (form.CadastroIndividual.emSituacaoDeRua != null)
@@ -821,11 +947,6 @@ namespace Softpark.WS.ViewModels.SIGSM
                     .Select(x => x.id_tp_origem_alimentacao).Distinct().ToArrayAsync();
 
                 emsit.origemAlimentoSituacaoRua = ori;
-
-                var qtda = await db.TP_Quantas_Vezes_Alimentacao
-                    .SingleOrDefaultAsync(x => x.codigo == emsit.quantidadeAlimentacoesAoDiaSituacaoRua);
-
-                emsit.quantidadeAlimentacoesAoDiaSituacaoRua = qtda?.id_tp_quantas_vezes_alimentacao;
             }
 
             if (form.CadastroIndividual.informacoesSocioDemograficas != null)
@@ -849,6 +970,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 var merc = await db.TP_Sit_Mercado.SingleOrDefaultAsync(x => x.codigo == info.situacaoMercadoTrabalhoCidadao);
 
                 info.situacaoMercadoTrabalhoCidadao = merc?.id_tp_sit_mercado;
+
+                info.ocupacaoCodigoCbo2002 = info.ocupacaoCodigoCbo2002?.Trim();
             }
 
             return form;

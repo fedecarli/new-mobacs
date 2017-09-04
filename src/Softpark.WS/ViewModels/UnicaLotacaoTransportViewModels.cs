@@ -4,6 +4,7 @@ using Softpark.WS.Validators;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Softpark.WS.ViewModels
@@ -68,6 +69,12 @@ namespace Softpark.WS.ViewModels
         public string codigoIbgeMunicipio { get; set; }
 
         /// <summary>
+        /// Código ASSMED_Cadastro
+        /// </summary>
+        [DataMember(Name = nameof(profissionalNome))]
+        public string profissionalNome { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="domain"></param>
@@ -98,7 +105,8 @@ namespace Softpark.WS.ViewModels
                 codigoIbgeMunicipio = model.codigoIbgeMunicipio,
                 dataAtendimento = model.dataAtendimento,
                 ine = model.ine,
-                profissionalCNS = model.profissionalCNS
+                profissionalCNS = model.profissionalCNS,
+                profissionalNome = DomainContainer.Current.VW_Profissional.FirstOrDefault(x => x.CNS == model.profissionalCNS)?.Nome
             };
         }
 

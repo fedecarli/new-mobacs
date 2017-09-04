@@ -431,5 +431,10 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             return cad.UnicaLotacaoTransport.id;
         }
+
+        internal FormCadastroDomiciliar ToDetail()
+        {
+            return this;
+        }
     }
 }

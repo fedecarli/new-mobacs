@@ -62,5 +62,6 @@ namespace Softpark.Models
         public virtual Etnia Etnia1 { get; set; }
         public virtual TP_Raca_Cor TP_Raca_Cor { get; set; }
         public virtual TP_Sexo TP_Sexo { get; set; }
+        public virtual Etnia Etnia11 { get; set; }
     }
 }
