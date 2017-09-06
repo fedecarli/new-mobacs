@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using static Softpark.Infrastructure.Extensions.WithStatement;
+using System.Data.SqlClient;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -87,63 +88,80 @@ namespace Softpark.WS.Controllers.Api
                 Length = 10
             };
 
-            var data = Domain.ASSMED_Cadastro.Where(x => x.Nome != null && x.Nome.Length > 0 && !x.Nome.Contains("*"));
+            var search = request.Search.Value == null ||
+                request.Search.Value.Trim().Length == 0 ?
+                null : request.Search.Value.Trim();
+            
+            var order = request.Columns.OrderBy(x => x.Sort.Direction)
+                .Aggregate("", (a, b) => (a.Length > 0 ? (a + ", ") : "") + b.Name);
+            
+            var sql = $@"
+						declare @search NVARCHAR(MAX),
+								@isNum BIT,
+								@isGuid BIT,
+								@isDate BIT,
+								@isCns BIT,
+								@len INT;
+						
+						 SELECT @search = @busca;
 
-            DateTime? dtFilter = null;
-            if (DateTime.TryParseExact(request.Search.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime _dtFilter))
-                dtFilter = _dtFilter;
+						 SELECT @len = LEN(@search);
 
-            decimal? codigo = null;
-            if (decimal.TryParse(request.Search.Value, out decimal _codigo))
-                codigo = _codigo;
+						 SELECT @isNum = ISNUMERIC(@search),
+								@isGuid = (CASE WHEN @search LIKE REPLACE('00000000-0000-0000-0000-000000000000', '0', '[0-9a-fA-F]') THEN 1 ELSE 0 END),
+								@isDate = ISDATE(@search),
+								@isCns = (CASE WHEN @len = 15 AND ISNUMERIC(@search) = 1 AND SUBSTRING(@search, 1, 1) IN ('1', '2', '7', '8', '9') THEN 1 ELSE 0 END);
 
-            string cns = null;
-            if (!string.IsNullOrEmpty(request.Search.Value) && request.Search.Value.Length == 15 && Regex.IsMatch(request.Search.Value, "([0-9]+)"))
-                cns = request.Search.Value;
+						 SELECT ac.Nome,
+								pf.DtNasc,
+								pf.NomeMae,
+								cns.Numero,
+								cid.NomeCidade,
+								ac.Codigo,
+								ci.id,
+								ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS ROW
+						   FROM ASSMED_Cadastro AS ac
+					  LEFT JOIN ASSMED_PesFisica AS pf
+							 ON pf.Codigo = ac.Codigo
+					  LEFT JOIN api.IdentificacaoUsuarioCidadao AS iden
+							 ON ac.Codigo = iden.Codigo
+							 OR ac.IdFicha = iden.id
+					  LEFT JOIN api.CadastroIndividual AS ci
+							 ON iden.id = ci.identificacaoUsuarioCidadao
+					  LEFT JOIN ASSMED_CadastroDocPessoal AS cns
+							 ON ac.Codigo = cns.Codigo
+							AND cns.CodTpDocP = 6
+					  LEFT JOIN Cidade as cid
+							 ON pf.MUNICIPIONASC = cid.CodCidade
+						  WHERE ac.Nome IS NOT NULL
+							AND LEN(LTRIM(RTRIM(nome))) > 0
+							AND ac.Nome NOT LIKE '%*%'
+							AND (CASE
+								 WHEN (@len = 0 OR @search IS NULL) THEN 1
+								 WHEN (@isCns = 1) THEN (CASE cns.Numero WHEN @search THEN 1 ELSE 0 END)
+								 WHEN (@isGuid = 1) THEN (CASE CAST(ci.id AS NVARCHAR(36)) WHEN @search THEN 1 ELSE 0 END)
+								 WHEN (@isCns = 0 AND @isNum = 1) THEN (CASE CAST(ac.Codigo AS VARCHAR(18)) WHEN @search THEN 1 ELSE 0 END)
+								 WHEN (@isDate = 1) THEN (CASE CONVERT(CHAR, pf.DtNasc, 103) WHEN @search THEN 1 ELSE 0 END)
+								 WHEN (@isCns = 0 AND @isGuid = 0 AND @isDate = 0) THEN
+									  (CASE
+									   WHEN cid.NomeCidade COLLATE Latin1_General_CI_AI LIKE '%' + @search + '%' OR
+											ac.Nome COLLATE Latin1_General_CI_AI LIKE '%' + @search + '%' OR
+											pf.NomeMae COLLATE Latin1_General_CI_AI LIKE '%' + @search + '%'
+									   THEN 1
+									   ELSE 0
+									    END)
+								 ELSE 0
+								  END) = 1
+					   GROUP BY ac.Nome,
+								pf.DtNasc,
+								pf.NomeMae,
+								cns.Numero,
+								cid.NomeCidade,
+								ac.Codigo,
+								ci.id
+					   ORDER BY {order}";
 
-            Guid? idFicha = null;
-
-            if (Guid.TryParse(request.Search.Value, out Guid _idFicha))
-                idFicha = _idFicha;
-
-            var filteredData = data.AsQueryable();
-
-            if (request.Search.Value != null && request.Search.Value.Length > 0)
-            {
-                var cnss = Domain.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero == cns && x.CodTpDocP == 6);
-
-                var cods = cnss.Select(x => (decimal?)x.Codigo).ToList();
-
-                if (cns != null && await data.AnyAsync(x => x.ASSMED_CadastroDocPessoal.Any(y => y.Numero != null && y.Numero == cns && y.CodTpDocP == 6)))
-                    filteredData = data.Where(x => x.ASSMED_CadastroDocPessoal.Any(y => y.Numero != null && y.Numero == cns && y.CodTpDocP == 6));
-                else if (idFicha != null && await data.AnyAsync(x => x.IdFicha != null && x.IdentificacaoUsuarioCidadao.CadastroIndividual.Any(y => y.id == _idFicha)))
-                    filteredData = data.Where(x => x.IdFicha == _idFicha);
-                else if (codigo != null && await data.AnyAsync(x => x.IdFicha != null && x.IdentificacaoUsuarioCidadao.CadastroIndividual.Any(y => y.id == _idFicha)))
-                    filteredData = data.Where(x => x.Codigo == _codigo);
-                else if (dtFilter != null && await data.AnyAsync(x => x.ASSMED_PesFisica != null && x.ASSMED_PesFisica.DtNasc == _dtFilter))
-                    filteredData = data.Where(x => x.ASSMED_PesFisica != null && x.ASSMED_PesFisica.DtNasc == _dtFilter);
-                else
-                    filteredData =
-                        from dt in data
-                        let pes = dt.ASSMED_PesFisica
-                        let ci = pes == null ? null :
-                        (from cid in Domain.Cidade where cid.CodCidade == pes.MUNICIPIONASC select cid.CodIbge)
-                        .FirstOrDefault()
-                        where (
-                        (dt.Nome != null ? dt.Nome : "") +
-                        (ci != null ? ci : "") +
-                        (pes != null && pes.NomeMae != null ? pes.NomeMae : "")).Contains(request.Search.Value)
-                        select dt;
-            }
-
-            var parsedData = from dt in filteredData
-                             let pes = dt.ASSMED_PesFisica
-                             let ci = pes == null ? null :
-                             (from cid in Domain.Cidade where cid.CodCidade == pes.MUNICIPIONASC select cid.NomeCidade)
-                             .FirstOrDefault()
-                             let _cns = dt.ASSMED_CadastroDocPessoal.Where(y => y.Numero != null && y.CodTpDocP == 6)
-                             .Select(x => x.Numero).FirstOrDefault()
-                             select new { dt, pes, ci, cns = _cns };
+            Domain.Database.SqlQuery(sql, new SqlParameter("@busca", search))
 
             // Paging filtered data.
             // Paging is rather manual due to in-memmory (IEnumerable) data.
@@ -404,7 +422,7 @@ namespace Softpark.WS.Controllers.Api
             data.IdentificacaoUsuarioCidadao1.RG = rg?.Numero;
             data.IdentificacaoUsuarioCidadao1.sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4;
 
-            return Ok(await FormCadastroIndividual.Apply(data, Domain));
+            return Ok((await FormCadastroIndividual.Apply(data, Domain)).ToDetail());
         }
 
         /// <summary>

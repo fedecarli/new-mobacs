@@ -566,6 +566,41 @@ namespace Softpark.WS.ViewModels.SIGSM
             return cad.id;
         }
 
+        private void Dirty(object obj)
+        {
+            if (obj != null)
+                foreach (PropertyInfo pi in obj.GetType().GetProperties())
+                {
+                    if (pi.PropertyType.Equals(typeof(string)))
+                    {
+                        var val = pi.GetValue(obj);
+
+                        if (val == null || string.IsNullOrEmpty(val.ToString().Trim()) || string.IsNullOrWhiteSpace(val.ToString().Trim()))
+                            pi.SetValue(obj, string.Empty);
+                        else
+                            pi.SetValue(obj, val.ToString().Trim());
+                    }
+                }
+        }
+
+        private void DirtyStrings()
+        {
+            Dirty(CabecalhoTransporte);
+            Dirty(CadastroIndividual);
+            Dirty(CadastroIndividual.identificacaoUsuarioCidadao);
+            Dirty(CadastroIndividual.informacoesSocioDemograficas);
+            Dirty(CadastroIndividual.condicoesDeSaude);
+            Dirty(CadastroIndividual.emSituacaoDeRua);
+            Dirty(CadastroIndividual.saidaCidadaoCadastro);
+        }
+
+        internal FormCadastroIndividual ToDetail()
+        {
+            DirtyStrings();
+
+            return this;
+        }
+
         private async Task<ASSMED_Cadastro> GerarCadastroAssmed(CadastroIndividual cad, DomainContainer db, UrlHelper url)
         {
             if (cad.IdentificacaoUsuarioCidadao1 == null) return null;

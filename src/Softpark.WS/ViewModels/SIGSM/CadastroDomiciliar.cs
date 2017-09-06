@@ -273,8 +273,20 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroDomiciliar.uuidFichaOriginadora == Guid.Empty ? CadastroDomiciliar.uuid
                 : CadastroDomiciliar.uuidFichaOriginadora;
 
-            var profissional = db.VW_Profissional.Where(x => x.CNS == CabecalhoTransporte.profissionalCNS &&
-            x.CNES == CabecalhoTransporte.cnes).ToArray().FirstOrDefault(x => x.INE == CabecalhoTransporte.ine || x.INE == null);
+            if (CabecalhoTransporte.ine != null)
+            {
+                int.TryParse(CabecalhoTransporte.ine, out int ine);
+
+                var setorPar = (await db.AS_SetoresPar.FirstOrDefaultAsync(x => x.CNES != null && x.CNES.Trim() == CabecalhoTransporte.cnes))?.CodSetor;
+
+                CabecalhoTransporte.ine = (await db.SetoresINEs.FirstOrDefaultAsync(x => x.CodINE == ine && x.CodSetor == setorPar))?.Numero;
+            }
+
+            var profissional = db.VW_Profissional
+                .Where(x => x.CNS != null && x.CNS.Trim() == CabecalhoTransporte.profissionalCNS &&
+                            x.CNES != null && x.CNES.Trim() == CabecalhoTransporte.cnes)
+                            .ToArray()
+                            .FirstOrDefault(x => x.INE == null || x.INE.Trim() == CabecalhoTransporte.ine);
 
             if (profissional != null)
             {
@@ -337,9 +349,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroDomiciliar.animalNoDomicilio = await db.TP_Animais.Where(x => CadastroDomiciliar.animalNoDomicilio.Contains(x.id_tp_animais))
                     .Select(x => x.codigo).ToArrayAsync();
             }
-
-            CabecalhoTransporte.cboCodigo_2002 = profissional.CBO;
-
+            
             CleanStrings();
 
             var cad = await CadastroDomiciliar.ToModel(db);
@@ -519,6 +529,33 @@ namespace Softpark.WS.ViewModels.SIGSM
             }
         }
 
+        private void Dirty(object obj)
+        {
+            if (obj != null)
+                foreach (PropertyInfo pi in obj.GetType().GetProperties())
+                {
+                    if (pi.PropertyType.Equals(typeof(string)))
+                    {
+                        var val = pi.GetValue(obj);
+
+                        if (val == null || string.IsNullOrEmpty(val.ToString().Trim()) || string.IsNullOrWhiteSpace(val.ToString().Trim()))
+                            pi.SetValue(obj, string.Empty);
+                        else
+                            pi.SetValue(obj, val.ToString().Trim());
+                    }
+                }
+        }
+
+        private void DirtyStrings()
+        {
+            Dirty(CabecalhoTransporte);
+            Dirty(CadastroDomiciliar);
+            Dirty(CadastroDomiciliar.condicaoMoradia);
+            Dirty(CadastroDomiciliar.enderecoLocalPermanencia);
+            CadastroDomiciliar.familiaRow.ToList().ForEach(Dirty);
+            Dirty(CadastroDomiciliar.instituicaoPermanencia);
+        }
+
         internal async Task<FormCadastroDomiciliar> ToDetail(DomainContainer db)
         {
             if (CadastroDomiciliar.condicaoMoradia != null)
@@ -560,6 +597,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroDomiciliar.animalNoDomicilio = await db.TP_Animais.Where(x => CadastroDomiciliar.animalNoDomicilio.Contains(x.codigo))
                     .Select(x => x.id_tp_animais).ToArrayAsync();
             }
+
+            DirtyStrings();
 
             return this;
         }
