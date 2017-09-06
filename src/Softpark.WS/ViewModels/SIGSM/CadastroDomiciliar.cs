@@ -1,12 +1,13 @@
-﻿using Softpark.Models;
+﻿using Newtonsoft.Json;
+using Softpark.Models;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http.Routing;
+using static Softpark.Infrastructure.Extensions.WithStatement;
 
 namespace Softpark.WS.ViewModels.SIGSM
 {
@@ -53,16 +54,6 @@ namespace Softpark.WS.ViewModels.SIGSM
     public class DetalheEnderecoLocalPermanenciaViewModel : EnderecoLocalPermanenciaViewModel
     {
         /// <summary>
-        /// Código ASSMED_Cadastro
-        /// </summary>
-        public decimal? Codigo { get; set; }
-
-        /// <summary>
-        /// Contrato
-        /// </summary>
-        public int? NumContrato { get; private set; }
-
-        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
@@ -97,16 +88,11 @@ namespace Softpark.WS.ViewModels.SIGSM
             pontoReferencia = model.pontoReferencia;
             microarea = model.microarea;
             stForaArea = model.stForaArea;
-            Codigo = model.Codigo;
-            NumContrato = model.num_contrato;
         }
-        
+
         internal override EnderecoLocalPermanencia ToModel(DomainContainer domain)
         {
             var iuc = base.ToModel(domain);
-
-            iuc.Codigo = Codigo;
-            iuc.num_contrato = 22;
 
             return iuc;
         }
@@ -131,7 +117,7 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator DetalheCadastroDomiciliarVW(CadastroDomiciliar model)
+        public static async Task<DetalheCadastroDomiciliarVW> ToVM(CadastroDomiciliar model, DomainContainer db)
         {
             var vm = new DetalheCadastroDomiciliarVW();
 
@@ -141,6 +127,18 @@ namespace Softpark.WS.ViewModels.SIGSM
             vm.ApplyModel(model);
 
             vm.enderecoLocalPermanencia = model.EnderecoLocalPermanencia1;
+
+            if (vm.enderecoLocalPermanencia != null)
+            {
+                if (vm.enderecoLocalPermanencia.cep != null)
+                    vm.enderecoLocalPermanencia.cep = Regex.Replace(vm.enderecoLocalPermanencia.cep, "^([0-9]{5})([0-9]{3})$", "$1-$2");
+
+                if (vm.enderecoLocalPermanencia.codigoIbgeMunicipio != null)
+                    vm.enderecoLocalPermanencia.codigoIbgeMunicipio = (await db.Cidade.FirstOrDefaultAsync(x => x.CodIbge == vm.enderecoLocalPermanencia.codigoIbgeMunicipio && x.CodIbge != null))?.CodCidade.ToString();
+
+                if (vm.enderecoLocalPermanencia.numeroDneUf != null)
+                    vm.enderecoLocalPermanencia.numeroDneUf = (await db.UF.FirstOrDefaultAsync(x => x.DNE == vm.enderecoLocalPermanencia.numeroDneUf))?.UF1;
+            }
 
             return vm;
         }
@@ -184,12 +182,13 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator FormCadastroDomiciliar(CadastroDomiciliar model)
+        /// <param name="db"></param>
+        public static async Task<FormCadastroDomiciliar> ToVM(CadastroDomiciliar model, DomainContainer db)
         {
             return new FormCadastroDomiciliar
             {
-                CadastroDomiciliar = model,
-                CabecalhoTransporte = model.UnicaLotacaoTransport
+                CadastroDomiciliar = await DetalheCadastroDomiciliarVW.ToVM(model, db),
+                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(model.UnicaLotacaoTransport)
             };
         }
 
@@ -197,36 +196,28 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator CadastroDomiciliar(FormCadastroDomiciliar model)
+        /// <param name="db"></param>
+        public static async Task<CadastroDomiciliar> ToModel(FormCadastroDomiciliar model, DomainContainer db)
         {
-            var tsk = Task.Run(async () =>
+            var cad = await model.CadastroDomiciliar.ToModel(db);
+
+            cad.UnicaLotacaoTransport = model;
+
+            if (cad.FamiliaRow.Any())
             {
-                var cad = await model.CadastroDomiciliar.ToModel(DomainContainer.Current);
-
-                cad.UnicaLotacaoTransport = model;
-
-                if (cad.EnderecoLocalPermanencia1 != null)
+                foreach (var fam in cad.FamiliaRow)
                 {
-                    var cod = model.CadastroDomiciliar.enderecoLocalPermanencia?.Codigo ?? 0;
-
-                    var asc = await DomainContainer.Current.ASSMED_Endereco.Where(x => x.Codigo == cod)
-                    .OrderByDescending(x => x.ItemEnd).FirstOrDefaultAsync();
-
-                    cad.EnderecoLocalPermanencia1.Codigo = asc?.Codigo;
-                    cad.EnderecoLocalPermanencia1.ASSMED_Endereco1 = asc;
+                    var asc = await db.ASSMED_CadastroDocPessoal
+                        .FirstOrDefaultAsync(x => x.CodTpDocP == 6 && x.Numero == fam.numeroCnsResponsavel);
 
                     if (asc != null)
                     {
-                        asc.IdFicha = cad.EnderecoLocalPermanencia1.id;
+                        asc.ASSMED_Cadastro.IdFicha = cad.EnderecoLocalPermanencia1.id;
                     }
                 }
+            }
 
-                return cad;
-            });
-
-            tsk.Wait();
-
-            return tsk.Result;
+            return cad;
         }
 
         private void Clear(object obj)
@@ -271,32 +262,16 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// <returns></returns>
         public async Task<Guid> LimparESalvarDados(DomainContainer db, UrlHelper url)
         {
+            var restDn = JsonConvert.SerializeObject(this);
+
             CleanStrings();
 
             CabecalhoTransporte.codigoIbgeMunicipio = db.ASSMED_Contratos.First().CodigoIbgeMunicipio;
 
-            var codigo = CadastroDomiciliar.enderecoLocalPermanencia?.Codigo;
-            var cns = CadastroDomiciliar.familiaRow.FirstOrDefault().numeroCnsResponsavel;
-
-            var assmedEndereco = await (db.ASSMED_Endereco.OrderByDescending(x => x.ItemEnd).Where(x => x.Codigo == codigo).FirstOrDefaultAsync() ??
-                db.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero.Trim().Length > 0 && x.Numero == cns && x.CodTpDocP == 6)
-                    .SelectMany(x => x.ASSMED_Cadastro.ASSMED_Endereco)
-                    .OrderByDescending(x => x.ItemEnd).FirstOrDefaultAsync());
-
             CadastroDomiciliar.uuid = Guid.NewGuid();
-            CadastroDomiciliar.uuidFichaOriginadora = CadastroDomiciliar.uuid;
-
-            if (assmedEndereco != null)
-            {
-                codigo = assmedEndereco.Codigo;
-
-                var ultimaFicha = await db.CadastroDomiciliar.SingleOrDefaultAsync(x => x.enderecoLocalPermanencia == assmedEndereco.IdFicha);
-
-                if (ultimaFicha != null)
-                {
-                    CadastroDomiciliar.uuidFichaOriginadora = ultimaFicha.id;
-                }
-            }
+            CadastroDomiciliar.uuidFichaOriginadora = CadastroDomiciliar.uuidFichaOriginadora == null ||
+                CadastroDomiciliar.uuidFichaOriginadora == Guid.Empty ? CadastroDomiciliar.uuid
+                : CadastroDomiciliar.uuidFichaOriginadora;
 
             var profissional = db.VW_Profissional.Where(x => x.CNS == CabecalhoTransporte.profissionalCNS &&
             x.CNES == CabecalhoTransporte.cnes).ToArray().FirstOrDefault(x => x.INE == CabecalhoTransporte.ine || x.INE == null);
@@ -308,8 +283,6 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (CadastroDomiciliar.enderecoLocalPermanencia != null)
             {
-                CadastroDomiciliar.enderecoLocalPermanencia.Codigo = codigo;
-
                 var ende = CadastroDomiciliar.enderecoLocalPermanencia;
 
                 var codCidade = ende.codigoIbgeMunicipio != null && !string.IsNullOrEmpty(ende.codigoIbgeMunicipio.Trim()) ?
@@ -359,6 +332,12 @@ namespace Softpark.WS.ViewModels.SIGSM
                 cond.formaEscoamentoBanheiro = esco?.codigo;
             }
 
+            if (CadastroDomiciliar.animalNoDomicilio != null)
+            {
+                CadastroDomiciliar.animalNoDomicilio = await db.TP_Animais.Where(x => CadastroDomiciliar.animalNoDomicilio.Contains(x.id_tp_animais))
+                    .Select(x => x.codigo).ToArrayAsync();
+            }
+
             CabecalhoTransporte.cboCodigo_2002 = profissional.CBO;
 
             CleanStrings();
@@ -367,19 +346,6 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             cad.UnicaLotacaoTransport = this;
             cad.DataRegistro = DateTime.Now;
-
-            if (cad.EnderecoLocalPermanencia1 != null)
-            {
-                var cod = CadastroDomiciliar.enderecoLocalPermanencia?.Codigo ?? 0;
-
-                cad.EnderecoLocalPermanencia1.Codigo = assmedEndereco?.Codigo;
-                cad.EnderecoLocalPermanencia1.ASSMED_Endereco1 = assmedEndereco;
-
-                if (assmedEndereco != null)
-                {
-                    assmedEndereco.IdFicha = cad.EnderecoLocalPermanencia1.id;
-                }
-            }
 
             if (cad.InstituicaoPermanencia1 != null && !((new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel) || cad.statusTermoRecusa))
             {
@@ -396,6 +362,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 }
             }
 
+            cad.fichaAtualizada = cad.id != cad.uuidFichaOriginadora;
+
             var header = cad.UnicaLotacaoTransport;
 
             header.CadastroDomiciliar.Add(cad);
@@ -404,20 +372,22 @@ namespace Softpark.WS.ViewModels.SIGSM
             var origem = db.OrigemVisita.Create();
             origem.token = Guid.NewGuid();
 
-            header.OrigemVisita = origem;
+            var dadoAnterior = CadastroDomiciliar.uuid != CadastroDomiciliar.uuidFichaOriginadora ?
+                (await db.CadastroDomiciliar.SingleOrDefaultAsync(x => x.id == CadastroDomiciliar.uuidFichaOriginadora)) : null;
 
-            header.Validar(db);
+            var da = dadoAnterior == null ? null :
+                await ToVM(dadoAnterior, db);
 
-            await cad.Validar(db);
+            var restDa = da == null ? null : JsonConvert.SerializeObject(da);
 
             var rastro = new RastroFicha
             {
-                CodUsu = Convert.ToInt32(ASPSessionVar.Read("idUsuario", url)),
+                CodUsu = Convert.ToInt32(ASPSessionVar.Read("idUsuario")),
                 DataModificacao = DateTime.Now,
                 OrigemVisita = origem,
                 token = origem.token,
-                DadoAnterior = null,
-                DadoAtual = await url.Request.Content.ReadAsStringAsync()
+                DadoAnterior = restDa,
+                DadoAtual = restDn
             };
 
             origem.id_tipo_origem = 2;
@@ -425,15 +395,172 @@ namespace Softpark.WS.ViewModels.SIGSM
             origem.enviado = false;
             origem.RastroFicha.Add(rastro);
             origem.UnicaLotacaoTransport.Add(header);
+            origem.finalizado = true;
+
+            header.OrigemVisita = origem;
+
+            header.Validar(db);
+
+            await cad.Validar(db);
+
             db.OrigemVisita.Add(origem);
 
             await db.SaveChangesAsync();
 
-            return cad.UnicaLotacaoTransport.id;
+            await GerarCadastroAssmed(cad, db, url);
+
+            await db.SaveChangesAsync();
+
+            return cad.id;
         }
 
-        internal FormCadastroDomiciliar ToDetail()
+        private async Task GerarCadastroAssmed(CadastroDomiciliar cad, DomainContainer db, UrlHelper url)
         {
+            if (cad.enderecoLocalPermanencia == null) return;
+
+            var end = cad.EnderecoLocalPermanencia1;
+
+            var codtplog = (await db.TB_MS_TIPO_LOGRADOURO.FirstOrDefaultAsync(x => x.CO_TIPO_LOGRADOURO != null && x.CO_TIPO_LOGRADOURO.Trim() != end.tipoLogradouroNumeroDne))?.CO_TIPO_LOGRADOURO.Trim() ?? null;
+
+            int? tplog = null;
+            if (int.TryParse(codtplog, out int tl))
+                tplog = tl;
+
+            var cid = await db.Cidade.FirstOrDefaultAsync(x => x.CodIbge != null && x.CodIbge.Trim() == end.codigoIbgeMunicipio);
+
+            var uf = await db.UF.FirstOrDefaultAsync(x => x.DNE != null && x.DNE.Trim() == end.numeroDneUf);
+
+            foreach (var fam in cad.FamiliaRow)
+            {
+                if (1 == await db.ASSMED_CadastroDocPessoal.CountAsync(x => x.Numero != null && x.Numero == fam.numeroCnsResponsavel && x.CodTpDocP == 6))
+                {
+                    var resp = await db.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero == fam.numeroCnsResponsavel && x.CodTpDocP == 6)
+                        .Select(x => x.ASSMED_Cadastro)
+                        .SingleOrDefaultAsync();
+
+                    if (resp == null) return;
+
+                    var depends = await db.IdentificacaoUsuarioCidadao.Where(x => x.cnsResponsavelFamiliar == fam.numeroCnsResponsavel &&
+                    x.cnsResponsavelFamiliar != x.cnsCidadao && x.Codigo != null)
+                    .SelectMany(x => x.ASSMED_Cadastro)
+                    .ToListAsync();
+
+                    var item = resp.ASSMED_Endereco.Max(x => x.ItemEnd) + 1;
+
+                    var respEnd = resp.ASSMED_Endereco.Where(x => x.TipoEnd == "R").OrderByDescending(x => x.ItemEnd).FirstOrDefault();
+                    respEnd = new ASSMED_Endereco
+                    {
+                        Codigo = resp.Codigo,
+                        NumContrato = resp.NumContrato,
+                        ItemEnd = item,
+                        ASSMED_Cadastro = resp,
+                        Bairro = end.bairro,
+                        CEP = end.cep,
+                        CodCidade = cid?.CodCidade,
+                        CodTpLogra = tplog,
+                        Complemento = end.complemento,
+                        Corresp = respEnd?.Corresp,
+                        ENDAREAMICRO = end.microarea,
+                        EnderecoLocalPermanencia = end,
+                        ENDREFERENCIA = end.pontoReferencia,
+                        ENDSEMAREA = end.stForaArea ? 1 : 0,
+                        IdFicha = end.id,
+                        Latitude = cad.latitude,
+                        Longitude = cad.longitude,
+                        Logradouro = end.nomeLogradouro,
+                        NomeCidade = cid?.NomeCidade,
+                        Numero = end.numero,
+                        SEMNUMERO = end.stSemNumero ? 1 : 0,
+                        TipoEnd = "R",
+                        UF = uf?.UF1,
+                        ENDAREA = respEnd?.ENDAREA
+                    };
+
+                    resp.ASSMED_Endereco.Add(respEnd);
+
+                    foreach (var depend in depends)
+                    {
+                        item = resp.ASSMED_Endereco.Max(x => x.ItemEnd) + 1;
+
+                        var respDep = depend.ASSMED_Endereco.Where(x => x.TipoEnd == "R")
+                            .OrderByDescending(x => x.ItemEnd).FirstOrDefault();
+
+                        respDep = new ASSMED_Endereco
+                        {
+                            Codigo = depend.Codigo,
+                            NumContrato = depend.NumContrato,
+                            ItemEnd = item,
+                            ASSMED_Cadastro = depend,
+                            Bairro = end.bairro,
+                            CEP = end.cep,
+                            CodCidade = cid?.CodCidade,
+                            CodTpLogra = tplog,
+                            Complemento = end.complemento,
+                            Corresp = respDep?.Corresp,
+                            ENDAREAMICRO = end.microarea,
+                            EnderecoLocalPermanencia = end,
+                            ENDREFERENCIA = end.pontoReferencia,
+                            ENDSEMAREA = end.stForaArea ? 1 : 0,
+                            IdFicha = end.id,
+                            Latitude = cad.latitude,
+                            Longitude = cad.longitude,
+                            Logradouro = end.nomeLogradouro,
+                            NomeCidade = cid?.NomeCidade,
+                            Numero = end.numero,
+                            SEMNUMERO = end.stSemNumero ? 1 : 0,
+                            TipoEnd = "R",
+                            UF = uf?.UF1,
+                            ENDAREA = respDep?.ENDAREA
+                        };
+
+                        depend.ASSMED_Endereco.Add(respDep);
+                    }
+                }
+            }
+        }
+
+        internal async Task<FormCadastroDomiciliar> ToDetail(DomainContainer db)
+        {
+            if (CadastroDomiciliar.condicaoMoradia != null)
+            {
+                var cond = CadastroDomiciliar.condicaoMoradia;
+
+                var abast = await db.TP_Abastecimento_Agua.SingleOrDefaultAsync(x => x.codigo == cond.abastecimentoAgua);
+                cond.abastecimentoAgua = abast?.id_tp_abastecimento_agua;
+
+                var loca = await db.TP_Localizacao.SingleOrDefaultAsync(x => x.codigo == cond.localizacao);
+                cond.localizacao = loca?.id_tp_localizacao;
+
+                var acesso = await db.TP_Acesso_Domicilio.SingleOrDefaultAsync(x => x.codigo == cond.tipoAcessoDomicilio);
+                cond.tipoAcessoDomicilio = acesso?.id_tp_acesso_domicilio;
+
+                var situ = await db.TP_Situacao_Moradia.SingleOrDefaultAsync(x => x.codigo == cond.situacaoMoradiaPosseTerra);
+                cond.situacaoMoradiaPosseTerra = situ?.id_tp_situacao_moradia;
+
+                cond.areaProducaoRural = cond.areaProducaoRural - 100 != null ? (cond.areaProducaoRural - 100) : null;
+
+                var tipo = await db.TP_Domicilio.SingleOrDefaultAsync(x => x.codigo == cond.tipoDomicilio);
+                cond.tipoDomicilio = tipo?.id_tp_domicilio;
+
+                var cons = await db.TP_Construcao_Domicilio.SingleOrDefaultAsync(x => x.codigo == cond.materialPredominanteParedesExtDomicilio);
+                cond.materialPredominanteParedesExtDomicilio = cons?.id_tp_construcao_domicilio;
+
+                var agua = await db.TP_Tratamento_Agua.SingleOrDefaultAsync(x => x.codigo == cond.aguaConsumoDomicilio);
+                cond.aguaConsumoDomicilio = agua?.id_tp_tratamento_agua;
+
+                var lixo = await db.TP_Destino_Lixo.SingleOrDefaultAsync(x => x.codigo == cond.destinoLixo);
+                cond.destinoLixo = lixo?.id_tp_destino_lixo;
+
+                var esco = await db.TP_Escoamento_Esgoto.SingleOrDefaultAsync(x => x.codigo == cond.formaEscoamentoBanheiro);
+                cond.formaEscoamentoBanheiro = esco?.id_tp_escoamento_esgoto;
+            }
+
+            if (CadastroDomiciliar.animalNoDomicilio != null)
+            {
+                CadastroDomiciliar.animalNoDomicilio = await db.TP_Animais.Where(x => CadastroDomiciliar.animalNoDomicilio.Contains(x.codigo))
+                    .Select(x => x.id_tp_animais).ToArrayAsync();
+            }
+
             return this;
         }
     }

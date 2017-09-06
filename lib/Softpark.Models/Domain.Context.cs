@@ -112,10 +112,8 @@ namespace Softpark.Models
         public virtual DbSet<ResponsavelPorCrianca> ResponsavelPorCrianca { get; set; }
         public virtual DbSet<SaidaCidadaoCadastro> SaidaCidadaoCadastro { get; set; }
         public virtual DbSet<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
-        public virtual DbSet<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
         public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
         public virtual DbSet<ASSMED_Cadastro> ASSMED_Cadastro { get; set; }
-        public virtual DbSet<ASSMED_Endereco> ASSMED_Endereco { get; set; }
         public virtual DbSet<VW_Domicilios> VW_Domicilios { get; set; }
         public virtual DbSet<ASSMED_Contratos> ASSMED_Contratos { get; set; }
         public virtual DbSet<ASSMED_CadEmails> ASSMED_CadEmails { get; set; }
@@ -123,6 +121,8 @@ namespace Softpark.Models
         public virtual DbSet<VW_ConsultaCadastrosIndividuais> VW_ConsultaCadastrosIndividuais { get; set; }
         public virtual DbSet<VW_ConsultaCadastrosDomiciliares> VW_ConsultaCadastrosDomiciliares { get; set; }
         public virtual DbSet<ASSMED_CadTelefones> ASSMED_CadTelefones { get; set; }
+        public virtual DbSet<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
+        public virtual DbSet<ASSMED_Endereco> ASSMED_Endereco { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

@@ -14,12 +14,6 @@ namespace Softpark.Models
     
     public partial class ASSMED_Contratos
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ASSMED_Contratos()
-        {
-            this.EnderecoLocalPermanencia = new HashSet<EnderecoLocalPermanencia>();
-        }
-    
         public int NumContrato { get; set; }
         public Nullable<System.DateTime> DtInicio { get; set; }
         public string NomeContratante { get; set; }
@@ -37,8 +31,5 @@ namespace Softpark.Models
         public string PastaCli { get; set; }
         public string PastaImagens { get; set; }
         public string CodigoIbgeMunicipio { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
     }
 }

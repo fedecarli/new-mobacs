@@ -17,12 +17,11 @@ namespace Softpark.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ASSMED_Cadastro()
         {
-            this.EnderecoLocalPermanencia = new HashSet<EnderecoLocalPermanencia>();
             this.IdentificacaoUsuarioCidadao1 = new HashSet<IdentificacaoUsuarioCidadao>();
             this.ASSMED_CadastroDocPessoal = new HashSet<ASSMED_CadastroDocPessoal>();
-            this.ASSMED_Endereco = new HashSet<ASSMED_Endereco>();
             this.ASSMED_CadEmails = new HashSet<ASSMED_CadEmails>();
             this.ASSMED_CadTelefones = new HashSet<ASSMED_CadTelefones>();
+            this.ASSMED_Endereco = new HashSet<ASSMED_Endereco>();
         }
     
         public int NumContrato { get; set; }
@@ -40,19 +39,17 @@ namespace Softpark.Models
         public string MotivoHomologacao { get; set; }
         public Nullable<System.Guid> IdFicha { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
         public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadastroDocPessoal> ASSMED_CadastroDocPessoal { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ASSMED_Endereco> ASSMED_Endereco { get; set; }
         public virtual ASSMED_PesFisica ASSMED_PesFisica { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadEmails> ASSMED_CadEmails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadTelefones> ASSMED_CadTelefones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ASSMED_Endereco> ASSMED_Endereco { get; set; }
     }
 }

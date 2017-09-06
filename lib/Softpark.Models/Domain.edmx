@@ -203,9 +203,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.api.ASSMED_Cadastro
           <Property Name="pontoReferencia" Type="nvarchar" MaxLength="40" />
           <Property Name="microarea" Type="nchar" MaxLength="2" />
           <Property Name="stForaArea" Type="bit" Nullable="false" />
-          <Property Name="num_contrato" Type="int" />
-          <Property Name="item_end" Type="int" />
-          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="FamiliaRow">
           <Key>
@@ -1517,18 +1514,6 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_Domicilios' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__EnderecoL__num_c__3F5F6F90">
-          <End Role="ASSMED_Contratos" Type="Self.ASSMED_Contratos" Multiplicity="0..1" />
-          <End Role="EnderecoLocalPermanencia" Type="Self.EnderecoLocalPermanencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Contratos">
-              <PropertyRef Name="NumContrato" />
-            </Principal>
-            <Dependent Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="num_contrato" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_AnimalNoDomicilio_CadastroDomiciliar">
           <End Role="CadastroDomiciliar" Type="Self.CadastroDomiciliar" Multiplicity="1" />
           <End Role="AnimalNoDomicilio" Type="Self.AnimalNoDomicilio" Multiplicity="*" />
@@ -1980,36 +1965,6 @@ warning 6035: The relationship 'FK_InformacoesSocioDemograficas_TP_Curso' has co
         <!--Errors Found During Generation:
 warning 6035: The relationship 'FK_InformacoesSocioDemograficas_TP_Sit_Mercado' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
         <Association Name="FK_InformacoesSocioDemograficas_TP_Sit_Mercado" />-->
-        <Association Name="FK_Local_Endereco">
-          <End Role="ASSMED_Endereco" Type="Self.ASSMED_Endereco" Multiplicity="0..1" />
-          <End Role="EnderecoLocalPermanencia" Type="Self.EnderecoLocalPermanencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Endereco">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-              <PropertyRef Name="ItemEnd" />
-            </Principal>
-            <Dependent Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="num_contrato" />
-              <PropertyRef Name="Codigo" />
-              <PropertyRef Name="item_end" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Local_Endereco_Cadastro">
-          <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="0..1" />
-          <End Role="EnderecoLocalPermanencia" Type="Self.EnderecoLocalPermanencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Cadastro">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Principal>
-            <Dependent Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="num_contrato" />
-              <PropertyRef Name="Codigo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MotivoVisita_FichaVisitaDomiciliarChildren">
           <End Role="SIGSM_MotivoVisita" Type="Self.SIGSM_MotivoVisita" Multiplicity="1" />
           <End Role="FichaVisitaDomiciliarChild_MotivoVisita" Type="Self.FichaVisitaDomiciliarChild_MotivoVisita" Multiplicity="*" />
@@ -2406,10 +2361,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_PesFisica" EntitySet="ASSMED_PesFisica" />
           </AssociationSet>
-          <AssociationSet Name="FK__EnderecoL__num_c__3F5F6F90" Association="Self.FK__EnderecoL__num_c__3F5F6F90">
-            <End Role="ASSMED_Contratos" EntitySet="ASSMED_Contratos" />
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
-          </AssociationSet>
           <AssociationSet Name="FK_AnimalNoDomicilio_CadastroDomiciliar" Association="Self.FK_AnimalNoDomicilio_CadastroDomiciliar">
             <End Role="CadastroDomiciliar" EntitySet="CadastroDomiciliar" />
             <End Role="AnimalNoDomicilio" EntitySet="AnimalNoDomicilio" />
@@ -2537,14 +2488,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK_InformacoesSocioDemograficas_TP_Relacao_Parentesco" Association="Self.FK_InformacoesSocioDemograficas_TP_Relacao_Parentesco">
             <End Role="TP_Relacao_Parentesco" EntitySet="TP_Relacao_Parentesco" />
             <End Role="InformacoesSocioDemograficas" EntitySet="InformacoesSocioDemograficas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Local_Endereco" Association="Self.FK_Local_Endereco">
-            <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Local_Endereco_Cadastro" Association="Self.FK_Local_Endereco_Cadastro">
-            <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
           </AssociationSet>
           <AssociationSet Name="FK_MotivoVisita_FichaVisitaDomiciliarChildren" Association="Self.FK_MotivoVisita_FichaVisitaDomiciliarChildren">
             <End Role="SIGSM_MotivoVisita" EntitySet="SIGSM_MotivoVisita" />
@@ -2817,30 +2760,12 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
             <End Role="CadastroIndividual_recusa" EntitySet="CadastroIndividual_recusa" />
           </AssociationSet>
-          <EntitySet Name="EnderecoLocalPermanencia" EntityType="Domain.EnderecoLocalPermanencia" />
           <EntitySet Name="IdentificacaoUsuarioCidadao" EntityType="Domain.IdentificacaoUsuarioCidadao" />
           <EntitySet Name="ASSMED_Cadastro" EntityType="Domain.ASSMED_Cadastro" />
-          <EntitySet Name="ASSMED_Endereco" EntityType="Domain.ASSMED_Endereco" />
           <EntitySet Name="VW_Domicilios" EntityType="Domain.VW_Domicilios" />
-          <AssociationSet Name="FK_CadastroDomiciliar_EnderecoLocalPermanencia" Association="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia">
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
-            <End Role="CadastroDomiciliar" EntitySet="CadastroDomiciliar" />
-          </AssociationSet>
           <AssociationSet Name="FK_CadastroIndividual_IdentificacaoUsuarioCidadao" Association="Domain.FK_CadastroIndividual_IdentificacaoUsuarioCidadao">
             <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
             <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
-          </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_En__IdFic__3B8EDEAC" Association="Domain.FK__ASSMED_En__IdFic__3B8EDEAC">
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
-            <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Local_Endereco" Association="Domain.FK_Local_Endereco">
-            <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Local_Endereco_Cadastro" Association="Domain.FK_Local_Endereco_Cadastro">
-            <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
           </AssociationSet>
           <AssociationSet Name="FK__ASSMED_Ca__IdFic__3A9ABA73" Association="Domain.FK__ASSMED_Ca__IdFic__3A9ABA73">
             <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
@@ -2866,19 +2791,11 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_CadastroDocPessoal" EntitySet="ASSMED_CadastroDocPessoal" />
           </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_Endereco__5649C92D" Association="Domain.FK__ASSMED_Endereco__5649C92D">
-            <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
-            <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
-          </AssociationSet>
           <AssociationSet Name="FK__ASSMED_PesFisica__7BE56230" Association="Domain.FK__ASSMED_PesFisica__7BE56230">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_PesFisica" EntitySet="ASSMED_PesFisica" />
           </AssociationSet>
           <EntitySet Name="ASSMED_Contratos" EntityType="Domain.ASSMED_Contratos" />
-          <AssociationSet Name="FK__EnderecoL__num_c__3F5F6F90" Association="Domain.FK__EnderecoL__num_c__3F5F6F90">
-            <End Role="ASSMED_Contratos" EntitySet="ASSMED_Contratos" />
-            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
-          </AssociationSet>
           <EntitySet Name="ASSMED_CadEmails" EntityType="Domain.ASSMED_CadEmails" />
           <AssociationSet Name="FK__ASSMED_CadEmails__4CC05EF3" Association="Domain.FK__ASSMED_CadEmails__4CC05EF3">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
@@ -2895,6 +2812,20 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK__ASSMED_CadTelefo__47FBA9D6" Association="Domain.FK__ASSMED_CadTelefo__47FBA9D6">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_CadTelefones" EntitySet="ASSMED_CadTelefones" />
+          </AssociationSet>
+          <EntitySet Name="EnderecoLocalPermanencia" EntityType="Domain.EnderecoLocalPermanencia" />
+          <EntitySet Name="ASSMED_Endereco" EntityType="Domain.ASSMED_Endereco" />
+          <AssociationSet Name="FK_CadastroDomiciliar_EnderecoLocalPermanencia" Association="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia">
+            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
+            <End Role="CadastroDomiciliar" EntitySet="CadastroDomiciliar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ASSMED_En__IdFic__3B8EDEAC" Association="Domain.FK__ASSMED_En__IdFic__3B8EDEAC">
+            <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
+            <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ASSMED_Endereco__5649C92D" Association="Domain.FK__ASSMED_Endereco__5649C92D">
+            <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
+            <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
@@ -4507,34 +4438,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="EnderecoLocalPermanencia">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="bairro" Type="String" Nullable="false" MaxLength="72" FixedLength="false" Unicode="true" />
-          <Property Name="cep" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="true" />
-          <Property Name="codigoIbgeMunicipio" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="true" />
-          <Property Name="complemento" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="nomeLogradouro" Type="String" Nullable="false" MaxLength="72" FixedLength="false" Unicode="true" />
-          <Property Name="numero" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="numeroDneUf" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
-          <Property Name="telefoneContato" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
-          <Property Name="telefoneResidencia" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
-          <Property Name="tipoLogradouroNumeroDne" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Name="stSemNumero" Type="Boolean" Nullable="false" />
-          <Property Name="pontoReferencia" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
-          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
-          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
-          <Property Name="num_contrato" Type="Int32" />
-          <Property Name="item_end" Type="Int32" />
-          <Property Name="Codigo" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="CadastroDomiciliar" Relationship="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia" FromRole="EnderecoLocalPermanencia" ToRole="CadastroDomiciliar" />
-          <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_En__IdFic__3B8EDEAC" FromRole="EnderecoLocalPermanencia" ToRole="ASSMED_Endereco" />
-          <NavigationProperty Name="ASSMED_Endereco1" Relationship="Domain.FK_Local_Endereco" FromRole="EnderecoLocalPermanencia" ToRole="ASSMED_Endereco" />
-          <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK_Local_Endereco_Cadastro" FromRole="EnderecoLocalPermanencia" ToRole="ASSMED_Cadastro" />
-          <NavigationProperty Name="ASSMED_Contratos" Relationship="Domain.FK__EnderecoL__num_c__3F5F6F90" FromRole="EnderecoLocalPermanencia" ToRole="ASSMED_Contratos" />
-        </EntityType>
         <EntityType Name="IdentificacaoUsuarioCidadao">
           <Key>
             <PropertyRef Name="id" />
@@ -4598,46 +4501,13 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="Justificativa" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="MotivoHomologacao" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="IdFicha" Type="Guid" />
-          <NavigationProperty Name="EnderecoLocalPermanencia" Relationship="Domain.FK_Local_Endereco_Cadastro" FromRole="ASSMED_Cadastro" ToRole="EnderecoLocalPermanencia" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao" Relationship="Domain.FK__ASSMED_Ca__IdFic__3A9ABA73" FromRole="ASSMED_Cadastro" ToRole="IdentificacaoUsuarioCidadao" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao1" Relationship="Domain.FK_Identificacao_Cadastro" FromRole="ASSMED_Cadastro" ToRole="IdentificacaoUsuarioCidadao" />
           <NavigationProperty Name="ASSMED_CadastroDocPessoal" Relationship="Domain.FK__ASSMED_CadastroD__719CDDE7" FromRole="ASSMED_Cadastro" ToRole="ASSMED_CadastroDocPessoal" />
-          <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_Endereco__5649C92D" FromRole="ASSMED_Cadastro" ToRole="ASSMED_Endereco" />
           <NavigationProperty Name="ASSMED_PesFisica" Relationship="Domain.FK__ASSMED_PesFisica__7BE56230" FromRole="ASSMED_Cadastro" ToRole="ASSMED_PesFisica" />
           <NavigationProperty Name="ASSMED_CadEmails" Relationship="Domain.FK__ASSMED_CadEmails__4CC05EF3" FromRole="ASSMED_Cadastro" ToRole="ASSMED_CadEmails" />
           <NavigationProperty Name="ASSMED_CadTelefones" Relationship="Domain.FK__ASSMED_CadTelefo__47FBA9D6" FromRole="ASSMED_Cadastro" ToRole="ASSMED_CadTelefones" />
-        </EntityType>
-        <EntityType Name="ASSMED_Endereco">
-          <Key>
-            <PropertyRef Name="NumContrato" />
-            <PropertyRef Name="Codigo" />
-            <PropertyRef Name="ItemEnd" />
-          </Key>
-          <Property Name="NumContrato" Type="Int32" Nullable="false" />
-          <Property Name="Codigo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="ItemEnd" Type="Int32" Nullable="false" />
-          <Property Name="CEP" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
-          <Property Name="TipoEnd" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="Corresp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="Logradouro" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Bairro" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Complemento" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NomeCidade" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="UF" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="Numero" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
-          <Property Name="Latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CodTpLogra" Type="Int32" />
-          <Property Name="CodCidade" Type="Int32" />
-          <Property Name="SEMNUMERO" Type="Int32" />
-          <Property Name="ENDREFERENCIA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ENDAREA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ENDAREAMICRO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ENDSEMAREA" Type="Int32" />
-          <Property Name="IdFicha" Type="Guid" />
-          <NavigationProperty Name="EnderecoLocalPermanencia" Relationship="Domain.FK__ASSMED_En__IdFic__3B8EDEAC" FromRole="ASSMED_Endereco" ToRole="EnderecoLocalPermanencia" />
-          <NavigationProperty Name="EnderecoLocalPermanencia1" Relationship="Domain.FK_Local_Endereco" FromRole="ASSMED_Endereco" ToRole="EnderecoLocalPermanencia" />
-          <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_Endereco__5649C92D" FromRole="ASSMED_Endereco" ToRole="ASSMED_Cadastro" />
+          <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_Endereco__5649C92D" FromRole="ASSMED_Cadastro" ToRole="ASSMED_Endereco" />
         </EntityType>
         <EntityType Name="VW_Domicilios">
           <Key>
@@ -4666,18 +4536,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="ENDAREAMICRO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ENDSEMAREA" Type="Int32" />
         </EntityType>
-        <Association Name="FK_CadastroDomiciliar_EnderecoLocalPermanencia">
-          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="0..1" />
-          <End Type="Domain.CadastroDomiciliar" Role="CadastroDomiciliar" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="CadastroDomiciliar">
-              <PropertyRef Name="enderecoLocalPermanencia" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CadastroIndividual_IdentificacaoUsuarioCidadao">
           <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="0..1" />
           <End Type="Domain.CadastroIndividual" Role="CadastroIndividual" Multiplicity="*" />
@@ -4687,48 +4545,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Principal>
             <Dependent Role="CadastroIndividual">
               <PropertyRef Name="identificacaoUsuarioCidadao" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ASSMED_En__IdFic__3B8EDEAC">
-          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="0..1" />
-          <End Type="Domain.ASSMED_Endereco" Role="ASSMED_Endereco" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ASSMED_Endereco">
-              <PropertyRef Name="IdFicha" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Local_Endereco">
-          <End Type="Domain.ASSMED_Endereco" Role="ASSMED_Endereco" Multiplicity="0..1" />
-          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Endereco">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-              <PropertyRef Name="ItemEnd" />
-            </Principal>
-            <Dependent Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="num_contrato" />
-              <PropertyRef Name="Codigo" />
-              <PropertyRef Name="item_end" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Local_Endereco_Cadastro">
-          <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="0..1" />
-          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Cadastro">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Principal>
-            <Dependent Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="num_contrato" />
-              <PropertyRef Name="Codigo" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4810,20 +4626,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ASSMED_Endereco__5649C92D">
-          <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="1" />
-          <End Type="Domain.ASSMED_Endereco" Role="ASSMED_Endereco" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Cadastro">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Principal>
-            <Dependent Role="ASSMED_Endereco">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="Codigo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__ASSMED_PesFisica__7BE56230">
           <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="1" />
           <End Type="Domain.ASSMED_PesFisica" Role="ASSMED_PesFisica" Multiplicity="0..1" />
@@ -4859,20 +4661,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="PastaCli" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PastaImagens" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CodigoIbgeMunicipio" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="EnderecoLocalPermanencia" Relationship="Domain.FK__EnderecoL__num_c__3F5F6F90" FromRole="ASSMED_Contratos" ToRole="EnderecoLocalPermanencia" />
         </EntityType>
-        <Association Name="FK__EnderecoL__num_c__3F5F6F90">
-          <End Type="Domain.ASSMED_Contratos" Role="ASSMED_Contratos" Multiplicity="0..1" />
-          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ASSMED_Contratos">
-              <PropertyRef Name="NumContrato" />
-            </Principal>
-            <Dependent Role="EnderecoLocalPermanencia">
-              <PropertyRef Name="num_contrato" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ASSMED_CadEmails">
           <Key>
             <PropertyRef Name="NumContrato" />
@@ -4973,6 +4762,97 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               <PropertyRef Name="Codigo" />
             </Principal>
             <Dependent Role="ASSMED_CadTelefones">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="Codigo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EnderecoLocalPermanencia">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="bairro" Type="String" Nullable="false" MaxLength="72" FixedLength="false" Unicode="true" />
+          <Property Name="cep" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="true" />
+          <Property Name="codigoIbgeMunicipio" Type="String" Nullable="false" MaxLength="7" FixedLength="true" Unicode="true" />
+          <Property Name="complemento" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="nomeLogradouro" Type="String" Nullable="false" MaxLength="72" FixedLength="false" Unicode="true" />
+          <Property Name="numero" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="numeroDneUf" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="telefoneContato" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="telefoneResidencia" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="tipoLogradouroNumeroDne" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="stSemNumero" Type="Boolean" Nullable="false" />
+          <Property Name="pontoReferencia" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="microarea" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="stForaArea" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CadastroDomiciliar" Relationship="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia" FromRole="EnderecoLocalPermanencia" ToRole="CadastroDomiciliar" />
+          <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_En__IdFic__3B8EDEAC" FromRole="EnderecoLocalPermanencia" ToRole="ASSMED_Endereco" />
+        </EntityType>
+        <EntityType Name="ASSMED_Endereco">
+          <Key>
+            <PropertyRef Name="NumContrato" />
+            <PropertyRef Name="Codigo" />
+            <PropertyRef Name="ItemEnd" />
+          </Key>
+          <Property Name="NumContrato" Type="Int32" Nullable="false" />
+          <Property Name="Codigo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ItemEnd" Type="Int32" Nullable="false" />
+          <Property Name="CEP" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="TipoEnd" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Corresp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Logradouro" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Bairro" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Complemento" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NomeCidade" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="UF" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="Numero" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Longitude" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CodTpLogra" Type="Int32" />
+          <Property Name="CodCidade" Type="Int32" />
+          <Property Name="SEMNUMERO" Type="Int32" />
+          <Property Name="ENDREFERENCIA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ENDAREA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ENDAREAMICRO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ENDSEMAREA" Type="Int32" />
+          <Property Name="IdFicha" Type="Guid" />
+          <NavigationProperty Name="EnderecoLocalPermanencia" Relationship="Domain.FK__ASSMED_En__IdFic__3B8EDEAC" FromRole="ASSMED_Endereco" ToRole="EnderecoLocalPermanencia" />
+          <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_Endereco__5649C92D" FromRole="ASSMED_Endereco" ToRole="ASSMED_Cadastro" />
+        </EntityType>
+        <Association Name="FK_CadastroDomiciliar_EnderecoLocalPermanencia">
+          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="0..1" />
+          <End Type="Domain.CadastroDomiciliar" Role="CadastroDomiciliar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnderecoLocalPermanencia">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CadastroDomiciliar">
+              <PropertyRef Name="enderecoLocalPermanencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ASSMED_En__IdFic__3B8EDEAC">
+          <End Type="Domain.EnderecoLocalPermanencia" Role="EnderecoLocalPermanencia" Multiplicity="0..1" />
+          <End Type="Domain.ASSMED_Endereco" Role="ASSMED_Endereco" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnderecoLocalPermanencia">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ASSMED_Endereco">
+              <PropertyRef Name="IdFicha" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ASSMED_Endereco__5649C92D">
+          <End Type="Domain.ASSMED_Cadastro" Role="ASSMED_Cadastro" Multiplicity="1" />
+          <End Type="Domain.ASSMED_Endereco" Role="ASSMED_Endereco" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASSMED_Cadastro">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="Codigo" />
+            </Principal>
+            <Dependent Role="ASSMED_Endereco">
               <PropertyRef Name="NumContrato" />
               <PropertyRef Name="Codigo" />
             </Dependent>
@@ -6177,30 +6057,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="EnderecoLocalPermanencia">
-            <EntityTypeMapping TypeName="Domain.EnderecoLocalPermanencia">
-              <MappingFragment StoreEntitySet="EnderecoLocalPermanencia">
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="item_end" ColumnName="item_end" />
-                <ScalarProperty Name="num_contrato" ColumnName="num_contrato" />
-                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
-                <ScalarProperty Name="microarea" ColumnName="microarea" />
-                <ScalarProperty Name="pontoReferencia" ColumnName="pontoReferencia" />
-                <ScalarProperty Name="stSemNumero" ColumnName="stSemNumero" />
-                <ScalarProperty Name="tipoLogradouroNumeroDne" ColumnName="tipoLogradouroNumeroDne" />
-                <ScalarProperty Name="telefoneResidencia" ColumnName="telefoneResidencia" />
-                <ScalarProperty Name="telefoneContato" ColumnName="telefoneContato" />
-                <ScalarProperty Name="numeroDneUf" ColumnName="numeroDneUf" />
-                <ScalarProperty Name="numero" ColumnName="numero" />
-                <ScalarProperty Name="nomeLogradouro" ColumnName="nomeLogradouro" />
-                <ScalarProperty Name="complemento" ColumnName="complemento" />
-                <ScalarProperty Name="codigoIbgeMunicipio" ColumnName="codigoIbgeMunicipio" />
-                <ScalarProperty Name="cep" ColumnName="cep" />
-                <ScalarProperty Name="bairro" ColumnName="bairro" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="IdentificacaoUsuarioCidadao">
             <EntityTypeMapping TypeName="Domain.IdentificacaoUsuarioCidadao">
               <MappingFragment StoreEntitySet="IdentificacaoUsuarioCidadao">
@@ -6254,34 +6110,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="DtSistema" ColumnName="DtSistema" />
                 <ScalarProperty Name="Nome" ColumnName="Nome" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ASSMED_Endereco">
-            <EntityTypeMapping TypeName="Domain.ASSMED_Endereco">
-              <MappingFragment StoreEntitySet="ASSMED_Endereco">
-                <ScalarProperty Name="IdFicha" ColumnName="IdFicha" />
-                <ScalarProperty Name="ENDSEMAREA" ColumnName="ENDSEMAREA" />
-                <ScalarProperty Name="ENDAREAMICRO" ColumnName="ENDAREAMICRO" />
-                <ScalarProperty Name="ENDAREA" ColumnName="ENDAREA" />
-                <ScalarProperty Name="ENDREFERENCIA" ColumnName="ENDREFERENCIA" />
-                <ScalarProperty Name="SEMNUMERO" ColumnName="SEMNUMERO" />
-                <ScalarProperty Name="CodCidade" ColumnName="CodCidade" />
-                <ScalarProperty Name="CodTpLogra" ColumnName="CodTpLogra" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Numero" ColumnName="Numero" />
-                <ScalarProperty Name="UF" ColumnName="UF" />
-                <ScalarProperty Name="NomeCidade" ColumnName="NomeCidade" />
-                <ScalarProperty Name="Complemento" ColumnName="Complemento" />
-                <ScalarProperty Name="Bairro" ColumnName="Bairro" />
-                <ScalarProperty Name="Logradouro" ColumnName="Logradouro" />
-                <ScalarProperty Name="Corresp" ColumnName="Corresp" />
-                <ScalarProperty Name="TipoEnd" ColumnName="TipoEnd" />
-                <ScalarProperty Name="CEP" ColumnName="CEP" />
-                <ScalarProperty Name="ItemEnd" ColumnName="ItemEnd" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
               </MappingFragment>
@@ -6396,6 +6224,55 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="TipoTel" ColumnName="TipoTel" />
                 <ScalarProperty Name="NumTel" ColumnName="NumTel" />
                 <ScalarProperty Name="DDD" ColumnName="DDD" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnderecoLocalPermanencia">
+            <EntityTypeMapping TypeName="Domain.EnderecoLocalPermanencia">
+              <MappingFragment StoreEntitySet="EnderecoLocalPermanencia">
+                <ScalarProperty Name="stForaArea" ColumnName="stForaArea" />
+                <ScalarProperty Name="microarea" ColumnName="microarea" />
+                <ScalarProperty Name="pontoReferencia" ColumnName="pontoReferencia" />
+                <ScalarProperty Name="stSemNumero" ColumnName="stSemNumero" />
+                <ScalarProperty Name="tipoLogradouroNumeroDne" ColumnName="tipoLogradouroNumeroDne" />
+                <ScalarProperty Name="telefoneResidencia" ColumnName="telefoneResidencia" />
+                <ScalarProperty Name="telefoneContato" ColumnName="telefoneContato" />
+                <ScalarProperty Name="numeroDneUf" ColumnName="numeroDneUf" />
+                <ScalarProperty Name="numero" ColumnName="numero" />
+                <ScalarProperty Name="nomeLogradouro" ColumnName="nomeLogradouro" />
+                <ScalarProperty Name="complemento" ColumnName="complemento" />
+                <ScalarProperty Name="codigoIbgeMunicipio" ColumnName="codigoIbgeMunicipio" />
+                <ScalarProperty Name="cep" ColumnName="cep" />
+                <ScalarProperty Name="bairro" ColumnName="bairro" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASSMED_Endereco">
+            <EntityTypeMapping TypeName="Domain.ASSMED_Endereco">
+              <MappingFragment StoreEntitySet="ASSMED_Endereco">
+                <ScalarProperty Name="IdFicha" ColumnName="IdFicha" />
+                <ScalarProperty Name="ENDSEMAREA" ColumnName="ENDSEMAREA" />
+                <ScalarProperty Name="ENDAREAMICRO" ColumnName="ENDAREAMICRO" />
+                <ScalarProperty Name="ENDAREA" ColumnName="ENDAREA" />
+                <ScalarProperty Name="ENDREFERENCIA" ColumnName="ENDREFERENCIA" />
+                <ScalarProperty Name="SEMNUMERO" ColumnName="SEMNUMERO" />
+                <ScalarProperty Name="CodCidade" ColumnName="CodCidade" />
+                <ScalarProperty Name="CodTpLogra" ColumnName="CodTpLogra" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="UF" ColumnName="UF" />
+                <ScalarProperty Name="NomeCidade" ColumnName="NomeCidade" />
+                <ScalarProperty Name="Complemento" ColumnName="Complemento" />
+                <ScalarProperty Name="Bairro" ColumnName="Bairro" />
+                <ScalarProperty Name="Logradouro" ColumnName="Logradouro" />
+                <ScalarProperty Name="Corresp" ColumnName="Corresp" />
+                <ScalarProperty Name="TipoEnd" ColumnName="TipoEnd" />
+                <ScalarProperty Name="CEP" ColumnName="CEP" />
+                <ScalarProperty Name="ItemEnd" ColumnName="ItemEnd" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
               </MappingFragment>

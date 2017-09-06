@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Http.Routing;
 
 namespace Softpark.WS
 {
@@ -26,44 +25,11 @@ namespace Softpark.WS
         }
     }
 
-    public class ASPSessionVar
+    public static class ASPSessionVar
     {
-        private UrlHelper _helper;
-        
-        private System.Web.Mvc.UrlHelper url;
-
-        public ASPSessionVar(UrlHelper helper)
+        public static string Read(string varName)
         {
-            _helper = helper;
-        }
-
-        public ASPSessionVar(System.Web.Mvc.UrlHelper url)
-        {
-            this.url = url;
-        }
-
-        public static string Read(string varName, UrlHelper helper)
-        {
-            return (new ASPSessionVar(helper).Read(varName));
-        }
-
-        public static string Read(string varName, System.Web.Mvc.UrlHelper url)
-        {
-            return (new ASPSessionVar(url).Read(varName));
-        }
-
-        public string Read(string varName)
-        {
-            var uri = "";
-
-            if (_helper != null)
-            {
-                uri = _helper.Content($"~/../../SessionVar.asp?SessionVar={varName}");
-            }
-            else if (url != null)
-            {
-                uri = url.Content($"~/../../SessionVar.asp?SessionVar={varName}");
-            }
+            var uri = $"{ConfigurationManager.AppSettings["sessionLocation"]}?SessionVar={varName}";
 
             var client = new WebServiceClient();
 

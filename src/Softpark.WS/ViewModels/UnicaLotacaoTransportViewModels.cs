@@ -1,9 +1,5 @@
-﻿using Softpark.Infrastructure.Extras;
-using Softpark.Models;
-using Softpark.WS.Validators;
+﻿using Softpark.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Configuration;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -88,7 +84,7 @@ namespace Softpark.WS.ViewModels
             ult.cnes = cnes;
             ult.ine = ine;
             ult.dataAtendimento = dataAtendimento;
-            ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
+            ult.codigoIbgeMunicipio = codigoIbgeMunicipio??domain.ASSMED_Contratos.First().CodigoIbgeMunicipio;
 
             return ult;
         }

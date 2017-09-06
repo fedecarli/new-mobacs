@@ -36,16 +36,10 @@ namespace Softpark.Models
         public string pontoReferencia { get; set; }
         public string microarea { get; set; }
         public bool stForaArea { get; set; }
-        public Nullable<int> num_contrato { get; set; }
-        public Nullable<int> item_end { get; set; }
-        public Nullable<decimal> Codigo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CadastroDomiciliar> CadastroDomiciliar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_Endereco> ASSMED_Endereco { get; set; }
-        public virtual ASSMED_Endereco ASSMED_Endereco1 { get; set; }
-        public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
-        public virtual ASSMED_Contratos ASSMED_Contratos { get; set; }
     }
 }

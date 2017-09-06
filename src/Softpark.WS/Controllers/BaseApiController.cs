@@ -19,7 +19,6 @@ namespace Softpark.WS.Controllers
         /// Domain models
         /// </summary>
         protected DomainContainer Domain { get; private set; }
-        protected ASPSessionVar Session { get; private set; }
 
         protected BaseApiController(DomainContainer domain)
         {
@@ -29,9 +28,7 @@ namespace Softpark.WS.Controllers
 
         protected bool Autenticado()
         {
-            Session = new ASPSessionVar(Url);
-            
-            return Session.Read("acesso") == "True";
+            return ASPSessionVar.Read("acesso") == "True";
         }
     }
     
@@ -45,7 +42,6 @@ namespace Softpark.WS.Controllers
         /// Domain models
         /// </summary>
         protected DomainContainer Domain { get; private set; }
-        protected new ASPSessionVar Session { get; private set; }
 
         protected BaseAjaxController(DomainContainer domain)
         {
@@ -55,9 +51,7 @@ namespace Softpark.WS.Controllers
 
         protected bool Autenticado()
         {
-            Session = new ASPSessionVar(Url);
-
-            return Session.Read("acesso") == "True";
+            return ASPSessionVar.Read("acesso") == "True";
         }
 
         protected ActionResult BadRequest(string message)

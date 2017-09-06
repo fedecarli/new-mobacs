@@ -6,7 +6,6 @@ using System.Web.Http.Description;
 using Softpark.WS.ViewModels.SIGSM;
 using DataTables.AspNet.WebApi2;
 using DataTables.AspNet.Core;
-using Softpark.WS.ViewModels;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Globalization;
@@ -35,6 +34,44 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Route("api/sigsm/listar/profissional/{nomeOuCns}/{cnes}")]
+        [ResponseType(typeof(VW_Profissional[]))]
+        public IHttpActionResult ListarProfissionais(string nomeOuCns, string cnes = null)
+        {
+            if (!Autenticado())
+            {
+                throw new ValidationException("É preciso estar logado.");
+            }
+
+            if (cnes != null && cnes.Trim() == "0")
+                cnes = null;
+
+            var data = Domain.VW_Profissional.Where(x => ((x.CNS != null && x.CNS == nomeOuCns) || x.Nome.ToLower().Contains(nomeOuCns.ToLower())) &&
+                (cnes == null || (x.CNES != null && x.CNES == cnes)))
+                .OrderBy(x => x.Nome)
+                .ThenBy(x => x.Profissao)
+                .ThenBy(x => x.Unidade)
+                .ThenBy(x => x.Equipe)
+                .Take(20)
+                .ToArray();
+
+            return Ok(data.Select(x =>
+            {
+                x.Profissao = x.Profissao.Trim();
+                x.CBO = x.CBO.Trim();
+                x.Equipe = x.INE == null ? null : x.INE.Trim() + " - " + x.Equipe;
+                x.INE = x.INE == null ? null : (Domain.SetoresINEs.Where(y => y.Numero != null && y.Numero.Trim() == x.INE.Trim()).Select(y => y.CodINE.ToString())
+                    .FirstOrDefault())?.ToString();
+
+                return x;
+            }).ToArray());
+        }
+
+        /// <summary>
+        /// Buscar cadastros individuais
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         [Route("api/sigsm/listar/CadastroIndividual")]
         [ResponseType(typeof(DataTablesJsonResult))]
         public async Task<IHttpActionResult> ListarCadastroIndividual(IDataTablesRequest request)
@@ -50,7 +87,7 @@ namespace Softpark.WS.Controllers.Api
                 Length = 10
             };
 
-            var data = Domain.VW_ConsultaCadastrosIndividuais;
+            var data = Domain.ASSMED_Cadastro.Where(x => x.Nome != null && x.Nome.Length > 0 && !x.Nome.Contains("*"));
 
             DateTime? dtFilter = null;
             if (DateTime.TryParseExact(request.Search.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime _dtFilter))
@@ -73,39 +110,59 @@ namespace Softpark.WS.Controllers.Api
 
             if (request.Search.Value != null && request.Search.Value.Length > 0)
             {
-                if (cns != null && await data.AnyAsync(x => x.CnsCidadao == cns))
-                    filteredData = data.Where(x => x.CnsCidadao == cns);
-                else if (idFicha != null && await data.AnyAsync(x => x.IdFicha == _idFicha))
+                var cnss = Domain.ASSMED_CadastroDocPessoal.Where(x => x.Numero != null && x.Numero == cns && x.CodTpDocP == 6);
+
+                var cods = cnss.Select(x => (decimal?)x.Codigo).ToList();
+
+                if (cns != null && await data.AnyAsync(x => x.ASSMED_CadastroDocPessoal.Any(y => y.Numero != null && y.Numero == cns && y.CodTpDocP == 6)))
+                    filteredData = data.Where(x => x.ASSMED_CadastroDocPessoal.Any(y => y.Numero != null && y.Numero == cns && y.CodTpDocP == 6));
+                else if (idFicha != null && await data.AnyAsync(x => x.IdFicha != null && x.IdentificacaoUsuarioCidadao.CadastroIndividual.Any(y => y.id == _idFicha)))
                     filteredData = data.Where(x => x.IdFicha == _idFicha);
-                else if (codigo != null && await data.AnyAsync(x => x.Codigo == _codigo))
+                else if (codigo != null && await data.AnyAsync(x => x.IdFicha != null && x.IdentificacaoUsuarioCidadao.CadastroIndividual.Any(y => y.id == _idFicha)))
                     filteredData = data.Where(x => x.Codigo == _codigo);
-                else if (dtFilter != null && await data.AnyAsync(x => x.DataNascimento == _dtFilter))
-                    filteredData = data.Where(x => x.DataNascimento == _dtFilter);
+                else if (dtFilter != null && await data.AnyAsync(x => x.ASSMED_PesFisica != null && x.ASSMED_PesFisica.DtNasc == _dtFilter))
+                    filteredData = data.Where(x => x.ASSMED_PesFisica != null && x.ASSMED_PesFisica.DtNasc == _dtFilter);
                 else
-                    filteredData = data.Where(_item => (
-                    (_item.NomeCidadao != null ? _item.NomeCidadao : "") +
-                    (_item.MunicipioNascimento != null ? _item.MunicipioNascimento : "") +
-                    (_item.NomeMae != null ? _item.NomeMae : "")).Contains(request.Search.Value));
+                    filteredData =
+                        from dt in data
+                        let pes = dt.ASSMED_PesFisica
+                        let ci = pes == null ? null :
+                        (from cid in Domain.Cidade where cid.CodCidade == pes.MUNICIPIONASC select cid.CodIbge)
+                        .FirstOrDefault()
+                        where (
+                        (dt.Nome != null ? dt.Nome : "") +
+                        (ci != null ? ci : "") +
+                        (pes != null && pes.NomeMae != null ? pes.NomeMae : "")).Contains(request.Search.Value)
+                        select dt;
             }
+
+            var parsedData = from dt in filteredData
+                             let pes = dt.ASSMED_PesFisica
+                             let ci = pes == null ? null :
+                             (from cid in Domain.Cidade where cid.CodCidade == pes.MUNICIPIONASC select cid.NomeCidade)
+                             .FirstOrDefault()
+                             let _cns = dt.ASSMED_CadastroDocPessoal.Where(y => y.Numero != null && y.CodTpDocP == 6)
+                             .Select(x => x.Numero).FirstOrDefault()
+                             select new { dt, pes, ci, cns = _cns };
 
             // Paging filtered data.
             // Paging is rather manual due to in-memmory (IEnumerable) data.
-            var dataPage = (await filteredData
-                .OrderBy(x => x.NomeCidadao)
-                .ThenBy(x => x.DataNascimento)
-                .ThenBy(x => x.NomeMae)
-                .ThenBy(x => x.CnsCidadao)
-                .ThenBy(x => x.MunicipioNascimento)
-                .ThenBy(x => x.Codigo)
+            var dataPage = (await parsedData
+                .OrderBy(x => x.dt.Nome)
+                .ThenBy(x => x.pes.DtNasc)
+                .ThenBy(x => x.pes.NomeMae)
+                .ThenBy(x => x.cns)
+                .ThenBy(x => x.ci)
+                .ThenBy(x => x.dt.Codigo)
                 .Skip(request.Start).Take(request.Length)
                 .ToArrayAsync())
                 .Select(x => new object[] {
-                    x.NomeCidadao,
-                    x.DataNascimento?.ToString("dd/MM/yyyy"),
-                    x.NomeMae,
-                    x.CnsCidadao,
-                    x.MunicipioNascimento,
-                    x.Codigo
+                    x.dt.Nome,
+                    x.pes?.DtNasc?.ToString("dd/MM/yyyy"),
+                    x.pes?.NomeMae,
+                    x.cns,
+                    x.ci,
+                    x.dt.Codigo
                 })
                 .ToArray();
 
@@ -143,19 +200,23 @@ namespace Softpark.WS.Controllers.Api
             var cns = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 6)?.Numero;
             var rg = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 1);
             var nis = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero;
-            var mun = cad.ASSMED_PesFisica?.MUNICIPIONASC ?? 0;
+            var mun = cad.ASSMED_PesFisica?.MUNICIPIONASC;
             var nac = cad.ASSMED_PesFisica?.Nacionalidade;
             var naca = cad.ASSMED_PesFisica?.CodNacao ?? 10;
 
-            var ulog = Convert.ToInt32(ASPSessionVar.Read("idUsuario", Url) ?? "0");
+            var ulog = Convert.ToInt32(ASPSessionVar.Read("idUsuario") ?? "0");
 
-            var cset = Convert.ToInt32(ASPSessionVar.Read("idSetor", Url) ?? "0");
+            var cset = Convert.ToInt32(ASPSessionVar.Read("idSetor") ?? "0");
 
             var setor = Domain.AS_SetoresPar.SingleOrDefault(x => x.CodSetor == cset);
 
-            var data = Domain.IdentificacaoUsuarioCidadao.Where(x => x.Codigo == codigo)
+            var data = (await Domain.IdentificacaoUsuarioCidadao.AnyAsync(x => x.Codigo == codigo)) ?
+                Domain.IdentificacaoUsuarioCidadao.Where(x => x.Codigo == codigo)
                 .SelectMany(x => x.CadastroIndividual).OrderByDescending(x => x.DataRegistro)
-                .FirstOrDefault();
+                .FirstOrDefault() :
+                (Domain.ASSMED_Cadastro.Where(x => x.Codigo == codigo && x.IdFicha != null)
+                .SelectMany(x => x.IdentificacaoUsuarioCidadao.CadastroIndividual)
+                .FirstOrDefault());
 
             var cont = Domain.ASSMED_Contratos.First();
 
@@ -211,7 +272,7 @@ namespace Softpark.WS.Controllers.Api
                 nameof(UnicaLotacaoTransport.ine)
             });
 
-            if(nh)
+            if (nh)
             {
                 origem.UnicaLotacaoTransport.Add(header);
                 header.OrigemVisita = origem;
@@ -259,7 +320,7 @@ namespace Softpark.WS.Controllers.Api
                 nameof(CadastroIndividual.UnicaLotacaoTransport),
                 nameof(CadastroIndividual.uuidFichaOriginadora)
             });
-            
+
             var ni = iden == null;
             With(ref iden, () => new IdentificacaoUsuarioCidadao
             {
@@ -267,7 +328,7 @@ namespace Softpark.WS.Controllers.Api
                 beneficiarioBolsaFamilia = false,
                 cnsCidadao = cns,
                 cnsResponsavelFamiliar = null,
-                codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge ?? cont.CodigoIbgeMunicipio,
+                codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge,
                 ComplementoRG = rg?.ComplementoRG,
                 CPF = cpf.Length == 11 ? cpf : "00000000000",
                 dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc,
@@ -284,7 +345,7 @@ namespace Softpark.WS.Controllers.Api
                 etnia = cad.ASSMED_PesFisica?.CodEtnia > 0 ? cad.ASSMED_PesFisica?.CodEtnia : null,
                 id = Guid.Empty,
                 microarea = null,
-                nacionalidadeCidadao = nac??1,
+                nacionalidadeCidadao = nac ?? 1,
                 paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == nac)?.codigo,
                 numeroNisPisPasep = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero,
                 num_contrato = 22,
@@ -306,7 +367,7 @@ namespace Softpark.WS.Controllers.Api
                 nameof(IdentificacaoUsuarioCidadao.stForaArea)
             });
 
-            if(ni)
+            if (ni)
             {
                 data.IdentificacaoUsuarioCidadao1 = iden;
 
@@ -319,7 +380,7 @@ namespace Softpark.WS.Controllers.Api
             data.IdentificacaoUsuarioCidadao1.Codigo = codigo;
             data.IdentificacaoUsuarioCidadao1.cnsCidadao = cns;
             data.IdentificacaoUsuarioCidadao1.codigoIbgeMunicipioNascimento = Domain.Cidade
-                .SingleOrDefault(x => x.CodCidade == mun)?.CodIbge ?? cont.CodigoIbgeMunicipio;
+                .SingleOrDefault(x => x.CodCidade == mun)?.CodIbge;
             data.IdentificacaoUsuarioCidadao1.ComplementoRG = rg?.ComplementoRG;
             data.IdentificacaoUsuarioCidadao1.CPF = cad.ASSMED_PesFisica?.CPF ?? data.IdentificacaoUsuarioCidadao1.CPF;
             data.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc;
@@ -334,7 +395,7 @@ namespace Softpark.WS.Controllers.Api
             data.IdentificacaoUsuarioCidadao1.emailCidadao = cad.ASSMED_CadEmails.OrderByDescending(x => x.DtSistema).FirstOrDefault()?.EMail;
             data.IdentificacaoUsuarioCidadao1.EstadoCivil = cad.ASSMED_PesFisica?.EstCivil ?? "I";
             data.IdentificacaoUsuarioCidadao1.etnia = cad.ASSMED_PesFisica?.CodEtnia;
-            data.IdentificacaoUsuarioCidadao1.nacionalidadeCidadao = nac??1;
+            data.IdentificacaoUsuarioCidadao1.nacionalidadeCidadao = nac ?? 1;
             data.IdentificacaoUsuarioCidadao1.paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == naca)?.codigo;
             data.IdentificacaoUsuarioCidadao1.numeroNisPisPasep = nis;
             data.IdentificacaoUsuarioCidadao1.portariaNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA;
@@ -359,10 +420,10 @@ namespace Softpark.WS.Controllers.Api
             {
                 throw new ValidationException("É preciso estar logado.");
             }
-            
+
             var id = await form.LimparESalvarDados(Domain, Url);
-            
-            return Ok(true);
+
+            return Ok(id);
         }
         #endregion
 
@@ -387,11 +448,11 @@ namespace Softpark.WS.Controllers.Api
                 Length = 10
             };
 
-            var data = Domain.VW_ConsultaCadastrosDomiciliares.AsQueryable();
-
-            decimal? codigo = null;
-            if (decimal.TryParse(request.Search.Value, out decimal _codigo))
-                codigo = _codigo;
+            var data =
+                from cd in Domain.CadastroDomiciliar
+                let children = Domain.CadastroDomiciliar.Count(x => x.uuidFichaOriginadora == cd.id && x.id != cd.id)
+                where children == 0
+                select cd;
 
             var idFicha = (Guid?)null;
             if (Guid.TryParse(request.Search.Value, out Guid _idFicha))
@@ -400,37 +461,32 @@ namespace Softpark.WS.Controllers.Api
             var filteredData = data;
             if (request.Search.Value != null && request.Search.Value.Length > 0)
             {
-                if (codigo != null && await data.AnyAsync(x => x.Codigo == _codigo))
-                    filteredData = data.Where(x => x.Codigo == _codigo);
-                else if (idFicha != null && await data.AnyAsync(x => x.IdFicha == _idFicha))
-                    filteredData = data.Where(x => x.IdFicha == _idFicha);
+                if (idFicha != null && await data.AnyAsync(x => x.id == _idFicha))
+                    filteredData = data.Where(x => x.id == _idFicha);
                 else
                     filteredData = data.Where(_item => (
-                    (_item.Numero != null ? _item.Numero : "") +
-                    (_item.Endereco != null ? _item.Endereco : "") +
-                    (_item.Complemento != null ? _item.Complemento : "") +
-                    (_item.Telefone != null ? _item.Telefone : "") +
-                    (_item.Responsavel != null ? _item.Responsavel : "")).Contains(request.Search.Value));
+                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.numero != null ? _item.EnderecoLocalPermanencia1.numero : "") +
+                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.nomeLogradouro != null ? _item.EnderecoLocalPermanencia1.nomeLogradouro : "") +
+                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.complemento != null ? _item.EnderecoLocalPermanencia1.complemento : "") +
+                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.telefoneResidencia != null ? _item.EnderecoLocalPermanencia1.telefoneResidencia : ""))
+                    .Contains(request.Search.Value));
             }
 
             // Paging filtered data.
             // Paging is rather manual due to in-memmory (IEnumerable) data.
             var dataPage = (await filteredData
-                .OrderBy(x => x.Endereco)
-                .ThenBy(x => x.Numero)
-                .ThenBy(x => x.Complemento)
-                .ThenBy(x => x.Telefone)
-                .ThenBy(x => x.Responsavel)
-                .ThenBy(x => x.Codigo)
+                .OrderBy(x => x.EnderecoLocalPermanencia1.nomeLogradouro)
+                .ThenBy(x => x.EnderecoLocalPermanencia1.numero)
+                .ThenBy(x => x.EnderecoLocalPermanencia1.complemento)
+                .ThenBy(x => x.EnderecoLocalPermanencia1.telefoneResidencia)
                 .Skip(request.Start).Take(request.Length)
                 .ToArrayAsync())
                 .Select(x => new object[] {
-                    x.Endereco,
-                    x.Numero,
-                    x.Complemento,
-                    x.Telefone,
-                    x.Responsavel,
-                    x.Codigo
+                    x.EnderecoLocalPermanencia1?.nomeLogradouro,
+                    x.EnderecoLocalPermanencia1?.numero,
+                    x.EnderecoLocalPermanencia1?.complemento,
+                    x.EnderecoLocalPermanencia1?.telefoneResidencia,
+                    x.id
                 })
                 .ToArray();
 
@@ -449,181 +505,63 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="codigo">Código do domicilio em ASSMED_Endereco</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/detalhar/CadastroDomiciliar/{codigo}")]
+        [Route("api/sigsm/detalhar/CadastroDomiciliar/{codigo:guid}")]
         [ResponseType(typeof(FormCadastroDomiciliar))]
-        public async Task<IHttpActionResult> DetalharCadastroDomiciliar(decimal codigo)
+        public async Task<IHttpActionResult> DetalharCadastroDomiciliar(Guid codigo)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            var cad = Domain.ASSMED_Endereco.Where(x => x.Codigo == codigo)
-                .OrderByDescending(x => x.ItemEnd).FirstOrDefault();
+            var ulog = Convert.ToInt32(ASPSessionVar.Read("idUsuario") ?? "0");
 
-            if (cad == null)
-            {
-                throw new ValidationException("Cadastro não encontrado!");
-            }
-
-            var cns = cad.ASSMED_Cadastro.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 6)?.Numero;
-
-            var mun = cad.CodCidade ?? 0;
-
-            var cont = Domain.ASSMED_Contratos.First();
-
-            var m = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun) ?? Domain.Cidade.FirstOrDefault(x => x.CodIbge == cont.CodigoIbgeMunicipio);
-
-            var ulog = Convert.ToInt32(ASPSessionVar.Read("idUsuario", Url) ?? "0");
-
-            var cset = Convert.ToInt32(ASPSessionVar.Read("idSetor", Url) ?? "0");
+            var cset = Convert.ToInt32(ASPSessionVar.Read("idSetor") ?? "0");
 
             var setor = Domain.AS_SetoresPar.SingleOrDefault(x => x.CodSetor == cset);
 
-            var data = Domain.EnderecoLocalPermanencia.Where(x => x.Codigo == codigo)
-                .SelectMany(x => x.CadastroDomiciliar).OrderByDescending(x => x.idAuto)
-                .FirstOrDefault();
+            var data = await Domain.CadastroDomiciliar.SingleOrDefaultAsync(x => x.id == codigo);
 
             if (data == null)
             {
-                var origem = new OrigemVisita
-                {
-                    enviado = false,
-                    enviarParaThrift = false,
-                    finalizado = false,
-                    id_tipo_origem = 2,
-                    token = Guid.NewGuid()
-                };
-
-                Domain.OrigemVisita.Add(origem);
-
-                var header = new UnicaLotacaoTransport
-                {
-                    cnes = setor?.CNES,
-                    codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
-                    dataAtendimento = DateTime.Now,
-                    id = Guid.NewGuid(),
-                    token = origem.token,
-                    OrigemVisita = origem
-                };
-
-                Domain.UnicaLotacaoTransport.Add(header);
-
-                origem.UnicaLotacaoTransport.Add(header);
-
-                var end = new EnderecoLocalPermanencia
-                {
-                    bairro = cad.Bairro,
-                    cep = cad.CEP,
-                    Codigo = cad.Codigo,
-                    num_contrato = cad.NumContrato,
-                    codigoIbgeMunicipio = m.CodIbge,
-                    complemento = cad.Complemento,
-                    item_end = cad.ItemEnd,
-                    id = Guid.NewGuid(),
-                    nomeLogradouro = cad.Logradouro,
-                    numero = cad.Numero,
-                    numeroDneUf = m.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0'),
-                    pontoReferencia = cad.ENDREFERENCIA,
-                    stForaArea = cad.ENDSEMAREA == 1,
-                    stSemNumero = cad.SEMNUMERO == 1,
-                    telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                            .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
-                    telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                            .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
-                    tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO
-                };
-
-                Domain.EnderecoLocalPermanencia.Add(end);
-
-                var fam = new FamiliaRow
-                {
-                    dataNascimentoResponsavel = cad.ASSMED_Cadastro.ASSMED_PesFisica?.DtNasc,
-                    id = Guid.NewGuid(),
-                    numeroCnsResponsavel = cns
-                };
-
-                Domain.FamiliaRow.Add(fam);
-
-                data = new CadastroDomiciliar
-                {
-                    EnderecoLocalPermanencia1 = end,
-                    FamiliaRow = new FamiliaRow[] {
-                        fam
-                    },
-                    DataRegistro = DateTime.Now,
-                    fichaAtualizada = false,
-                    id = Guid.NewGuid(),
-                    uuidFichaOriginadora = Guid.Empty,
-                    tpCdsOrigem = 3,
-                    UnicaLotacaoTransport = header
-                };
-
-                Domain.CadastroDomiciliar.Add(data);
-                fam.CadastroDomiciliar.Add(data);
-                end.CadastroDomiciliar.Add(data);
-                header.CadastroDomiciliar.Add(data);
-
-                await Domain.SaveChangesAsync();
+                throw new ValidationException("Não foi possível encontrar a ficha selecionada.");
             }
 
-            if (data.EnderecoLocalPermanencia1 == null)
+            var header = data.UnicaLotacaoTransport;
+
+            var origem = header.OrigemVisita;
+
+            var cad = Domain.ASSMED_Endereco.Where(x => x.IdFicha == codigo)
+                .OrderByDescending(x => x.ItemEnd).FirstOrDefault();
+
+            if (cad != null)
             {
-                var end = new EnderecoLocalPermanencia
-                {
-                    bairro = cad.Bairro,
-                    cep = cad.CEP,
-                    Codigo = cad.Codigo,
-                    num_contrato = cad.NumContrato,
-                    codigoIbgeMunicipio = m.CodIbge,
-                    complemento = cad.Complemento,
-                    item_end = cad.ItemEnd,
-                    id = Guid.NewGuid(),
-                    microarea = null,
-                    nomeLogradouro = cad.Logradouro,
-                    numero = cad.Numero,
-                    numeroDneUf = m.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0'),
-                    pontoReferencia = cad.ENDREFERENCIA,
-                    stForaArea = cad.ENDSEMAREA == 1,
-                    stSemNumero = cad.SEMNUMERO == 1,
-                    telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                            .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
-                    telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                            .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
-                    tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO
-                };
+                var cns = cad.ASSMED_Cadastro.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 6)?.Numero;
 
-                data.EnderecoLocalPermanencia1 = end;
-                Domain.EnderecoLocalPermanencia.Add(end);
-                end.CadastroDomiciliar.Add(data);
+                var mun = cad.CodCidade ?? 0;
 
-                await Domain.SaveChangesAsync();
+                var cont = Domain.ASSMED_Contratos.First();
+
+                var m = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun);
+
+                data.EnderecoLocalPermanencia1.bairro = cad.Bairro;
+                data.EnderecoLocalPermanencia1.cep = cad.CEP?.Replace("-", "");
+                data.EnderecoLocalPermanencia1.codigoIbgeMunicipio = m?.CodIbge;
+                data.EnderecoLocalPermanencia1.complemento = cad.Complemento;
+                data.EnderecoLocalPermanencia1.nomeLogradouro = cad.Logradouro;
+                data.EnderecoLocalPermanencia1.numero = cad.Numero;
+                data.EnderecoLocalPermanencia1.numeroDneUf = m?.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0');
+                data.EnderecoLocalPermanencia1.pontoReferencia = cad.ENDREFERENCIA;
+                data.EnderecoLocalPermanencia1.stForaArea = cad.ENDSEMAREA == 1;
+                data.EnderecoLocalPermanencia1.stSemNumero = cad.SEMNUMERO == 1;
+                data.EnderecoLocalPermanencia1.telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                        .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault();
+                data.EnderecoLocalPermanencia1.telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                        .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault();
+                data.EnderecoLocalPermanencia1.tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO;
             }
 
-            data.EnderecoLocalPermanencia1.bairro = cad.Bairro;
-            data.EnderecoLocalPermanencia1.cep = cad.CEP;
-            data.EnderecoLocalPermanencia1.Codigo = cad.Codigo;
-            data.EnderecoLocalPermanencia1.num_contrato = cad.NumContrato;
-            data.EnderecoLocalPermanencia1.codigoIbgeMunicipio = m.CodIbge;
-            data.EnderecoLocalPermanencia1.complemento = cad.Complemento;
-            data.EnderecoLocalPermanencia1.item_end = cad.ItemEnd;
-            data.EnderecoLocalPermanencia1.nomeLogradouro = cad.Logradouro;
-            data.EnderecoLocalPermanencia1.numero = cad.Numero;
-            data.EnderecoLocalPermanencia1.numeroDneUf = m.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0');
-            data.EnderecoLocalPermanencia1.pontoReferencia = cad.ENDREFERENCIA;
-            data.EnderecoLocalPermanencia1.stForaArea = cad.ENDSEMAREA == 1;
-            data.EnderecoLocalPermanencia1.stSemNumero = cad.SEMNUMERO == 1;
-            data.EnderecoLocalPermanencia1.telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                    .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault();
-            data.EnderecoLocalPermanencia1.telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
-                    .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault();
-            data.EnderecoLocalPermanencia1.tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO;
-
-            return Ok((new FormCadastroDomiciliar
-            {
-                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(data.UnicaLotacaoTransport),
-                CadastroDomiciliar = data
-            }).ToDetail());
+            return Ok(await (await FormCadastroDomiciliar.ToVM(data, Domain)).ToDetail(Domain));
         }
 
         /// <summary>
@@ -641,8 +579,8 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var id = await form.LimparESalvarDados(Domain, Url);
-            
-            return Ok(true);
+
+            return Ok(id);
         }
         #endregion
 

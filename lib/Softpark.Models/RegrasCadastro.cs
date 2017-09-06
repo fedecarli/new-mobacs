@@ -451,16 +451,16 @@ namespace Softpark.Models
             if (cond.cnsCidadao != null && !cond.cnsCidadao.isValidCns())
                 throw new ValidationException("O CNS do cidadão está incorreto.");
 
-            if (cond.cnsResponsavelFamiliar != null)
+            if (cond.cnsResponsavelFamiliar != null && cond.cnsResponsavelFamiliar != cond.cnsCidadao)
             {
                 if (cond.statusEhResponsavel)
-                    throw new ValidationException("O CNS do responsável familiar não deve ser informado neste caso.");
+                    throw new ValidationException("O CNS do responsável familiar não deve ser informado.");
 
                 if (!cond.cnsResponsavelFamiliar.isValidCns())
                     throw new ValidationException("O CNS do responsável familiar é inválido.");
             }
             else if (!cond.statusEhResponsavel)
-                throw new ValidationException("O CNS do responsável familiar deve ser informado neste caso.");
+                throw new ValidationException("O CNS do responsável familiar deve ser informado.");
 
             if (cond.telefoneCelular != null && (cond.telefoneCelular.Length < 10 || cond.telefoneCelular.Length > 11 ||
                 Regex.IsMatch(cond.telefoneCelular ?? "-", "([^0-9])")))
@@ -691,7 +691,7 @@ namespace Softpark.Models
                 throw new ValidationException("A quantidade de cômodos não pode ser informada para este tipo de imóvel.");
 
             if (cond.nuComodos == 0 || cond.nuComodos > 99)
-                throw new ValidationException("A quantidade de cõmodos é inválida");
+                throw new ValidationException("A quantidade de cômodos é inválida");
 
             if (cond.nuMoradores != null && (cond.nuMoradores < cad.FamiliaRow.Sum(x => x.numeroMembrosFamilia) || cond.nuMoradores < cad.FamiliaRow.Count))
                 throw new ValidationException("O número de moradores não pode ser menor que o total de membros / famílias cadastrados.");
@@ -886,7 +886,7 @@ namespace Softpark.Models
                 throw new ValidationException("Informe o Uuid da ficha originadora.");
 
             if (cad.InstituicaoPermanencia1 != null && !((new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel) || cad.statusTermoRecusa))
-                throw new ValidationException("A instituição de permanência não pode ser informada.");
+                throw new ValidationException("A instituição de permanência não pode ser informada para o tipo de imóvel selecionado.");
 
             cad.InstituicaoPermanencia1?.Validar(cad);
         }
