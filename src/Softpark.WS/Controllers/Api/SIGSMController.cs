@@ -7,12 +7,10 @@ using Softpark.WS.ViewModels.SIGSM;
 using DataTables.AspNet.WebApi2;
 using DataTables.AspNet.Core;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-using System.Globalization;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using static Softpark.Infrastructure.Extensions.WithStatement;
-using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -60,10 +58,11 @@ namespace Softpark.WS.Controllers.Api
             {
                 x.Profissao = x.Profissao.Trim();
                 x.CBO = x.CBO.Trim();
-                x.Equipe = x.INE == null ? null : x.INE.Trim() + " - " + x.Equipe;
-                x.INE = x.INE == null ? null : (Domain.SetoresINEs.Where(y => y.Numero != null && y.Numero.Trim() == x.INE.Trim()).Select(y => y.CodINE.ToString())
+                x.Equipe = x.INE == null ? string.Empty : x.INE.Trim() + " - " + x.Equipe;
+                x.INE = x.INE == null ? string.Empty : (Domain.SetoresINEs.Where(y => y.Numero != null && y.Numero.Trim() == x.INE.Trim()).Select(y => y.CodINE.ToString())
                     .FirstOrDefault())?.ToString();
-
+                x.Equipe = x.INE == null ? string.Empty : x.Equipe;
+                x.INE = x.INE == null ? string.Empty : x.INE;
                 return x;
             }).ToArray());
         }
@@ -91,102 +90,31 @@ namespace Softpark.WS.Controllers.Api
             var search = request.Search.Value == null ||
                 request.Search.Value.Trim().Length == 0 ?
                 null : request.Search.Value.Trim();
-            
-            var order = request.Columns.OrderBy(x => x.Sort.Direction)
-                .Aggregate("", (a, b) => (a.Length > 0 ? (a + ", ") : "") + b.Name);
-            
-            var sql = $@"
-						declare @search NVARCHAR(MAX),
-								@isNum BIT,
-								@isGuid BIT,
-								@isDate BIT,
-								@isCns BIT,
-								@len INT;
-						
-						 SELECT @search = @busca;
 
-						 SELECT @len = LEN(@search);
+            var http = System.Web.HttpContext.Current;
 
-						 SELECT @isNum = ISNUMERIC(@search),
-								@isGuid = (CASE WHEN @search LIKE REPLACE('00000000-0000-0000-0000-000000000000', '0', '[0-9a-fA-F]') THEN 1 ELSE 0 END),
-								@isDate = ISDATE(@search),
-								@isCns = (CASE WHEN @len = 15 AND ISNUMERIC(@search) = 1 AND SUBSTRING(@search, 1, 1) IN ('1', '2', '7', '8', '9') THEN 1 ELSE 0 END);
+            var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"]);
+            var ordDir = http.Request.Params["order[0][dir]"] == "asc" ? 0 : 1;
 
-						 SELECT ac.Nome,
-								pf.DtNasc,
-								pf.NomeMae,
-								cns.Numero,
-								cid.NomeCidade,
-								ac.Codigo,
-								ci.id,
-								ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS ROW
-						   FROM ASSMED_Cadastro AS ac
-					  LEFT JOIN ASSMED_PesFisica AS pf
-							 ON pf.Codigo = ac.Codigo
-					  LEFT JOIN api.IdentificacaoUsuarioCidadao AS iden
-							 ON ac.Codigo = iden.Codigo
-							 OR ac.IdFicha = iden.id
-					  LEFT JOIN api.CadastroIndividual AS ci
-							 ON iden.id = ci.identificacaoUsuarioCidadao
-					  LEFT JOIN ASSMED_CadastroDocPessoal AS cns
-							 ON ac.Codigo = cns.Codigo
-							AND cns.CodTpDocP = 6
-					  LEFT JOIN Cidade as cid
-							 ON pf.MUNICIPIONASC = cid.CodCidade
-						  WHERE ac.Nome IS NOT NULL
-							AND LEN(LTRIM(RTRIM(nome))) > 0
-							AND ac.Nome NOT LIKE '%*%'
-							AND (CASE
-								 WHEN (@len = 0 OR @search IS NULL) THEN 1
-								 WHEN (@isCns = 1) THEN (CASE cns.Numero WHEN @search THEN 1 ELSE 0 END)
-								 WHEN (@isGuid = 1) THEN (CASE CAST(ci.id AS NVARCHAR(36)) WHEN @search THEN 1 ELSE 0 END)
-								 WHEN (@isCns = 0 AND @isNum = 1) THEN (CASE CAST(ac.Codigo AS VARCHAR(18)) WHEN @search THEN 1 ELSE 0 END)
-								 WHEN (@isDate = 1) THEN (CASE CONVERT(CHAR, pf.DtNasc, 103) WHEN @search THEN 1 ELSE 0 END)
-								 WHEN (@isCns = 0 AND @isGuid = 0 AND @isDate = 0) THEN
-									  (CASE
-									   WHEN cid.NomeCidade COLLATE Latin1_General_CI_AI LIKE '%' + @search + '%' OR
-											ac.Nome COLLATE Latin1_General_CI_AI LIKE '%' + @search + '%' OR
-											pf.NomeMae COLLATE Latin1_General_CI_AI LIKE '%' + @search + '%'
-									   THEN 1
-									   ELSE 0
-									    END)
-								 ELSE 0
-								  END) = 1
-					   GROUP BY ac.Nome,
-								pf.DtNasc,
-								pf.NomeMae,
-								cns.Numero,
-								cid.NomeCidade,
-								ac.Codigo,
-								ci.id
-					   ORDER BY {order}";
+            System.Data.Entity.Core.Objects.ObjectParameter totalFilteredParam = new System.Data.Entity.Core.Objects.ObjectParameter("total", typeof(int));
+            System.Data.Entity.Core.Objects.ObjectParameter totalParam = new System.Data.Entity.Core.Objects.ObjectParameter("totalFiltered", typeof(int));
 
-            Domain.Database.SqlQuery(sql, new SqlParameter("@busca", search))
+            var cads = Domain.PR_ConsultaCadastroIndividuais(search, request.Start, request.Length,
+                ordCol, ordDir, totalParam, totalFilteredParam);
 
-            // Paging filtered data.
-            // Paging is rather manual due to in-memmory (IEnumerable) data.
-            var dataPage = (await parsedData
-                .OrderBy(x => x.dt.Nome)
-                .ThenBy(x => x.pes.DtNasc)
-                .ThenBy(x => x.pes.NomeMae)
-                .ThenBy(x => x.cns)
-                .ThenBy(x => x.ci)
-                .ThenBy(x => x.dt.Codigo)
-                .Skip(request.Start).Take(request.Length)
-                .ToArrayAsync())
-                .Select(x => new object[] {
-                    x.dt.Nome,
-                    x.pes?.DtNasc?.ToString("dd/MM/yyyy"),
-                    x.pes?.NomeMae,
-                    x.cns,
-                    x.ci,
-                    x.dt.Codigo
-                })
-                .ToArray();
+            var cadastros = (from c in cads
+                             select new string[] {
+                            c.Nome == null ? string.Empty : c.Nome,
+                            c.DtNasc == null ? string.Empty : c.DtNasc,
+                            c.NomeMae == null ? string.Empty : c.NomeMae,
+                            c.Cns == null ? string.Empty : c.Cns,
+                            c.NomeCidade == null ? string.Empty : c.NomeCidade,
+                            c.Codigo == null ? string.Empty : c.Codigo
+                        }).ToArray();
 
             // Response creation. To create your response you need to reference your request, to avoid
             // request/response tampering and to ensure response will be correctly created.
-            var response = DataTablesResponse.Create(request, data.Count(), filteredData.Count(), dataPage);
+            var response = DataTablesResponse.Create(request, (int)totalParam.Value, (int)totalFilteredParam.Value, cadastros);
 
             // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
             // response to a json-compatible content, so DataTables can read it when received.
@@ -490,21 +418,57 @@ namespace Softpark.WS.Controllers.Api
                     .Contains(request.Search.Value));
             }
 
+            var http = System.Web.HttpContext.Current;
+
+            var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"]);
+            var ordDir = http.Request.Params["order[0][dir]"] == "asc" ? 0 : 1;
+
+            if (ordDir == 0)
+            {
+                filteredData = from fd in filteredData
+                               orderby (ordCol == 0 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.nomeLogradouro) :
+                               ordCol == 1 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.numero) :
+                               ordCol == 2 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.complemento) :
+                               ordCol == 3 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.telefoneResidencia) :
+                               fd.id.ToString()) ascending
+                               select fd;
+            }
+            else
+            {
+                filteredData = from fd in filteredData
+                               orderby (ordCol == 0 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.nomeLogradouro) :
+                               ordCol == 1 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.numero) :
+                               ordCol == 2 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.complemento) :
+                               ordCol == 3 ?
+                                (fd.EnderecoLocalPermanencia1 == null ? null :
+                                fd.EnderecoLocalPermanencia1.telefoneResidencia) :
+                               fd.id.ToString()) descending
+                               select fd;
+            }
+
             // Paging filtered data.
             // Paging is rather manual due to in-memmory (IEnumerable) data.
-            var dataPage = (await filteredData
-                .OrderBy(x => x.EnderecoLocalPermanencia1.nomeLogradouro)
-                .ThenBy(x => x.EnderecoLocalPermanencia1.numero)
-                .ThenBy(x => x.EnderecoLocalPermanencia1.complemento)
-                .ThenBy(x => x.EnderecoLocalPermanencia1.telefoneResidencia)
-                .Skip(request.Start).Take(request.Length)
-                .ToArrayAsync())
-                .Select(x => new object[] {
-                    x.EnderecoLocalPermanencia1?.nomeLogradouro,
-                    x.EnderecoLocalPermanencia1?.numero,
-                    x.EnderecoLocalPermanencia1?.complemento,
-                    x.EnderecoLocalPermanencia1?.telefoneResidencia,
-                    x.id
+            var dataPage = (await filteredData.Skip(request.Start).Take(request.Length).ToArrayAsync())
+                .Select(x => new string[] {
+                    x.EnderecoLocalPermanencia1?.nomeLogradouro??string.Empty,
+                    x.EnderecoLocalPermanencia1?.numero??string.Empty,
+                    x.EnderecoLocalPermanencia1?.complemento??string.Empty,
+                    x.EnderecoLocalPermanencia1?.telefoneResidencia??string.Empty,
+                    x.id.ToString().Replace("{", "").Replace("}", "")
                 })
                 .ToArray();
 
@@ -609,15 +573,119 @@ namespace Softpark.WS.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("api/sigsm/listar/VisitaDomiciliar")]
-        [ResponseType(typeof(string))]
-        public IHttpActionResult ListarVisitaDomiciliar()
+        [ResponseType(typeof(DataTablesJsonResult))]
+        public async Task<IHttpActionResult> ListarVisitaDomiciliar(IDataTablesRequest request)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            return Ok(Versions.Version);
+            if (request == null) request = new DataTablesRequest
+            {
+                Draw = 1,
+                Length = 10
+            };
+
+            var data = (await Domain.FichaVisitaDomiciliarMaster.ToArrayAsync())
+                .Where(x => x.uuidFicha != null);
+
+            var idFicha = request.Search.Value == null || request.Search.Value.Length < 36 ||
+                !Regex.IsMatch(request.Search.Value, "^([0-9]{7}-)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$") ? null :
+                request.Search.Value;
+
+            var byDate = (request.Search.Value != null && Regex.IsMatch(request.Search.Value, "([0-9]{2}/[0-9]{2}/[0-9]{4})"));
+
+            var filteredData = from d in data
+                               select new
+                               {
+                                   d,
+                                   p = Domain.VW_Profissional.FirstOrDefault(x =>
+                    d.UnicaLotacaoTransport.profissionalCNS == x.CNS.Trim() &&
+                    d.UnicaLotacaoTransport.cboCodigo_2002 == x.CBO.Trim() &&
+                    d.UnicaLotacaoTransport.cnes == x.CNES.Trim() &&
+                    (x.INE == null || d.UnicaLotacaoTransport.ine == x.INE.Trim()))
+                               }
+                               into fd
+                               where fd.p != null
+                               select fd;
+
+            if (request.Search.Value != null && request.Search.Value.Length > 0)
+            {
+                filteredData = (from fd in filteredData
+                                where
+                                fd.d.uuidFicha == request.Search.Value ||
+                                fd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("dd/MM/yyyy") == request.Search.Value ||
+                                fd.d.FichaVisitaDomiciliarChild.Count.ToString() == request.Search.Value ||
+                                (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
+                                fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
+                                "Não Finalizada").Contains(request.Search.Value) ||
+                                fd.p.Nome.Contains(request.Search.Value)
+                                select fd).Distinct();
+            }
+
+            var http = System.Web.HttpContext.Current;
+
+            var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"]);
+            var ordDir = http.Request.Params["order[0][dir]"] == "asc" ? 0 : 1;
+
+            if (ordDir == 0)
+            {
+                filteredData = from fd in filteredData
+                               orderby (
+                               ordCol == 0 ?
+                                fd.p.Nome :
+                               ordCol == 1 ?
+                                fd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("yyyy/MM/dd HH:mm:ss.sss") :
+                               ordCol == 2 ?
+                                fd.d.FichaVisitaDomiciliarChild.Count.ToString()
+                                .PadLeft(10, '0') :
+                               ordCol == 3 ?
+                                (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
+                                fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
+                                "Não Finalizada") :
+                               fd.d.uuidFicha) ascending
+                               select fd;
+            }
+            else
+            {
+                filteredData = from fd in filteredData
+                               orderby (
+                               ordCol == 0 ?
+                                fd.p.Nome :
+                               ordCol == 1 ?
+                                fd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("yyyy/MM/dd HH:mm:ss.sss") :
+                               ordCol == 2 ?
+                                fd.d.FichaVisitaDomiciliarChild.Count.ToString()
+                                .PadLeft(10, '0') :
+                               ordCol == 3 ?
+                                (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
+                                fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
+                                "Não Finalizada") :
+                               fd.d.uuidFicha) descending
+                               select fd;
+            }
+
+            // Paging filtered data.
+            // Paging is rather manual due to in-memmory (IEnumerable) data.
+            var dataPage = from nd in filteredData.Skip(request.Start).Take(request.Length)
+                           select new string[] {
+                                nd.p.Nome,
+                                nd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("dd/MM/yyyy"),
+                                nd.d.FichaVisitaDomiciliarChild.Count.ToString(),
+                                (nd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
+                                nd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
+                                "Não Finalizada"),
+                                nd.d.uuidFicha
+                           };
+
+            // Response creation. To create your response you need to reference your request, to avoid
+            // request/response tampering and to ensure response will be correctly created.
+            var response = DataTablesResponse.Create(request, data.Count(), filteredData.Count(), dataPage.ToArray());
+
+            // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
+            // response to a json-compatible content, so DataTables can read it when received.
+            return new DataTablesJsonResult(response, Request);
         }
 
         /// <summary>

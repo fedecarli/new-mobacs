@@ -2077,6 +2077,15 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
         <Function Name="PR_ProcessarFichasAPI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="token" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="PR_ConsultaCadastroIndividuais" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="search" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="skip" Type="int" Mode="In" />
+          <Parameter Name="take" Type="int" Mode="In" />
+          <Parameter Name="orderCol" Type="int" Mode="In" />
+          <Parameter Name="orderDirection" Type="int" Mode="In" />
+          <Parameter Name="total" Type="int" Mode="InOut" />
+          <Parameter Name="totalFiltered" Type="int" Mode="InOut" />
+        </Function>
         <EntityContainer Name="DomainStoreContainer">
           <EntitySet Name="AnimalNoDomicilio" EntityType="Self.AnimalNoDomicilio" Schema="api" store:Type="Tables" />
           <EntitySet Name="CadastroDomiciliar" EntityType="Self.CadastroDomiciliar" Schema="api" store:Type="Tables" />
@@ -2827,6 +2836,15 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
           </AssociationSet>
+          <FunctionImport Name="PR_ConsultaCadastroIndividuais" ReturnType="Collection(Domain.PR_ConsultaCadastroIndividuais_Result2)">
+            <Parameter Name="search" Mode="In" Type="String" />
+            <Parameter Name="skip" Mode="In" Type="Int32" />
+            <Parameter Name="take" Mode="In" Type="Int32" />
+            <Parameter Name="orderCol" Mode="In" Type="Int32" />
+            <Parameter Name="orderDirection" Mode="In" Type="Int32" />
+            <Parameter Name="total" Mode="InOut" Type="Int32" />
+            <Parameter Name="totalFiltered" Mode="InOut" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
           <Key>
@@ -4858,6 +4876,33 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="PR_ConsultaCadastroIndividuais_Result">
+          <Property Type="String" Name="Nome" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="DtNasc" Nullable="true" Precision="23" />
+          <Property Type="String" Name="NomeMae" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Cns" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="NomeCidade" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Codigo" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Guid" Name="Id" Nullable="true" />
+          <Property Type="Int64" Name="Row" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="PR_ConsultaCadastroIndividuais_Result1">
+          <Property Type="String" Name="Nome" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="DtNasc" Nullable="true" Precision="23" />
+          <Property Type="String" Name="NomeMae" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Cns" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="NomeCidade" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Codigo" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Int64" Name="Row" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="PR_ConsultaCadastroIndividuais_Result2">
+          <Property Type="String" Name="Nome" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="DtNasc" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="NomeMae" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="Cns" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="NomeCidade" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="Codigo" Nullable="true" MaxLength="512" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6278,6 +6323,18 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PR_ConsultaCadastroIndividuais" FunctionName="Domain.Store.PR_ConsultaCadastroIndividuais">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Domain.PR_ConsultaCadastroIndividuais_Result2">
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="DtNasc" ColumnName="DtNasc" />
+                <ScalarProperty Name="NomeMae" ColumnName="NomeMae" />
+                <ScalarProperty Name="Cns" ColumnName="Cns" />
+                <ScalarProperty Name="NomeCidade" ColumnName="NomeCidade" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

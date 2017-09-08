@@ -202,6 +202,15 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result1.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result2.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="RastroFicha.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

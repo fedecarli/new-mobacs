@@ -149,5 +149,30 @@ namespace Softpark.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_EncerrarAgenda", idAgendaProdParameter, retornoParameter, tipoFichaParameter);
         }
+    
+        public virtual ObjectResult<PR_ConsultaCadastroIndividuais_Result2> PR_ConsultaCadastroIndividuais(string search, Nullable<int> skip, Nullable<int> take, Nullable<int> orderCol, Nullable<int> orderDirection, ObjectParameter total, ObjectParameter totalFiltered)
+        {
+            var searchParameter = search != null ?
+                new ObjectParameter("search", search) :
+                new ObjectParameter("search", typeof(string));
+    
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("skip", skip) :
+                new ObjectParameter("skip", typeof(int));
+    
+            var takeParameter = take.HasValue ?
+                new ObjectParameter("take", take) :
+                new ObjectParameter("take", typeof(int));
+    
+            var orderColParameter = orderCol.HasValue ?
+                new ObjectParameter("orderCol", orderCol) :
+                new ObjectParameter("orderCol", typeof(int));
+    
+            var orderDirectionParameter = orderDirection.HasValue ?
+                new ObjectParameter("orderDirection", orderDirection) :
+                new ObjectParameter("orderDirection", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PR_ConsultaCadastroIndividuais_Result2>("PR_ConsultaCadastroIndividuais", searchParameter, skipParameter, takeParameter, orderColParameter, orderDirectionParameter, total, totalFiltered);
+        }
     }
 }
