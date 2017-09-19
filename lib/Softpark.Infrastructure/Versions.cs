@@ -8,6 +8,6 @@
         /// <summary>
         /// Versão atual
         /// </summary>
-        public const string Version = "1.7.0.0";
+        public const string Version = "1.7.0.5";
     }
 }

@@ -46,21 +46,14 @@ namespace Softpark.WS
             }
 
             string data = null;
-
-            try
+            
+            using (var s = client.OpenRead(uri))
+            using (var sr = new StreamReader(s))
             {
-                using (var s = client.OpenRead(uri))
-                using (var sr = new StreamReader(s))
-                {
-                    data = sr.ReadToEnd();
-                }
+                data = sr.ReadToEnd();
+            }
                 
-                return data;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return data;
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
