@@ -150,6 +150,13 @@
         <AssociationConnector Association="Domain.FK_CadastroDomiciliar_EnderecoLocalPermanencia" />
         <AssociationConnector Association="Domain.FK__ASSMED_En__IdFic__3B8EDEAC" />
         <AssociationConnector Association="Domain.FK__ASSMED_Endereco__5649C92D" />
+        <EntityTypeShape EntityType="Domain.SIGSM_Transmissao" Width="1.5" PointX="28.375" PointY="28.25" />
+        <EntityTypeShape EntityType="Domain.SIGSM_Transmissao_Processos" Width="1.5" PointX="30.625" PointY="1" />
+        <EntityTypeShape EntityType="Domain.SIGSM_Transmissao_StatusGeracao" Width="1.5" PointX="28.375" PointY="1.375" />
+        <AssociationConnector Association="Domain.FK__SIGSM_Tra__IdTra__38B27201" />
+        <AssociationConnector Association="Domain.FK__SIGSM_Tra__IdSta__39A6963A" />
+        <EntityTypeShape EntityType="Domain.SIGSM_Transmissao_Processos_Log" Width="1.5" PointX="32.875" PointY="1.5" />
+        <AssociationConnector Association="Domain.FK__SIGSM_Tra__IdPro__5FCC3F22" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

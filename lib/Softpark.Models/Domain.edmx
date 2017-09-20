@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AnimalNoDomicilio">
           <Key>
             <PropertyRef Name="id_cadastro_domiciliar" />
@@ -758,6 +758,46 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.Nacionalidade' 
           <Property Name="nome" Type="nvarchar" MaxLength="80" Nullable="false" />
           <Property Name="observacoes" Type="nvarchar" MaxLength="255" />
           <Property Name="campo" Type="nvarchar" MaxLength="120" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SIGSM_Transmissao">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DataSolicitacao" Type="datetime" Nullable="false" />
+          <Property Name="CodUsu" Type="int" Nullable="false" />
+          <Property Name="DataLote" Type="datetime" Nullable="false" />
+          <Property Name="AgendadoPara" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SIGSM_Transmissao_Processos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdTransmissao" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdStatusGeracao" Type="int" Nullable="false" />
+          <Property Name="InicioDoProcesso" Type="datetime" />
+          <Property Name="FimDoProcesso" Type="datetime" />
+          <Property Name="ArquivoGerado" Type="nvarchar" MaxLength="255" />
+          <Property Name="TipoFicha" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SIGSM_Transmissao_Processos_Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdProcesso" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Erro" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DataLog" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SIGSM_Transmissao_StatusGeracao">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descricao" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="Cor" Type="nvarchar" MaxLength="60" />
+          <Property Name="Icone" Type="nvarchar" MaxLength="60" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.TB_MS_TIPO_LOGRADOURO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1514,6 +1554,42 @@ warning 6002: The table/view 'DEV01-SIGSM-SantanaParnaiba2.1.dbo.VW_Domicilios' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__SIGSM_Tra__IdPro__5FCC3F22">
+          <End Role="SIGSM_Transmissao_Processos" Type="Self.SIGSM_Transmissao_Processos" Multiplicity="1" />
+          <End Role="SIGSM_Transmissao_Processos_Log" Type="Self.SIGSM_Transmissao_Processos_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_Transmissao_Processos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGSM_Transmissao_Processos_Log">
+              <PropertyRef Name="IdProcesso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SIGSM_Tra__IdSta__39A6963A">
+          <End Role="SIGSM_Transmissao_StatusGeracao" Type="Self.SIGSM_Transmissao_StatusGeracao" Multiplicity="1" />
+          <End Role="SIGSM_Transmissao_Processos" Type="Self.SIGSM_Transmissao_Processos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_Transmissao_StatusGeracao">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGSM_Transmissao_Processos">
+              <PropertyRef Name="IdStatusGeracao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SIGSM_Tra__IdTra__38B27201">
+          <End Role="SIGSM_Transmissao" Type="Self.SIGSM_Transmissao" Multiplicity="1" />
+          <End Role="SIGSM_Transmissao_Processos" Type="Self.SIGSM_Transmissao_Processos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_Transmissao">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGSM_Transmissao_Processos">
+              <PropertyRef Name="IdTransmissao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AnimalNoDomicilio_CadastroDomiciliar">
           <End Role="CadastroDomiciliar" Type="Self.CadastroDomiciliar" Multiplicity="1" />
           <End Role="AnimalNoDomicilio" Type="Self.AnimalNoDomicilio" Multiplicity="*" />
@@ -2133,6 +2209,10 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="Setores" EntityType="Self.Setores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SetoresINEs" EntityType="Self.SetoresINEs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_MotivoVisita" EntityType="Self.SIGSM_MotivoVisita" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIGSM_Transmissao" EntityType="Self.SIGSM_Transmissao" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIGSM_Transmissao_Processos" EntityType="Self.SIGSM_Transmissao_Processos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIGSM_Transmissao_Processos_Log" EntityType="Self.SIGSM_Transmissao_Processos_Log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIGSM_Transmissao_StatusGeracao" EntityType="Self.SIGSM_Transmissao_StatusGeracao" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TP_Abastecimento_Agua" EntityType="Self.TP_Abastecimento_Agua" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TP_Acesso_Domicilio" EntityType="Self.TP_Acesso_Domicilio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TP_Animais" EntityType="Self.TP_Animais" Schema="dbo" store:Type="Tables" />
@@ -2369,6 +2449,18 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK__ASSMED_PesFisica__7BE56230" Association="Self.FK__ASSMED_PesFisica__7BE56230">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_PesFisica" EntitySet="ASSMED_PesFisica" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SIGSM_Tra__IdPro__5FCC3F22" Association="Self.FK__SIGSM_Tra__IdPro__5FCC3F22">
+            <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
+            <End Role="SIGSM_Transmissao_Processos_Log" EntitySet="SIGSM_Transmissao_Processos_Log" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SIGSM_Tra__IdSta__39A6963A" Association="Self.FK__SIGSM_Tra__IdSta__39A6963A">
+            <End Role="SIGSM_Transmissao_StatusGeracao" EntitySet="SIGSM_Transmissao_StatusGeracao" />
+            <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SIGSM_Tra__IdTra__38B27201" Association="Self.FK__SIGSM_Tra__IdTra__38B27201">
+            <End Role="SIGSM_Transmissao" EntitySet="SIGSM_Transmissao" />
+            <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
           </AssociationSet>
           <AssociationSet Name="FK_AnimalNoDomicilio_CadastroDomiciliar" Association="Self.FK_AnimalNoDomicilio_CadastroDomiciliar">
             <End Role="CadastroDomiciliar" EntitySet="CadastroDomiciliar" />
@@ -2845,6 +2937,22 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <Parameter Name="total" Mode="InOut" Type="Int32" />
             <Parameter Name="totalFiltered" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="SIGSM_Transmissao" EntityType="Domain.SIGSM_Transmissao" />
+          <EntitySet Name="SIGSM_Transmissao_Processos" EntityType="Domain.SIGSM_Transmissao_Processos" />
+          <EntitySet Name="SIGSM_Transmissao_StatusGeracao" EntityType="Domain.SIGSM_Transmissao_StatusGeracao" />
+          <AssociationSet Name="FK__SIGSM_Tra__IdTra__38B27201" Association="Domain.FK__SIGSM_Tra__IdTra__38B27201">
+            <End Role="SIGSM_Transmissao" EntitySet="SIGSM_Transmissao" />
+            <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SIGSM_Tra__IdSta__39A6963A" Association="Domain.FK__SIGSM_Tra__IdSta__39A6963A">
+            <End Role="SIGSM_Transmissao_StatusGeracao" EntitySet="SIGSM_Transmissao_StatusGeracao" />
+            <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
+          </AssociationSet>
+          <EntitySet Name="SIGSM_Transmissao_Processos_Log" EntityType="Domain.SIGSM_Transmissao_Processos_Log" />
+          <AssociationSet Name="FK__SIGSM_Tra__IdPro__5FCC3F22" Association="Domain.FK__SIGSM_Tra__IdPro__5FCC3F22">
+            <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
+            <End Role="SIGSM_Transmissao_Processos_Log" EntitySet="SIGSM_Transmissao_Processos_Log" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="VW_IdentificacaoUsuarioCidadao">
           <Key>
@@ -4903,6 +5011,88 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Type="String" Name="NomeCidade" Nullable="true" MaxLength="512" />
           <Property Type="String" Name="Codigo" Nullable="true" MaxLength="512" />
         </ComplexType>
+        <EntityType Name="SIGSM_Transmissao">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="DataSolicitacao" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CodUsu" Type="Int32" Nullable="false" />
+          <Property Name="DataLote" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AgendadoPara" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="SIGSM_Transmissao_Processos" Relationship="Domain.FK__SIGSM_Tra__IdTra__38B27201" FromRole="SIGSM_Transmissao" ToRole="SIGSM_Transmissao_Processos" />
+        </EntityType>
+        <EntityType Name="SIGSM_Transmissao_Processos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IdTransmissao" Type="Guid" Nullable="false" />
+          <Property Name="IdStatusGeracao" Type="Int32" Nullable="false" />
+          <Property Name="InicioDoProcesso" Type="DateTime" Precision="3" />
+          <Property Name="FimDoProcesso" Type="DateTime" Precision="3" />
+          <Property Name="ArquivoGerado" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TipoFicha" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SIGSM_Transmissao" Relationship="Domain.FK__SIGSM_Tra__IdTra__38B27201" FromRole="SIGSM_Transmissao_Processos" ToRole="SIGSM_Transmissao" />
+          <NavigationProperty Name="SIGSM_Transmissao_StatusGeracao" Relationship="Domain.FK__SIGSM_Tra__IdSta__39A6963A" FromRole="SIGSM_Transmissao_Processos" ToRole="SIGSM_Transmissao_StatusGeracao" />
+          <NavigationProperty Name="SIGSM_Transmissao_Processos_Log" Relationship="Domain.FK__SIGSM_Tra__IdPro__5FCC3F22" FromRole="SIGSM_Transmissao_Processos" ToRole="SIGSM_Transmissao_Processos_Log" />
+        </EntityType>
+        <EntityType Name="SIGSM_Transmissao_StatusGeracao">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descricao" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="Cor" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="Icone" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SIGSM_Transmissao_Processos" Relationship="Domain.FK__SIGSM_Tra__IdSta__39A6963A" FromRole="SIGSM_Transmissao_StatusGeracao" ToRole="SIGSM_Transmissao_Processos" />
+        </EntityType>
+        <Association Name="FK__SIGSM_Tra__IdTra__38B27201">
+          <End Type="Domain.SIGSM_Transmissao" Role="SIGSM_Transmissao" Multiplicity="1" />
+          <End Type="Domain.SIGSM_Transmissao_Processos" Role="SIGSM_Transmissao_Processos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_Transmissao">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGSM_Transmissao_Processos">
+              <PropertyRef Name="IdTransmissao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SIGSM_Tra__IdSta__39A6963A">
+          <End Type="Domain.SIGSM_Transmissao_StatusGeracao" Role="SIGSM_Transmissao_StatusGeracao" Multiplicity="1" />
+          <End Type="Domain.SIGSM_Transmissao_Processos" Role="SIGSM_Transmissao_Processos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_Transmissao_StatusGeracao">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGSM_Transmissao_Processos">
+              <PropertyRef Name="IdStatusGeracao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SIGSM_Transmissao_Processos_Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IdProcesso" Type="Guid" Nullable="false" />
+          <Property Name="Erro" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataLog" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="SIGSM_Transmissao_Processos" Relationship="Domain.FK__SIGSM_Tra__IdPro__5FCC3F22" FromRole="SIGSM_Transmissao_Processos_Log" ToRole="SIGSM_Transmissao_Processos" />
+        </EntityType>
+        <Association Name="FK__SIGSM_Tra__IdPro__5FCC3F22">
+          <End Type="Domain.SIGSM_Transmissao_Processos" Role="SIGSM_Transmissao_Processos" Multiplicity="1" />
+          <End Type="Domain.SIGSM_Transmissao_Processos_Log" Role="SIGSM_Transmissao_Processos_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_Transmissao_Processos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SIGSM_Transmissao_Processos_Log">
+              <PropertyRef Name="IdProcesso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6335,6 +6525,50 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="SIGSM_Transmissao">
+            <EntityTypeMapping TypeName="Domain.SIGSM_Transmissao">
+              <MappingFragment StoreEntitySet="SIGSM_Transmissao">
+                <ScalarProperty Name="AgendadoPara" ColumnName="AgendadoPara" />
+                <ScalarProperty Name="DataLote" ColumnName="DataLote" />
+                <ScalarProperty Name="CodUsu" ColumnName="CodUsu" />
+                <ScalarProperty Name="DataSolicitacao" ColumnName="DataSolicitacao" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SIGSM_Transmissao_Processos">
+            <EntityTypeMapping TypeName="Domain.SIGSM_Transmissao_Processos">
+              <MappingFragment StoreEntitySet="SIGSM_Transmissao_Processos">
+                <ScalarProperty Name="TipoFicha" ColumnName="TipoFicha" />
+                <ScalarProperty Name="ArquivoGerado" ColumnName="ArquivoGerado" />
+                <ScalarProperty Name="FimDoProcesso" ColumnName="FimDoProcesso" />
+                <ScalarProperty Name="InicioDoProcesso" ColumnName="InicioDoProcesso" />
+                <ScalarProperty Name="IdStatusGeracao" ColumnName="IdStatusGeracao" />
+                <ScalarProperty Name="IdTransmissao" ColumnName="IdTransmissao" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SIGSM_Transmissao_StatusGeracao">
+            <EntityTypeMapping TypeName="Domain.SIGSM_Transmissao_StatusGeracao">
+              <MappingFragment StoreEntitySet="SIGSM_Transmissao_StatusGeracao">
+                <ScalarProperty Name="Icone" ColumnName="Icone" />
+                <ScalarProperty Name="Cor" ColumnName="Cor" />
+                <ScalarProperty Name="Descricao" ColumnName="Descricao" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SIGSM_Transmissao_Processos_Log">
+            <EntityTypeMapping TypeName="Domain.SIGSM_Transmissao_Processos_Log">
+              <MappingFragment StoreEntitySet="SIGSM_Transmissao_Processos_Log">
+                <ScalarProperty Name="DataLog" ColumnName="DataLog" />
+                <ScalarProperty Name="Erro" ColumnName="Erro" />
+                <ScalarProperty Name="IdProcesso" ColumnName="IdProcesso" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

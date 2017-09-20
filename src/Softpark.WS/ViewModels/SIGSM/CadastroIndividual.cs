@@ -350,12 +350,48 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             CadastroIndividual.uuid = Guid.NewGuid();
             CadastroIndividual.uuidFichaOriginadora = CadastroIndividual.uuid;
+            CadastroIndividual.fichaAtualizada = false;
+
+            CadastroIndividual dadoAnterior = null;
+
+            SIGSM_Transmissao_Processos proc = null;
 
             if (assmedCadastro != null)
             {
                 codigo = assmedCadastro.Codigo;
 
+                // Busca a última ficha do cadastro
                 var ultimaFicha = await db.CadastroIndividual.SingleOrDefaultAsync(x => x.identificacaoUsuarioCidadao == assmedCadastro.IdFicha);
+
+                proc = await db.SIGSM_Transmissao_Processos.FindAsync(ultimaFicha.id);
+
+                dadoAnterior = CadastroIndividual.uuid != CadastroIndividual.uuidFichaOriginadora ?
+                    (await db.CadastroIndividual.SingleOrDefaultAsync(x => x.id == CadastroIndividual.uuidFichaOriginadora)) : null;
+
+                // Verifica se a ficha de origem existe E possui uma ficha de origem E
+                // se ainda não foi enviada E o tipo de origem não é a API
+                while (ultimaFicha != null &&
+                    ultimaFicha.uuidFichaOriginadora != null &&
+                    ultimaFicha.uuidFichaOriginadora != ultimaFicha.id &&
+                    !ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviado &&
+                    ultimaFicha.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
+                {
+                    // marca a ficha de origem para não ser enviada
+                    ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
+
+                    // busca a origem da origem
+                    var uf = await db.CadastroIndividual.FindAsync(ultimaFicha.uuidFichaOriginadora);
+
+                    // atribui a ficha de origem da origem à origem da ficha à ser criada
+                    // se existir
+                    if (uf != null)
+                        ultimaFicha = uf;
+                }
+
+                if (ultimaFicha != null &&
+                    !ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviado &&
+                    ultimaFicha.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
+                    ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
 
                 if (ultimaFicha != null)
                 {
@@ -365,12 +401,12 @@ namespace Softpark.WS.ViewModels.SIGSM
                 }
             }
 
-            if(CabecalhoTransporte.ine != null)
+            if (CabecalhoTransporte.ine != null)
             {
                 int.TryParse(CabecalhoTransporte.ine, out int ine);
 
                 var setorPar = (await db.AS_SetoresPar.FirstOrDefaultAsync(x => x.CNES != null && x.CNES.Trim() == CabecalhoTransporte.cnes))?.CodSetor;
-                
+
                 CabecalhoTransporte.ine = (await db.SetoresINEs.FirstOrDefaultAsync(x => x.CodINE == ine && x.CodSetor == setorPar))?.Numero;
             }
 
@@ -477,7 +513,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (cad.IdentificacaoUsuarioCidadao1 != null)
             {
-                cad.IdentificacaoUsuarioCidadao1.Codigo = assmedCadastro?.Codigo??CadastroIndividual.identificacaoUsuarioCidadao?.Codigo;
+                cad.IdentificacaoUsuarioCidadao1.Codigo = assmedCadastro?.Codigo ?? CadastroIndividual.identificacaoUsuarioCidadao?.Codigo;
 
                 if (CadastroIndividual.identificacaoUsuarioCidadao != null)
                     CadastroIndividual.identificacaoUsuarioCidadao.Codigo = cad.IdentificacaoUsuarioCidadao1.Codigo;
@@ -520,9 +556,6 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             cad.Validar(db);
 
-            var dadoAnterior = CadastroIndividual.uuid != CadastroIndividual.uuidFichaOriginadora ?
-                (await db.CadastroIndividual.SingleOrDefaultAsync(x => x.id == CadastroIndividual.uuidFichaOriginadora)) : null;
-
             var da = dadoAnterior == null ? null :
                 new FormCadastroIndividual
                 {
@@ -549,6 +582,17 @@ namespace Softpark.WS.ViewModels.SIGSM
             origem.UnicaLotacaoTransport.Add(header);
             origem.finalizado = true;
             db.OrigemVisita.Add(origem);
+
+            if (proc != null)
+            {
+                foreach (var log in proc.SIGSM_Transmissao_Processos_Log)
+                {
+                    db.SIGSM_Transmissao_Processos_Log.Remove(log);
+                }
+
+                proc.SIGSM_Transmissao_Processos_Log.Clear();
+                db.SIGSM_Transmissao_Processos.Remove(proc);
+            }
 
             await db.SaveChangesAsync();
 

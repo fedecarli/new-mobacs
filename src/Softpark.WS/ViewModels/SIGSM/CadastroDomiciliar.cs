@@ -273,6 +273,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroDomiciliar.uuidFichaOriginadora == Guid.Empty ? CadastroDomiciliar.uuid
                 : CadastroDomiciliar.uuidFichaOriginadora;
 
+            var proc = await db.SIGSM_Transmissao_Processos.FindAsync(CadastroDomiciliar.uuidFichaOriginadora);
+
             if (CabecalhoTransporte.ine != null)
             {
                 int.TryParse(CabecalhoTransporte.ine, out int ine);
@@ -349,7 +351,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroDomiciliar.animalNoDomicilio = await db.TP_Animais.Where(x => CadastroDomiciliar.animalNoDomicilio.Contains(x.id_tp_animais))
                     .Select(x => x.codigo).ToArrayAsync();
             }
-            
+
             CleanStrings();
 
             var cad = await CadastroDomiciliar.ToModel(db);
@@ -383,7 +385,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             origem.token = Guid.NewGuid();
 
             var dadoAnterior = CadastroDomiciliar.uuid != CadastroDomiciliar.uuidFichaOriginadora ?
-                (await db.CadastroDomiciliar.SingleOrDefaultAsync(x => x.id == CadastroDomiciliar.uuidFichaOriginadora)) : null;
+                (await db.CadastroDomiciliar.FindAsync(CadastroDomiciliar.uuidFichaOriginadora)) : null;
 
             var da = dadoAnterior == null ? null :
                 await ToVM(dadoAnterior, db);
@@ -400,6 +402,37 @@ namespace Softpark.WS.ViewModels.SIGSM
                 DadoAtual = restDn
             };
 
+            // Verifica se a ficha de origem existe E possui uma ficha de origem E
+            // se ainda não foi enviada E o tipo de origem não é a API
+            while (dadoAnterior != null &&
+                dadoAnterior.uuidFichaOriginadora != null &&
+                dadoAnterior.uuidFichaOriginadora != dadoAnterior.id &&
+                !dadoAnterior.UnicaLotacaoTransport.OrigemVisita.enviado &&
+                dadoAnterior.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
+            {
+                // marca a ficha de origem para não ser enviada
+                dadoAnterior.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
+
+                // busca a origem da origem
+                var uf = await db.CadastroDomiciliar.FindAsync(dadoAnterior.uuidFichaOriginadora);
+
+                // atribui a ficha de origem da origem à origem da ficha à ser criada
+                // se existir
+                if (uf != null)
+                    dadoAnterior = uf;
+            }
+
+            if (dadoAnterior != null &&
+                !dadoAnterior.UnicaLotacaoTransport.OrigemVisita.enviado &&
+                dadoAnterior.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
+                dadoAnterior.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
+
+            if (dadoAnterior != null)
+            {
+                CadastroDomiciliar.uuidFichaOriginadora = dadoAnterior.id;
+                CadastroDomiciliar.fichaAtualizada = true;
+            }
+
             origem.id_tipo_origem = 2;
             origem.enviarParaThrift = true;
             origem.enviado = false;
@@ -414,6 +447,17 @@ namespace Softpark.WS.ViewModels.SIGSM
             await cad.Validar(db);
 
             db.OrigemVisita.Add(origem);
+
+            if (proc != null)
+            {
+                foreach (var log in proc.SIGSM_Transmissao_Processos_Log)
+                {
+                    db.SIGSM_Transmissao_Processos_Log.Remove(log);
+                }
+
+                proc.SIGSM_Transmissao_Processos_Log.Clear();
+                db.SIGSM_Transmissao_Processos.Remove(proc);
+            }
 
             await db.SaveChangesAsync();
 

@@ -74,7 +74,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("api/sigsm/listar/CadastroIndividual")]
         [ResponseType(typeof(DataTablesJsonResult))]
-        public async Task<IHttpActionResult> ListarCadastroIndividual(IDataTablesRequest request)
+        public IHttpActionResult ListarCadastroIndividual(IDataTablesRequest request)
         {
             if (!Autenticado())
             {

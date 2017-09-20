@@ -348,43 +348,42 @@ namespace Softpark.WS.Controllers.Api
             Log.Info(serializer.Serialize(cadastros));
             #endregion
 
-            // cria um token
-            var origem = Domain.OrigemVisita.Create();
-
-            origem.token = Guid.NewGuid();
-            origem.id_tipo_origem = 1;
-            origem.enviarParaThrift = true;
-            origem.enviado = false;
-
-            Domain.OrigemVisita.Add(origem);
-
-            await Domain.SaveChangesAsync();
-
             try
             {
                 // percorre a coleção de ViewModels
                 foreach (var cadastro in cadastros)
                 {
-                    // realiza o DataBind do cabeçalho
-                    var header = cadastro.cabecalho.ToModel(Domain);
-
-                    header.id = Guid.NewGuid();
-                    header.OrigemVisita = origem;
-                    header.token = origem.token;
-
-                    Domain.UnicaLotacaoTransport.Add(header);
-
                     // processa os cadastros individuais de responsáveis
                     await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao != null &&
-                    x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
+                    x.identificacaoUsuarioCidadao.statusEhResponsavel), cadastro.cabecalho.ToModel(Domain));
 
                     // processa os cadastros individuais de dependentes
                     await ProcessarIndividuos(cadastro.individuos.Where(x => x.identificacaoUsuarioCidadao == null ||
-                    !x.identificacaoUsuarioCidadao.statusEhResponsavel), header);
+                    !x.identificacaoUsuarioCidadao.statusEhResponsavel), cadastro.cabecalho.ToModel(Domain));
 
                     // processa os cadastros domiciliares
                     foreach (var domicilio in cadastro.domicilios)
                     {
+                        // cria um token
+                        var origem = Domain.OrigemVisita.Create();
+
+                        origem.token = Guid.NewGuid();
+                        origem.id_tipo_origem = 1;
+                        origem.enviarParaThrift = true;
+                        origem.enviado = false;
+
+                        Domain.OrigemVisita.Add(origem);
+                        Log.Info($"TOKEN {origem.token}");
+
+                        // realiza o DataBind do cabeçalho
+                        var header = cadastro.cabecalho.ToModel(Domain);
+
+                        header.id = Guid.NewGuid();
+                        header.OrigemVisita = origem;
+                        header.token = origem.token;
+
+                        Domain.UnicaLotacaoTransport.Add(header);
+
                         var cad = await domicilio.ToModel(Domain);
                         cad.tpCdsOrigem = 3;
                         cad.UnicaLotacaoTransport = header;
@@ -400,6 +399,26 @@ namespace Softpark.WS.Controllers.Api
                         var master = masters.FirstOrDefault(x => x.FichaVisitaDomiciliarChild.Count < 99) ?? Domain.FichaVisitaDomiciliarMaster.Create();
 
                         if (master.uuidFicha != null) return master;
+
+                        // cria um token
+                        var origem = Domain.OrigemVisita.Create();
+
+                        origem.token = Guid.NewGuid();
+                        origem.id_tipo_origem = 1;
+                        origem.enviarParaThrift = true;
+                        origem.enviado = false;
+
+                        Domain.OrigemVisita.Add(origem);
+                        Log.Info($"TOKEN {origem.token}");
+
+                        // realiza o DataBind do cabeçalho
+                        var header = cadastro.cabecalho.ToModel(Domain);
+
+                        header.id = Guid.NewGuid();
+                        header.OrigemVisita = origem;
+                        header.token = origem.token;
+
+                        Domain.UnicaLotacaoTransport.Add(header);
 
                         master.tpCdsOrigem = 3;
                         master.UnicaLotacaoTransport = header;
@@ -453,7 +472,7 @@ namespace Softpark.WS.Controllers.Api
             {
                 // salva as fichas em banco de dados
                 await Domain.SaveChangesAsync();
-                
+
                 // finaliza o token
                 //Domain.PR_ProcessarFichasAPI(origem.token);
             }
@@ -477,20 +496,45 @@ namespace Softpark.WS.Controllers.Api
         /// <summary>
         /// Este método é responsável por tratar e processar os cadastros individuais
         /// </summary>
-        /// <param name="individuos">ViewModel Collection de individuos</param>
-        /// <param name="header">Cabeçalho</param>
-        /// <param name="validar">Indicador para realizar ou não a validação de dados</param>
+        /// <param name="individuos"></param>
+        /// <param name="header"></param>
+        /// <param name="validar"></param>
         /// <returns></returns>
-        private async Task ProcessarIndividuos(IEnumerable<PrimitiveCadastroIndividualViewModel> individuos,
-            UnicaLotacaoTransport header, bool validar = false)
+        private async Task ProcessarIndividuos(IEnumerable<PrimitiveCadastroIndividualViewModel> individuos, UnicaLotacaoTransport header, bool validar = false)
         {
             // percorre os individuos
             foreach (var individuo in individuos)
             {
+                // cria um token
+                var origem = Domain.OrigemVisita.Create();
+
+                origem.token = Guid.NewGuid();
+                origem.id_tipo_origem = 1;
+                origem.enviarParaThrift = true;
+                origem.enviado = false;
+                Log.Info($"TOKEN {origem.token}");
+
+                Domain.OrigemVisita.Add(origem);
+
+                // realiza o DataBind do cabeçalho
+                var h = Domain.UnicaLotacaoTransport.Create();
+
+                h.id = Guid.NewGuid();
+                h.OrigemVisita = origem;
+                h.token = origem.token;
+                h.cboCodigo_2002 = header.cboCodigo_2002;
+                h.cnes = header.cnes;
+                h.codigoIbgeMunicipio = header.codigoIbgeMunicipio;
+                h.dataAtendimento = header.dataAtendimento;
+                h.ine = header.ine;
+                h.profissionalCNS = header.profissionalCNS;
+
+                Domain.UnicaLotacaoTransport.Add(h);
+
                 // realiza o DataBind
                 var cad = await individuo.ToModel(Domain);
                 cad.tpCdsOrigem = 3;
-                cad.UnicaLotacaoTransport = header;
+                cad.UnicaLotacaoTransport = h;
 
                 if (validar) cad.Validar(Domain);
 
@@ -543,7 +587,7 @@ namespace Softpark.WS.Controllers.Api
                     Log.Warn("Erro ao tentar finalizar token.", e);
                 }
             }
-            
+
             Log.Info(Ok(true));
             return Ok(true);
         }

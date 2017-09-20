@@ -123,6 +123,10 @@ namespace Softpark.Models
         public virtual DbSet<ASSMED_CadTelefones> ASSMED_CadTelefones { get; set; }
         public virtual DbSet<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
         public virtual DbSet<ASSMED_Endereco> ASSMED_Endereco { get; set; }
+        public virtual DbSet<SIGSM_Transmissao> SIGSM_Transmissao { get; set; }
+        public virtual DbSet<SIGSM_Transmissao_Processos> SIGSM_Transmissao_Processos { get; set; }
+        public virtual DbSet<SIGSM_Transmissao_StatusGeracao> SIGSM_Transmissao_StatusGeracao { get; set; }
+        public virtual DbSet<SIGSM_Transmissao_Processos_Log> SIGSM_Transmissao_Processos_Log { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

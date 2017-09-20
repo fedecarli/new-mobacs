@@ -231,6 +231,18 @@
     <Compile Include="SIGSM_MotivoVisita.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="SIGSM_Transmissao.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao_Processos.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao_Processos_Log.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao_StatusGeracao.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="TB_MS_TIPO_LOGRADOURO.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
