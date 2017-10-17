@@ -12,18 +12,15 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class VW_Profissional
+    public partial class ASSMED_Acesso
     {
-        public long id { get; set; }
-        public string CNS { get; set; }
-        public string Nome { get; set; }
-        public string CBO { get; set; }
-        public string Profissao { get; set; }
-        public string CNES { get; set; }
-        public string Unidade { get; set; }
-        public string INE { get; set; }
-        public string Equipe { get; set; }
-        public decimal Codigo { get; set; }
+        public string EMail { get; set; }
+        public System.DateTime DtAcesso { get; set; }
         public Nullable<int> CodUsu { get; set; }
+        public string Validou { get; set; }
+        public string NumIP { get; set; }
+        public Nullable<System.DateTime> DtSaida { get; set; }
+        public string ASPSESSIONIDQASRTRQT { get; set; }
+        public Nullable<System.DateTime> DtUltVer { get; set; }
     }
 }

@@ -17,8 +17,10 @@ namespace Softpark.Models
     
     public partial class DomainContainer : DbContext
     {
-        public DomainContainer()
-            : base("name=DomainContainer")
+    	public static string ContainerName => "DomainContainer";
+    
+        private void _ctorDomainContainer()
+            //: base("name=DomainContainer")
         {
         }
     
@@ -127,6 +129,15 @@ namespace Softpark.Models
         public virtual DbSet<SIGSM_Transmissao_Processos> SIGSM_Transmissao_Processos { get; set; }
         public virtual DbSet<SIGSM_Transmissao_StatusGeracao> SIGSM_Transmissao_StatusGeracao { get; set; }
         public virtual DbSet<SIGSM_Transmissao_Processos_Log> SIGSM_Transmissao_Processos_Log { get; set; }
+        public virtual DbSet<SIGSM_ServicoSerializador_Agenda> SIGSM_ServicoSerializador_Agenda { get; set; }
+        public virtual DbSet<SIGSM_ServicoSerializador_Config> SIGSM_ServicoSerializador_Config { get; set; }
+        public virtual DbSet<SIGSM_ServicoSerializador_Fichas> SIGSM_ServicoSerializador_Fichas { get; set; }
+        public virtual DbSet<ASSMED_Acesso> ASSMED_Acesso { get; set; }
+        public virtual DbSet<ASSMED_Usuario> ASSMED_Usuario { get; set; }
+        public virtual DbSet<AS_Credenciados> AS_Credenciados { get; set; }
+        public virtual DbSet<AS_CredenciadosUsu> AS_CredenciadosUsu { get; set; }
+        public virtual DbSet<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
+        public virtual DbSet<VW_Profissional> VW_Profissional { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

@@ -188,7 +188,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             return new FormCadastroDomiciliar
             {
                 CadastroDomiciliar = await DetalheCadastroDomiciliarVW.ToVM(model, db),
-                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(model.UnicaLotacaoTransport)
+                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(model.UnicaLotacaoTransport, db)
             };
         }
 
@@ -266,7 +266,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             CleanStrings();
 
-            CabecalhoTransporte.codigoIbgeMunicipio = db.ASSMED_Contratos.First().CodigoIbgeMunicipio;
+            CabecalhoTransporte.codigoIbgeMunicipio = db.Database.SqlQuery<ASSMED_Contratos>("SELECT * FROM ASSMED_Contratos").First().CodigoIbgeMunicipio;
 
             CadastroDomiciliar.uuid = Guid.NewGuid();
             CadastroDomiciliar.uuidFichaOriginadora = CadastroDomiciliar.uuidFichaOriginadora == null ||
@@ -450,12 +450,10 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (proc != null)
             {
-                foreach (var log in proc.SIGSM_Transmissao_Processos_Log)
-                {
-                    db.SIGSM_Transmissao_Processos_Log.Remove(log);
-                }
+                var logs = db.SIGSM_Transmissao_Processos_Log.Where(x => x.IdProcesso == proc.Id);
 
-                proc.SIGSM_Transmissao_Processos_Log.Clear();
+                db.SIGSM_Transmissao_Processos_Log.RemoveRange(logs);
+                
                 db.SIGSM_Transmissao_Processos.Remove(proc);
             }
 
@@ -534,7 +532,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
                     foreach (var depend in depends)
                     {
-                        item = resp.ASSMED_Endereco.Max(x => x.ItemEnd) + 1;
+                        item = depend.ASSMED_Endereco.Max(x => x.ItemEnd) + 1;
 
                         var respDep = depend.ASSMED_Endereco.Where(x => x.TipoEnd == "R")
                             .OrderByDescending(x => x.ItemEnd).FirstOrDefault();

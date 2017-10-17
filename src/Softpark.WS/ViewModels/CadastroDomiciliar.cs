@@ -136,6 +136,12 @@ namespace Softpark.WS.ViewModels
         public string longitude { get; set; } = null;
 
         /// <summary>
+        /// Data de atendimento
+        /// </summary>
+        [Required]
+        public DateTime DataAtendimento { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <returns></returns>

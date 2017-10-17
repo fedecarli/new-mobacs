@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -392,9 +393,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
+    <Compile Include="ViewModels\AutenticacaoViewModel.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroIndividual.cs" />
-    <Compile Include="ViewModels\UsuarioLoginViewModel.cs" />
+    <Compile Include="ViewModels\SIGSM\VisitaDomiciliar.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

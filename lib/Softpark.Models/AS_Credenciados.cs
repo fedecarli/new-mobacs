@@ -12,30 +12,27 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Setores
+    public partial class AS_Credenciados
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Setores()
+        public AS_Credenciados()
         {
-            this.SetoresINEs = new HashSet<SetoresINEs>();
-            this.AS_SetoresPar = new HashSet<AS_SetoresPar>();
+            this.AS_CredenciadosUsu = new HashSet<AS_CredenciadosUsu>();
             this.AS_CredenciadosVinc = new HashSet<AS_CredenciadosVinc>();
         }
     
-        public int CodSetor { get; set; }
         public int NumContrato { get; set; }
-        public string DesSetor { get; set; }
+        public int CodCred { get; set; }
         public Nullable<decimal> Codigo { get; set; }
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
-        public bool almoxarifado { get; set; }
-        public string DesSetorRes { get; set; }
-        public Nullable<int> blindado { get; set; }
+        public string CNES { get; set; }
+        public string NumConselho { get; set; }
+        public Nullable<int> CodOrgao { get; set; }
+        public string UF { get; set; }
+        public string Tratamento { get; set; }
     
+        public virtual UF UF1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SetoresINEs> SetoresINEs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AS_SetoresPar> AS_SetoresPar { get; set; }
+        public virtual ICollection<AS_CredenciadosUsu> AS_CredenciadosUsu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
     }

@@ -93,14 +93,14 @@ namespace Softpark.WS.ViewModels
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        internal static UnicaLotacaoTransportCadastroViewModel ApplyModel(UnicaLotacaoTransport model)
+        internal static UnicaLotacaoTransportCadastroViewModel ApplyModel(UnicaLotacaoTransport model, DomainContainer db)
         {
             return new UnicaLotacaoTransportCadastroViewModel {
                 cboCodigo_2002 = model.cboCodigo_2002,
                 cnes = model.cnes,
                 codigoIbgeMunicipio = model.codigoIbgeMunicipio,
                 dataAtendimento = model.dataAtendimento,
-                ine = model.ine,
+                ine = db.SetoresINEs.FirstOrDefault(x => x.Numero != null && x.Numero.Trim() == model.ine)?.CodINE.ToString(),
                 profissionalCNS = model.profissionalCNS,
                 profissionalNome = DomainContainer.Current.VW_Profissional.FirstOrDefault(x => x.CNS == model.profissionalCNS)?.Nome
             };
@@ -112,7 +112,7 @@ namespace Softpark.WS.ViewModels
         /// <param name="model"></param>
         public static implicit operator UnicaLotacaoTransportCadastroViewModel(UnicaLotacaoTransport model)
         {
-            return ApplyModel(model);
+            return ApplyModel(model, DomainContainer.Current);
         }
 
         /// <summary>

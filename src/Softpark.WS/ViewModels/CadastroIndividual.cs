@@ -166,6 +166,12 @@ namespace Softpark.WS.ViewModels
         }
 
         /// <summary>
+        /// Data de Atendimento
+        /// </summary>
+        [Required]
+        public DateTime DataAtendimento { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="model"></param>

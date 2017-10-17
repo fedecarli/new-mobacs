@@ -12,18 +12,9 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class VW_Profissional
+    public partial class SIGSM_ServicoSerializador_Config
     {
-        public long id { get; set; }
-        public string CNS { get; set; }
-        public string Nome { get; set; }
-        public string CBO { get; set; }
-        public string Profissao { get; set; }
-        public string CNES { get; set; }
-        public string Unidade { get; set; }
-        public string INE { get; set; }
-        public string Equipe { get; set; }
-        public decimal Codigo { get; set; }
-        public Nullable<int> CodUsu { get; set; }
+        public string Configuracao { get; set; }
+        public string Valor { get; set; }
     }
 }

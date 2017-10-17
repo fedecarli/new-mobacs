@@ -62,6 +62,14 @@ namespace Softpark.WS.ViewModels
                 Add(model);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="childs"></param>
+        /// <param name="db"></param>
+        public void ToModels(ICollection<FichaVisitaDomiciliarChild> childs, DomainContainer db) =>
+            ForEach(item => childs.Add(item.ToModel(db)));
     }
 
     /// <summary>
@@ -176,6 +184,12 @@ namespace Softpark.WS.ViewModels
         /// Data de registro da ficha no app
         /// </summary>
         public DateTime? DataRegistro { get; set; } = null;
+
+        /// <summary>
+        /// Data do Atendimento
+        /// </summary>
+        [Required]
+        public DateTime DataAtendimento { get; set; }
 
         /// <summary>
         /// DataBind

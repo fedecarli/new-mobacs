@@ -17,6 +17,7 @@ namespace Softpark.WS.Controllers.Api
     /// <summary>
     /// Controller para chamadas via SIGSM
     /// </summary>
+    [RoutePrefix("api/sigsm")]
     [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class SIGSMController : BaseApiController
@@ -33,7 +34,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/listar/profissional/{nomeOuCns}/{cnes}")]
+        [Route("listar/profissional/{nomeOuCns}/{cnes}")]
         [ResponseType(typeof(VW_Profissional[]))]
         public IHttpActionResult ListarProfissionais(string nomeOuCns, string cnes = null)
         {
@@ -72,7 +73,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/listar/CadastroIndividual")]
+        [Route("listar/CadastroIndividual")]
         [ResponseType(typeof(DataTablesJsonResult))]
         public IHttpActionResult ListarCadastroIndividual(IDataTablesRequest request)
         {
@@ -127,7 +128,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="codigo">Código da pessoa em ASSMED_Cadastro</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/detalhar/CadastroIndividual/{codigo}")]
+        [Route("detalhar/CadastroIndividual/{codigo}")]
         [ResponseType(typeof(FormCadastroIndividual))]
         public async Task<IHttpActionResult> DetalharCadastroIndividual(decimal codigo)
         {
@@ -358,7 +359,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/sigsm/salvar/CadastroIndividual")]
+        [Route("salvar/CadastroIndividual")]
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> SalvarCadastroIndividual([FromBody] FormCadastroIndividual form)
         {
@@ -379,7 +380,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/listar/CadastroDomiciliar")]
+        [Route("listar/CadastroDomiciliar")]
         [ResponseType(typeof(DataTablesJsonResult))]
         public async Task<IHttpActionResult> ListarCadastroDomiciliar(IDataTablesRequest request)
         {
@@ -400,6 +401,8 @@ namespace Softpark.WS.Controllers.Api
                 where children == 0
                 select cd;
 
+            var total = 100;
+
             var idFicha = (Guid?)null;
             if (Guid.TryParse(request.Search.Value, out Guid _idFicha))
                 idFicha = _idFicha;
@@ -416,6 +419,8 @@ namespace Softpark.WS.Controllers.Api
                     (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.complemento != null ? _item.EnderecoLocalPermanencia1.complemento : "") +
                     (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.telefoneResidencia != null ? _item.EnderecoLocalPermanencia1.telefoneResidencia : ""))
                     .Contains(request.Search.Value));
+
+                total = data.Count();
             }
 
             var http = System.Web.HttpContext.Current;
@@ -474,7 +479,7 @@ namespace Softpark.WS.Controllers.Api
 
             // Response creation. To create your response you need to reference your request, to avoid
             // request/response tampering and to ensure response will be correctly created.
-            var response = DataTablesResponse.Create(request, data.Count(), filteredData.Count(), dataPage);
+            var response = DataTablesResponse.Create(request, total, total > 100 ? 100 : total, dataPage);
 
             // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
             // response to a json-compatible content, so DataTables can read it when received.
@@ -487,7 +492,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="codigo">Código do domicilio em ASSMED_Endereco</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/detalhar/CadastroDomiciliar/{codigo:guid}")]
+        [Route("detalhar/CadastroDomiciliar/{codigo:guid}")]
         [ResponseType(typeof(FormCadastroDomiciliar))]
         public async Task<IHttpActionResult> DetalharCadastroDomiciliar(Guid codigo)
         {
@@ -551,7 +556,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/sigsm/salvar/CadastroDomiciliar")]
+        [Route("salvar/CadastroDomiciliar")]
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> SalvarCadastroDomiciliar([FromBody] FormCadastroDomiciliar form)
         {
@@ -572,7 +577,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/listar/VisitaDomiciliar")]
+        [Route("listar/VisitaDomiciliar")]
         [ResponseType(typeof(DataTablesJsonResult))]
         public async Task<IHttpActionResult> ListarVisitaDomiciliar(IDataTablesRequest request)
         {
@@ -590,6 +595,8 @@ namespace Softpark.WS.Controllers.Api
             var data = (await Domain.FichaVisitaDomiciliarMaster.ToArrayAsync())
                 .Where(x => x.uuidFicha != null);
 
+            var total = 100;
+
             var idFicha = request.Search.Value == null || request.Search.Value.Length < 36 ||
                 !Regex.IsMatch(request.Search.Value, "^([0-9]{7}-)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$") ? null :
                 request.Search.Value;
@@ -601,10 +608,10 @@ namespace Softpark.WS.Controllers.Api
                                {
                                    d,
                                    p = Domain.VW_Profissional.FirstOrDefault(x =>
-                    d.UnicaLotacaoTransport.profissionalCNS == x.CNS.Trim() &&
-                    d.UnicaLotacaoTransport.cboCodigo_2002 == x.CBO.Trim() &&
-                    d.UnicaLotacaoTransport.cnes == x.CNES.Trim() &&
-                    (x.INE == null || d.UnicaLotacaoTransport.ine == x.INE.Trim()))
+                                   d.UnicaLotacaoTransport.profissionalCNS == x.CNS.Trim() &&
+                                   d.UnicaLotacaoTransport.cboCodigo_2002 == x.CBO.Trim() &&
+                                   d.UnicaLotacaoTransport.cnes == x.CNES.Trim() &&
+                                   (x.INE == null || d.UnicaLotacaoTransport.ine == x.INE.Trim()))
                                }
                                into fd
                                where fd.p != null
@@ -615,13 +622,15 @@ namespace Softpark.WS.Controllers.Api
                 filteredData = (from fd in filteredData
                                 where
                                 fd.d.uuidFicha == request.Search.Value ||
-                                fd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("dd/MM/yyyy") == request.Search.Value ||
+                                fd.d.UnicaLotacaoTransport.dataAtendimento.ToString("dd/MM/yyyy") == request.Search.Value ||
                                 fd.d.FichaVisitaDomiciliarChild.Count.ToString() == request.Search.Value ||
                                 (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
                                 fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
                                 "Não Finalizada").Contains(request.Search.Value) ||
                                 fd.p.Nome.Contains(request.Search.Value)
                                 select fd).Distinct();
+
+                total = data.Count();
             }
 
             var http = System.Web.HttpContext.Current;
@@ -669,19 +678,20 @@ namespace Softpark.WS.Controllers.Api
             // Paging filtered data.
             // Paging is rather manual due to in-memmory (IEnumerable) data.
             var dataPage = from nd in filteredData.Skip(request.Start).Take(request.Length)
-                           select new string[] {
-                                nd.p.Nome,
+                           select new object[] {
+                                nd.d.uuidFicha,
                                 nd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("dd/MM/yyyy"),
-                                nd.d.FichaVisitaDomiciliarChild.Count.ToString(),
+                                nd.p.Nome,
+                                nd.d.FichaVisitaDomiciliarChild.Count,
                                 (nd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
                                 nd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
                                 "Não Finalizada"),
-                                nd.d.uuidFicha
+                                nd.d.UnicaLotacaoTransport.OrigemVisita.enviado
                            };
 
             // Response creation. To create your response you need to reference your request, to avoid
             // request/response tampering and to ensure response will be correctly created.
-            var response = DataTablesResponse.Create(request, data.Count(), filteredData.Count(), dataPage.ToArray());
+            var response = DataTablesResponse.Create(request, total, total > 100 ? 100 : total, dataPage.ToArray());
 
             // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
             // response to a json-compatible content, so DataTables can read it when received.
@@ -691,36 +701,46 @@ namespace Softpark.WS.Controllers.Api
         /// <summary>
         /// Detalhar Visita Domiciliar
         /// </summary>
-        /// <param name="codigo">Código do domicilio em ASSMED_Endereco</param>
+        /// <param name="codigo">Código da visita</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/sigsm/detalhar/VisitaDomiciliar/{codigo}")]
+        [Route("detalhar/VisitaDomiciliar/{codigo:guid}")]
         [ResponseType(typeof(string))]
-        public IHttpActionResult DetalharVisitaDomiciliar(int codigo)
+        public async Task<IHttpActionResult> DetalharVisitaDomiciliar(Guid codigo)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            return Ok(Versions.Version);
+            var ficha = await Domain.FichaVisitaDomiciliarMaster.FindAsync(codigo);
+
+            if (ficha == null)
+                throw new ValidationException("A ficha selecionada não foi encontrada.");
+
+            DetalheFichaVisitaDomiciliarMasterVW vm = ficha;
+
+            return Ok(vm.ToDetail());
         }
 
         /// <summary>
-        /// Salvar Cadastro Domniciliar
+        /// 
         /// </summary>
+        /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/sigsm/salvar/VisitaDomiciliar")]
+        [Route("salvar/VisitaDomiciliar")]
         [ResponseType(typeof(string))]
-        public IHttpActionResult SalvarVisitaDomiciliar()
+        public async Task<IHttpActionResult> SalvarVisitaDomiciliar([FromBody] DetalheFichaVisitaDomiciliarMasterVW vm)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            return Ok(Versions.Version);
+            var id = await vm.LimparESalvarDados(Domain, Url);
+
+            return Ok(id);
         }
         #endregion
     }

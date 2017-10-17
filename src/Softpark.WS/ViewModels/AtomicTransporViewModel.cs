@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Softpark.WS.ViewModels
@@ -25,6 +26,12 @@ namespace Softpark.WS.ViewModels
         /// individuos
         /// </summary>
         public PrimitiveCadastroIndividualViewModel[] individuos { get; set; } = new PrimitiveCadastroIndividualViewModel[0];
+
+        /// <summary>
+        /// Data de Atendimento
+        /// </summary>
+        [Required]
+        public DateTime DataAtendimento { get; set; }
 #pragma warning restore IDE1006 // Naming Styles
     }
 }

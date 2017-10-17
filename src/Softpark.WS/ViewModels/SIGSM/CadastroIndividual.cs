@@ -330,8 +330,8 @@ namespace Softpark.WS.ViewModels.SIGSM
             var restDn = JsonConvert.SerializeObject(this);
 
             CleanStrings();
-
-            CabecalhoTransporte.codigoIbgeMunicipio = db.ASSMED_Contratos.First().CodigoIbgeMunicipio;
+            
+            CabecalhoTransporte.codigoIbgeMunicipio = db.Database.SqlQuery<ASSMED_Contratos>("SELECT * FROM ASSMED_Contratos").First().CodigoIbgeMunicipio;
 
             var codigo = CadastroIndividual.identificacaoUsuarioCidadao?.Codigo;
             var cpf = CadastroIndividual.identificacaoUsuarioCidadao?.CPF;
@@ -560,7 +560,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 new FormCadastroIndividual
                 {
                     CadastroIndividual = dadoAnterior,
-                    CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(dadoAnterior.UnicaLotacaoTransport)
+                    CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(dadoAnterior.UnicaLotacaoTransport, db)
                 };
 
             var restDa = da == null ? null : JsonConvert.SerializeObject(da);
@@ -585,12 +585,10 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (proc != null)
             {
-                foreach (var log in proc.SIGSM_Transmissao_Processos_Log)
-                {
-                    db.SIGSM_Transmissao_Processos_Log.Remove(log);
-                }
+                var logs = db.SIGSM_Transmissao_Processos_Log.Where(x => x.IdProcesso == proc.Id);
 
-                proc.SIGSM_Transmissao_Processos_Log.Clear();
+                db.SIGSM_Transmissao_Processos_Log.RemoveRange(logs);
+
                 db.SIGSM_Transmissao_Processos.Remove(proc);
             }
 
@@ -1006,14 +1004,12 @@ namespace Softpark.WS.ViewModels.SIGSM
         {
             var form = new FormCadastroIndividual
             {
-                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(data.UnicaLotacaoTransport),
+                CabecalhoTransporte = UnicaLotacaoTransportCadastroViewModel.ApplyModel(data.UnicaLotacaoTransport, db),
                 CadastroIndividual = data
             };
 
             form.CabecalhoTransporte.profissionalNome = db.VW_Profissional.FirstOrDefault(x => x.CNS == form.CabecalhoTransporte.profissionalCNS)?.Nome;
-
-            form.CabecalhoTransporte.ine = (await db.SetoresINEs.FirstOrDefaultAsync(x => x.Numero != null && x.Numero == form.CabecalhoTransporte.ine))?.CodINE.ToString();
-
+            
             form.Finalizado = data.UnicaLotacaoTransport.OrigemVisita.finalizado;
 
             if (form.CadastroIndividual.identificacaoUsuarioCidadao != null)

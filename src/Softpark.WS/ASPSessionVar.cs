@@ -1,5 +1,6 @@
-﻿using System;
-using System.Configuration;
+﻿using Softpark.Models;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,9 +28,20 @@ namespace Softpark.WS
 
     public static class ASPSessionVar
     {
-        public static string Read(string varName)
+        private static Dictionary<string, string> _variables = new Dictionary<string, string>();
+
+        public static string Read(string varName, bool fromCache = false)
         {
-            var uri = $"{ConfigurationManager.AppSettings["sessionLocation"]}?SessionVar={varName}";
+            if (fromCache && _variables.ContainsKey(varName.ToLower()))
+                return _variables[varName.ToLower()];
+
+            var db = DomainContainer.Current;
+
+            var cfg = db?.SIGSM_ServicoSerializador_Config?.Find("sessionLocation");
+
+            var uri = cfg?.Valor ?? "http://localhost/sigsm/v2/SessionVar.asp";
+
+            uri += $"?SessionVar={varName}";
 
             var client = new WebServiceClient();
 
@@ -46,13 +58,13 @@ namespace Softpark.WS
             }
 
             string data = null;
-            
+
             using (var s = client.OpenRead(uri))
             using (var sr = new StreamReader(s))
             {
                 data = sr.ReadToEnd();
             }
-                
+
             return data;
         }
     }

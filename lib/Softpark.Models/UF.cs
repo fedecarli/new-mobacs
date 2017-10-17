@@ -14,9 +14,18 @@ namespace Softpark.Models
     
     public partial class UF
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public UF()
+        {
+            this.AS_Credenciados = new HashSet<AS_Credenciados>();
+        }
+    
         public string UF1 { get; set; }
         public string DesUF { get; set; }
         public Nullable<int> CodANP { get; set; }
         public string DNE { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AS_Credenciados> AS_Credenciados { get; set; }
     }
 }

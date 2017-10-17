@@ -12,18 +12,18 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class VW_Profissional
+    public partial class AS_CredenciadosUsu
     {
-        public long id { get; set; }
-        public string CNS { get; set; }
-        public string Nome { get; set; }
-        public string CBO { get; set; }
-        public string Profissao { get; set; }
-        public string CNES { get; set; }
-        public string Unidade { get; set; }
-        public string INE { get; set; }
-        public string Equipe { get; set; }
-        public decimal Codigo { get; set; }
+        public int NumContrato { get; set; }
+        public int CodCred { get; set; }
+        public int ItemU { get; set; }
+        public Nullable<int> CodUsuD { get; set; }
+        public Nullable<System.DateTime> DtInicio { get; set; }
+        public Nullable<System.DateTime> DtFinal { get; set; }
         public Nullable<int> CodUsu { get; set; }
+        public Nullable<System.DateTime> DtSistema { get; set; }
+        public string NumIP { get; set; }
+    
+        public virtual AS_Credenciados AS_Credenciados { get; set; }
     }
 }

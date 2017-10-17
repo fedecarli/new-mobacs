@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -72,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimalNoDomicilio.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_Acesso.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="ASSMED_Cadastro.cs">
@@ -99,6 +103,18 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="ASSMED_PesFisica.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_Usuario.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AS_Credenciados.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AS_CredenciadosUsu.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AS_CredenciadosVinc.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="AS_Profissoes.cs">
@@ -229,6 +245,15 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SIGSM_MotivoVisita.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_ServicoSerializador_Agenda.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_ServicoSerializador_Config.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_ServicoSerializador_Fichas.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SIGSM_Transmissao.cs">
@@ -390,7 +415,9 @@
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_Profissional.cs" />
+    <Compile Include="VW_Profissional.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="VW_profissional_cns.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

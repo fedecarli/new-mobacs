@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.WS", "src\Softpark.WS\Softpark.WS.csproj", "{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}"
 EndProject
@@ -15,45 +15,64 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.Infrastructure", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTables.AspNet.WebApi2", "lib\DataTables.AspNet.WebApi2\DataTables.AspNet.WebApi2.csproj", "{1D71601C-F383-4FF0-B409-C01140247525}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softpark.DomainModels", "Softpark.DomainModels\Softpark.DomainModels.csproj", "{80721739-B803-4489-8F5F-6C3ED4094768}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		ItanhaemHomolog|Any CPU = ItanhaemHomolog|Any CPU
+		ItanhaemProd|Any CPU = ItanhaemProd|Any CPU
+		LocalServer|Any CPU = LocalServer|Any CPU
 		Release|Any CPU = Release|Any CPU
 		Santana|Any CPU = Santana|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.ItanhaemHomolog|Any CPU.ActiveCfg = Santana|Any CPU
+		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.ItanhaemHomolog|Any CPU.Build.0 = Santana|Any CPU
+		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.ItanhaemProd|Any CPU.ActiveCfg = Santana|Any CPU
+		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.ItanhaemProd|Any CPU.Build.0 = Santana|Any CPU
+		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.LocalServer|Any CPU.ActiveCfg = Santana|Any CPU
+		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.LocalServer|Any CPU.Build.0 = Santana|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{B425EF5B-EB40-4F1A-A2C4-2BCF10ABFE56}.Santana|Any CPU.Build.0 = Santana|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.ItanhaemHomolog|Any CPU.ActiveCfg = Santana|Any CPU
+		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.ItanhaemHomolog|Any CPU.Build.0 = Santana|Any CPU
+		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.ItanhaemProd|Any CPU.ActiveCfg = Santana|Any CPU
+		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.ItanhaemProd|Any CPU.Build.0 = Santana|Any CPU
+		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.LocalServer|Any CPU.ActiveCfg = Santana|Any CPU
+		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.LocalServer|Any CPU.Build.0 = Santana|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C}.Santana|Any CPU.Build.0 = Santana|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.ItanhaemHomolog|Any CPU.ActiveCfg = Santana|Any CPU
+		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.ItanhaemHomolog|Any CPU.Build.0 = Santana|Any CPU
+		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.ItanhaemProd|Any CPU.ActiveCfg = Santana|Any CPU
+		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.ItanhaemProd|Any CPU.Build.0 = Santana|Any CPU
+		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.LocalServer|Any CPU.ActiveCfg = Santana|Any CPU
+		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.LocalServer|Any CPU.Build.0 = Santana|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Santana|Any CPU.ActiveCfg = Santana|Any CPU
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B}.Santana|Any CPU.Build.0 = Santana|Any CPU
 		{1D71601C-F383-4FF0-B409-C01140247525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D71601C-F383-4FF0-B409-C01140247525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.ItanhaemHomolog|Any CPU.ActiveCfg = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.ItanhaemHomolog|Any CPU.Build.0 = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.ItanhaemProd|Any CPU.ActiveCfg = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.ItanhaemProd|Any CPU.Build.0 = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.LocalServer|Any CPU.ActiveCfg = Release|Any CPU
+		{1D71601C-F383-4FF0-B409-C01140247525}.LocalServer|Any CPU.Build.0 = Release|Any CPU
 		{1D71601C-F383-4FF0-B409-C01140247525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D71601C-F383-4FF0-B409-C01140247525}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D71601C-F383-4FF0-B409-C01140247525}.Santana|Any CPU.ActiveCfg = Release|Any CPU
 		{1D71601C-F383-4FF0-B409-C01140247525}.Santana|Any CPU.Build.0 = Release|Any CPU
-		{80721739-B803-4489-8F5F-6C3ED4094768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80721739-B803-4489-8F5F-6C3ED4094768}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80721739-B803-4489-8F5F-6C3ED4094768}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80721739-B803-4489-8F5F-6C3ED4094768}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80721739-B803-4489-8F5F-6C3ED4094768}.Santana|Any CPU.ActiveCfg = Release|Any CPU
-		{80721739-B803-4489-8F5F-6C3ED4094768}.Santana|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +82,8 @@ Global
 		{5216DD98-11F2-48D2-9A9F-BC04DA960B6C} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{1F23D6E3-9E03-4ED7-8874-F6085E548D3B} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
 		{1D71601C-F383-4FF0-B409-C01140247525} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
-		{80721739-B803-4489-8F5F-6C3ED4094768} = {0AAD2FB0-CB27-462C-AB4A-84F7F13803E3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE7C3323-A782-418B-9273-40AF42CDB26A}
 	EndGlobalSection
 EndGlobal
