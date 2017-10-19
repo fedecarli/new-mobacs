@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -74,6 +75,9 @@
     <Compile Include="AnimalNoDomicilio.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ASSMED_Acesso.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ASSMED_Cadastro.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -86,10 +90,31 @@
     <Compile Include="ASSMED_CadastroPF.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ASSMED_CadEmails.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_CadTelefones.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_Contratos.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ASSMED_Endereco.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="ASSMED_PesFisica.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASSMED_Usuario.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AS_Credenciados.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AS_CredenciadosUsu.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AS_CredenciadosVinc.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="AS_Profissoes.cs">
@@ -177,13 +202,13 @@
     <Compile Include="InstituicaoPermanencia.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="Nacionalidade.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="OrigemAlimentoSituacaoRua.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="OrigemVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Paises.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="ProfCidadaoVinc.cs">
@@ -193,6 +218,15 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result1.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result2.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="RastroFicha.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -211,6 +245,27 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SIGSM_MotivoVisita.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_ServicoSerializador_Agenda.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_ServicoSerializador_Config.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_ServicoSerializador_Fichas.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao_Processos.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao_Processos_Log.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Transmissao_StatusGeracao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TB_MS_TIPO_LOGRADOURO.cs">
@@ -348,10 +403,21 @@
     <Compile Include="UnicaLotacaoTransport.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_ConsultaCadastrosDomiciliares.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_ConsultaCadastrosIndividuais.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VW_Domicilios.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_Profissional.cs" />
+    <Compile Include="VW_Profissional.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="VW_profissional_cns.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

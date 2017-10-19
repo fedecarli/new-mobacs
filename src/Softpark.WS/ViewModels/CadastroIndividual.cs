@@ -166,6 +166,12 @@ namespace Softpark.WS.ViewModels
         }
 
         /// <summary>
+        /// Data de Atendimento
+        /// </summary>
+        [Required]
+        public DateTime DataAtendimento { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
@@ -803,43 +809,43 @@ namespace Softpark.WS.ViewModels
         /// DataBind
         /// </summary>
         /// <param name="domain"></param>
-        internal IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
-        {
-            var iuc = domain.IdentificacaoUsuarioCidadao.Create();
+        internal virtual IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
+            {
+                var iuc = domain.IdentificacaoUsuarioCidadao.Create();
 
-            iuc.id = Guid.NewGuid();
-            iuc.nomeSocial = nomeSocial;
-            iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
-            iuc.dataNascimentoCidadao = dataNascimentoCidadao;
-            iuc.desconheceNomeMae = desconheceNomeMae;
-            iuc.emailCidadao = emailCidadao;
-            iuc.nacionalidadeCidadao = nacionalidadeCidadao;
-            iuc.nomeCidadao = nomeCidadao;
-            iuc.nomeMaeCidadao = nomeMaeCidadao;
-            iuc.cnsCidadao = cnsCidadao;
-            iuc.cnsResponsavelFamiliar = cnsResponsavelFamiliar;
-            iuc.telefoneCelular = telefoneCelular;
-            iuc.numeroNisPisPasep = numeroNisPisPasep;
-            iuc.paisNascimento = paisNascimento;
-            iuc.racaCorCidadao = racaCorCidadao;
-            iuc.sexoCidadao = sexoCidadao;
-            iuc.statusEhResponsavel = statusEhResponsavel;
-            iuc.etnia = etnia;
-            iuc.nomePaiCidadao = nomePaiCidadao;
-            iuc.desconheceNomePai = desconheceNomePai;
-            iuc.dtNaturalizacao = dtNaturalizacao;
-            iuc.portariaNaturalizacao = portariaNaturalizacao;
-            iuc.dtEntradaBrasil = dtEntradaBrasil;
-            iuc.microarea = microarea;
-            iuc.stForaArea = stForaArea;
-            iuc.RG = RG;
-            iuc.ComplementoRG = ComplementoRG;
-            iuc.CPF = CPF;
-            iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
-            iuc.EstadoCivil = EstadoCivil;
+                iuc.id = Guid.NewGuid();
+                iuc.nomeSocial = nomeSocial;
+                iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
+                iuc.dataNascimentoCidadao = dataNascimentoCidadao;
+                iuc.desconheceNomeMae = desconheceNomeMae;
+                iuc.emailCidadao = emailCidadao;
+                iuc.nacionalidadeCidadao = nacionalidadeCidadao;
+                iuc.nomeCidadao = nomeCidadao;
+                iuc.nomeMaeCidadao = nomeMaeCidadao;
+                iuc.cnsCidadao = cnsCidadao;
+                iuc.cnsResponsavelFamiliar = cnsResponsavelFamiliar;
+                iuc.telefoneCelular = telefoneCelular;
+                iuc.numeroNisPisPasep = numeroNisPisPasep;
+                iuc.paisNascimento = paisNascimento;
+                iuc.racaCorCidadao = racaCorCidadao;
+                iuc.sexoCidadao = sexoCidadao;
+                iuc.statusEhResponsavel = statusEhResponsavel;
+                iuc.etnia = etnia;
+                iuc.nomePaiCidadao = nomePaiCidadao;
+                iuc.desconheceNomePai = desconheceNomePai;
+                iuc.dtNaturalizacao = dtNaturalizacao;
+                iuc.portariaNaturalizacao = portariaNaturalizacao;
+                iuc.dtEntradaBrasil = dtEntradaBrasil;
+                iuc.microarea = microarea;
+                iuc.stForaArea = stForaArea;
+                iuc.RG = RG;
+                iuc.ComplementoRG = ComplementoRG;
+                iuc.CPF = CPF;
+                iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
+                iuc.EstadoCivil = EstadoCivil;
 
-            return iuc;
-        }
+                return iuc;
+            }
     }
 
     /// <summary>

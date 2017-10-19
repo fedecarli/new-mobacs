@@ -1,9 +1,6 @@
-﻿using Softpark.Infrastructure.Extras;
-using Softpark.Models;
-using Softpark.WS.Validators;
+﻿using Softpark.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Configuration;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Softpark.WS.ViewModels
@@ -68,6 +65,12 @@ namespace Softpark.WS.ViewModels
         public string codigoIbgeMunicipio { get; set; }
 
         /// <summary>
+        /// Código ASSMED_Cadastro
+        /// </summary>
+        [DataMember(Name = nameof(profissionalNome))]
+        public string profissionalNome { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="domain"></param>
@@ -81,7 +84,7 @@ namespace Softpark.WS.ViewModels
             ult.cnes = cnes;
             ult.ine = ine;
             ult.dataAtendimento = dataAtendimento;
-            ult.codigoIbgeMunicipio = codigoIbgeMunicipio??ConfigurationManager.AppSettings["idMunicipioCliente"];
+            ult.codigoIbgeMunicipio = codigoIbgeMunicipio??domain.ASSMED_Contratos.First().CodigoIbgeMunicipio;
 
             return ult;
         }
@@ -90,16 +93,36 @@ namespace Softpark.WS.ViewModels
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        internal static UnicaLotacaoTransportCadastroViewModel ApplyModel(UnicaLotacaoTransport model)
+        internal static UnicaLotacaoTransportCadastroViewModel ApplyModel(UnicaLotacaoTransport model, DomainContainer db)
         {
             return new UnicaLotacaoTransportCadastroViewModel {
                 cboCodigo_2002 = model.cboCodigo_2002,
                 cnes = model.cnes,
                 codigoIbgeMunicipio = model.codigoIbgeMunicipio,
                 dataAtendimento = model.dataAtendimento,
-                ine = model.ine,
-                profissionalCNS = model.profissionalCNS
+                ine = db.SetoresINEs.FirstOrDefault(x => x.Numero != null && x.Numero.Trim() == model.ine)?.CodINE.ToString(),
+                profissionalCNS = model.profissionalCNS,
+                profissionalNome = DomainContainer.Current.VW_Profissional.FirstOrDefault(x => x.CNS == model.profissionalCNS)?.Nome
             };
         }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator UnicaLotacaoTransportCadastroViewModel(UnicaLotacaoTransport model)
+        {
+            return ApplyModel(model, DomainContainer.Current);
+        }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator UnicaLotacaoTransport(UnicaLotacaoTransportCadastroViewModel model)
+        {
+            return model.ToModel(DomainContainer.Current);
+        }
+
     }
 }

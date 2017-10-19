@@ -8,6 +8,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
+using DataTables.AspNet.WebApi2;
 
 #pragma warning disable 1591
 namespace Softpark.WS
@@ -23,7 +24,9 @@ namespace Softpark.WS
             CultureInfo.DefaultThreadCurrentUICulture =
             Thread.CurrentThread.CurrentUICulture =
             Thread.CurrentThread.CurrentCulture = custom;
-            
+
+            GlobalConfiguration.Configuration.RegisterDataTables();
+
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();
             GlobalConfiguration.Configure(WebApiConfig.Register);

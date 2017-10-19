@@ -12,12 +12,14 @@ using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using Softpark.Infrastructure.Extras;
+using static Softpark.Infrastructure.Extensions.WithStatement;
 
 namespace Softpark.WS.Controllers.Api
 {
     /// <summary>
     /// Common datasets controller
     /// </summary>
+    [RoutePrefix("api/dados")]
     [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class DatabaseSupplyController : BaseApiController
@@ -42,7 +44,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/version")]
+        [Route("version")]
         [ResponseType(typeof(string))]
         public IHttpActionResult GetVersion()
         {
@@ -55,7 +57,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="data">Data no formato DateTime (yyyy-MM-ddTHH:mm:ssZ)</param>
         /// <returns>Epoch</returns>
         [HttpGet]
-        [Route("api/dados/epoch", Name = "GetEpochURI")]
+        [Route("epoch", Name = "GetEpochURI")]
         [ResponseType(typeof(long))]
         public IHttpActionResult GetEpoch([FromUri] DateTime data)
         {
@@ -71,12 +73,21 @@ namespace Softpark.WS.Controllers.Api
         /// Endpoint para download de dados básicos para carga de trabalho
         /// </summary>
         /// <param name="modelo">O nome do modelo de dados que deseja consultar.</param>
+        /// <param name="token"></param>
         /// <returns>Retorna uma coleção de dados básicos</returns>
         [HttpGet]
-        [Route("api/dados/{modelo}", Name = "BasicSupplyAction")]
+        [Route("buscar/{modelo}/{token:guid}", Name = "BasicSupplyAction")]
         [ResponseType(typeof(BasicViewModel[]))]
-        public IHttpActionResult GetEntities([FromUri, Required] string modelo)
+        public async Task<IHttpActionResult> GetEntities([FromUri, Required] string modelo, [FromUri, Required] Guid token)
         {
+            var acesso = await BuscarAcesso(token);
+
+            if (acesso == null)
+            {
+                ModelState.AddModelError(nameof(token), "Token Inválido.");
+                return BadRequest(ModelState);
+            }
+
             List<BasicViewModel> model;
 
             switch (modelo.ToLowerInvariant())
@@ -204,12 +215,12 @@ namespace Softpark.WS.Controllers.Api
                         }).ToList();
                     break;
                 case "pais":
-                    model = Domain.Paises
+                    model = Domain.Nacionalidade
                         .Select(x => new BasicViewModel
                         {
                             Modelo = "Pais",
                             Codigo = x.codigo.ToString(),
-                            Descricao = x.nome,
+                            Descricao = x.DesNacao,
                             Observacao = null
                         }).ToList();
                     break;
@@ -566,15 +577,55 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
+        /// Endpoint para buscar informações do acesso
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>Retorna dados sobre a sessão baseada em token</returns>
+        [HttpGet]
+        [Route("acesso/{token:guid}", Name = "AccessTokenSupplyAction")]
+        [ResponseType(typeof(DadosAcessoViewModel))]
+        public async Task<IHttpActionResult> GetAccessTokenInfo(Guid token)
+        {
+            var acesso = await BuscarAcesso(token);
+
+            if (acesso == null)
+            {
+                return BadRequest("Token Inválido ou Expirado!");
+            }
+
+            var cfg = await Domain.SIGSM_ServicoSerializador_Config.FindAsync("limiteHorasToken");
+
+            var horas = Convert.ToInt32(cfg?.Valor ?? (2 * 24).ToString());
+
+            var dadosAcesso = new DadosAcessoViewModel
+            {
+                TokenAcesso = token,
+                DadosAtrelados = acesso.profissional,
+                ValidoAte = acesso.acs.DtUltVer.Value.AddHours(horas).AddMilliseconds(-1)
+            };
+
+            // retorna o token gerado
+            return Ok(dadosAcesso);
+        }
+
+        /// <summary>
         /// Endpoint para download de dados dos profissionais
         /// </summary>
         /// <returns>Coleção com os dados dos profissionais</returns>
         [HttpGet]
-        [Route("api/dados/profissional", Name = "ProfessionalSupplyAction")]
+        [Route("profissional/{token:guid}", Name = "ProfessionalSupplyAction")]
         [ResponseType(typeof(ProfissionalViewModel[]))]
-        public IHttpActionResult GetProfissionais()
+        public async Task<IHttpActionResult> GetProfissionais(Guid token)
         {
-            var profs = Domain.VW_Profissional.ToList();
+            var acesso = await BuscarAcesso(token);
+
+            if (acesso == null)
+            {
+                ModelState.AddModelError(nameof(token), "Token Inválido.");
+                return BadRequest(ModelState);
+            }
+
+            var profs = await Domain.VW_Profissional.ToListAsync();
 
             var ps = new Dictionary<string, ProfissionalViewModel>();
 
@@ -584,7 +635,7 @@ namespace Softpark.WS.Controllers.Api
 
                 var cns = prof?.CNS?.Trim();
 
-                if(cns != null)
+                if (cns != null)
                     ps.Add(cns, _);
 
                 return _;
@@ -608,77 +659,428 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns>Coleção de modelos de dados</returns>
         [HttpGet]
-        [Route("api/dados/modelos", Name = "ModelSupplyAction")]
+        [Route("modelos/{token:guid}", Name = "ModelSupplyAction")]
         [ResponseType(typeof(BasicViewModel[]))]
-        public IHttpActionResult GetModels()
+        public async Task<IHttpActionResult> GetModels(Guid token)
         {
+            var acesso = await BuscarAcesso(token);
+
+            if (acesso == null)
+            {
+                ModelState.AddModelError(nameof(token), "Token Inválido.");
+                return BadRequest(ModelState);
+            }
+
             return Ok(new[] {
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DoencaCardiaca", Descricao = "DoencaCardiaca", Observacao = "/api/dados/DoencaCardiaca" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DoencaRespiratoria", Descricao = "DoencaRespiratoria", Observacao = "/api/dados/DoencaRespiratoria" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "FormaDeEscoamentoDoBanheiroOuSanitario", Descricao = "FormaDeEscoamentoDoBanheiroOuSanitario", Observacao = "/api/dados/FormaDeEscoamentoDoBanheiroOuSanitario" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "ProblemaRins", Descricao = "ProblemaRins", Observacao = "/api/dados/ProblemaRins" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "ConsideracaoPeso", Descricao = "ConsideracaoPeso", Observacao = "/api/dados/ConsideracaoPeso" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AcessoHigiene", Descricao = "AcessoHigiene", Observacao = "/api/dados/AcessoHigiene" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "OrigemAlimentacao", Descricao = "OrigemAlimentacao", Observacao = "/api/dados/OrigemAlimentacao" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "QuantasVezesAlimentacao", Descricao = "QuantasVezesAlimentacao", Observacao = "/api/dados/QuantasVezesAlimentacao" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TempoSituacaoDeRua", Descricao = "TempoSituacaoDeRua", Observacao = "/api/dados/TempoSituacaoDeRua" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Municipios", Descricao = "Municipios", Observacao = "/api/dados/Municipios" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Nacionalidade", Descricao = "Nacionalidade", Observacao = "/api/dados/Nacionalidade" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Pais", Descricao = "Pais", Observacao = "/api/dados/Pais" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "RacaCor", Descricao = "RacaCor", Observacao = "/api/dados/RacaCor" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Sexo", Descricao = "Sexo", Observacao = "/api/dados/Sexo" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Etnia", Descricao = "Etnia", Observacao = "/api/dados/Etnia" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DeficienciaCidadao", Descricao = "DeficienciaCidadao", Observacao = "/api/dados/DeficienciaCidadao" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CursoMaisElevado", Descricao = "CursoMaisElevado", Observacao = "/api/dados/CursoMaisElevado" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CBO", Descricao = "CBO", Observacao = "/api/dados/CBO" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "OrientacaoSexual", Descricao = "OrientacaoSexual", Observacao = "/api/dados/OrientacaoSexual" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "RelacaoParentesco", Descricao = "RelacaoParentesco", Observacao = "/api/dados/RelacaoParentesco" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "SituacaoMercadoTrabalho", Descricao = "SituacaoMercadoTrabalho", Observacao = "/api/dados/SituacaoMercadoTrabalho" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "identidadeGeneroCidadao", Descricao = "identidadeGeneroCidadao", Observacao = "/api/dados/identidadeGeneroCidadao" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "ResponsavelCrianca", Descricao = "ResponsavelCrianca", Observacao = "/api/dados/ResponsavelCrianca" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoSaida", Descricao = "MotivoSaida", Observacao = "/api/dados/MotivoSaida" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CNES", Descricao = "CNES", Observacao = "/api/dados/CNES" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "INE", Descricao = "INE", Observacao = "/api/dados/INE" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AnimalNoDomicilio", Descricao = "AnimalNoDomicilio", Observacao = "/api/dados/AnimalNoDomicilio" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AbastecimentoDeAgua", Descricao = "AbastecimentoDeAgua", Observacao = "/api/dados/AbastecimentoDeAgua" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CondicaoDePosseEUsoDaTerra", Descricao = "CondicaoDePosseEUsoDaTerra", Observacao = "/api/dados/CondicaoDePosseEUsoDaTerra" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DestinoDoLixo", Descricao = "DestinoDoLixo", Observacao = "/api/dados/DestinoDoLixo" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "LocalizacaoDaMoradia", Descricao = "LocalizacaoDaMoradia", Observacao = "/api/dados/LocalizacaoDaMoradia" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MaterialPredominanteNaConstrucao", Descricao = "MaterialPredominanteNaConstrucao", Observacao = "/api/dados/MaterialPredominanteNaConstrucao" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "SituacaoDeMoradia", Descricao = "SituacaoDeMoradia", Observacao = "/api/dados/SituacaoDeMoradia" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TipoDeAcessoAoDomicilio", Descricao = "TipoDeAcessoAoDomicilio", Observacao = "/api/dados/TipoDeAcessoAoDomicilio" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TipoDeDomicilio", Descricao = "TipoDeDomicilio", Observacao = "/api/dados/TipoDeDomicilio" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AguaConsumoDomicilio", Descricao = "AguaConsumoDomicilio", Observacao = "/api/dados/AguaConsumoDomicilio" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "UF", Descricao = "UF", Observacao = "/api/dados/UF" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TipoDeLogradouro", Descricao = "TipoDeLogradouro", Observacao = "/api/dados/TipoDeLogradouro" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "RendaFamiliar", Descricao = "RendaFamiliar", Observacao = "/api/dados/RendaFamiliar" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "tipoDeImovel", Descricao = "tipoDeImovel", Observacao = "/api/dados/tipoDeImovel" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Turno", Descricao = "Turno", Observacao = "/api/dados/Turno" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoVisita", Descricao = "MotivoVisita", Observacao = "/api/dados/MotivoVisita" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = "/api/dados/Desfecho" },
-                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "EstadoCivil", Descricao = "EstadoCivil", Observacao = "/api/dados/EstadoCivil" },
-                new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = "/api/dados/profissional" }
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DoencaCardiaca", Descricao = "DoencaCardiaca", Observacao = $"/api/dados/buscar/DoencaCardiaca/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DoencaRespiratoria", Descricao = "DoencaRespiratoria", Observacao = $"/api/dados/buscar/DoencaRespiratoria/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "FormaDeEscoamentoDoBanheiroOuSanitario", Descricao = "FormaDeEscoamentoDoBanheiroOuSanitario", Observacao = $"/api/dados/buscar/FormaDeEscoamentoDoBanheiroOuSanitario/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "ProblemaRins", Descricao = "ProblemaRins", Observacao = $"/api/dados/buscar/ProblemaRins/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "ConsideracaoPeso", Descricao = "ConsideracaoPeso", Observacao = $"/api/dados/buscar/ConsideracaoPeso/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AcessoHigiene", Descricao = "AcessoHigiene", Observacao = $"/api/dados/buscar/AcessoHigiene/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "OrigemAlimentacao", Descricao = "OrigemAlimentacao", Observacao = $"/api/dados/buscar/OrigemAlimentacao/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "QuantasVezesAlimentacao", Descricao = "QuantasVezesAlimentacao", Observacao = $"/api/dados/buscar/QuantasVezesAlimentacao/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TempoSituacaoDeRua", Descricao = "TempoSituacaoDeRua", Observacao = $"/api/dados/buscar/TempoSituacaoDeRua/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Municipios", Descricao = "Municipios", Observacao = $"/api/dados/buscar/Municipios/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Nacionalidade", Descricao = "Nacionalidade", Observacao = $"/api/dados/buscar/Nacionalidade/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Pais", Descricao = "Pais", Observacao = $"/api/dados/buscar/Pais/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "RacaCor", Descricao = "RacaCor", Observacao = $"/api/dados/buscar/RacaCor/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Sexo", Descricao = "Sexo", Observacao = $"/api/dados/buscar/Sexo/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Etnia", Descricao = "Etnia", Observacao = $"/api/dados/buscar/Etnia/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DeficienciaCidadao", Descricao = "DeficienciaCidadao", Observacao = $"/api/dados/buscar/DeficienciaCidadao/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CursoMaisElevado", Descricao = "CursoMaisElevado", Observacao = $"/api/dados/buscar/CursoMaisElevado/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CBO", Descricao = "CBO", Observacao = $"/api/dados/buscar/CBO/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "OrientacaoSexual", Descricao = "OrientacaoSexual", Observacao = $"/api/dados/buscar/OrientacaoSexual/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "RelacaoParentesco", Descricao = "RelacaoParentesco", Observacao = $"/api/dados/buscar/RelacaoParentesco/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "SituacaoMercadoTrabalho", Descricao = "SituacaoMercadoTrabalho", Observacao = $"/api/dados/buscar/SituacaoMercadoTrabalho/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "identidadeGeneroCidadao", Descricao = "identidadeGeneroCidadao", Observacao = $"/api/dados/buscar/identidadeGeneroCidadao/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "ResponsavelCrianca", Descricao = "ResponsavelCrianca", Observacao = $"/api/dados/buscar/ResponsavelCrianca/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoSaida", Descricao = "MotivoSaida", Observacao = $"/api/dados/buscar/MotivoSaida/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CNES", Descricao = "CNES", Observacao = $"/api/dados/buscar/CNES/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "INE", Descricao = "INE", Observacao = $"/api/dados/buscar/INE/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AnimalNoDomicilio", Descricao = "AnimalNoDomicilio", Observacao = $"/api/dados/buscar/AnimalNoDomicilio/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AbastecimentoDeAgua", Descricao = "AbastecimentoDeAgua", Observacao = $"/api/dados/buscar/AbastecimentoDeAgua/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "CondicaoDePosseEUsoDaTerra", Descricao = "CondicaoDePosseEUsoDaTerra", Observacao = $"/api/dados/buscar/CondicaoDePosseEUsoDaTerra/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "DestinoDoLixo", Descricao = "DestinoDoLixo", Observacao = $"/api/dados/buscar/DestinoDoLixo/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "LocalizacaoDaMoradia", Descricao = "LocalizacaoDaMoradia", Observacao = $"/api/dados/buscar/LocalizacaoDaMoradia/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MaterialPredominanteNaConstrucao", Descricao = "MaterialPredominanteNaConstrucao", Observacao = $"/api/dados/buscar/MaterialPredominanteNaConstrucao/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "SituacaoDeMoradia", Descricao = "SituacaoDeMoradia", Observacao = $"/api/dados/buscar/SituacaoDeMoradia/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TipoDeAcessoAoDomicilio", Descricao = "TipoDeAcessoAoDomicilio", Observacao = $"/api/dados/buscar/TipoDeAcessoAoDomicilio/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TipoDeDomicilio", Descricao = "TipoDeDomicilio", Observacao = $"/api/dados/buscar/TipoDeDomicilio/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "AguaConsumoDomicilio", Descricao = "AguaConsumoDomicilio", Observacao = $"/api/dados/buscar/AguaConsumoDomicilio/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "UF", Descricao = "UF", Observacao = $"/api/dados/buscar/UF/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "TipoDeLogradouro", Descricao = "TipoDeLogradouro", Observacao = $"/api/dados/buscar/TipoDeLogradouro/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "RendaFamiliar", Descricao = "RendaFamiliar", Observacao = $"/api/dados/buscar/RendaFamiliar/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "tipoDeImovel", Descricao = "tipoDeImovel", Observacao = $"/api/dados/buscar/tipoDeImovel/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Turno", Descricao = "Turno", Observacao = $"/api/dados/buscar/Turno/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "MotivoVisita", Descricao = "MotivoVisita", Observacao = $"/api/dados/buscar/MotivoVisita/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "Desfecho", Descricao = "Desfecho", Observacao = $"/api/dados/buscar/Desfecho/{token}" },
+                new BasicViewModel { Modelo = "BasicViewModel", Codigo = "EstadoCivil", Descricao = "EstadoCivil", Observacao = $"/api/dados/buscar/EstadoCivil/{token}" },
+                new BasicViewModel { Modelo = "ProfissionalViewModel", Codigo = "Profissional", Descricao = "Profissional", Observacao = $"/api/dados/buscar/profissional/{token}" }
             }.OrderBy(x => x.Codigo).ToArray());
         }
 
-        /// <summary>
-        /// Método para buscar o cabeçalho
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        private async Task<UnicaLotacaoTransport> GetHeader(Guid token)
+        private CadastroIndividual Converge(ASSMED_Cadastro cad, CadastroIndividual data, UsuarioVM acesso)
         {
-            return await Domain.UnicaLotacaoTransport.FirstOrDefaultAsync(u => u.token == token && !u.OrigemVisita.finalizado);
+            var prof = acesso.profissional;
+
+            var cns = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 6)?.Numero;
+            var rg = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 1);
+            var nis = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero;
+            var mun = cad.ASSMED_PesFisica?.MUNICIPIONASC;
+            var nac = cad.ASSMED_PesFisica?.Nacionalidade;
+            var naca = cad.ASSMED_PesFisica?.CodNacao ?? 10;
+
+            var cont = Domain.ASSMED_Contratos.First();
+
+            var cpf = cad.ASSMED_PesFisica?.CPF?.Trim()?.Replace("([^0-9])", "") ?? "00000000000";
+
+            var iden = data?.IdentificacaoUsuarioCidadao1;
+
+            var header = data?.UnicaLotacaoTransport;
+            var nh = header == null;
+
+            var origem = header?.OrigemVisita;
+            var nor = origem == null;
+
+            With(ref origem, () => new OrigemVisita
+            {
+                enviado = false,
+                enviarParaThrift = false,
+                finalizado = true,
+                id_tipo_origem = 2,
+                token = Guid.Empty
+            }, nor ? new string[0] : new[] {
+                nameof(OrigemVisita.enviado),
+                nameof(OrigemVisita.enviarParaThrift),
+                nameof(OrigemVisita.finalizado),
+                nameof(OrigemVisita.id_tipo_origem),
+                nameof(OrigemVisita.token),
+                nameof(OrigemVisita.UnicaLotacaoTransport)
+            });
+
+            With(ref header, () => new UnicaLotacaoTransport
+            {
+                cnes = prof.CNES.Trim(),
+                codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
+                dataAtendimento = DateTime.Now,
+                id = Guid.Empty,
+                token = origem.token,
+                OrigemVisita = origem,
+                profissionalCNS = prof.CNS.Trim(),
+                cboCodigo_2002 = prof.CBO.Trim()
+            }, nh ? new string[0] : new[] {
+                nameof(UnicaLotacaoTransport.cnes),
+                nameof(UnicaLotacaoTransport.codigoIbgeMunicipio),
+                nameof(UnicaLotacaoTransport.cboCodigo_2002),
+                nameof(UnicaLotacaoTransport.dataAtendimento),
+                nameof(UnicaLotacaoTransport.id),
+                nameof(UnicaLotacaoTransport.FichaVisitaDomiciliarMaster),
+                nameof(UnicaLotacaoTransport.OrigemVisita),
+                nameof(UnicaLotacaoTransport.token),
+                nameof(UnicaLotacaoTransport.profissionalCNS),
+                nameof(UnicaLotacaoTransport.CadastroDomiciliar),
+                nameof(UnicaLotacaoTransport.CadastroIndividual),
+                nameof(UnicaLotacaoTransport.DataDeAtendimento),
+                nameof(UnicaLotacaoTransport.ine)
+            });
+
+            if (nh)
+            {
+                origem.UnicaLotacaoTransport.Add(header);
+                header.OrigemVisita = origem;
+            }
+
+            var nd = data == null;
+            With(ref data, () => new CadastroIndividual
+            {
+                CondicoesDeSaude1 = null,
+                DataRegistro = DateTime.Now,
+                EmSituacaoDeRua1 = null,
+                fichaAtualizada = false,
+                id = Guid.Empty,
+                idAuto = 0,
+                InformacoesSocioDemograficas1 = null,
+                Justificativa = null,
+                SaidaCidadaoCadastro1 = null,
+                statusTermoRecusaCadastroIndividualAtencaoBasica = false,
+                uuidFichaOriginadora = Guid.Empty,
+                tpCdsOrigem = 3,
+                UnicaLotacaoTransport = header
+            }, nd ? new string[0] : new[] {
+                nameof(CadastroIndividual.IdentificacaoUsuarioCidadao1),
+                nameof(CadastroIndividual.CondicoesDeSaude1),
+                nameof(CadastroIndividual.condicoesDeSaude),
+                nameof(CadastroIndividual.CadastroIndividual_recusa),
+                nameof(CadastroIndividual.DataRegistro),
+                nameof(CadastroIndividual.emSituacaoDeRua),
+                nameof(CadastroIndividual.EmSituacaoDeRua1),
+                nameof(CadastroIndividual.fichaAtualizada),
+                nameof(CadastroIndividual.headerTransport),
+                nameof(CadastroIndividual.id),
+                nameof(CadastroIndividual.idAuto),
+                nameof(CadastroIndividual.identificacaoUsuarioCidadao),
+                nameof(CadastroIndividual.IdentificacaoUsuarioCidadao1),
+                nameof(CadastroIndividual.informacoesSocioDemograficas),
+                nameof(CadastroIndividual.InformacoesSocioDemograficas1),
+                nameof(CadastroIndividual.Justificativa),
+                nameof(CadastroIndividual.latitude),
+                nameof(CadastroIndividual.longitude),
+                nameof(CadastroIndividual.saidaCidadaoCadastro),
+                nameof(CadastroIndividual.SaidaCidadaoCadastro1),
+                nameof(CadastroIndividual.statusTermoRecusaCadastroIndividualAtencaoBasica),
+                nameof(CadastroIndividual.tpCdsOrigem),
+                nameof(CadastroIndividual.UnicaLotacaoTransport),
+                nameof(CadastroIndividual.uuidFichaOriginadora)
+            });
+
+            var ni = iden == null;
+            With(ref iden, () => new IdentificacaoUsuarioCidadao
+            {
+                Codigo = cad.Codigo,
+                beneficiarioBolsaFamilia = false,
+                cnsCidadao = cns,
+                cnsResponsavelFamiliar = null,
+                codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge,
+                ComplementoRG = rg?.ComplementoRG,
+                CPF = cpf.Length == 11 ? cpf : "00000000000",
+                dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc,
+                desconheceNomeMae = cad.ASSMED_PesFisica?.NomeMae == null,
+                desconheceNomePai = cad.ASSMED_PesFisica?.NomePai == null,
+                nomeCidadao = cad.Nome,
+                nomeMaeCidadao = cad.ASSMED_PesFisica?.NomeMae,
+                nomePaiCidadao = cad.ASSMED_PesFisica?.NomePai,
+                nomeSocial = cad.NomeSocial,
+                dtEntradaBrasil = cad.ASSMED_PesFisica?.ESTRANGEIRADATA,
+                dtNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZADADATA,
+                emailCidadao = cad.ASSMED_CadEmails.OrderByDescending(x => x.DtSistema).FirstOrDefault()?.EMail,
+                EstadoCivil = cad.ASSMED_PesFisica?.EstCivil ?? "I",
+                etnia = cad.ASSMED_PesFisica?.CodEtnia > 0 ? cad.ASSMED_PesFisica?.CodEtnia : null,
+                id = Guid.Empty,
+                microarea = null,
+                nacionalidadeCidadao = nac ?? 1,
+                paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == nac)?.codigo,
+                numeroNisPisPasep = cad.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 7)?.Numero,
+                num_contrato = 22,
+                portariaNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA,
+                racaCorCidadao = (int)(cad.ASSMED_PesFisica?.CodCor > 0 ? cad.ASSMED_PesFisica?.CodCor : 6),
+                telefoneCelular = cad.ASSMED_CadTelefones.Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}".Trim()).FirstOrDefault(),
+                RG = rg?.Numero,
+                sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4,
+                statusEhResponsavel = true,
+                stForaArea = true
+            }, ni ? new string[0] : new[] {
+                nameof(IdentificacaoUsuarioCidadao.Codigo),
+                nameof(IdentificacaoUsuarioCidadao.num_contrato),
+                nameof(IdentificacaoUsuarioCidadao.id),
+                nameof(IdentificacaoUsuarioCidadao.beneficiarioBolsaFamilia),
+                nameof(IdentificacaoUsuarioCidadao.cnsResponsavelFamiliar),
+                nameof(IdentificacaoUsuarioCidadao.microarea),
+                nameof(IdentificacaoUsuarioCidadao.statusEhResponsavel),
+                nameof(IdentificacaoUsuarioCidadao.stForaArea)
+            });
+
+            if (ni)
+            {
+                data.IdentificacaoUsuarioCidadao1 = iden;
+
+                data.IdentificacaoUsuarioCidadao1.CadastroIndividual.Add(data);
+
+                cad.IdFicha = iden.id;
+                cad.IdentificacaoUsuarioCidadao = iden;
+            }
+
+            data.IdentificacaoUsuarioCidadao1.Codigo = cad.Codigo;
+            data.IdentificacaoUsuarioCidadao1.cnsCidadao = cns;
+            data.IdentificacaoUsuarioCidadao1.codigoIbgeMunicipioNascimento = Domain.Cidade
+                .SingleOrDefault(x => x.CodCidade == mun)?.CodIbge;
+            data.IdentificacaoUsuarioCidadao1.ComplementoRG = rg?.ComplementoRG;
+            data.IdentificacaoUsuarioCidadao1.CPF = cad.ASSMED_PesFisica?.CPF ?? data.IdentificacaoUsuarioCidadao1.CPF;
+            data.IdentificacaoUsuarioCidadao1.dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc;
+            data.IdentificacaoUsuarioCidadao1.desconheceNomeMae = cad.ASSMED_PesFisica?.MaeDesconhecida == 1;
+            data.IdentificacaoUsuarioCidadao1.desconheceNomePai = cad.ASSMED_PesFisica?.PaiDesconhecido == 1;
+            data.IdentificacaoUsuarioCidadao1.nomeCidadao = cad.Nome;
+            data.IdentificacaoUsuarioCidadao1.nomeMaeCidadao = cad.ASSMED_PesFisica?.NomeMae;
+            data.IdentificacaoUsuarioCidadao1.nomePaiCidadao = cad.ASSMED_PesFisica?.NomePai;
+            data.IdentificacaoUsuarioCidadao1.nomeSocial = cad.NomeSocial;
+            data.IdentificacaoUsuarioCidadao1.dtEntradaBrasil = cad.ASSMED_PesFisica?.ESTRANGEIRADATA;
+            data.IdentificacaoUsuarioCidadao1.dtNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZADADATA;
+            data.IdentificacaoUsuarioCidadao1.emailCidadao = cad.ASSMED_CadEmails.OrderByDescending(x => x.DtSistema).FirstOrDefault()?.EMail;
+            data.IdentificacaoUsuarioCidadao1.EstadoCivil = cad.ASSMED_PesFisica?.EstCivil ?? "I";
+            data.IdentificacaoUsuarioCidadao1.etnia = cad.ASSMED_PesFisica?.CodEtnia;
+            data.IdentificacaoUsuarioCidadao1.nacionalidadeCidadao = nac ?? 1;
+            data.IdentificacaoUsuarioCidadao1.paisNascimento = Domain.Nacionalidade.FirstOrDefault(x => x.CodNacao == naca)?.codigo;
+            data.IdentificacaoUsuarioCidadao1.numeroNisPisPasep = nis;
+            data.IdentificacaoUsuarioCidadao1.portariaNaturalizacao = cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA;
+            data.IdentificacaoUsuarioCidadao1.racaCorCidadao = cad.ASSMED_PesFisica?.CodCor ?? 0;
+            data.IdentificacaoUsuarioCidadao1.telefoneCelular = cad.ASSMED_CadTelefones.Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}".Trim()).FirstOrDefault();
+            data.IdentificacaoUsuarioCidadao1.RG = rg?.Numero;
+            data.IdentificacaoUsuarioCidadao1.sexoCidadao = cad.ASSMED_PesFisica?.Sexo == "M" ? 0 : cad.ASSMED_PesFisica?.Sexo == "F" ? 1 : 4;
+
+            return data;
         }
 
-        /// <summary>
-        /// Método para buscar todos os cabeçalhos de um profissional
-        /// </summary>
-        /// <param name="header"></param>
-        /// <returns></returns>
-        private IQueryable<UnicaLotacaoTransport> GetHeadersBy(UnicaLotacaoTransport header)
+        private CadastroDomiciliar Converge(ASSMED_Endereco cad, CadastroDomiciliar data, UsuarioVM acesso)
         {
-            return Domain.UnicaLotacaoTransport.Where(u => u.profissionalCNS == header.profissionalCNS && u.OrigemVisita.finalizado);
+            var prof = acesso.profissional;
+            var cont = Domain.ASSMED_Contratos.First();
+
+            var header = data?.UnicaLotacaoTransport;
+            var nh = header == null;
+
+            var origem = header?.OrigemVisita;
+            var nor = origem == null;
+
+            With(ref origem, () => new OrigemVisita
+            {
+                enviado = false,
+                enviarParaThrift = false,
+                finalizado = true,
+                id_tipo_origem = 2,
+                token = Guid.Empty
+            }, nor ? new string[0] : new[] {
+                nameof(OrigemVisita.enviado),
+                nameof(OrigemVisita.enviarParaThrift),
+                nameof(OrigemVisita.finalizado),
+                nameof(OrigemVisita.id_tipo_origem),
+                nameof(OrigemVisita.token),
+                nameof(OrigemVisita.UnicaLotacaoTransport)
+            });
+
+            With(ref header, () => new UnicaLotacaoTransport
+            {
+                cnes = prof.CNES.Trim(),
+                codigoIbgeMunicipio = cont.CodigoIbgeMunicipio,
+                dataAtendimento = DateTime.Now,
+                id = Guid.Empty,
+                token = origem.token,
+                OrigemVisita = origem,
+                profissionalCNS = prof.CNS.Trim(),
+                cboCodigo_2002 = prof.CBO.Trim()
+            }, nh ? new string[0] : new[] {
+                nameof(UnicaLotacaoTransport.cnes),
+                nameof(UnicaLotacaoTransport.codigoIbgeMunicipio),
+                nameof(UnicaLotacaoTransport.cboCodigo_2002),
+                nameof(UnicaLotacaoTransport.dataAtendimento),
+                nameof(UnicaLotacaoTransport.id),
+                nameof(UnicaLotacaoTransport.FichaVisitaDomiciliarMaster),
+                nameof(UnicaLotacaoTransport.OrigemVisita),
+                nameof(UnicaLotacaoTransport.token),
+                nameof(UnicaLotacaoTransport.profissionalCNS),
+                nameof(UnicaLotacaoTransport.CadastroDomiciliar),
+                nameof(UnicaLotacaoTransport.CadastroIndividual),
+                nameof(UnicaLotacaoTransport.DataDeAtendimento),
+                nameof(UnicaLotacaoTransport.ine)
+            });
+
+            if (nh)
+            {
+                origem.UnicaLotacaoTransport.Add(header);
+                header.OrigemVisita = origem;
+            }
+
+            var nd = data == null;
+            With(ref data, () => new CadastroDomiciliar
+            {
+                condicaoMoradia = null,
+                enderecoLocalPermanencia = null,
+                DataRegistro = DateTime.Now,
+                fichaAtualizada = false,
+                id = Guid.Empty,
+                idAuto = 0,
+                Justificativa = null,
+                uuidFichaOriginadora = Guid.Empty,
+                tpCdsOrigem = 3,
+                UnicaLotacaoTransport = header,
+                statusTermoRecusa = false
+            }, nd ? new string[0] : new[] {
+                nameof(CadastroDomiciliar.AnimalNoDomicilio),
+                nameof(CadastroDomiciliar.CondicaoMoradia1),
+                nameof(CadastroDomiciliar.condicaoMoradia),
+                nameof(CadastroDomiciliar.DataRegistro),
+                nameof(CadastroDomiciliar.enderecoLocalPermanencia),
+                nameof(CadastroDomiciliar.EnderecoLocalPermanencia1),
+                nameof(CadastroDomiciliar.fichaAtualizada),
+                nameof(CadastroDomiciliar.headerTransport),
+                nameof(CadastroDomiciliar.id),
+                nameof(CadastroDomiciliar.idAuto),
+                nameof(CadastroDomiciliar.FamiliaRow),
+                nameof(CadastroDomiciliar.instituicaoPermanencia),
+                nameof(CadastroDomiciliar.InstituicaoPermanencia1),
+                nameof(CadastroDomiciliar.Justificativa),
+                nameof(CadastroDomiciliar.latitude),
+                nameof(CadastroDomiciliar.longitude),
+                nameof(CadastroDomiciliar.quantosAnimaisNoDomicilio),
+                nameof(CadastroDomiciliar.stAnimaisNoDomicilio),
+                nameof(CadastroDomiciliar.statusTermoRecusa),
+                nameof(CadastroDomiciliar.tipoDeImovel),
+                nameof(CadastroDomiciliar.tpCdsOrigem),
+                nameof(CadastroDomiciliar.TP_Imovel),
+                nameof(CadastroDomiciliar.UnicaLotacaoTransport),
+                nameof(CadastroDomiciliar.uuidFichaOriginadora)
+            });
+
+            var end = data?.EnderecoLocalPermanencia1;
+
+            var contrato = Domain.ASSMED_Contratos.First();
+            var mun = Domain.Cidade.SingleOrDefault(x => x.CodIbge == contrato.CodigoIbgeMunicipio);
+
+            var ne = end == null;
+            With(ref end, () => new EnderecoLocalPermanencia
+            {
+                bairro = cad.Bairro,
+                cep = cad.CEP?.Replace("-", ""),
+                codigoIbgeMunicipio = mun.CodIbge,
+                complemento = cad.Complemento,
+                nomeLogradouro = cad.Logradouro,
+                numero = cad.Numero,
+                numeroDneUf = mun.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0'),
+                pontoReferencia = cad.ENDREFERENCIA,
+                stForaArea = cad.ENDSEMAREA == 1,
+                stSemNumero = cad.SEMNUMERO == 1,
+                telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                    .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
+                telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                    .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault(),
+                tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO
+            }, ne ? new string[0] : new[] {
+                nameof(EnderecoLocalPermanencia.bairro),
+                nameof(EnderecoLocalPermanencia.cep),
+                nameof(EnderecoLocalPermanencia.codigoIbgeMunicipio),
+                nameof(EnderecoLocalPermanencia.complemento),
+                nameof(EnderecoLocalPermanencia.nomeLogradouro),
+                nameof(EnderecoLocalPermanencia.numero),
+                nameof(EnderecoLocalPermanencia.numeroDneUf),
+                nameof(EnderecoLocalPermanencia.pontoReferencia),
+                nameof(EnderecoLocalPermanencia.stForaArea),
+                nameof(EnderecoLocalPermanencia.stSemNumero),
+                nameof(EnderecoLocalPermanencia.telefoneContato),
+                nameof(EnderecoLocalPermanencia.telefoneResidencia),
+                nameof(EnderecoLocalPermanencia.tipoLogradouroNumeroDne)
+            });
+
+            if (ne)
+            {
+                var cns = cad.ASSMED_Cadastro.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 6)?.Numero;
+
+                data.EnderecoLocalPermanencia1.bairro = cad.Bairro;
+                data.EnderecoLocalPermanencia1.cep = cad.CEP?.Replace("-", "");
+                data.EnderecoLocalPermanencia1.codigoIbgeMunicipio = mun.CodIbge;
+                data.EnderecoLocalPermanencia1.complemento = cad.Complemento;
+                data.EnderecoLocalPermanencia1.nomeLogradouro = cad.Logradouro;
+                data.EnderecoLocalPermanencia1.numero = cad.Numero;
+                data.EnderecoLocalPermanencia1.numeroDneUf = mun.CodDNE?.ToString()?.Trim()?.PadLeft(2, '0');
+                data.EnderecoLocalPermanencia1.pontoReferencia = cad.ENDREFERENCIA;
+                data.EnderecoLocalPermanencia1.stForaArea = cad.ENDSEMAREA == 1;
+                data.EnderecoLocalPermanencia1.stSemNumero = cad.SEMNUMERO == 1;
+                data.EnderecoLocalPermanencia1.telefoneContato = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                        .Where(x => x.TipoTel == "C").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault();
+                data.EnderecoLocalPermanencia1.telefoneResidencia = cad.ASSMED_Cadastro.ASSMED_CadTelefones
+                        .Where(x => x.TipoTel == "R").Select(x => $"{x.DDD}{x.NumTel}").FirstOrDefault();
+                data.EnderecoLocalPermanencia1.tipoLogradouroNumeroDne = Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(x => x.DS_TIPO_LOGRADOURO_ABREV == cad.TipoEnd)?.CO_TIPO_LOGRADOURO;
+            }
+
+            return data;
         }
 
         /// <summary>
@@ -688,51 +1090,35 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="microarea">microárea</param>
         /// <returns>Coleção de Pacientes</returns>
         [HttpGet]
-        [Route("api/dados/paciente/{token:guid}", Name = "PacienteSupplyAction")]
+        [Route("paciente/{token:guid}", Name = "PacienteSupplyAction")]
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
         public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
             Log.Info("-----");
             Log.Info($"GET api/dados/paciente/{token}");
 
-            var headerToken = await GetHeader(token);
+            var acesso = await BuscarAcesso(token);
 
-            if (headerToken == null)
+            if (acesso == null)
             {
-                var error = BadRequest("Token Inválido.");
-
-                Log.Fatal("Token inválido");
-
-                return error;
+                ModelState.AddModelError(nameof(token), "Token Inválido.");
+                return BadRequest(ModelState);
             }
 
-            var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
+            var prof = acesso.profissional;
 
-            var pessoas = from pc in Domain.VW_profissional_cns
-                          join cad in Domain.VW_ultimo_cadastroIndividual
-                          on pc.CodigoCidadao equals cad.Codigo
-                          where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                          select new { pc, cad };
+            var d = await (from pca in Domain.ProfCidadaoVincAgendaProd
+                           join pcv in Domain.ProfCidadaoVinc
+                                    on pca.IdVinc equals pcv.IdVinc
+                           join cad in Domain.ASSMED_Cadastro
+                                    on (decimal)pcv.IdCidadao equals cad.Codigo
+                           let fic = cad.IdentificacaoUsuarioCidadao
+                           where pca.AgendamentoMarcado == true
+                              && pca.DataCarregado == null
+                              && pcv.IdProfissional == acesso.cad.Codigo
+                           select new { pca, cad, fic }).ToListAsync();
 
-            var idProf = pessoas.FirstOrDefault()?.pc.IdProfissional;
-
-            var profs = Domain.ProfCidadaoVincAgendaProd
-                .Where(x =>
-                    x.AgendamentoMarcado == true &&
-                    x.DataCarregado == null &&
-                    x.FichaGerada == true &&
-                    x.ProfCidadaoVinc.IdProfissional == idProf);
-
-            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-            var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                .Select(x => x.cad.idCadastroIndividual).ToArray();
-
-            var cadastros = Domain.CadastroIndividual
-                .Where(x => x.identificacaoUsuarioCidadao != null && ids.Contains(x.identificacaoUsuarioCidadao.Value)
-                            && cads.Contains(x.id)).ToArray();
-
-            CadastroIndividualViewModelCollection results = cadastros;
+            CadastroIndividualViewModelCollection results = d.Select(x => Converge(x.cad, x.fic != null ? x.fic.CadastroIndividual.FirstOrDefault() : null, acesso)).ToList();
 
             if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
             {
@@ -741,21 +1127,18 @@ namespace Softpark.WS.Controllers.Api
 
             var rs = results.ToArray();
 
-            var data = Ok(rs);
-
-            var ps = profs.Where(x => pessoas.Any(z => x.IdVinc == z.pc.IdVinc)).ToList();
-
-            ps.ForEach(x =>
+            d.ForEach(x =>
             {
-                Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, false);
+                x.pca.DataCarregado = DateTime.Now;
+                x.pca.FichaGerada = true;
             });
 
             await Domain.SaveChangesAsync();
 
             var serializer = new JavaScriptSerializer();
-            Log.Info(serializer.Serialize(results.ToArray()));
+            Log.Info(serializer.Serialize(rs));
 
-            return data;
+            return Ok(rs);
         }
 
         /// <summary>
@@ -765,7 +1148,7 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="microarea">Microárea</param>
         /// <returns>Coleção de domicilios</returns>
         [HttpGet]
-        [Route("api/dados/domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
+        [Route("domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
         [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
         public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token, [FromUri] string microarea = null)
         {
@@ -774,29 +1157,32 @@ namespace Softpark.WS.Controllers.Api
                 Log.Info("----");
                 Log.Info($"api/dados/domicilio/{token}");
 
-                var headerToken = await GetHeader(token);
+                var acesso = await BuscarAcesso(token);
 
-                if (headerToken == null) return BadRequest("Token Inválido.");
+                if (acesso == null)
+                {
+                    ModelState.AddModelError(nameof(token), "Token Inválido.");
+                    return BadRequest(ModelState);
+                }
 
-                //Alteração Cristiano, David 
-                var domicilios = (from pc in Domain.VW_profissional_cns
-                                  join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
-                                  join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
-                                  join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
-                                  join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
-                                  join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
-                                  join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
-                                  join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
-                                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
-                                    agenda.AgendamentoMarcado == true &&
-                                    agenda.DataCarregadoDomiciliar == null &&
-                                    agenda.FichaDomiciliarGerada == true &&
-                                    idtUserCid.cnsResponsavelFamiliar == null
-                                  select new { cd, agenda }).ToList();
+                var prof = acesso.profissional;
 
-                var cadastros = domicilios.Select(x => x.cd).ToArray();
+                var domicilios = await (from pcv in Domain.ProfCidadaoVinc
+                                        join agd in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agd.IdVinc
+                                        join ass in Domain.ASSMED_Cadastro on (decimal?)pcv.IdCidadao equals ass.Codigo
+                                        join end in Domain.ASSMED_Endereco on ass.Codigo equals end.Codigo
+                                        let fic = end.EnderecoLocalPermanencia
+                                        let ide = ass.IdentificacaoUsuarioCidadao
+                                        let cdo = fic != null ? fic.CadastroDomiciliar.FirstOrDefault() : null
+                                        let children = fic == null ? 0 : Domain.CadastroDomiciliar.Count(x => x.uuidFichaOriginadora == cdo.id && x.id != cdo.id)
+                                        where children == 0
+                                           && agd.AgendamentoMarcado == true
+                                           && agd.DataCarregadoDomiciliar == null
+                                           && pcv.IdProfissional == acesso.cad.Codigo
+                                           && (ide == null || ide.cnsResponsavelFamiliar == null)
+                                        select new { agd, cdo, end }).ToListAsync();
 
-                CadastroDomiciliarViewModelCollection results = cadastros;
+                CadastroDomiciliarViewModelCollection results = domicilios.Select(x => Converge(x.end, x.cdo, acesso)).ToArray();
 
                 if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
                 {
@@ -805,7 +1191,8 @@ namespace Softpark.WS.Controllers.Api
 
                 domicilios.ForEach(x =>
                 {
-                    Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
+                    x.agd.DataCarregadoDomiciliar = DateTime.Now;
+                    x.agd.FichaDomiciliarGerada = true;
                 });
 
                 await Domain.SaveChangesAsync();
@@ -816,45 +1203,12 @@ namespace Softpark.WS.Controllers.Api
                 Log.Info(serializer.Serialize(resultados));
 
                 return Ok(resultados);
-
             }
             catch (Exception ex)
             {
                 Log.Fatal(ex.Message, ex);
                 throw new ValidationException(ex.Message);
             }
-        }
-
-        /// <summary>
-        /// Endpoint para buscar as visitas realizadas pelo profissional informado
-        /// </summary>
-        /// <param name="token">Token de acesso</param>
-        /// <param name="microarea">Microárea</param>
-        /// <returns>Coleção de visitas</returns>
-        [HttpGet]
-        [Route("api/dados/visita/{token:guid}", Name = "VisitaSupplyAction")]
-        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel[]))]
-        public async Task<IHttpActionResult> GetVisitas([FromUri, Required] Guid token, [FromUri] string microarea = null)
-        {
-            Log.Info("----");
-            Log.Info($"api/dados/visita/{token}");
-
-            var headerToken = await GetHeader(token);
-
-            if (headerToken == null) return BadRequest("Token Inválido.");
-
-            FichaVisitaDomiciliarChildCadastroViewModelCollection results = GetHeadersBy(headerToken)
-                .SelectMany(f => f.FichaVisitaDomiciliarMaster).SelectMany(f => f.FichaVisitaDomiciliarChild).ToArray();
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-            {
-                results = results.Where(r => r.microarea == null || r.microarea == microarea).ToArray();
-            }
-
-            var serializer = new JavaScriptSerializer();
-            Log.Info(serializer.Serialize(results.ToArray()));
-
-            return Ok(results.ToArray());
         }
     }
 

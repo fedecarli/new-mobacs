@@ -136,10 +136,16 @@ namespace Softpark.WS.ViewModels
         public string longitude { get; set; } = null;
 
         /// <summary>
+        /// Data de atendimento
+        /// </summary>
+        [Required]
+        public DateTime DataAtendimento { get; set; }
+
+        /// <summary>
         /// DataBind
         /// </summary>
         /// <returns></returns>
-        public async Task<CadastroDomiciliar> ToModel(DomainContainer domain)
+        public virtual async Task<CadastroDomiciliar> ToModel(DomainContainer domain)
         {
             var dc = domain.CadastroDomiciliar.Create();
 
@@ -548,7 +554,7 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        internal EnderecoLocalPermanencia ToModel(DomainContainer domain)
+        internal virtual EnderecoLocalPermanencia ToModel(DomainContainer domain)
         {
             var elp = domain.EnderecoLocalPermanencia.Create();
 
