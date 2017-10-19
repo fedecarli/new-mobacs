@@ -18,18 +18,14 @@ namespace Softpark.Models
         public SIGSM_Transmissao()
         {
             this.SIGSM_Transmissao_Processos = new HashSet<SIGSM_Transmissao_Processos>();
-            this.SIGSM_ServicoSerializador_Agenda = new HashSet<SIGSM_ServicoSerializador_Agenda>();
         }
     
         public System.Guid Id { get; set; }
         public System.DateTime DataSolicitacao { get; set; }
         public int CodUsu { get; set; }
         public System.DateTime DataLote { get; set; }
-        public System.DateTime AgendadoPara { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SIGSM_Transmissao_Processos> SIGSM_Transmissao_Processos { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SIGSM_ServicoSerializador_Agenda> SIGSM_ServicoSerializador_Agenda { get; set; }
     }
 }

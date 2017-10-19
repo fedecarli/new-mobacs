@@ -12,12 +12,15 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class RastroFicha
+    public partial class Conflito
     {
-        public System.Guid token { get; set; }
-        public int CodUsu { get; set; }
-        public System.DateTime DataModificacao { get; set; }
-        public string DadoAnterior { get; set; }
-        public string DadoAtual { get; set; }
+        public int id { get; set; }
+        public System.Guid idCadastroIndividual { get; set; }
+        public Nullable<System.DateTime> Data { get; set; }
+        public Nullable<byte> Resolvido { get; set; }
+        public Nullable<int> CodMunicipe { get; set; }
+        public Nullable<decimal> Codigo { get; set; }
+        public Nullable<System.Guid> idCadastroDomiciliar { get; set; }
+        public Nullable<System.DateTime> DataResolvido { get; set; }
     }
 }

@@ -12,9 +12,12 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TipoLogradouro
+    public partial class Lote
     {
-        public int CodTpLogra { get; set; }
-        public string DesTpLogra { get; set; }
+        public long id { get; set; }
+        public Nullable<System.DateTime> Data { get; set; }
+        public Nullable<int> CodUsuario { get; set; }
+        public Nullable<bool> finalizado { get; set; }
+        public Nullable<System.DateTime> dataFinalizado { get; set; }
     }
 }

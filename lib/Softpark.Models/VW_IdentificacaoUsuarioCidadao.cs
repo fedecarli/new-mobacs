@@ -47,9 +47,9 @@ namespace Softpark.Models
         public decimal Codigo { get; set; }
         public string Justificativa { get; set; }
         public string RG { get; set; }
+        public string ComplementoRG { get; set; }
         public string CPF { get; set; }
         public string EstadoCivil { get; set; }
         public Nullable<bool> beneficiarioBolsaFamilia { get; set; }
-        public string ComplementoRG { get; set; }
     }
 }

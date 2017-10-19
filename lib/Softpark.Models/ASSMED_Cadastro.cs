@@ -38,18 +38,19 @@ namespace Softpark.Models
         public string Justificativa { get; set; }
         public string MotivoHomologacao { get; set; }
         public Nullable<System.Guid> IdFicha { get; set; }
+        public long idAuto { get; set; }
     
         public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadastroDocPessoal> ASSMED_CadastroDocPessoal { get; set; }
-        public virtual ASSMED_PesFisica ASSMED_PesFisica { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadEmails> ASSMED_CadEmails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_CadTelefones> ASSMED_CadTelefones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_Endereco> ASSMED_Endereco { get; set; }
+        public virtual ASSMED_PesFisica ASSMED_PesFisica { get; set; }
     }
 }

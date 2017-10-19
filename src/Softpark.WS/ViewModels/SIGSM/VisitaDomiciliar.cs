@@ -183,7 +183,6 @@ namespace Softpark.WS.ViewModels.SIGSM
             {
                 CodUsu = Convert.ToInt32(ASPSessionVar.Read("idUsuario")),
                 DataModificacao = DateTime.Now,
-                OrigemVisita = orig,
                 token = orig.token,
                 DadoAnterior = restDa,
                 DadoAtual = restDn

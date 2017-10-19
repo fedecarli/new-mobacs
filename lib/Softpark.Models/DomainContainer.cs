@@ -129,7 +129,7 @@ namespace Softpark.Models
         /// Coleção de profissionais
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        //public virtual DbRawSqlQuery<VW_Profissional> VW_Profissional =>
-        //    Database.SqlQuery<VW_Profissional>("SELECT CBO, CNES, CNS, INE, Equipe, Nome, Profissao, Unidade FROM [api].[VW_Profissional]");
+        public virtual DbRawSqlQuery<VW_Profissional> VW_Profissional =>
+            Database.SqlQuery<VW_Profissional>("SELECT id, CNS, Nome, CBO, Profissao, CNES, Unidade, INE, Equipe, CodUsu FROM [api].[VW_Profissional]");
     }
 }

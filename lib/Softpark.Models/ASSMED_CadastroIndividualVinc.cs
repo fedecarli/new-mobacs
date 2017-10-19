@@ -12,12 +12,11 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class RastroFicha
+    public partial class ASSMED_CadastroIndividualVinc
     {
-        public System.Guid token { get; set; }
-        public int CodUsu { get; set; }
-        public System.DateTime DataModificacao { get; set; }
-        public string DadoAnterior { get; set; }
-        public string DadoAtual { get; set; }
+        public int id { get; set; }
+        public Nullable<System.Guid> idCadastroIndividual { get; set; }
+        public Nullable<decimal> Codigo { get; set; }
+        public Nullable<System.DateTime> Data { get; set; }
     }
 }

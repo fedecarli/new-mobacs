@@ -24,6 +24,8 @@ namespace Softpark.Models
         public Nullable<int> IdProfissional { get; set; }
         public Nullable<int> IdCidadao { get; set; }
         public Nullable<bool> Marcado { get; set; }
+        public Nullable<int> OrigemPerfilVinc { get; set; }
+        public Nullable<System.DateTime> DataVinc { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfCidadaoVincAgendaProd> ProfCidadaoVincAgendaProd { get; set; }

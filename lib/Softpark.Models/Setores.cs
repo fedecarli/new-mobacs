@@ -17,9 +17,9 @@ namespace Softpark.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Setores()
         {
-            this.SetoresINEs = new HashSet<SetoresINEs>();
-            this.AS_SetoresPar = new HashSet<AS_SetoresPar>();
             this.AS_CredenciadosVinc = new HashSet<AS_CredenciadosVinc>();
+            this.AS_SetoresPar = new HashSet<AS_SetoresPar>();
+            this.SetoresINEs = new HashSet<SetoresINEs>();
         }
     
         public int CodSetor { get; set; }
@@ -33,10 +33,10 @@ namespace Softpark.Models
         public Nullable<int> blindado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SetoresINEs> SetoresINEs { get; set; }
+        public virtual ICollection<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AS_SetoresPar> AS_SetoresPar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
+        public virtual ICollection<SetoresINEs> SetoresINEs { get; set; }
     }
 }

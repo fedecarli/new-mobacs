@@ -17,7 +17,6 @@ namespace Softpark.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OrigemVisita()
         {
-            this.RastroFicha = new HashSet<RastroFicha>();
             this.UnicaLotacaoTransport = new HashSet<UnicaLotacaoTransport>();
         }
     
@@ -26,10 +25,10 @@ namespace Softpark.Models
         public int id_tipo_origem { get; set; }
         public bool enviarParaThrift { get; set; }
         public bool enviado { get; set; }
+        public Nullable<bool> Executado { get; set; }
+        public Nullable<System.DateTime> DataExecutado { get; set; }
     
         public virtual TipoOrigem TipoOrigem { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RastroFicha> RastroFicha { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UnicaLotacaoTransport> UnicaLotacaoTransport { get; set; }
     }

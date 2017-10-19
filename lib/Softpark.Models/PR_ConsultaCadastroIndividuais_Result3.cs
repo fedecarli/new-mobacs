@@ -10,14 +10,14 @@
 namespace Softpark.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class RastroFicha
+    public partial class PR_ConsultaCadastroIndividuais_Result3
     {
-        public System.Guid token { get; set; }
-        public int CodUsu { get; set; }
-        public System.DateTime DataModificacao { get; set; }
-        public string DadoAnterior { get; set; }
-        public string DadoAtual { get; set; }
+        public string Nome { get; set; }
+        public string DtNasc { get; set; }
+        public string NomeMae { get; set; }
+        public string Cns { get; set; }
+        public string NomeCidade { get; set; }
+        public string Codigo { get; set; }
     }
 }

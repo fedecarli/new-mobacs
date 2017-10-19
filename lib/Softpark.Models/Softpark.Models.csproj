@@ -87,6 +87,9 @@
     <Compile Include="ASSMED_CadastroDomiciliarVinc.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ASSMED_CadastroIndividualVinc.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ASSMED_CadastroPF.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -142,6 +145,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="CondicoesDeSaude.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Conflito.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="DeficienciasCidadao.cs">
@@ -202,6 +208,9 @@
     <Compile Include="InstituicaoPermanencia.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="Lote.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="Nacionalidade.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -218,6 +227,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais1_Result.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="PR_ConsultaCadastroIndividuais_Result.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -225,6 +237,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="PR_ConsultaCadastroIndividuais_Result2.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result3.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="RastroFicha.cs">
@@ -269,9 +284,6 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TB_MS_TIPO_LOGRADOURO.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TipoLogradouro.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="TipoOrigem.cs">
@@ -409,15 +421,10 @@
     <Compile Include="VW_ConsultaCadastrosIndividuais.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_Domicilios.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="VW_Profissional.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
+    <Compile Include="VW_Profissional.cs" />
     <Compile Include="VW_profissional_cns.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

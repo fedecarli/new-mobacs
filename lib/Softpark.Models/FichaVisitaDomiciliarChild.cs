@@ -36,8 +36,9 @@ namespace Softpark.Models
         public string longitude { get; set; }
         public System.Guid childId { get; set; }
         public Nullable<System.DateTime> dtNascimento { get; set; }
-        public string Justificativa { get; set; }
+        public Nullable<bool> Erro { get; set; }
         public Nullable<System.DateTime> DataRegistro { get; set; }
+        public string Justificativa { get; set; }
     
         public virtual FichaVisitaDomiciliarMaster FichaVisitaDomiciliarMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -396,7 +396,6 @@ namespace Softpark.WS.ViewModels.SIGSM
             {
                 CodUsu = Convert.ToInt32(ASPSessionVar.Read("idUsuario")),
                 DataModificacao = DateTime.Now,
-                OrigemVisita = origem,
                 token = origem.token,
                 DadoAnterior = restDa,
                 DadoAtual = restDn
@@ -436,7 +435,6 @@ namespace Softpark.WS.ViewModels.SIGSM
             origem.id_tipo_origem = 2;
             origem.enviarParaThrift = true;
             origem.enviado = false;
-            origem.RastroFicha.Add(rastro);
             origem.UnicaLotacaoTransport.Add(header);
             origem.finalizado = true;
 
@@ -447,6 +445,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             await cad.Validar(db);
 
             db.OrigemVisita.Add(origem);
+            db.RastroFicha.Add(rastro);
 
             if (proc != null)
             {

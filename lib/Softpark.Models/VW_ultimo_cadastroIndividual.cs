@@ -14,9 +14,9 @@ namespace Softpark.Models
     
     public partial class VW_ultimo_cadastroIndividual
     {
-        public decimal Codigo { get; set; }
-        public System.Guid idCadastroIndividual { get; set; }
+        public Nullable<decimal> Codigo { get; set; }
+        public Nullable<System.Guid> idCadastroIndividual { get; set; }
         public System.Guid headerTransport { get; set; }
-        public System.Guid token { get; set; }
+        public Nullable<System.Guid> token { get; set; }
     }
 }

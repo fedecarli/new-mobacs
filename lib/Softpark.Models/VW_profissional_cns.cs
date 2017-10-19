@@ -15,9 +15,9 @@ namespace Softpark.Models
     public partial class VW_profissional_cns
     {
         public decimal Codigo { get; set; }
-        public int IdProfissional { get; set; }
+        public Nullable<int> IdProfissional { get; set; }
         public string cnsProfissional { get; set; }
-        public int IdCidadao { get; set; }
+        public Nullable<int> IdCidadao { get; set; }
         public string cnsCidadao { get; set; }
         public string CBO { get; set; }
         public string CNES { get; set; }

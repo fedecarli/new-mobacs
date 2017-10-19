@@ -29,21 +29,63 @@ namespace Softpark.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<VW_IdentificacaoUsuarioCidadao> VW_IdentificacaoUsuarioCidadao { get; set; }
-        public virtual DbSet<VW_profissional_cns> VW_profissional_cns { get; set; }
-        public virtual DbSet<VW_ultimo_cadastroDomiciliar> VW_ultimo_cadastroDomiciliar { get; set; }
-        public virtual DbSet<VW_ultimo_cadastroIndividual> VW_ultimo_cadastroIndividual { get; set; }
+        public virtual DbSet<AnimalNoDomicilio> AnimalNoDomicilio { get; set; }
+        public virtual DbSet<CadastroDomiciliar> CadastroDomiciliar { get; set; }
+        public virtual DbSet<CadastroIndividual> CadastroIndividual { get; set; }
+        public virtual DbSet<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
+        public virtual DbSet<CondicaoMoradia> CondicaoMoradia { get; set; }
+        public virtual DbSet<CondicoesDeSaude> CondicoesDeSaude { get; set; }
+        public virtual DbSet<DeficienciasCidadao> DeficienciasCidadao { get; set; }
+        public virtual DbSet<DoencaCardiaca> DoencaCardiaca { get; set; }
+        public virtual DbSet<DoencaRespiratoria> DoencaRespiratoria { get; set; }
+        public virtual DbSet<DoencaRins> DoencaRins { get; set; }
+        public virtual DbSet<EmSituacaoDeRua> EmSituacaoDeRua { get; set; }
+        public virtual DbSet<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
+        public virtual DbSet<FamiliaRow> FamiliaRow { get; set; }
+        public virtual DbSet<FichaVisitaDomiciliarChild> FichaVisitaDomiciliarChild { get; set; }
+        public virtual DbSet<FichaVisitaDomiciliarMaster> FichaVisitaDomiciliarMaster { get; set; }
+        public virtual DbSet<HigienePessoalSituacaoRua> HigienePessoalSituacaoRua { get; set; }
+        public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
+        public virtual DbSet<InformacoesSocioDemograficas> InformacoesSocioDemograficas { get; set; }
+        public virtual DbSet<InstituicaoPermanencia> InstituicaoPermanencia { get; set; }
+        public virtual DbSet<Lote> Lote { get; set; }
+        public virtual DbSet<OrigemAlimentoSituacaoRua> OrigemAlimentoSituacaoRua { get; set; }
+        public virtual DbSet<OrigemVisita> OrigemVisita { get; set; }
+        public virtual DbSet<RastroFicha> RastroFicha { get; set; }
+        public virtual DbSet<ResponsavelPorCrianca> ResponsavelPorCrianca { get; set; }
+        public virtual DbSet<SaidaCidadaoCadastro> SaidaCidadaoCadastro { get; set; }
         public virtual DbSet<TipoOrigem> TipoOrigem { get; set; }
         public virtual DbSet<UnicaLotacaoTransport> UnicaLotacaoTransport { get; set; }
+        public virtual DbSet<AS_Credenciados> AS_Credenciados { get; set; }
+        public virtual DbSet<AS_CredenciadosUsu> AS_CredenciadosUsu { get; set; }
+        public virtual DbSet<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
+        public virtual DbSet<AS_Profissoes> AS_Profissoes { get; set; }
+        public virtual DbSet<AS_ProfissoesTab> AS_ProfissoesTab { get; set; }
+        public virtual DbSet<AS_SetoresPar> AS_SetoresPar { get; set; }
+        public virtual DbSet<ASSMED_Acesso> ASSMED_Acesso { get; set; }
+        public virtual DbSet<ASSMED_Cadastro> ASSMED_Cadastro { get; set; }
         public virtual DbSet<ASSMED_CadastroDocPessoal> ASSMED_CadastroDocPessoal { get; set; }
         public virtual DbSet<ASSMED_CadastroPF> ASSMED_CadastroPF { get; set; }
+        public virtual DbSet<ASSMED_CadEmails> ASSMED_CadEmails { get; set; }
+        public virtual DbSet<ASSMED_CadTelefones> ASSMED_CadTelefones { get; set; }
+        public virtual DbSet<ASSMED_Contratos> ASSMED_Contratos { get; set; }
+        public virtual DbSet<ASSMED_Endereco> ASSMED_Endereco { get; set; }
         public virtual DbSet<ASSMED_PesFisica> ASSMED_PesFisica { get; set; }
+        public virtual DbSet<ASSMED_Usuario> ASSMED_Usuario { get; set; }
         public virtual DbSet<Cidade> Cidade { get; set; }
         public virtual DbSet<Etnia> Etnia { get; set; }
         public virtual DbSet<ProfCidadaoVinc> ProfCidadaoVinc { get; set; }
         public virtual DbSet<ProfCidadaoVincAgendaProd> ProfCidadaoVincAgendaProd { get; set; }
         public virtual DbSet<Setores> Setores { get; set; }
         public virtual DbSet<SetoresINEs> SetoresINEs { get; set; }
+        public virtual DbSet<SIGSM_MotivoVisita> SIGSM_MotivoVisita { get; set; }
+        public virtual DbSet<SIGSM_ServicoSerializador_Agenda> SIGSM_ServicoSerializador_Agenda { get; set; }
+        public virtual DbSet<SIGSM_ServicoSerializador_Config> SIGSM_ServicoSerializador_Config { get; set; }
+        public virtual DbSet<SIGSM_ServicoSerializador_Fichas> SIGSM_ServicoSerializador_Fichas { get; set; }
+        public virtual DbSet<SIGSM_Transmissao> SIGSM_Transmissao { get; set; }
+        public virtual DbSet<SIGSM_Transmissao_Processos> SIGSM_Transmissao_Processos { get; set; }
+        public virtual DbSet<SIGSM_Transmissao_Processos_Log> SIGSM_Transmissao_Processos_Log { get; set; }
+        public virtual DbSet<SIGSM_Transmissao_StatusGeracao> SIGSM_Transmissao_StatusGeracao { get; set; }
         public virtual DbSet<TP_Abastecimento_Agua> TP_Abastecimento_Agua { get; set; }
         public virtual DbSet<TP_Acesso_Domicilio> TP_Acesso_Domicilio { get; set; }
         public virtual DbSet<TP_Animais> TP_Animais { get; set; }
@@ -60,6 +102,7 @@ namespace Softpark.Models
         public virtual DbSet<TP_Doenca_Respiratoria> TP_Doenca_Respiratoria { get; set; }
         public virtual DbSet<TP_Domicilio> TP_Domicilio { get; set; }
         public virtual DbSet<TP_Escoamento_Esgoto> TP_Escoamento_Esgoto { get; set; }
+        public virtual DbSet<TP_EstadoCivil> TP_EstadoCivil { get; set; }
         public virtual DbSet<TP_Exames> TP_Exames { get; set; }
         public virtual DbSet<TP_Higiene_Pessoal> TP_Higiene_Pessoal { get; set; }
         public virtual DbSet<TP_Identidade_Genero_Cidadao> TP_Identidade_Genero_Cidadao { get; set; }
@@ -82,62 +125,19 @@ namespace Softpark.Models
         public virtual DbSet<TP_Situacao_Moradia_Rural> TP_Situacao_Moradia_Rural { get; set; }
         public virtual DbSet<TP_Tratamento_Agua> TP_Tratamento_Agua { get; set; }
         public virtual DbSet<UF> UF { get; set; }
-        public virtual DbSet<TipoLogradouro> TipoLogradouro { get; set; }
+        public virtual DbSet<ASSMED_CadastroDomiciliarVinc> ASSMED_CadastroDomiciliarVinc { get; set; }
+        public virtual DbSet<ASSMED_CadastroIndividualVinc> ASSMED_CadastroIndividualVinc { get; set; }
+        public virtual DbSet<Conflito> Conflito { get; set; }
+        public virtual DbSet<Nacionalidade> Nacionalidade { get; set; }
+        public virtual DbSet<TB_MS_TIPO_LOGRADOURO> TB_MS_TIPO_LOGRADOURO { get; set; }
         public virtual DbSet<TP_Conduta> TP_Conduta { get; set; }
         public virtual DbSet<TP_Nasf> TP_Nasf { get; set; }
-        public virtual DbSet<SIGSM_MotivoVisita> SIGSM_MotivoVisita { get; set; }
-        public virtual DbSet<AS_Profissoes> AS_Profissoes { get; set; }
-        public virtual DbSet<AS_ProfissoesTab> AS_ProfissoesTab { get; set; }
-        public virtual DbSet<TB_MS_TIPO_LOGRADOURO> TB_MS_TIPO_LOGRADOURO { get; set; }
-        public virtual DbSet<AS_SetoresPar> AS_SetoresPar { get; set; }
-        public virtual DbSet<ASSMED_CadastroDomiciliarVinc> ASSMED_CadastroDomiciliarVinc { get; set; }
-        public virtual DbSet<TP_EstadoCivil> TP_EstadoCivil { get; set; }
-        public virtual DbSet<AnimalNoDomicilio> AnimalNoDomicilio { get; set; }
-        public virtual DbSet<CadastroDomiciliar> CadastroDomiciliar { get; set; }
-        public virtual DbSet<CadastroIndividual> CadastroIndividual { get; set; }
-        public virtual DbSet<CondicaoMoradia> CondicaoMoradia { get; set; }
-        public virtual DbSet<CondicoesDeSaude> CondicoesDeSaude { get; set; }
-        public virtual DbSet<DeficienciasCidadao> DeficienciasCidadao { get; set; }
-        public virtual DbSet<DoencaCardiaca> DoencaCardiaca { get; set; }
-        public virtual DbSet<DoencaRespiratoria> DoencaRespiratoria { get; set; }
-        public virtual DbSet<DoencaRins> DoencaRins { get; set; }
-        public virtual DbSet<EmSituacaoDeRua> EmSituacaoDeRua { get; set; }
-        public virtual DbSet<FamiliaRow> FamiliaRow { get; set; }
-        public virtual DbSet<FichaVisitaDomiciliarChild> FichaVisitaDomiciliarChild { get; set; }
-        public virtual DbSet<FichaVisitaDomiciliarMaster> FichaVisitaDomiciliarMaster { get; set; }
-        public virtual DbSet<HigienePessoalSituacaoRua> HigienePessoalSituacaoRua { get; set; }
-        public virtual DbSet<InformacoesSocioDemograficas> InformacoesSocioDemograficas { get; set; }
-        public virtual DbSet<InstituicaoPermanencia> InstituicaoPermanencia { get; set; }
-        public virtual DbSet<OrigemAlimentoSituacaoRua> OrigemAlimentoSituacaoRua { get; set; }
-        public virtual DbSet<OrigemVisita> OrigemVisita { get; set; }
-        public virtual DbSet<RastroFicha> RastroFicha { get; set; }
-        public virtual DbSet<ResponsavelPorCrianca> ResponsavelPorCrianca { get; set; }
-        public virtual DbSet<SaidaCidadaoCadastro> SaidaCidadaoCadastro { get; set; }
-        public virtual DbSet<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
-        public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
-        public virtual DbSet<ASSMED_Cadastro> ASSMED_Cadastro { get; set; }
-        public virtual DbSet<VW_Domicilios> VW_Domicilios { get; set; }
-        public virtual DbSet<ASSMED_Contratos> ASSMED_Contratos { get; set; }
-        public virtual DbSet<ASSMED_CadEmails> ASSMED_CadEmails { get; set; }
-        public virtual DbSet<Nacionalidade> Nacionalidade { get; set; }
-        public virtual DbSet<VW_ConsultaCadastrosIndividuais> VW_ConsultaCadastrosIndividuais { get; set; }
+        public virtual DbSet<VW_IdentificacaoUsuarioCidadao> VW_IdentificacaoUsuarioCidadao { get; set; }
+        public virtual DbSet<VW_ultimo_cadastroDomiciliar> VW_ultimo_cadastroDomiciliar { get; set; }
+        public virtual DbSet<VW_ultimo_cadastroIndividual> VW_ultimo_cadastroIndividual { get; set; }
         public virtual DbSet<VW_ConsultaCadastrosDomiciliares> VW_ConsultaCadastrosDomiciliares { get; set; }
-        public virtual DbSet<ASSMED_CadTelefones> ASSMED_CadTelefones { get; set; }
-        public virtual DbSet<EnderecoLocalPermanencia> EnderecoLocalPermanencia { get; set; }
-        public virtual DbSet<ASSMED_Endereco> ASSMED_Endereco { get; set; }
-        public virtual DbSet<SIGSM_Transmissao> SIGSM_Transmissao { get; set; }
-        public virtual DbSet<SIGSM_Transmissao_Processos> SIGSM_Transmissao_Processos { get; set; }
-        public virtual DbSet<SIGSM_Transmissao_StatusGeracao> SIGSM_Transmissao_StatusGeracao { get; set; }
-        public virtual DbSet<SIGSM_Transmissao_Processos_Log> SIGSM_Transmissao_Processos_Log { get; set; }
-        public virtual DbSet<SIGSM_ServicoSerializador_Agenda> SIGSM_ServicoSerializador_Agenda { get; set; }
-        public virtual DbSet<SIGSM_ServicoSerializador_Config> SIGSM_ServicoSerializador_Config { get; set; }
-        public virtual DbSet<SIGSM_ServicoSerializador_Fichas> SIGSM_ServicoSerializador_Fichas { get; set; }
-        public virtual DbSet<ASSMED_Acesso> ASSMED_Acesso { get; set; }
-        public virtual DbSet<ASSMED_Usuario> ASSMED_Usuario { get; set; }
-        public virtual DbSet<AS_Credenciados> AS_Credenciados { get; set; }
-        public virtual DbSet<AS_CredenciadosUsu> AS_CredenciadosUsu { get; set; }
-        public virtual DbSet<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
-        public virtual DbSet<VW_Profissional> VW_Profissional { get; set; }
+        public virtual DbSet<VW_ConsultaCadastrosIndividuais> VW_ConsultaCadastrosIndividuais { get; set; }
+        public virtual DbSet<VW_profissional_cns> VW_profissional_cns { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {
@@ -165,7 +165,7 @@ namespace Softpark.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PR_EncerrarAgenda", idAgendaProdParameter, retornoParameter, tipoFichaParameter);
         }
     
-        public virtual ObjectResult<PR_ConsultaCadastroIndividuais_Result2> PR_ConsultaCadastroIndividuais(string search, Nullable<int> skip, Nullable<int> take, Nullable<int> orderCol, Nullable<int> orderDirection, ObjectParameter total, ObjectParameter totalFiltered)
+        public virtual ObjectResult<PR_ConsultaCadastroIndividuais_Result3> PR_ConsultaCadastroIndividuais(string search, Nullable<int> skip, Nullable<int> take, Nullable<int> orderCol, Nullable<int> orderDirection, ObjectParameter total, ObjectParameter totalFiltered)
         {
             var searchParameter = search != null ?
                 new ObjectParameter("search", search) :
@@ -187,7 +187,7 @@ namespace Softpark.Models
                 new ObjectParameter("orderDirection", orderDirection) :
                 new ObjectParameter("orderDirection", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PR_ConsultaCadastroIndividuais_Result2>("PR_ConsultaCadastroIndividuais", searchParameter, skipParameter, takeParameter, orderColParameter, orderDirectionParameter, total, totalFiltered);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PR_ConsultaCadastroIndividuais_Result3>("PR_ConsultaCadastroIndividuais", searchParameter, skipParameter, takeParameter, orderColParameter, orderDirectionParameter, total, totalFiltered);
         }
     }
 }
