@@ -7908,3 +7908,24 @@ ERROR 2017-10-19 18:40:03,278 1159324ms ptionHandlingAttribute OnException      
    em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
 ClientConnectionId:45f87f31-c30d-49c6-abb6-e239d2993472
 Error Number:-2,State:0,Class:11
+ERROR 2017-10-20 13:13:31,204 120507ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://localhost/sigsm/v2/ESUS/fichas/api/sigsm/listar/VisitaDomiciliar: System.Net.WebException: The operation has timed out
+   em System.Net.WebClient.OpenRead(Uri address)
+   em Softpark.WS.ASPSessionVar.Read(String varName, Boolean fromCache) na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\ASPSessionVar.cs:linha 62
+   em Softpark.WS.Controllers.BaseApiController.Autenticado() na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\BaseApiController.cs:linha 32
+   em Softpark.WS.Controllers.Api.SIGSMController.<ListarVisitaDomiciliar>d__9.MoveNext() na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\SIGSMController.cs:linha 584
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Threading.Tasks.TaskHelpersExtensions.<CastToObject>d__3`1.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()

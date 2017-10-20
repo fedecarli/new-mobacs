@@ -39,6 +39,7 @@ namespace Softpark.Models
         public Nullable<bool> Erro { get; set; }
         public Nullable<System.DateTime> DataRegistro { get; set; }
         public string Justificativa { get; set; }
+        public string nomeCidadao { get; set; }
     
         public virtual FichaVisitaDomiciliarMaster FichaVisitaDomiciliarMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

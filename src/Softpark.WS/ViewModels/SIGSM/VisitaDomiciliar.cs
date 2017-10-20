@@ -31,8 +31,11 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// <summary>
         /// 
         /// </summary>
-        public FichaVisitaDomiciliarChildCadastroViewModel[] FichasChild { get; set; }
+        public FichaVisitaDomiciliarChildListagemViewModel[] FichasChild { get; set; }
 
+        /// <summary>
+        /// Finalizado?
+        /// </summary>
         public bool Finalizado { get; set; }
 
         /// <summary>
@@ -91,12 +94,14 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             cad.UnicaLotacaoTransport = CabecalhoTransporte;
 
-            FichaVisitaDomiciliarChildCadastroViewModelCollection fichas = FichasChild;
+            var newCad = UuidFicha == null || string.IsNullOrEmpty(UuidFicha.Trim());
 
-            fichas.ToModels(cad.FichaVisitaDomiciliarChild, domain);
+            cad.uuidFicha = !newCad ? UuidFicha : ($"{CabecalhoTransporte.cnes}-{Guid.NewGuid()}");
+            cad.headerTransport = cad.UnicaLotacaoTransport.id;
+            cad.tpCdsOrigem = 3;
 
-            cad.uuidFicha = UuidFicha != null ? UuidFicha :
-                ($"{CabecalhoTransporte.cnes}-{Guid.NewGuid()}");
+            if (newCad)
+                domain.FichaVisitaDomiciliarMaster.Add(cad);
 
             return cad;
         }
@@ -139,13 +144,15 @@ namespace Softpark.WS.ViewModels.SIGSM
             CabecalhoTransporte = model.UnicaLotacaoTransport;
         }
 
-        internal async Task<string> LimparESalvarDados(DomainContainer domain, UrlHelper url)
+        internal async Task<FichaVisitaDomiciliarMaster> LimparESalvarDados(DomainContainer domain, UrlHelper url)
         {
             var restDn = JsonConvert.SerializeObject(this);
 
             CleanStrings();
 
             var cad = await ToModel(domain);
+
+            var dadoAnterior = await domain.FichaVisitaDomiciliarMaster.FindAsync(cad.uuidFicha);
 
             var orig = cad.UnicaLotacaoTransport.OrigemVisita;
 
@@ -159,21 +166,17 @@ namespace Softpark.WS.ViewModels.SIGSM
                 orig.token = Guid.NewGuid();
                 orig.UnicaLotacaoTransport.Add(cad.UnicaLotacaoTransport);
                 domain.OrigemVisita.Add(orig);
-
-                domain.FichaVisitaDomiciliarMaster.Add(cad);
             }
 
             cad.UnicaLotacaoTransport.OrigemVisita = orig;
 
-            domain.FichaVisitaDomiciliarChild.AddRange(cad.FichaVisitaDomiciliarChild);
+            //domain.FichaVisitaDomiciliarChild.AddRange(cad.FichaVisitaDomiciliarChild);
 
             cad.UnicaLotacaoTransport.Validar(domain);
 
             cad.Validar();
 
-            cad.FichaVisitaDomiciliarChild.ToList().ForEach(x => x.Validar());
-
-            var dadoAnterior = await domain.FichaVisitaDomiciliarMaster.FindAsync(cad.uuidFicha);
+            //cad.FichaVisitaDomiciliarChild.ToList().ForEach(x => x.Validar());
 
             DetalheFichaVisitaDomiciliarMasterVW da = dadoAnterior ?? null;
 
@@ -192,7 +195,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             await domain.SaveChangesAsync();
 
-            return cad.uuidFicha;
+            return cad;
         }
     }
 }

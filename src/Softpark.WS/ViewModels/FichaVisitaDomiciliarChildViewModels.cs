@@ -6,6 +6,9 @@ using Softpark.Models;
 using System;
 using Softpark.WS.Validators;
 using Softpark.Infrastructure.Extras;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Web.Http.Routing;
 
 namespace Softpark.WS.ViewModels
 {
@@ -88,10 +91,20 @@ namespace Softpark.WS.ViewModels
         public Guid? token { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public Guid? id { get; set; }
+
+        /// <summary>
         /// Turno da visita
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public long turno { get; set; }
+
+        /// <summary>
+        /// Nome Cidadao
+        /// </summary>
+        public string nomeCidadao { get; set; }
 
         /// <summary>
         /// Número do prontuário
@@ -228,17 +241,19 @@ namespace Softpark.WS.ViewModels
             longitude = model.longitude;
             Justificativa = model.Justificativa;
             DataRegistro = model.DataRegistro;
+            nomeCidadao = model.nomeCidadao;
         }
 
         /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="domain"></param>
-        internal FichaVisitaDomiciliarChild ToModel(DomainContainer domain)
+        internal async Task<FichaVisitaDomiciliarChild> ToModel(DomainContainer domain)
         {
-            var fvdc = domain.FichaVisitaDomiciliarChild.Create();
+            var fvdc = (await domain.FichaVisitaDomiciliarChild.FindAsync(id)) ??
+                domain.FichaVisitaDomiciliarChild.Create();
 
-            fvdc.childId = Guid.NewGuid();
+            fvdc.childId = id ?? Guid.NewGuid();
             fvdc.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional == null || alturaAcompanhamentoNutricional <= 0 ? (decimal?)null : Convert.ToDecimal(alturaAcompanhamentoNutricional);
             fvdc.cnsCidadao = cnsCidadao;
             fvdc.desfecho = desfecho;
@@ -255,10 +270,165 @@ namespace Softpark.WS.ViewModels
             fvdc.longitude = longitude;
             fvdc.Justificativa = Justificativa;
             fvdc.DataRegistro = DataRegistro;
+            fvdc.nomeCidadao = nomeCidadao;
 
             domain.FichaVisitaDomiciliarChild.Add(fvdc);
 
             return fvdc;
+        }
+
+        private void Dirty(object obj)
+        {
+            if (obj != null)
+                foreach (PropertyInfo pi in obj.GetType().GetProperties())
+                {
+                    if (pi.PropertyType.Equals(typeof(string)))
+                    {
+                        var val = pi.GetValue(obj);
+
+                        if (val == null || string.IsNullOrEmpty(val.ToString().Trim()) || string.IsNullOrWhiteSpace(val.ToString().Trim()))
+                            pi.SetValue(obj, string.Empty);
+                        else
+                            pi.SetValue(obj, val.ToString().Trim());
+                    }
+                }
+        }
+
+        private void DirtyStrings()
+        {
+            Dirty(this);
+        }
+
+        internal FichaVisitaDomiciliarChildCadastroViewModel ToDetail()
+        {
+            DirtyStrings();
+
+            return this;
+        }
+
+        internal async Task<FichaVisitaDomiciliarChildCadastroViewModel> LimparESalvarDados(DomainContainer domain, UrlHelper url, FichaVisitaDomiciliarMaster ficha)
+        {
+            id
+        }
+
+#pragma warning restore IDE1006 // Naming Styles
+    }
+
+    /// <summary>
+    /// ViewModel Collection de fichas de visita
+    /// </summary>
+    public class FichaVisitaDomiciliarChildListagemViewModelCollection : List<FichaVisitaDomiciliarChildListagemViewModel>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        public FichaVisitaDomiciliarChildListagemViewModelCollection(FichaVisitaDomiciliarChild[] models)
+        {
+            AddRange(models);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection"></param>
+        public FichaVisitaDomiciliarChildListagemViewModelCollection(IEnumerable<FichaVisitaDomiciliarChildListagemViewModel> collection) : base(collection)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public static implicit operator FichaVisitaDomiciliarChildListagemViewModelCollection(FichaVisitaDomiciliarChild[] models)
+        {
+            return new FichaVisitaDomiciliarChildListagemViewModelCollection(models);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        public static implicit operator FichaVisitaDomiciliarChildListagemViewModelCollection(FichaVisitaDomiciliarChildListagemViewModel[] models)
+        {
+            return new FichaVisitaDomiciliarChildListagemViewModelCollection(models);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="models"></param>
+        public void AddRange(FichaVisitaDomiciliarChild[] models)
+        {
+            var i = 1;
+            foreach (FichaVisitaDomiciliarChildListagemViewModel model in models)
+            {
+                model.numero = i++;
+                Add(model);
+            }
+        }
+    }
+
+    /// <summary>
+    /// FichaVisitaDomiciliarChild DTO Listagem
+    /// </summary>
+    /// <remarks>
+    /// http://esusab.github.io/integracao/docs/dicionario-fvd.html
+    /// </remarks>
+    public class FichaVisitaDomiciliarChildListagemViewModel
+    {
+#pragma warning disable IDE1006 // Naming Styles
+        // ReSharper disable once InconsistentNaming
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public string uuidFicha { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+        /// <summary>
+        /// Posição na listagem
+        /// </summary>
+        public int numero { get; set; }
+
+        /// <summary>
+        /// Cns do Cidadão
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string cnsCidadao { get; set; }
+
+        /// <summary>
+        /// Cns do Cidadão
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string nomeCidadao { get; set; }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="num"></param>
+        private void ApplyModel(FichaVisitaDomiciliarChild model, int num)
+        {
+            if (model == null) return;
+
+            cnsCidadao = model.cnsCidadao;
+            uuidFicha = model.uuidFicha;
+            numero = num;
+            nomeCidadao = model.nomeCidadao;
+        }
+
+        /// <summary>
+        /// DataBind
+        /// </summary>
+        /// <param name="model"></param>
+        public static implicit operator FichaVisitaDomiciliarChildListagemViewModel(FichaVisitaDomiciliarChild model)
+        {
+            var vm = new FichaVisitaDomiciliarChildListagemViewModel();
+
+            vm.ApplyModel(model, 0);
+
+            return vm;
         }
 #pragma warning restore IDE1006 // Naming Styles
     }

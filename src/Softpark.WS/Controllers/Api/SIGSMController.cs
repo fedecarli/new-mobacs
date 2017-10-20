@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using static Softpark.Infrastructure.Extensions.WithStatement;
 using System.Text.RegularExpressions;
+using Softpark.WS.ViewModels;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -573,7 +574,7 @@ namespace Softpark.WS.Controllers.Api
 
         #region VisitaDomiciliar
         /// <summary>
-        /// Buscar visitas domiciliares
+        /// Buscar visitas domiciliares (master)
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -680,7 +681,7 @@ namespace Softpark.WS.Controllers.Api
             var dataPage = from nd in filteredData.Skip(request.Start).Take(request.Length)
                            select new object[] {
                                 nd.d.uuidFicha,
-                                nd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("dd/MM/yyyy"),
+                                nd.d.UnicaLotacaoTransport.dataAtendimento.ToString("dd/MM/yyyy"),
                                 nd.p.Nome,
                                 nd.d.FichaVisitaDomiciliarChild.Count,
                                 (nd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
@@ -699,21 +700,21 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
-        /// Detalhar Visita Domiciliar
+        /// Detalhar Visita Domiciliar Master
         /// </summary>
-        /// <param name="codigo">Código da visita</param>
+        /// <param name="uuidFicha">Id da Ficha Master</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("detalhar/VisitaDomiciliar/{codigo:guid}")]
-        [ResponseType(typeof(string))]
-        public async Task<IHttpActionResult> DetalharVisitaDomiciliar(Guid codigo)
+        [Route("detalhar/VisitaDomiciliar/{uuidFicha}")]
+        [ResponseType(typeof(DetalheFichaVisitaDomiciliarMasterVW))]
+        public async Task<IHttpActionResult> DetalharVisitaDomiciliar(string uuidFicha)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            var ficha = await Domain.FichaVisitaDomiciliarMaster.FindAsync(codigo);
+            var ficha = await Domain.FichaVisitaDomiciliarMaster.FindAsync(uuidFicha);
 
             if (ficha == null)
                 throw new ValidationException("A ficha selecionada não foi encontrada.");
@@ -724,14 +725,91 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
-        /// 
+        /// Detalhar Visita Domiciliar Child
+        /// </summary>
+        /// <param name="uuidFicha">Id da Ficha Master</param>
+        /// <param name="childId">Id da Ficha Child</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("detalhar/VisitaDomiciliar/{uuidFicha}/child/{childId:guid}")]
+        [ResponseType(typeof(FichaVisitaDomiciliarChildCadastroViewModel))]
+        public async Task<IHttpActionResult> DetalharVisitaDomiciliarChild(string uuidFicha, Guid childId)
+        {
+            if (!Autenticado())
+            {
+                throw new ValidationException("É preciso estar logado.");
+            }
+
+            var ficha = await Domain.FichaVisitaDomiciliarMaster.FindAsync(uuidFicha);
+
+            if (ficha == null)
+                throw new ValidationException("A ficha selecionada não foi encontrada.");
+
+            var child = ficha.FichaVisitaDomiciliarChild.SingleOrDefault(x => x.childId == childId);
+
+            if (child == null)
+                throw new ValidationException("A ficha selecionada não foi encontrada.");
+
+            FichaVisitaDomiciliarChildCadastroViewModel vm = child;
+
+            return Ok(vm.ToDetail());
+        }
+        
+        /// <summary>
+        /// Criar/Atualizar Ficha de Visita Domiciliar Master
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("salvar/VisitaDomiciliar")]
+        [ResponseType(typeof(DetalheFichaVisitaDomiciliarMasterVW))]
+        public async Task<IHttpActionResult> SalvarVisitaDomiciliarMaster([FromBody] DetalheFichaVisitaDomiciliarMasterVW vm)
+        {
+            if (!Autenticado())
+            {
+                throw new ValidationException("É preciso estar logado.");
+            }
+
+            DetalheFichaVisitaDomiciliarMasterVW detalhe = await vm.LimparESalvarDados(Domain, Url);
+
+            return Ok(detalhe.ToDetail());
+        }
+
+        /// <summary>
+        /// Criar/Atualizar Ficha de Visita Domiciliar Child
+        /// </summary>
+        /// <param name="uuidFicha"></param>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("salvar/VisitaDomiciliar/{uuidFicha}/child")]
+        [ResponseType(typeof(Guid))]
+        public async Task<IHttpActionResult> SalvarVisitaDomiciliarChild([FromUri] string uuidFicha, [FromBody] FichaVisitaDomiciliarChildCadastroViewModel vm)
+        {
+            if (!Autenticado())
+            {
+                throw new ValidationException("É preciso estar logado.");
+            }
+
+            var ficha = await Domain.FichaVisitaDomiciliarMaster.FindAsync(uuidFicha);
+
+            if (ficha == null)
+                throw new ValidationException("Ficha master não encontrada.");
+
+            FichaVisitaDomiciliarChildCadastroViewModel child = await vm.LimparESalvarDados(Domain, Url, ficha);
+
+            return Ok(child.ToDetail());
+        }
+
+        /// <summary>
+        /// Remover Ficha de Visita Domiciliar Child
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("remover/VisitaDomiciliar/{uuidFicha}/child/{childId:guid}")]
         [ResponseType(typeof(string))]
-        public async Task<IHttpActionResult> SalvarVisitaDomiciliar([FromBody] DetalheFichaVisitaDomiciliarMasterVW vm)
+        public async Task<IHttpActionResult> RemoverVisitaDomiciliarChild([FromBody] DetalheFichaVisitaDomiciliarMasterVW vm)
         {
             if (!Autenticado())
             {

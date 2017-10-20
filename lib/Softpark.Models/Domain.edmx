@@ -277,6 +277,7 @@ warning 6002: The table/view 'SIGSM.api.Conflito' does not have a primary key de
           <Property Name="Erro" Type="bit" />
           <Property Name="DataRegistro" Type="datetime" />
           <Property Name="Justificativa" Type="varchar" MaxLength="500" />
+          <Property Name="nomeCidadao" Type="varchar" MaxLength="120" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarChild_MotivoVisita">
           <Key>
@@ -3442,6 +3443,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="Justificativa" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="FichaVisitaDomiciliarMaster" Relationship="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" FromRole="FichaVisitaDomiciliarChild" ToRole="FichaVisitaDomiciliarMaster" />
           <NavigationProperty Name="SIGSM_MotivoVisita" Relationship="Domain.FichaVisitaDomiciliarChild_MotivoVisita" FromRole="FichaVisitaDomiciliarChild" ToRole="SIGSM_MotivoVisita" />
+          <Property Name="nomeCidadao" Type="String" MaxLength="120" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarMaster">
           <Key>
@@ -5686,6 +5688,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="FichaVisitaDomiciliarChild">
             <EntityTypeMapping TypeName="Domain.FichaVisitaDomiciliarChild">
               <MappingFragment StoreEntitySet="FichaVisitaDomiciliarChild">
+                <ScalarProperty Name="nomeCidadao" ColumnName="nomeCidadao" />
                 <ScalarProperty Name="Justificativa" ColumnName="Justificativa" />
                 <ScalarProperty Name="DataRegistro" ColumnName="DataRegistro" />
                 <ScalarProperty Name="Erro" ColumnName="Erro" />

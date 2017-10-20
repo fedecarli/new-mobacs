@@ -3018,3 +3018,6 @@ CROSS APPLY (
 			x.IdFicha,
 			x.Codigo
 GO
+
+delete from grupo_sistemas where ID_Sistema NOT IN (2, 99)
+GO
