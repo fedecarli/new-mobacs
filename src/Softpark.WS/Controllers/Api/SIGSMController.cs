@@ -754,7 +754,7 @@ namespace Softpark.WS.Controllers.Api
 
             return Ok(vm.ToDetail());
         }
-        
+
         /// <summary>
         /// Criar/Atualizar Ficha de Visita Domiciliar Master
         /// </summary>
@@ -804,21 +804,33 @@ namespace Softpark.WS.Controllers.Api
         /// <summary>
         /// Remover Ficha de Visita Domiciliar Child
         /// </summary>
-        /// <param name="vm"></param>
+        /// <param name="uuidFicha"></param>
+        /// <param name="childId"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("remover/VisitaDomiciliar/{uuidFicha}/child/{childId:guid}")]
         [ResponseType(typeof(string))]
-        public async Task<IHttpActionResult> RemoverVisitaDomiciliarChild([FromBody] DetalheFichaVisitaDomiciliarMasterVW vm)
+        public async Task<IHttpActionResult> RemoverVisitaDomiciliarChild([FromUri] string uuidFicha, [FromUri] Guid childId)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            var id = await vm.LimparESalvarDados(Domain, Url);
+            var ficha = await Domain.FichaVisitaDomiciliarMaster.FindAsync(uuidFicha);
 
-            return Ok(id);
+            if (ficha == null) return Ok();
+
+            var child = ficha.FichaVisitaDomiciliarChild.SingleOrDefault(x => x.childId == childId);
+
+            if (child == null) return Ok();
+
+            ficha.FichaVisitaDomiciliarChild.Remove(child);
+            Domain.FichaVisitaDomiciliarChild.Remove(child);
+
+            await Domain.SaveChangesAsync();
+
+            return Ok();
         }
         #endregion
     }

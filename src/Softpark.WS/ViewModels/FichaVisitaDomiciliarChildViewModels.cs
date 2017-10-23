@@ -9,6 +9,7 @@ using Softpark.Infrastructure.Extras;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
+using System.Linq;
 
 namespace Softpark.WS.ViewModels
 {
@@ -72,7 +73,7 @@ namespace Softpark.WS.ViewModels
         /// <param name="childs"></param>
         /// <param name="db"></param>
         public void ToModels(ICollection<FichaVisitaDomiciliarChild> childs, DomainContainer db) =>
-            ForEach(item => childs.Add(item.ToModel(db)));
+            ForEach(async item => childs.Add(await item.ToModel(db)));
     }
 
     /// <summary>
@@ -164,13 +165,13 @@ namespace Softpark.WS.ViewModels
         /// Peso do paciente
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public double? pesoAcompanhamentoNutricional { get; set; } = null;
+        public decimal? pesoAcompanhamentoNutricional { get; set; } = null;
 
         /// <summary>
         /// Altura do paciente
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public double? alturaAcompanhamentoNutricional { get; set; } = null;
+        public decimal? alturaAcompanhamentoNutricional { get; set; } = null;
 
         /// <summary>
         /// Visita compartilhada
@@ -225,13 +226,13 @@ namespace Softpark.WS.ViewModels
         {
             if (model == null) return;
 
-            alturaAcompanhamentoNutricional = model.alturaAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(model.alturaAcompanhamentoNutricional));
+            alturaAcompanhamentoNutricional = model.alturaAcompanhamentoNutricional;
             cnsCidadao = model.cnsCidadao;
             desfecho = model.desfecho;
             dtNascimento = model.dtNascimento;
             microarea = model.microarea;
             numProntuario = model.numProntuario;
-            pesoAcompanhamentoNutricional = model.pesoAcompanhamentoNutricional == null ? null : new double?(Convert.ToDouble(pesoAcompanhamentoNutricional));
+            pesoAcompanhamentoNutricional = model.pesoAcompanhamentoNutricional;
             sexo = model.sexo;
             statusVisitaCompartilhadaOutroProfissional = model.statusVisitaCompartilhadaOutroProfissional;
             stForaArea = model.stForaArea;
@@ -306,9 +307,69 @@ namespace Softpark.WS.ViewModels
             return this;
         }
 
-        internal async Task<FichaVisitaDomiciliarChildCadastroViewModel> LimparESalvarDados(DomainContainer domain, UrlHelper url, FichaVisitaDomiciliarMaster ficha)
+        private void Clear(object obj)
         {
-            id
+            if (obj != null)
+                foreach (PropertyInfo pi in obj.GetType().GetProperties())
+                {
+                    if (pi.PropertyType.Equals(typeof(string)))
+                    {
+                        var val = pi.GetValue(obj);
+
+                        if (val == null || string.IsNullOrEmpty(val.ToString().Trim()) || string.IsNullOrWhiteSpace(val.ToString().Trim()))
+                            pi.SetValue(obj, null);
+                        else
+                            pi.SetValue(obj, val.ToString().Trim());
+                    }
+                }
+        }
+
+        private void CleanStrings()
+        {
+            Clear(this);
+        }
+
+        internal async Task<FichaVisitaDomiciliarChild> LimparESalvarDados(DomainContainer domain, UrlHelper url, FichaVisitaDomiciliarMaster ficha)
+        {
+            CleanStrings();
+
+            var isNew = id == null;
+            var child = ficha.FichaVisitaDomiciliarChild.FirstOrDefault(x => x.childId == id)
+                ?? domain.FichaVisitaDomiciliarChild.Create();
+
+            child.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional;
+            child.childId = id ?? Guid.NewGuid();
+            child.cnsCidadao = cnsCidadao;
+            child.dtNascimento = DataAtendimento;
+            child.DataRegistro = DataRegistro;
+            child.desfecho = desfecho;
+            child.FichaVisitaDomiciliarMaster = ficha;
+            child.Justificativa = Justificativa;
+            child.latitude = latitude;
+            child.longitude = longitude;
+            child.microarea = microarea;
+            child.nomeCidadao = nomeCidadao;
+            child.numProntuario = numProntuario;
+            child.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional;
+            child.sexo = sexo;
+            child.SIGSM_MotivoVisita = motivosVisita.Select(x => domain.SIGSM_MotivoVisita.Find(x))
+                .Where(x => x != null).ToList();
+            child.statusVisitaCompartilhadaOutroProfissional = statusVisitaCompartilhadaOutroProfissional;
+            child.stForaArea = stForaArea || child.microarea == null;
+            child.tipoDeImovel = tipoDeImovel;
+            child.turno = turno;
+            child.uuidFicha = ficha.uuidFicha;
+            child.Validar();
+
+            if (isNew)
+            {
+                domain.FichaVisitaDomiciliarChild.Add(child);
+                ficha.FichaVisitaDomiciliarChild.Add(child);
+            }
+
+            await domain.SaveChangesAsync();
+
+            return child;
         }
 
 #pragma warning restore IDE1006 // Naming Styles
