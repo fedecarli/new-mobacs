@@ -168,7 +168,7 @@ namespace Softpark.WS.Controllers.Api
             var master = await GetOrCreateMaster(child.token ?? Guid.Empty);
 
             // realiza o DataBinding da ViewModel para a Model
-            var ficha = child.ToModel(Domain);
+            var ficha = await child.ToModel(Domain);
 
             // filtra os dados dos Motivos de Visita
             foreach (var motivoId in child.motivosVisita)
@@ -435,7 +435,7 @@ namespace Softpark.WS.Controllers.Api
                     {
                         var master = getOrCreateMaster();
 
-                        var ficha = child.ToModel(Domain);
+                        var ficha = await child.ToModel(Domain);
 
                         foreach (var motivoId in child.motivosVisita)
                         {

@@ -415,12 +415,16 @@
     <Compile Include="UnicaLotacaoTransport.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_CadastroDomiciliar.cs" />
+    <Compile Include="VW_CadastroIndividual.cs" />
+    <Compile Include="VW_Cadastros.cs" />
     <Compile Include="VW_ConsultaCadastrosDomiciliares.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_ConsultaCadastrosIndividuais.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="VW_FichasMaster.cs" />
     <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

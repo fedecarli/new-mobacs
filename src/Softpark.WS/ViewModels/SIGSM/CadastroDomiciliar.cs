@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Softpark.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -452,7 +453,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 var logs = db.SIGSM_Transmissao_Processos_Log.Where(x => x.IdProcesso == proc.Id);
 
                 db.SIGSM_Transmissao_Processos_Log.RemoveRange(logs);
-                
+
                 db.SIGSM_Transmissao_Processos.Remove(proc);
             }
 

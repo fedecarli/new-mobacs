@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using static Softpark.Infrastructure.Extensions.WithStatement;
 using System.Text.RegularExpressions;
 using Softpark.WS.ViewModels;
+using System.Collections.Generic;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -70,6 +71,25 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
+        /// Pesquisar cadastros assmed
+        /// </summary>
+        /// <param name="q">Query</param>
+        /// <param name="limit">Quantidade de registros</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("buscar/assmedCadastro")]
+        [ResponseType(typeof(VW_Cadastros[]))]
+        public IHttpActionResult BuscarCadastroIndividual(string q, int? limit = 15)
+        {
+            if (!Autenticado())
+            {
+                throw new ValidationException("É preciso estar logado.");
+            }
+
+            return Ok(Domain.VW_Cadastros(q, limit ?? 15).ToArray());
+        }
+
+        /// <summary>
         /// Buscar cadastros individuais
         /// </summary>
         /// <returns></returns>
@@ -94,29 +114,12 @@ namespace Softpark.WS.Controllers.Api
                 null : request.Search.Value.Trim();
 
             var http = System.Web.HttpContext.Current;
-
             var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"]);
             var ordDir = http.Request.Params["order[0][dir]"] == "asc" ? 0 : 1;
 
-            System.Data.Entity.Core.Objects.ObjectParameter totalFilteredParam = new System.Data.Entity.Core.Objects.ObjectParameter("total", typeof(int));
-            System.Data.Entity.Core.Objects.ObjectParameter totalParam = new System.Data.Entity.Core.Objects.ObjectParameter("totalFiltered", typeof(int));
-
-            var cads = Domain.PR_ConsultaCadastroIndividuais(search, request.Start, request.Length,
-                ordCol, ordDir, totalParam, totalFilteredParam);
-
-            var cadastros = (from c in cads
-                             select new string[] {
-                            c.Nome == null ? string.Empty : c.Nome,
-                            c.DtNasc == null ? string.Empty : c.DtNasc,
-                            c.NomeMae == null ? string.Empty : c.NomeMae,
-                            c.Cns == null ? string.Empty : c.Cns,
-                            c.NomeCidade == null ? string.Empty : c.NomeCidade,
-                            c.Codigo == null ? string.Empty : c.Codigo
-                        }).ToArray();
-
             // Response creation. To create your response you need to reference your request, to avoid
             // request/response tampering and to ensure response will be correctly created.
-            var response = DataTablesResponse.Create(request, (int)totalParam.Value, (int)totalFilteredParam.Value, cadastros);
+            var response = DataTablesResponse.Create(request, 100, 100, Domain.VW_CadastroIndividuais(search, request.Start, request.Length, ordCol, ordDir));
 
             // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
             // response to a json-compatible content, so DataTables can read it when received.
@@ -383,7 +386,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("listar/CadastroDomiciliar")]
         [ResponseType(typeof(DataTablesJsonResult))]
-        public async Task<IHttpActionResult> ListarCadastroDomiciliar(IDataTablesRequest request)
+        public IHttpActionResult ListarCadastroDomiciliar(IDataTablesRequest request)
         {
             if (!Autenticado())
             {
@@ -396,91 +399,17 @@ namespace Softpark.WS.Controllers.Api
                 Length = 10
             };
 
-            var data =
-                from cd in Domain.CadastroDomiciliar
-                let children = Domain.CadastroDomiciliar.Count(x => x.uuidFichaOriginadora == cd.id && x.id != cd.id)
-                where children == 0
-                select cd;
-
-            var total = 100;
-
-            var idFicha = (Guid?)null;
-            if (Guid.TryParse(request.Search.Value, out Guid _idFicha))
-                idFicha = _idFicha;
-
-            var filteredData = data;
-            if (request.Search.Value != null && request.Search.Value.Length > 0)
-            {
-                if (idFicha != null && await data.AnyAsync(x => x.id == _idFicha))
-                    filteredData = data.Where(x => x.id == _idFicha);
-                else
-                    filteredData = data.Where(_item => (
-                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.numero != null ? _item.EnderecoLocalPermanencia1.numero : "") +
-                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.nomeLogradouro != null ? _item.EnderecoLocalPermanencia1.nomeLogradouro : "") +
-                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.complemento != null ? _item.EnderecoLocalPermanencia1.complemento : "") +
-                    (_item.EnderecoLocalPermanencia1 != null && _item.EnderecoLocalPermanencia1.telefoneResidencia != null ? _item.EnderecoLocalPermanencia1.telefoneResidencia : ""))
-                    .Contains(request.Search.Value));
-
-                total = data.Count();
-            }
-
             var http = System.Web.HttpContext.Current;
-
             var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"]);
             var ordDir = http.Request.Params["order[0][dir]"] == "asc" ? 0 : 1;
 
-            if (ordDir == 0)
-            {
-                filteredData = from fd in filteredData
-                               orderby (ordCol == 0 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.nomeLogradouro) :
-                               ordCol == 1 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.numero) :
-                               ordCol == 2 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.complemento) :
-                               ordCol == 3 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.telefoneResidencia) :
-                               fd.id.ToString()) ascending
-                               select fd;
-            }
-            else
-            {
-                filteredData = from fd in filteredData
-                               orderby (ordCol == 0 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.nomeLogradouro) :
-                               ordCol == 1 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.numero) :
-                               ordCol == 2 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.complemento) :
-                               ordCol == 3 ?
-                                (fd.EnderecoLocalPermanencia1 == null ? null :
-                                fd.EnderecoLocalPermanencia1.telefoneResidencia) :
-                               fd.id.ToString()) descending
-                               select fd;
-            }
-
             // Paging filtered data.
             // Paging is rather manual due to in-memmory (IEnumerable) data.
-            var dataPage = (await filteredData.Skip(request.Start).Take(request.Length).ToArrayAsync())
-                .Select(x => new string[] {
-                    x.EnderecoLocalPermanencia1?.nomeLogradouro??string.Empty,
-                    x.EnderecoLocalPermanencia1?.numero??string.Empty,
-                    x.EnderecoLocalPermanencia1?.complemento??string.Empty,
-                    x.EnderecoLocalPermanencia1?.telefoneResidencia??string.Empty,
-                    x.id.ToString().Replace("{", "").Replace("}", "")
-                })
-                .ToArray();
+            var dataPage = Domain.VW_CadastroDomiciliares(request.Search.Value, request.Start, request.Length, ordCol, ordDir).ToArray();
 
             // Response creation. To create your response you need to reference your request, to avoid
             // request/response tampering and to ensure response will be correctly created.
-            var response = DataTablesResponse.Create(request, total, total > 100 ? 100 : total, dataPage);
+            var response = DataTablesResponse.Create(request, 100, 100, dataPage);
 
             // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
             // response to a json-compatible content, so DataTables can read it when received.
@@ -580,7 +509,7 @@ namespace Softpark.WS.Controllers.Api
         [HttpGet]
         [Route("listar/VisitaDomiciliar")]
         [ResponseType(typeof(DataTablesJsonResult))]
-        public async Task<IHttpActionResult> ListarVisitaDomiciliar(IDataTablesRequest request)
+        public IHttpActionResult ListarVisitaDomiciliar(IDataTablesRequest request)
         {
             if (!Autenticado())
             {
@@ -593,106 +522,16 @@ namespace Softpark.WS.Controllers.Api
                 Length = 10
             };
 
-            var data = (await Domain.FichaVisitaDomiciliarMaster.ToArrayAsync())
-                .Where(x => x.uuidFicha != null);
-
-            var total = 100;
-
-            var idFicha = request.Search.Value == null || request.Search.Value.Length < 36 ||
-                !Regex.IsMatch(request.Search.Value, "^([0-9]{7}-)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$") ? null :
-                request.Search.Value;
-
-            var byDate = (request.Search.Value != null && Regex.IsMatch(request.Search.Value, "([0-9]{2}/[0-9]{2}/[0-9]{4})"));
-
-            var filteredData = from d in data
-                               select new
-                               {
-                                   d,
-                                   p = Domain.VW_Profissional.FirstOrDefault(x =>
-                                   d.UnicaLotacaoTransport.profissionalCNS == x.CNS.Trim() &&
-                                   d.UnicaLotacaoTransport.cboCodigo_2002 == x.CBO.Trim() &&
-                                   d.UnicaLotacaoTransport.cnes == x.CNES.Trim() &&
-                                   (x.INE == null || d.UnicaLotacaoTransport.ine == x.INE.Trim()))
-                               }
-                               into fd
-                               where fd.p != null
-                               select fd;
-
-            if (request.Search.Value != null && request.Search.Value.Length > 0)
-            {
-                filteredData = (from fd in filteredData
-                                where
-                                fd.d.uuidFicha == request.Search.Value ||
-                                fd.d.UnicaLotacaoTransport.dataAtendimento.ToString("dd/MM/yyyy") == request.Search.Value ||
-                                fd.d.FichaVisitaDomiciliarChild.Count.ToString() == request.Search.Value ||
-                                (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
-                                fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
-                                "Não Finalizada").Contains(request.Search.Value) ||
-                                fd.p.Nome.Contains(request.Search.Value)
-                                select fd).Distinct();
-
-                total = data.Count();
-            }
-
             var http = System.Web.HttpContext.Current;
+            var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"] ?? "0");
+            var ordDir = http.Request.Params["order[0][dir]"] == "desc" ? 1 : 0;
 
-            var ordCol = Convert.ToInt32(http.Request.Params["order[0][column]"]);
-            var ordDir = http.Request.Params["order[0][dir]"] == "asc" ? 0 : 1;
-
-            if (ordDir == 0)
-            {
-                filteredData = from fd in filteredData
-                               orderby (
-                               ordCol == 0 ?
-                                fd.p.Nome :
-                               ordCol == 1 ?
-                                fd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("yyyy/MM/dd HH:mm:ss.sss") :
-                               ordCol == 2 ?
-                                fd.d.FichaVisitaDomiciliarChild.Count.ToString()
-                                .PadLeft(10, '0') :
-                               ordCol == 3 ?
-                                (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
-                                fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
-                                "Não Finalizada") :
-                               fd.d.uuidFicha) ascending
-                               select fd;
-            }
-            else
-            {
-                filteredData = from fd in filteredData
-                               orderby (
-                               ordCol == 0 ?
-                                fd.p.Nome :
-                               ordCol == 1 ?
-                                fd.d.UnicaLotacaoTransport.DataDeAtendimento.ToString("yyyy/MM/dd HH:mm:ss.sss") :
-                               ordCol == 2 ?
-                                fd.d.FichaVisitaDomiciliarChild.Count.ToString()
-                                .PadLeft(10, '0') :
-                               ordCol == 3 ?
-                                (fd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
-                                fd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
-                                "Não Finalizada") :
-                               fd.d.uuidFicha) descending
-                               select fd;
-            }
-
-            // Paging filtered data.
-            // Paging is rather manual due to in-memmory (IEnumerable) data.
-            var dataPage = from nd in filteredData.Skip(request.Start).Take(request.Length)
-                           select new object[] {
-                                nd.d.uuidFicha,
-                                nd.d.UnicaLotacaoTransport.dataAtendimento.ToString("dd/MM/yyyy"),
-                                nd.p.Nome,
-                                nd.d.FichaVisitaDomiciliarChild.Count,
-                                (nd.d.UnicaLotacaoTransport.OrigemVisita.enviado ? "Enviada" :
-                                nd.d.UnicaLotacaoTransport.OrigemVisita.finalizado ? "Finalizada" :
-                                "Não Finalizada"),
-                                nd.d.UnicaLotacaoTransport.OrigemVisita.enviado
-                           };
+            string cnes = ASPSessionVar.Read("CNESSetor");
 
             // Response creation. To create your response you need to reference your request, to avoid
             // request/response tampering and to ensure response will be correctly created.
-            var response = DataTablesResponse.Create(request, total, total > 100 ? 100 : total, dataPage.ToArray());
+            var response = DataTablesResponse.Create(request, 100, 100,
+                Domain.VW_FichasMasters(request.Search.Value, request.Length < 10 ? 10 : request.Length, request.Start, ordCol, ordDir, cnes));
 
             // Easier way is to return a new 'DataTablesJsonResult', which will automatically convert your
             // response to a json-compatible content, so DataTables can read it when received.
@@ -796,6 +635,9 @@ namespace Softpark.WS.Controllers.Api
             if (ficha == null)
                 throw new ValidationException("Ficha master não encontrada.");
 
+            if (ficha.UnicaLotacaoTransport.OrigemVisita.finalizado)
+                throw new ValidationException("Não é possível alterar os dados de uma ficha finalizada.");
+
             FichaVisitaDomiciliarChildCadastroViewModel child = await vm.LimparESalvarDados(Domain, Url, ficha);
 
             return Ok(child.ToDetail());
@@ -821,10 +663,14 @@ namespace Softpark.WS.Controllers.Api
 
             if (ficha == null) return Ok();
 
+            if (ficha.UnicaLotacaoTransport.OrigemVisita.finalizado)
+                throw new ValidationException("Não é possível alterar os dados de uma ficha finalizada.");
+
             var child = ficha.FichaVisitaDomiciliarChild.SingleOrDefault(x => x.childId == childId);
 
             if (child == null) return Ok();
 
+            child.SIGSM_MotivoVisita.Clear();
             ficha.FichaVisitaDomiciliarChild.Remove(child);
             Domain.FichaVisitaDomiciliarChild.Remove(child);
 

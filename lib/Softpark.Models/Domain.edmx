@@ -278,6 +278,7 @@ warning 6002: The table/view 'SIGSM.api.Conflito' does not have a primary key de
           <Property Name="DataRegistro" Type="datetime" />
           <Property Name="Justificativa" Type="varchar" MaxLength="500" />
           <Property Name="nomeCidadao" Type="varchar" MaxLength="120" />
+          <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarChild_MotivoVisita">
           <Key>
@@ -3444,6 +3445,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="FichaVisitaDomiciliarMaster" Relationship="Domain.FK_FichaVisitaDomiciliarChild_FichaVisitaDomiciliarMaster" FromRole="FichaVisitaDomiciliarChild" ToRole="FichaVisitaDomiciliarMaster" />
           <NavigationProperty Name="SIGSM_MotivoVisita" Relationship="Domain.FichaVisitaDomiciliarChild_MotivoVisita" FromRole="FichaVisitaDomiciliarChild" ToRole="SIGSM_MotivoVisita" />
           <Property Name="nomeCidadao" Type="String" MaxLength="120" />
+          <Property Name="Codigo" Type="Decimal" Nullable="true" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="FichaVisitaDomiciliarMaster">
           <Key>
@@ -3575,8 +3577,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="id_tipo_origem" Type="Int32" Nullable="false" />
           <Property Name="enviarParaThrift" Type="Boolean" Nullable="false" />
           <Property Name="enviado" Type="Boolean" Nullable="false" />
-          <Property Name="Executado" Type="Boolean" />
-          <Property Name="DataExecutado" Type="DateTime" Precision="3" />
           <NavigationProperty Name="TipoOrigem" Relationship="Domain.FK_OrigemVisita_TipoOrigem_Id" FromRole="OrigemVisita" ToRole="TipoOrigem" />
           <NavigationProperty Name="UnicaLotacaoTransport" Relationship="Domain.FK_UnicaLotacaoTransport_OrigemVisita" FromRole="OrigemVisita" ToRole="UnicaLotacaoTransport" />
         </EntityType>
@@ -5708,6 +5708,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="numProntuario" ColumnName="numProntuario" />
                 <ScalarProperty Name="turno" ColumnName="turno" />
                 <ScalarProperty Name="uuidFicha" ColumnName="uuidFicha" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5823,8 +5824,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="OrigemVisita">
             <EntityTypeMapping TypeName="Domain.OrigemVisita">
               <MappingFragment StoreEntitySet="OrigemVisita">
-                <ScalarProperty Name="DataExecutado" ColumnName="DataExecutado" />
-                <ScalarProperty Name="Executado" ColumnName="Executado" />
                 <ScalarProperty Name="enviado" ColumnName="enviado" />
                 <ScalarProperty Name="enviarParaThrift" ColumnName="enviarParaThrift" />
                 <ScalarProperty Name="id_tipo_origem" ColumnName="id_tipo_origem" />

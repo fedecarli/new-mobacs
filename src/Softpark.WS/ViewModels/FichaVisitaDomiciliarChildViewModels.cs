@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using System.Linq;
+using System.Data.SqlClient;
 
 namespace Softpark.WS.ViewModels
 {
@@ -95,6 +96,11 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         public Guid? id { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public decimal? Codigo { get; set; }
 
         /// <summary>
         /// Turno da visita
@@ -243,6 +249,9 @@ namespace Softpark.WS.ViewModels
             Justificativa = model.Justificativa;
             DataRegistro = model.DataRegistro;
             nomeCidadao = model.nomeCidadao;
+            id = model.childId;
+            Codigo = model.Codigo;
+            motivosVisita = model.SIGSM_MotivoVisita.Select(x => x.codigo).ToArray();
         }
 
         /// <summary>
@@ -272,6 +281,9 @@ namespace Softpark.WS.ViewModels
             fvdc.Justificativa = Justificativa;
             fvdc.DataRegistro = DataRegistro;
             fvdc.nomeCidadao = nomeCidadao;
+            fvdc.Codigo = Codigo;
+            fvdc.SIGSM_MotivoVisita = motivosVisita.Select(x => domain.SIGSM_MotivoVisita.Find(x))
+                .Where(x => x != null).ToList();
 
             domain.FichaVisitaDomiciliarChild.Add(fvdc);
 
@@ -340,14 +352,14 @@ namespace Softpark.WS.ViewModels
             child.alturaAcompanhamentoNutricional = alturaAcompanhamentoNutricional;
             child.childId = id ?? Guid.NewGuid();
             child.cnsCidadao = cnsCidadao;
-            child.dtNascimento = DataAtendimento;
-            child.DataRegistro = DataRegistro;
+            child.dtNascimento = dtNascimento;
+            child.DataRegistro = DateTime.Now;
             child.desfecho = desfecho;
             child.FichaVisitaDomiciliarMaster = ficha;
             child.Justificativa = Justificativa;
             child.latitude = latitude;
             child.longitude = longitude;
-            child.microarea = microarea;
+            child.microarea = microarea != null && !string.IsNullOrEmpty(microarea.Trim()) ? microarea : null;
             child.nomeCidadao = nomeCidadao;
             child.numProntuario = numProntuario;
             child.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional;
@@ -359,6 +371,7 @@ namespace Softpark.WS.ViewModels
             child.tipoDeImovel = tipoDeImovel;
             child.turno = turno;
             child.uuidFicha = ficha.uuidFicha;
+            child.Codigo = Codigo;
             child.Validar();
 
             if (isNew)
@@ -421,15 +434,8 @@ namespace Softpark.WS.ViewModels
         /// 
         /// </summary>
         /// <param name="models"></param>
-        public void AddRange(FichaVisitaDomiciliarChild[] models)
-        {
-            var i = 1;
-            foreach (FichaVisitaDomiciliarChildListagemViewModel model in models)
-            {
-                model.numero = i++;
-                Add(model);
-            }
-        }
+        public void AddRange(FichaVisitaDomiciliarChild[] models) =>
+            models.ToList().ForEach(x => Add(x));
     }
 
     /// <summary>
@@ -443,41 +449,52 @@ namespace Softpark.WS.ViewModels
 #pragma warning disable IDE1006 // Naming Styles
         // ReSharper disable once InconsistentNaming
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public string uuidFicha { get; set; }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
         /// <summary>
-        /// Posição na listagem
+        /// Codigo ASSMED
         /// </summary>
-        public int numero { get; set; }
+        public string id { get; set; }
 
         /// <summary>
         /// Cns do Cidadão
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public string cnsCidadao { get; set; }
+        public string CNS { get; set; }
 
         /// <summary>
-        /// Cns do Cidadão
+        /// Nome do Cidadão
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public string nomeCidadao { get; set; }
+        public string NOM { get; set; }
 
         /// <summary>
-        /// DataBind
+        /// Data Nascimento do Cidadão
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="num"></param>
-        private void ApplyModel(FichaVisitaDomiciliarChild model, int num)
-        {
-            if (model == null) return;
+        // ReSharper disable once InconsistentNaming
+        public string DTN { get; set; }
 
-            cnsCidadao = model.cnsCidadao;
-            uuidFicha = model.uuidFicha;
-            numero = num;
-            nomeCidadao = model.nomeCidadao;
-        }
+        /// <summary>
+        /// Nome Mãe do Cidadão
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string MAE { get; set; }
+
+        /// <summary>
+        /// CPF do Cidadão
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string CPF { get; set; }
+
+        /// <summary>
+        /// SEXO do Cidadão
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public string SEXO { get; set; }
+
+        /// <summary>
+        /// Uuid Child
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public Guid uuId { get; set; }
 
         /// <summary>
         /// DataBind
@@ -485,11 +502,32 @@ namespace Softpark.WS.ViewModels
         /// <param name="model"></param>
         public static implicit operator FichaVisitaDomiciliarChildListagemViewModel(FichaVisitaDomiciliarChild model)
         {
-            var vm = new FichaVisitaDomiciliarChildListagemViewModel();
-
-            vm.ApplyModel(model, 0);
-
-            return vm;
+            return model == null ? null : DomainContainer.Current.Database.SqlQuery<FichaVisitaDomiciliarChildListagemViewModel>(@"
+             SELECT TOP 1
+	                COALESCE(CAST(COALESCE(c.Codigo, cd.Codigo) AS VARCHAR), '') AS id,
+	                COALESCE(c.cnsCidadao, '') AS CNS,
+	                COALESCE(c.nomeCidadao, COALESCE(cd.Nome, '') COLLATE Latin1_General_CI_AI) AS NOM,
+	                COALESCE(CONVERT(VARCHAR,(CONVERT(DATE,COALESCE(c.dtNascimento, COALESCE(pf1.DtNasc,pf2.DtNasc)),103)),103), '') AS DTN,
+	                COALESCE(COALESCE(pf1.NomeMae,pf2.NomeMae) COLLATE Latin1_General_CI_AI, '') AS MAE,
+	                COALESCE(COALESCE(pf1.CPF, pf2.CPF) COLLATE Latin1_General_CI_AI, '') AS CPF,
+                    (CASE WHEN (c.sexo IS NULL OR c.sexo = 4) AND COALESCE(pf1.Sexo, pf2.Sexo) COLLATE Latin1_General_CI_AI = 'F' THEN '1'
+                          WHEN (c.sexo IS NULL OR c.sexo = 4) AND COALESCE(pf1.Sexo, pf2.Sexo) COLLATE Latin1_General_CI_AI = 'M' THEN '0'
+                          ELSE COALESCE(CAST(c.sexo AS VARCHAR), '4') END) AS SEXO,
+	                c.childId AS uuId
+               FROM api.FichaVisitaDomiciliarChild as c
+          LEFT JOIN ASSMED_CadastroDocPessoal AS d
+                 ON c.cnsCidadao COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(d.Numero)) COLLATE Latin1_General_CI_AI
+          LEFT JOIN ASSMED_Cadastro AS cd
+                 ON d.Codigo = cd.Codigo
+                 OR c.Codigo = cd.Codigo
+          LEFT JOIN ASSMED_CadastroPF AS pf1
+                 ON cd.Codigo = pf1.Codigo
+          LEFT JOIN ASSMED_PesFisica AS pf2
+                 ON cd.Codigo = pf2.Codigo
+              WHERE c.childId = @id
+           ORDER BY cd.Nome COLLATE Latin1_General_CI_AI,
+                    c.cnsCidadao,
+                    cd.Codigo", new SqlParameter("@id", model.childId)).Single();
         }
 #pragma warning restore IDE1006 // Naming Styles
     }

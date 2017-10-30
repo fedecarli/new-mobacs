@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Softpark.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -89,10 +91,27 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// <returns></returns>
         internal async Task<FichaVisitaDomiciliarMaster> ToModel(DomainContainer domain)
         {
-            var cad = (await domain.FichaVisitaDomiciliarMaster.FindAsync(UuidFicha))
-                ?? domain.FichaVisitaDomiciliarMaster.Create();
+            var da = (await domain.FichaVisitaDomiciliarMaster.FindAsync(UuidFicha));
+            var cad = da ?? domain.FichaVisitaDomiciliarMaster.Create();
 
-            cad.UnicaLotacaoTransport = CabecalhoTransporte;
+            if (da != null)
+            {
+                int.TryParse(cad.UnicaLotacaoTransport.ine, out int _ine);
+                var ine = await domain.SetoresINEs.SingleOrDefaultAsync(x => x.CodINE == _ine);
+
+                var header = da.UnicaLotacaoTransport;
+                header.cboCodigo_2002 = cad.UnicaLotacaoTransport.cboCodigo_2002;
+                header.cnes = cad.UnicaLotacaoTransport.cnes;
+                header.codigoIbgeMunicipio = cad.UnicaLotacaoTransport.codigoIbgeMunicipio;
+                header.dataAtendimento = cad.UnicaLotacaoTransport.dataAtendimento;
+                header.ine = ine?.Numero?.Trim();
+                header.profissionalCNS = cad.UnicaLotacaoTransport.profissionalCNS;
+                cad.UnicaLotacaoTransport = header;
+            }
+            else
+            {
+                cad.UnicaLotacaoTransport = CabecalhoTransporte;
+            }
 
             var newCad = UuidFicha == null || string.IsNullOrEmpty(UuidFicha.Trim());
 
@@ -138,8 +157,10 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             Finalizado = model.UnicaLotacaoTransport.OrigemVisita.finalizado;
 
-            FichaVisitaDomiciliarChildCadastroViewModelCollection fichas =
+            FichaVisitaDomiciliarChildListagemViewModelCollection fichas =
                 model.FichaVisitaDomiciliarChild.ToArray();
+
+            FichasChild = fichas.ToArray();
 
             CabecalhoTransporte = model.UnicaLotacaoTransport;
         }
@@ -153,6 +174,10 @@ namespace Softpark.WS.ViewModels.SIGSM
             var cad = await ToModel(domain);
 
             var dadoAnterior = await domain.FichaVisitaDomiciliarMaster.FindAsync(cad.uuidFicha);
+
+            if (dadoAnterior != null && dadoAnterior.UnicaLotacaoTransport.OrigemVisita.finalizado)
+                throw new ValidationException("Não é possível alterar os dados de uma ficha finalizada.");
+
 
             var orig = cad.UnicaLotacaoTransport.OrigemVisita;
 
