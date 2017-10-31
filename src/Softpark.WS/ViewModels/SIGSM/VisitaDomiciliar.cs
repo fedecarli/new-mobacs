@@ -96,16 +96,15 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (da != null)
             {
-                int.TryParse(cad.UnicaLotacaoTransport.ine, out int _ine);
+                int.TryParse(CabecalhoTransporte.ine, out int _ine);
                 var ine = await domain.SetoresINEs.SingleOrDefaultAsync(x => x.CodINE == _ine);
 
                 var header = da.UnicaLotacaoTransport;
-                header.cboCodigo_2002 = cad.UnicaLotacaoTransport.cboCodigo_2002;
-                header.cnes = cad.UnicaLotacaoTransport.cnes;
-                header.codigoIbgeMunicipio = cad.UnicaLotacaoTransport.codigoIbgeMunicipio;
-                header.dataAtendimento = cad.UnicaLotacaoTransport.dataAtendimento;
+                header.cboCodigo_2002 = CabecalhoTransporte.cboCodigo_2002;
+                header.cnes = CabecalhoTransporte.cnes;
+                header.dataAtendimento = CabecalhoTransporte.dataAtendimento;
                 header.ine = ine?.Numero?.Trim();
-                header.profissionalCNS = cad.UnicaLotacaoTransport.profissionalCNS;
+                header.profissionalCNS = CabecalhoTransporte.profissionalCNS;
                 cad.UnicaLotacaoTransport = header;
             }
             else
@@ -113,11 +112,33 @@ namespace Softpark.WS.ViewModels.SIGSM
                 cad.UnicaLotacaoTransport = CabecalhoTransporte;
             }
 
+            if (cad.UnicaLotacaoTransport.OrigemVisita == null)
+            {
+                cad.UnicaLotacaoTransport.OrigemVisita = domain.OrigemVisita.Create();
+
+                cad.UnicaLotacaoTransport.OrigemVisita.finalizado = false;
+                cad.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem = 2;
+                cad.UnicaLotacaoTransport.OrigemVisita.token = Guid.NewGuid();
+                cad.UnicaLotacaoTransport.OrigemVisita.enviado = false;
+                cad.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = true;
+                cad.UnicaLotacaoTransport.OrigemVisita.UnicaLotacaoTransport.Add(cad.UnicaLotacaoTransport);
+
+                domain.OrigemVisita.Add(cad.UnicaLotacaoTransport.OrigemVisita);
+            }
+
             var newCad = UuidFicha == null || string.IsNullOrEmpty(UuidFicha.Trim());
 
             cad.uuidFicha = !newCad ? UuidFicha : ($"{CabecalhoTransporte.cnes}-{Guid.NewGuid()}");
             cad.headerTransport = cad.UnicaLotacaoTransport.id;
             cad.tpCdsOrigem = 3;
+
+            if (Finalizado)
+            {
+                cad.Validar();
+                if (cad.FichaVisitaDomiciliarChild.Count <= 0)
+                    throw new ValidationException("Não é possível finalizar uma ficha sem fichas filhas.");
+                cad.UnicaLotacaoTransport.OrigemVisita.finalizado = Finalizado;
+            }
 
             if (newCad)
                 domain.FichaVisitaDomiciliarMaster.Add(cad);
@@ -171,15 +192,31 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             CleanStrings();
 
-            var cad = await ToModel(domain);
-
-            var dadoAnterior = await domain.FichaVisitaDomiciliarMaster.FindAsync(cad.uuidFicha);
+            var dadoAnterior = await domain.FichaVisitaDomiciliarMaster.FindAsync(UuidFicha);
 
             if (dadoAnterior != null && dadoAnterior.UnicaLotacaoTransport.OrigemVisita.finalizado)
                 throw new ValidationException("Não é possível alterar os dados de uma ficha finalizada.");
 
+            DetalheFichaVisitaDomiciliarMasterVW da = null;
+
+            if (dadoAnterior != null)
+                da = dadoAnterior;
+
+            var restDa = da == null ? null : JsonConvert.SerializeObject(da);
+
+            var cad = await ToModel(domain);
 
             var orig = cad.UnicaLotacaoTransport.OrigemVisita;
+
+            var rastro = new RastroFicha
+            {
+                CodUsu = Convert.ToInt32(ASPSessionVar.Read("idUsuario")),
+                DataModificacao = DateTime.Now,
+                DadoAnterior = restDa,
+                DadoAtual = restDn
+            };
+
+            domain.RastroFicha.Add(rastro);
 
             if (cad.UnicaLotacaoTransport.OrigemVisita == null)
             {
@@ -193,34 +230,22 @@ namespace Softpark.WS.ViewModels.SIGSM
                 domain.OrigemVisita.Add(orig);
             }
 
+            rastro.token = orig.token;
+
             cad.UnicaLotacaoTransport.OrigemVisita = orig;
-
-            //domain.FichaVisitaDomiciliarChild.AddRange(cad.FichaVisitaDomiciliarChild);
-
-            cad.UnicaLotacaoTransport.Validar(domain);
-
+            
             cad.Validar();
 
-            //cad.FichaVisitaDomiciliarChild.ToList().ForEach(x => x.Validar());
-
-            DetalheFichaVisitaDomiciliarMasterVW da = dadoAnterior ?? null;
-
-            var restDa = da == null ? null : JsonConvert.SerializeObject(da);
-
-            var rastro = new RastroFicha
+            try
             {
-                CodUsu = Convert.ToInt32(ASPSessionVar.Read("idUsuario")),
-                DataModificacao = DateTime.Now,
-                token = orig.token,
-                DadoAnterior = restDa,
-                DadoAtual = restDn
-            };
+                await domain.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
 
-            domain.RastroFicha.Add(rastro);
-
-            await domain.SaveChangesAsync();
-
-            return cad;
+            return await domain.FichaVisitaDomiciliarMaster.FindAsync(cad.uuidFicha);
         }
     }
 }

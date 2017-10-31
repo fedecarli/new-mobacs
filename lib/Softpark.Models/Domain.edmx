@@ -401,8 +401,6 @@ warning 6002: The table/view 'SIGSM.api.Conflito' does not have a primary key de
           <Property Name="id_tipo_origem" Type="int" Nullable="false" />
           <Property Name="enviarParaThrift" Type="bit" Nullable="false" />
           <Property Name="enviado" Type="bit" Nullable="false" />
-          <Property Name="Executado" Type="bit" />
-          <Property Name="DataExecutado" Type="datetime" />
         </EntityType>
         <EntityType Name="RastroFicha">
           <Key>

@@ -441,7 +441,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             header.OrigemVisita = origem;
 
-            header.Validar(db);
+            header.Validar(db).ThrowErrors();
 
             await cad.Validar(db);
 

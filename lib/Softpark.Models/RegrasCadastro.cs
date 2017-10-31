@@ -102,7 +102,7 @@ namespace Softpark.Models
         /// <param name="header"></param>
         /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
-        public static void Validar(this UnicaLotacaoTransport header, DomainContainer domain)
+        public static List<string> Validar(this UnicaLotacaoTransport header, DomainContainer domain)
         {
             var errors = new List<string>();
 
@@ -135,10 +135,16 @@ namespace Softpark.Models
                 }
             }
 
-            ThrowErrors(errors);
+            return errors;
         }
 
-        private static void ThrowErrors(List<string> errors)
+        /// <summary>
+        /// Throw all errors
+        /// </summary>
+        /// <param name="errors"></param>
+        public static void ThrowErrors(this List<string> errors) => ThrowError(errors);
+
+        private static void ThrowError(List<string> errors)
         {
             if (errors.Count > 0)
                 throw new ValidationException(errors.Aggregate("", (a, b) => a + b + "<br/>\n"));
@@ -152,6 +158,8 @@ namespace Softpark.Models
         public static void Validar(this FichaVisitaDomiciliarMaster master)
         {
             var errors = new List<string>();
+
+            errors.AddRange(master.UnicaLotacaoTransport.Validar(DomainContainer.Current));
 
             if (master.UnicaLotacaoTransport == null)
                 errors.Add("O cabeçalho de atendimento não foi encontrado.");

@@ -552,7 +552,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             header.OrigemVisita = origem;
 
-            header.Validar(db);
+            header.Validar(db).ThrowErrors();
 
             cad.Validar(db);
 
