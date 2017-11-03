@@ -885,7 +885,10 @@ namespace Softpark.Models
             if (cond.telefoneResidencia != null && (cond.telefoneResidencia.Length < 10 || cond.telefoneResidencia.Length > 11))
                 errors.Add("Em local de permanência, o telefone da residência é inválido, o número deve ter entre 10 e 11 caracteres numéricos incluíndo o DDD.");
 
-            if (cond.tipoLogradouroNumeroDne == null || domain.TB_MS_TIPO_LOGRADOURO.All(x => x.CO_TIPO_LOGRADOURO == null || x.CO_TIPO_LOGRADOURO.Trim() != cond.tipoLogradouroNumeroDne))
+            var cods = domain.Database.SqlQuery<string>("SELECT LTRIM(RTRIM(CO_TIPO_LOGRADOURO)) FROM TB_MS_TIPO_LOGRADOURO WHERE CO_TIPO_LOGRADOURO IS NOT NULL")
+                .ToArray();
+
+            if (cond.tipoLogradouroNumeroDne == null || !cods.Contains(cond.tipoLogradouroNumeroDne))
                 errors.Add("Em local de permanência, o tipo de logradouro é inválido.");
 
             if (cond.pontoReferencia != null && cond.pontoReferencia.Length > 40)
@@ -993,8 +996,8 @@ namespace Softpark.Models
 
             if (cad.InstituicaoPermanencia1 != null && !((new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel) || cad.statusTermoRecusa))
                 errors.Add("A instituição de permanência não pode ser informada para o tipo de imóvel selecionado.");
-            
-            errors.AddRange(cad.InstituicaoPermanencia1?.Validar(cad)??empty);
+
+            errors.AddRange(cad.InstituicaoPermanencia1?.Validar(cad) ?? empty);
         }
 
         /// <summary>

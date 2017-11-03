@@ -386,6 +386,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                     // se existir
                     if (uf != null)
                         ultimaFicha = uf;
+                    else
+                        break;
                 }
 
                 if (ultimaFicha != null &&
@@ -584,10 +586,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (proc != null)
             {
-                var logs = db.SIGSM_Transmissao_Processos_Log.Where(x => x.IdProcesso == proc.Id);
-
-                db.SIGSM_Transmissao_Processos_Log.RemoveRange(logs);
-
+                db.SIGSM_Transmissao_Processos_Log.RemoveRange(proc.SIGSM_Transmissao_Processos_Log);
                 db.SIGSM_Transmissao_Processos.Remove(proc);
             }
 

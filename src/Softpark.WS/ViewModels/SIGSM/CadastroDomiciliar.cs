@@ -420,6 +420,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 // se existir
                 if (uf != null)
                     dadoAnterior = uf;
+                else
+                    break;
             }
 
             if (dadoAnterior != null &&
@@ -450,10 +452,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (proc != null)
             {
-                var logs = db.SIGSM_Transmissao_Processos_Log.Where(x => x.IdProcesso == proc.Id);
-
-                db.SIGSM_Transmissao_Processos_Log.RemoveRange(logs);
-
+                db.SIGSM_Transmissao_Processos_Log.RemoveRange(proc.SIGSM_Transmissao_Processos_Log);
                 db.SIGSM_Transmissao_Processos.Remove(proc);
             }
 
@@ -472,7 +471,10 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             var end = cad.EnderecoLocalPermanencia1;
 
-            var codtplog = (await db.TB_MS_TIPO_LOGRADOURO.FirstOrDefaultAsync(x => x.CO_TIPO_LOGRADOURO != null && x.CO_TIPO_LOGRADOURO.Trim() != end.tipoLogradouroNumeroDne))?.CO_TIPO_LOGRADOURO.Trim() ?? null;
+            var cods = await db.Database.SqlQuery<string>("SELECT LTRIM(RTRIM(CO_TIPO_LOGRADOURO)) FROM TB_MS_TIPO_LOGRADOURO WHERE CO_TIPO_LOGRADOURO IS NOT NULL")
+                .ToArrayAsync();
+
+            var codtplog = cods.FirstOrDefault(x => x != end.tipoLogradouroNumeroDne);
 
             int? tplog = null;
             if (int.TryParse(codtplog, out int tl))

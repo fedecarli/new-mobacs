@@ -238,6 +238,13 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             try
             {
+                Guid.TryParse(cad.uuidFicha.Replace(cad.UnicaLotacaoTransport.cnes + "-", ""), out Guid id);
+                var proc = await domain.SIGSM_Transmissao_Processos.FindAsync(id);
+                
+                domain.SIGSM_Transmissao_Processos_Log.RemoveRange(proc.SIGSM_Transmissao_Processos_Log);
+
+                domain.SIGSM_Transmissao_Processos.Remove(proc);
+
                 await domain.SaveChangesAsync();
             }
             catch

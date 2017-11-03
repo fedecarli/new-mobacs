@@ -380,6 +380,13 @@ namespace Softpark.WS.ViewModels
                 ficha.FichaVisitaDomiciliarChild.Add(child);
             }
 
+            Guid.TryParse(ficha.uuidFicha.Replace(ficha.UnicaLotacaoTransport.cnes + "-", ""), out Guid idf);
+            var proc = await domain.SIGSM_Transmissao_Processos.FindAsync(idf);
+
+            proc.SIGSM_Transmissao_Processos_Log.Clear();
+
+            domain.SIGSM_Transmissao_Processos.Remove(proc);
+
             await domain.SaveChangesAsync();
 
             return child;

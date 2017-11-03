@@ -496,7 +496,7 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var id = await form.LimparESalvarDados(Domain, Url);
-
+            
             return Ok(id);
         }
         #endregion
@@ -609,7 +609,9 @@ namespace Softpark.WS.Controllers.Api
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            DetalheFichaVisitaDomiciliarMasterVW detalhe = await vm.LimparESalvarDados(Domain, Url);
+            var master = await vm.LimparESalvarDados(Domain, Url);
+
+            DetalheFichaVisitaDomiciliarMasterVW detalhe = master;
 
             return Ok(detalhe.ToDetail());
         }
@@ -673,6 +675,13 @@ namespace Softpark.WS.Controllers.Api
             child.SIGSM_MotivoVisita.Clear();
             ficha.FichaVisitaDomiciliarChild.Remove(child);
             Domain.FichaVisitaDomiciliarChild.Remove(child);
+
+            Guid.TryParse(ficha.uuidFicha.Replace(ficha.UnicaLotacaoTransport.cnes + "-", ""), out Guid id);
+            var proc = await Domain.SIGSM_Transmissao_Processos.FindAsync(id);
+
+            proc.SIGSM_Transmissao_Processos_Log.Clear();
+
+            Domain.SIGSM_Transmissao_Processos.Remove(proc);
 
             await Domain.SaveChangesAsync();
 
