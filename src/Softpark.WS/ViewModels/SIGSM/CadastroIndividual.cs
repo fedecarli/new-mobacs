@@ -412,8 +412,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CabecalhoTransporte.ine = (await db.SetoresINEs.FirstOrDefaultAsync(x => x.CodINE == ine && x.CodSetor == setorPar))?.Numero;
             }
 
-            var profissional = db.VW_Profissional.Where(x => x.CNS == CabecalhoTransporte.profissionalCNS &&
-            x.CNES == CabecalhoTransporte.cnes).ToArray().FirstOrDefault(x => x.INE == CabecalhoTransporte.ine || x.INE == null);
+            var profissional = db.VW_Profissionais("CadastroIndividual", CabecalhoTransporte.cnes, CabecalhoTransporte.profissionalCNS, 1)
+                            .FirstOrDefault(x => x.INE == null || x.INE.Trim() == CabecalhoTransporte.ine);
 
             if (profissional != null)
             {
@@ -554,7 +554,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             header.OrigemVisita = origem;
 
-            header.Validar(db).ThrowErrors();
+            header.Validar("CadastroIndividual", db).ThrowErrors();
 
             cad.Validar(db);
 

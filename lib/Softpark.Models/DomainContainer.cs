@@ -137,6 +137,26 @@ namespace Softpark.Models
             Database.SqlQuery<VW_Profissional>("SELECT id, CNS, Nome, CBO, Profissao, CNES, Unidade, INE, Equipe, CodUsu FROM [api].[VW_Profissional]");
 
         /// <summary>
+        /// Coleção de profissionais
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public virtual DbRawSqlQuery<VW_Profissional> VW_Profissionais(string ficha, string cnes, string nomeOuCns, int limit) =>
+            Database.SqlQuery<VW_Profissional>("SELECT TOP " + limit +
+                @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
+                    a.Profissao, a.CNES, a.Unidade,
+                    CAST(c.CodINE AS VARCHAR(18)) AS INE,
+                    (a.INE + '-' + a.Equipe) AS Equipe,
+                    a.CodUsu
+                FROM [api].[VW_Profissional] AS a
+                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON a.CBO = b.CBO
+                LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
+                WHERE b.Ficha = @ficha" + (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
+                (string.IsNullOrEmpty(nomeOuCns?.Trim()) ? "" : " AND (a.CNS = @cns OR a.Nome LIKE @nome)") +
+                " ORDER BY a.Nome, a.Profissao, a.Unidade, a.Equipe",
+                new SqlParameter("@ficha", ficha), new SqlParameter("@cnes", cnes),
+                new SqlParameter("@cns", nomeOuCns), new SqlParameter("@nome", $"%{nomeOuCns}%"));
+
+        /// <summary>
         /// ASSMED Cadastros
         /// </summary>
         public virtual DbRawSqlQuery<VW_Cadastros> VW_Cadastros(string q, int limit)

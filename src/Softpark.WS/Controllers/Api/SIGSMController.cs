@@ -36,26 +36,23 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("listar/profissional/{nomeOuCns}/{cnes}")]
+        [Route("listar/profissional/{ficha}/{nomeOuCns}/{cnes}")]
         [ResponseType(typeof(VW_Profissional[]))]
-        public IHttpActionResult ListarProfissionais(string nomeOuCns, string cnes = null)
+        public IHttpActionResult ListarProfissionais([FromUri, Required] string ficha, [FromUri] string nomeOuCns,
+            [FromUri] string cnes = null)
         {
             if (!Autenticado())
             {
                 throw new ValidationException("É preciso estar logado.");
             }
 
+            if (ficha == null || Domain.SIGSM_ServicoSerializador_Fichas.Find(ficha) == null)
+                throw new ValidationException("Informe a ficha para buscar o profissional.");
+
             if (cnes != null && cnes.Trim() == "0")
                 cnes = null;
 
-            var data = Domain.VW_Profissional.Where(x => ((x.CNS != null && x.CNS == nomeOuCns) || x.Nome.ToLower().Contains(nomeOuCns.ToLower())) &&
-                (cnes == null || (x.CNES != null && x.CNES == cnes)))
-                .OrderBy(x => x.Nome)
-                .ThenBy(x => x.Profissao)
-                .ThenBy(x => x.Unidade)
-                .ThenBy(x => x.Equipe)
-                .Take(20)
-                .ToArray();
+            var data = Domain.VW_Profissionais(ficha, cnes, nomeOuCns, 20).ToArray();
 
             return Ok(data.Select(x =>
             {
@@ -496,7 +493,7 @@ namespace Softpark.WS.Controllers.Api
             }
 
             var id = await form.LimparESalvarDados(Domain, Url);
-            
+
             return Ok(id);
         }
         #endregion

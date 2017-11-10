@@ -179,7 +179,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             Finalizado = model.UnicaLotacaoTransport.OrigemVisita.finalizado;
 
             FichaVisitaDomiciliarChildListagemViewModelCollection fichas =
-                model.FichaVisitaDomiciliarChild.ToArray();
+                model.FichaVisitaDomiciliarChild.OrderBy(x => x.DataRegistro).ToArray();
 
             FichasChild = fichas.ToArray();
 

@@ -102,7 +102,7 @@ namespace Softpark.Models
         /// <param name="header"></param>
         /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
-        public static List<string> Validar(this UnicaLotacaoTransport header, DomainContainer domain)
+        public static List<string> Validar(this UnicaLotacaoTransport header, string ficha, DomainContainer domain)
         {
             var errors = new List<string>();
 
@@ -110,8 +110,8 @@ namespace Softpark.Models
                 errors.Add("O CNS do profissional é inválido.");
             else
             {
-                var profissional = domain.VW_Profissional.Where(x => x.CNS != null && x.CNS.Trim() == header.profissionalCNS.Trim()).ToArray();
-
+                var profissional = domain.VW_Profissionais(ficha, header.cnes, header.profissionalCNS, 1).ToArray();
+                
                 if (profissional.Length == 0)
                     errors.Add("O profissional informado não foi encontrado.");
                 else
@@ -159,7 +159,7 @@ namespace Softpark.Models
         {
             var errors = new List<string>();
 
-            errors.AddRange(master.UnicaLotacaoTransport.Validar(DomainContainer.Current));
+            errors.AddRange(master.UnicaLotacaoTransport.Validar("VisitaDomiciliar", DomainContainer.Current));
 
             if (master.UnicaLotacaoTransport == null)
                 errors.Add("O cabeçalho de atendimento não foi encontrado.");
@@ -222,7 +222,7 @@ namespace Softpark.Models
                 errors.Add("O sexo do cidadão não deve ser informado para o tipo de imóvel selecionado.");
 
             if (child.sexo == null && obrigatorio)
-                errors.Add("O sexo do cidadão é obrigatório.");
+                child.sexo = 4;
 
             if (child.sexo != null && !(new long?[] { 0, 1, 4 }).Contains(child.sexo))
                 errors.Add("O sexo do cidadão é inválido.");
