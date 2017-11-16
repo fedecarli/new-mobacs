@@ -127,7 +127,7 @@ namespace Softpark.WS.Controllers.Api
             transport.OrigemVisita = origem;
             transport.token = origem.token;
 
-            transport.Validar(Domain).ThrowErrors();
+            transport.Validar(null, Domain).ThrowErrors();
 
             Domain.UnicaLotacaoTransport.Add(transport);
 

@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using static Softpark.Infrastructure.Extensions.WithStatement;
-using System.Text.RegularExpressions;
 using Softpark.WS.ViewModels;
-using System.Collections.Generic;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -46,25 +44,14 @@ namespace Softpark.WS.Controllers.Api
                 throw new ValidationException("É preciso estar logado.");
             }
 
-            if (ficha == null || Domain.SIGSM_ServicoSerializador_Fichas.Find(ficha) == null)
-                throw new ValidationException("Informe a ficha para buscar o profissional.");
-
+            ficha = ficha == null || ficha.ToLower() == "todos" ? null : ficha;
+            
             if (cnes != null && cnes.Trim() == "0")
                 cnes = null;
 
             var data = Domain.VW_Profissionais(ficha, cnes, nomeOuCns, 20).ToArray();
 
-            return Ok(data.Select(x =>
-            {
-                x.Profissao = x.Profissao.Trim();
-                x.CBO = x.CBO.Trim();
-                x.Equipe = x.INE == null ? string.Empty : x.INE.Trim() + " - " + x.Equipe;
-                x.INE = x.INE == null ? string.Empty : (Domain.SetoresINEs.Where(y => y.Numero != null && y.Numero.Trim() == x.INE.Trim()).Select(y => y.CodINE.ToString())
-                    .FirstOrDefault())?.ToString();
-                x.Equipe = x.INE == null ? string.Empty : x.Equipe;
-                x.INE = x.INE == null ? string.Empty : x.INE;
-                return x;
-            }).ToArray());
+            return Ok(data);
         }
 
         /// <summary>

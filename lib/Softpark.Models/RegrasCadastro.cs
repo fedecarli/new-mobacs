@@ -100,6 +100,7 @@ namespace Softpark.Models
         /// valida cabeçalho
         /// </summary>
         /// <param name="header"></param>
+        /// <param name="ficha"></param>
         /// <param name="domain"></param>
         /// <exception cref="ValidationException"></exception>
         public static List<string> Validar(this UnicaLotacaoTransport header, string ficha, DomainContainer domain)
@@ -110,7 +111,9 @@ namespace Softpark.Models
                 errors.Add("O CNS do profissional é inválido.");
             else
             {
-                var profissional = domain.VW_Profissionais(ficha, header.cnes, header.profissionalCNS, 1).ToArray();
+                var profissional = ficha ==  null ?
+                    domain.VW_Profissionais(header.cnes, header.profissionalCNS, 1).ToArray() :
+                    domain.VW_Profissionais(ficha, header.cnes, header.profissionalCNS, 1).ToArray();
                 
                 if (profissional.Length == 0)
                     errors.Add("O profissional informado não foi encontrado.");

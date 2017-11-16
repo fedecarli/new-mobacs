@@ -140,21 +140,66 @@ namespace Softpark.Models
         /// Coleção de profissionais
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public virtual DbRawSqlQuery<VW_Profissional> VW_Profissionais(string ficha, string cnes, string nomeOuCns, int limit) =>
-            Database.SqlQuery<VW_Profissional>("SELECT TOP " + limit +
+        public virtual DbRawSqlQuery<VW_Profissional> VW_Profissionais(string cnes, string nomeOuCns, int limit)
+        {
+            var parameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrEmpty(cnes?.Trim()))
+                parameters.Add(new SqlParameter("@cnes", cnes));
+
+            if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
+                parameters.Add(new SqlParameter("@cns", nomeOuCns));
+
+            if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
+                parameters.Add(new SqlParameter("@nome", $"%{nomeOuCns}%"));
+
+            return Database.SqlQuery<VW_Profissional>("SELECT TOP " + limit +
                 @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
                     a.Profissao, a.CNES, a.Unidade,
                     CAST(c.CodINE AS VARCHAR(18)) AS INE,
                     (a.INE + '-' + a.Equipe) AS Equipe,
                     a.CodUsu
                 FROM [api].[VW_Profissional] AS a
-                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON a.CBO = b.CBO
                 LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
-                WHERE b.Ficha = @ficha" + (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
+                WHERE a.CNS IS NOT NULL" + (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
                 (string.IsNullOrEmpty(nomeOuCns?.Trim()) ? "" : " AND (a.CNS = @cns OR a.Nome LIKE @nome)") +
-                " ORDER BY a.Nome, a.Profissao, a.Unidade, a.Equipe",
-                new SqlParameter("@ficha", ficha), new SqlParameter("@cnes", cnes),
-                new SqlParameter("@cns", nomeOuCns), new SqlParameter("@nome", $"%{nomeOuCns}%"));
+                " ORDER BY a.Nome, a.Profissao, a.Unidade, a.Equipe", parameters: parameters.ToArray());
+        }
+
+        /// <summary>
+        /// Coleção de profissionais
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public virtual DbRawSqlQuery<VW_Profissional> VW_Profissionais(string ficha, string cnes, string nomeOuCns, int limit)
+        {
+            var parameters = new List<SqlParameter>();
+
+            parameters.Add(new SqlParameter("@ficha", ficha));
+
+            if (!string.IsNullOrEmpty(cnes?.Trim()))
+                parameters.Add(new SqlParameter("@cnes", cnes));
+
+            if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
+                parameters.Add(new SqlParameter("@cns", nomeOuCns));
+
+            if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
+                parameters.Add(new SqlParameter("@nome", $"%{nomeOuCns}%"));
+
+            return ficha == null ? VW_Profissionais(cnes, nomeOuCns, limit) :
+            Database.SqlQuery<VW_Profissional>("SELECT TOP " + limit +
+                @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
+                    a.Profissao, a.CNES, a.Unidade,
+                    COALESCE(CAST(c.CodINE AS VARCHAR(18)), '') AS INE,
+                    COALESCE((a.INE + ' - ' + a.Equipe), '') AS Equipe,
+                    a.CodUsu
+                FROM [api].[VW_Profissional] AS a
+                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO))
+                LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
+                WHERE a.CNS IS NOT NULL AND b.Ficha = @ficha" +
+                (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
+                (string.IsNullOrEmpty(nomeOuCns?.Trim()) ? "" : " AND (a.CNS = @cns OR a.Nome LIKE @nome)") +
+                " ORDER BY a.Nome, a.Profissao, a.Unidade, a.Equipe", parameters: parameters.ToArray());
+        }
 
         /// <summary>
         /// ASSMED Cadastros
