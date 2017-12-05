@@ -19,6 +19,7 @@ namespace Softpark.Models
         {
             this.CadastroIndividual = new HashSet<CadastroIndividual>();
             this.ASSMED_Cadastro = new HashSet<ASSMED_Cadastro>();
+            this.Documentos = new HashSet<Documentos>();
         }
     
         public System.Guid id { get; set; }
@@ -62,5 +63,7 @@ namespace Softpark.Models
         public virtual Etnia Etnia1 { get; set; }
         public virtual TP_Raca_Cor TP_Raca_Cor { get; set; }
         public virtual TP_Sexo TP_Sexo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Documentos> Documentos { get; set; }
     }
 }

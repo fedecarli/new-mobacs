@@ -134,24 +134,24 @@ namespace Softpark.WS.ViewModels
                 x.CBO == model.cboCodigo_2002 &&
                 x.CNES == model.cnes &&
                 x.INE == model.ine
-            );
+            ) ?? new VW_Profissional();
 
             var _ine = db.SetoresINEs
                 .FirstOrDefault(x => x.Numero != null && x.Numero.Trim() == model.ine);
 
             return new UnicaLotacaoTransportCadastroViewModel
             {
-                cboCodigo_2002 = prof.CBO,
-                cnes = prof.CNES,
-                codigoIbgeMunicipio = model.codigoIbgeMunicipio,
+                cboCodigo_2002 = prof.CBO ?? "",
+                cnes = prof.CNES ?? "",
+                codigoIbgeMunicipio = model.codigoIbgeMunicipio ?? "",
                 dataAtendimento = model.dataAtendimento,
-                ine = prof.INE,
-                codine = _ine?.CodINE.ToString(),
-                profissionalCNS = prof.CNS,
-                profissionalNome = prof.Nome,
-                Equipe = prof.Equipe,
-                Profissao = prof.Profissao,
-                Unidade = prof.Unidade,
+                ine = prof.INE ?? "",
+                codine = _ine?.CodINE.ToString() ?? "",
+                profissionalCNS = prof.CNS ?? "",
+                profissionalNome = prof.Nome ?? "",
+                Equipe = prof.Equipe ?? "",
+                Profissao = prof.Profissao ?? "",
+                Unidade = prof.Unidade ?? "",
                 Codigo = prof.CodUsu
             };
         }

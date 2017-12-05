@@ -15,5 +15,6 @@ namespace Softpark.Models
         public string INE { get; set; }
         public string Equipe { get; set; }
         public int CodUsu { get; set; }
+        public bool Autorizado { get; set; }
     }
 }

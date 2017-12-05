@@ -138,6 +138,8 @@ namespace Softpark.Models
         public virtual DbSet<VW_ConsultaCadastrosDomiciliares> VW_ConsultaCadastrosDomiciliares { get; set; }
         public virtual DbSet<VW_ConsultaCadastrosIndividuais> VW_ConsultaCadastrosIndividuais { get; set; }
         public virtual DbSet<VW_profissional_cns> VW_profissional_cns { get; set; }
+        public virtual DbSet<Documentos> Documentos { get; set; }
+        public virtual DbSet<ASSMED_TipoDocPessoal> ASSMED_TipoDocPessoal { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

@@ -31,5 +31,6 @@ namespace Softpark.Models
         public string ComplementoRG { get; set; }
     
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
+        public virtual ASSMED_TipoDocPessoal ASSMED_TipoDocPessoal { get; set; }
     }
 }

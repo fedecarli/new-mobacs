@@ -108,6 +108,9 @@
     <Compile Include="ASSMED_PesFisica.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="ASSMED_TipoDocPessoal.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="ASSMED_Usuario.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -151,6 +154,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="DeficienciasCidadao.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Documentos.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="DoencaCardiaca.cs">

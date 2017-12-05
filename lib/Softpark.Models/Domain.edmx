@@ -173,6 +173,19 @@ warning 6002: The table/view 'SIGSM.api.Conflito' does not have a primary key de
           <Property Name="id_informacoes_socio_demograficas" Type="uniqueidentifier" Nullable="false" />
           <Property Name="id_tp_deficiencia_cidadao" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Documentos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdIdentificacaoUsuarioCidadao" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="NumContrato" Type="int" Nullable="false" />
+          <Property Name="IdTipoDocumento" Type="int" Nullable="false" />
+          <Property Name="TipoArquivo" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Tamanho" Type="bigint" Nullable="false" />
+          <Property Name="Data" Type="datetime" Nullable="false" />
+          <Property Name="Arquivo" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="DoencaCardiaca">
           <Key>
             <PropertyRef Name="id_tp_doenca_cariaca" />
@@ -766,6 +779,20 @@ warning 6002: The table/view 'SIGSM.api.Conflito' does not have a primary key de
           <Property Name="ESCOLARIDADE" Type="int" />
           <Property Name="ORIENTACAO" Type="int" />
           <Property Name="GENERO" Type="int" />
+        </EntityType>
+        <EntityType Name="ASSMED_TipoDocPessoal">
+          <Key>
+            <PropertyRef Name="NumContrato" />
+            <PropertyRef Name="CodTpDocP" />
+          </Key>
+          <Property Name="NumContrato" Type="int" Nullable="false" />
+          <Property Name="CodTpDocP" Type="int" Nullable="false" />
+          <Property Name="DesTpDocP" Type="varchar" MaxLength="50" />
+          <Property Name="Numero" Type="char" MaxLength="1" />
+          <Property Name="Serie" Type="char" MaxLength="1" />
+          <Property Name="Secao" Type="char" MaxLength="1" />
+          <Property Name="Zona" Type="char" MaxLength="1" />
+          <Property Name="DtValidade" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="ASSMED_Usuario">
           <Key>
@@ -1640,6 +1667,20 @@ warning 6002: The table/view 'SIGSM.dbo.VW_ConsultaCadastrosIndividuais' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__ASSMED_CadastroD__70A8B9AE">
+          <End Role="ASSMED_TipoDocPessoal" Type="Self.ASSMED_TipoDocPessoal" Multiplicity="1" />
+          <End Role="ASSMED_CadastroDocPessoal" Type="Self.ASSMED_CadastroDocPessoal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASSMED_TipoDocPessoal">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodTpDocP" />
+            </Principal>
+            <Dependent Role="ASSMED_CadastroDocPessoal">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodTpDocP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__ASSMED_CadastroD__719CDDE7">
           <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="1" />
           <End Role="ASSMED_CadastroDocPessoal" Type="Self.ASSMED_CadastroDocPessoal" Multiplicity="*" />
@@ -1719,6 +1760,32 @@ warning 6002: The table/view 'SIGSM.dbo.VW_ConsultaCadastrosIndividuais' does no
             <Dependent Role="ASSMED_PesFisica">
               <PropertyRef Name="NumContrato" />
               <PropertyRef Name="Codigo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Documento__IdIde__74FC6632">
+          <End Role="IdentificacaoUsuarioCidadao" Type="Self.IdentificacaoUsuarioCidadao" Multiplicity="1" />
+          <End Role="Documentos" Type="Self.Documentos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Documentos">
+              <PropertyRef Name="IdIdentificacaoUsuarioCidadao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Documentos__77D8D2DD">
+          <End Role="ASSMED_TipoDocPessoal" Type="Self.ASSMED_TipoDocPessoal" Multiplicity="1" />
+          <End Role="Documentos" Type="Self.Documentos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASSMED_TipoDocPessoal">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodTpDocP" />
+            </Principal>
+            <Dependent Role="Documentos">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="IdTipoDocumento" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2338,6 +2405,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="CondicaoMoradia" EntityType="Self.CondicaoMoradia" Schema="api" store:Type="Tables" />
           <EntitySet Name="CondicoesDeSaude" EntityType="Self.CondicoesDeSaude" Schema="api" store:Type="Tables" />
           <EntitySet Name="DeficienciasCidadao" EntityType="Self.DeficienciasCidadao" Schema="api" store:Type="Tables" />
+          <EntitySet Name="Documentos" EntityType="Self.Documentos" Schema="api" store:Type="Tables" />
           <EntitySet Name="DoencaCardiaca" EntityType="Self.DoencaCardiaca" Schema="api" store:Type="Tables" />
           <EntitySet Name="DoencaRespiratoria" EntityType="Self.DoencaRespiratoria" Schema="api" store:Type="Tables" />
           <EntitySet Name="DoencaRins" EntityType="Self.DoencaRins" Schema="api" store:Type="Tables" />
@@ -2375,6 +2443,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="ASSMED_Contratos" EntityType="Self.ASSMED_Contratos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_Endereco" EntityType="Self.ASSMED_Endereco" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_PesFisica" EntityType="Self.ASSMED_PesFisica" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ASSMED_TipoDocPessoal" EntityType="Self.ASSMED_TipoDocPessoal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ASSMED_Usuario" EntityType="Self.ASSMED_Usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cidade" EntityType="Self.Cidade" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Etnia" EntityType="Self.Etnia" Schema="dbo" store:Type="Tables" />
@@ -2609,6 +2678,10 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
           </AssociationSet>
+          <AssociationSet Name="FK__ASSMED_CadastroD__70A8B9AE" Association="Self.FK__ASSMED_CadastroD__70A8B9AE">
+            <End Role="ASSMED_TipoDocPessoal" EntitySet="ASSMED_TipoDocPessoal" />
+            <End Role="ASSMED_CadastroDocPessoal" EntitySet="ASSMED_CadastroDocPessoal" />
+          </AssociationSet>
           <AssociationSet Name="FK__ASSMED_CadastroD__719CDDE7" Association="Self.FK__ASSMED_CadastroD__719CDDE7">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_CadastroDocPessoal" EntitySet="ASSMED_CadastroDocPessoal" />
@@ -2632,6 +2705,14 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK__ASSMED_PesFisica__7BE56230" Association="Self.FK__ASSMED_PesFisica__7BE56230">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_PesFisica" EntitySet="ASSMED_PesFisica" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Documento__IdIde__74FC6632" Association="Self.FK__Documento__IdIde__74FC6632">
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+            <End Role="Documentos" EntitySet="Documentos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Documentos__77D8D2DD" Association="Self.FK__Documentos__77D8D2DD">
+            <End Role="ASSMED_TipoDocPessoal" EntitySet="ASSMED_TipoDocPessoal" />
+            <End Role="Documentos" EntitySet="Documentos" />
           </AssociationSet>
           <AssociationSet Name="FK__SIGSM_Tra__IdPro__0DDF849A" Association="Self.FK__SIGSM_Tra__IdPro__0DDF849A">
             <End Role="SIGSM_Transmissao_Processos" EntitySet="SIGSM_Transmissao_Processos" />
@@ -3153,6 +3234,24 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <Parameter Name="total" Mode="InOut" Type="Int32" />
             <Parameter Name="totalFiltered" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Documentos" EntityType="Domain.Documentos" />
+          <EntitySet Name="ASSMED_TipoDocPessoal" EntityType="Domain.ASSMED_TipoDocPessoal" />
+          <AssociationSet Name="FK__Documento__IdIde__74FC6632" Association="Domain.FK__Documento__IdIde__74FC6632">
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+            <End Role="Documentos" EntitySet="Documentos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Documentos__77D8D2DD" Association="Domain.FK__Documentos__77D8D2DD">
+            <End Role="ASSMED_TipoDocPessoal" EntitySet="ASSMED_TipoDocPessoal" />
+            <End Role="Documentos" EntitySet="Documentos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IdentificacaoUsuarioCidadao_Etnia1" Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia1">
+            <End Role="Etnia" EntitySet="Etnia" />
+            <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ASSMED_CadastroD__70A8B9AE" Association="Domain.FK__ASSMED_CadastroD__70A8B9AE">
+            <End Role="ASSMED_TipoDocPessoal" EntitySet="ASSMED_TipoDocPessoal" />
+            <End Role="ASSMED_CadastroDocPessoal" EntitySet="ASSMED_CadastroDocPessoal" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="PR_ConsultaCadastroIndividuais_Result">
           <Property Type="String" Name="Nome" Nullable="true" MaxLength="100" />
@@ -3506,6 +3605,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="Etnia1" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_Etnia" FromRole="IdentificacaoUsuarioCidadao" ToRole="Etnia" />
           <NavigationProperty Name="TP_Raca_Cor" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Raca_Cor" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Raca_Cor" />
           <NavigationProperty Name="TP_Sexo" Relationship="Domain.FK_IdentificacaoUsuarioCidadao_TP_Sexo" FromRole="IdentificacaoUsuarioCidadao" ToRole="TP_Sexo" />
+		  <NavigationProperty Name="Documentos" Relationship="Domain.FK__Documento__IdIde__74FC6632" FromRole="IdentificacaoUsuarioCidadao" ToRole="Documentos" />
         </EntityType>
         <EntityType Name="InformacoesSocioDemograficas">
           <Key>
@@ -3797,6 +3897,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="NumIP" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
           <Property Name="ComplementoRG" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK__ASSMED_CadastroD__719CDDE7" FromRole="ASSMED_CadastroDocPessoal" ToRole="ASSMED_Cadastro" />
+          <NavigationProperty Name="ASSMED_TipoDocPessoal" Relationship="Domain.FK__ASSMED_CadastroD__70A8B9AE" FromRole="ASSMED_CadastroDocPessoal" ToRole="ASSMED_TipoDocPessoal" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroPF">
           <Key>
@@ -5462,6 +5563,91 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Type="String" Name="NomeCidade" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Codigo" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Documentos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IdIdentificacaoUsuarioCidadao" Type="Guid" Nullable="false" />
+          <Property Name="NumContrato" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoDocumento" Type="Int32" Nullable="false" />
+          <Property Name="TipoArquivo" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Tamanho" Type="Int64" Nullable="false" />
+          <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Arquivo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="IdentificacaoUsuarioCidadao" Relationship="Domain.FK__Documento__IdIde__74FC6632" FromRole="Documentos" ToRole="IdentificacaoUsuarioCidadao" />
+          <NavigationProperty Name="ASSMED_TipoDocPessoal" Relationship="Domain.FK__Documentos__77D8D2DD" FromRole="Documentos" ToRole="ASSMED_TipoDocPessoal" />
+        </EntityType>
+        <EntityType Name="ASSMED_TipoDocPessoal">
+          <Key>
+            <PropertyRef Name="NumContrato" />
+            <PropertyRef Name="CodTpDocP" />
+          </Key>
+          <Property Name="NumContrato" Type="Int32" Nullable="false" />
+          <Property Name="CodTpDocP" Type="Int32" Nullable="false" />
+          <Property Name="DesTpDocP" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Numero" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Serie" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Secao" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Zona" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DtValidade" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Documentos" Relationship="Domain.FK__Documentos__77D8D2DD" FromRole="ASSMED_TipoDocPessoal" ToRole="Documentos" />
+          <NavigationProperty Name="ASSMED_CadastroDocPessoal" Relationship="Domain.FK__ASSMED_CadastroD__70A8B9AE" FromRole="ASSMED_TipoDocPessoal" ToRole="ASSMED_CadastroDocPessoal" />
+        </EntityType>
+        <Association Name="FK__Documento__IdIde__74FC6632">
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="1" />
+          <End Type="Domain.Documentos" Role="Documentos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Documentos">
+              <PropertyRef Name="IdIdentificacaoUsuarioCidadao" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Documentos__77D8D2DD">
+          <End Type="Domain.ASSMED_TipoDocPessoal" Role="ASSMED_TipoDocPessoal" Multiplicity="1" />
+          <End Type="Domain.Documentos" Role="Documentos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASSMED_TipoDocPessoal">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodTpDocP" />
+            </Principal>
+            <Dependent Role="Documentos">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="IdTipoDocumento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IdentificacaoUsuarioCidadao_Etnia1">
+          <End Type="Domain.Etnia" Role="Etnia" Multiplicity="0..1" />
+          <End Type="Domain.IdentificacaoUsuarioCidadao" Role="IdentificacaoUsuarioCidadao" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Etnia">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodEtnia" />
+            </Principal>
+            <Dependent Role="IdentificacaoUsuarioCidadao">
+              <PropertyRef Name="num_contrato" />
+              <PropertyRef Name="etnia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ASSMED_CadastroD__70A8B9AE">
+          <End Type="Domain.ASSMED_TipoDocPessoal" Role="ASSMED_TipoDocPessoal" Multiplicity="1" />
+          <End Type="Domain.ASSMED_CadastroDocPessoal" Role="ASSMED_CadastroDocPessoal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASSMED_TipoDocPessoal">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodTpDocP" />
+            </Principal>
+            <Dependent Role="ASSMED_CadastroDocPessoal">
+              <PropertyRef Name="NumContrato" />
+              <PropertyRef Name="CodTpDocP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7067,6 +7253,34 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Documentos">
+            <EntityTypeMapping TypeName="Domain.Documentos">
+              <MappingFragment StoreEntitySet="Documentos">
+                <ScalarProperty Name="Arquivo" ColumnName="Arquivo" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Tamanho" ColumnName="Tamanho" />
+                <ScalarProperty Name="TipoArquivo" ColumnName="TipoArquivo" />
+                <ScalarProperty Name="IdTipoDocumento" ColumnName="IdTipoDocumento" />
+                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
+                <ScalarProperty Name="IdIdentificacaoUsuarioCidadao" ColumnName="IdIdentificacaoUsuarioCidadao" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASSMED_TipoDocPessoal">
+            <EntityTypeMapping TypeName="Domain.ASSMED_TipoDocPessoal">
+              <MappingFragment StoreEntitySet="ASSMED_TipoDocPessoal">
+                <ScalarProperty Name="DtValidade" ColumnName="DtValidade" />
+                <ScalarProperty Name="Zona" ColumnName="Zona" />
+                <ScalarProperty Name="Secao" ColumnName="Secao" />
+                <ScalarProperty Name="Serie" ColumnName="Serie" />
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="DesTpDocP" ColumnName="DesTpDocP" />
+                <ScalarProperty Name="CodTpDocP" ColumnName="CodTpDocP" />
+                <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

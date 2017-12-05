@@ -9,6 +9,7 @@ using System.Web.Http.Routing;
 using System.Text.RegularExpressions;
 using static Softpark.Infrastructure.Extensions.WithStatement;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Softpark.WS.ViewModels.SIGSM
 {
@@ -356,12 +357,16 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             SIGSM_Transmissao_Processos proc = null;
 
+            var updateAssmed = true;
+
             if (assmedCadastro != null)
             {
                 codigo = assmedCadastro.Codigo;
 
                 // Busca a última ficha do cadastro
                 var ultimaFicha = await db.CadastroIndividual.SingleOrDefaultAsync(x => x.identificacaoUsuarioCidadao == assmedCadastro.IdFicha);
+
+                updateAssmed = (ultimaFicha.UnicaLotacaoTransport.dataAtendimento > CabecalhoTransporte.dataAtendimento);
 
                 proc = await db.SIGSM_Transmissao_Processos.FindAsync(ultimaFicha.id);
 
@@ -377,7 +382,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                     ultimaFicha.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
                 {
                     // marca a ficha de origem para não ser enviada
-                    ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
+                    if (updateAssmed)
+                        ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
 
                     // busca a origem da origem
                     var uf = await db.CadastroIndividual.FindAsync(ultimaFicha.uuidFichaOriginadora);
@@ -390,7 +396,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                         break;
                 }
 
-                if (ultimaFicha != null &&
+                if (updateAssmed && ultimaFicha != null &&
                     !ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviado &&
                     ultimaFicha.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
                     ultimaFicha.UnicaLotacaoTransport.OrigemVisita.enviarParaThrift = false;
@@ -426,7 +432,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
                 var iden = CadastroIndividual.identificacaoUsuarioCidadao;
 
-                int? codCidade = iden.codigoIbgeMunicipioNascimento != null && !string.IsNullOrEmpty(iden.codigoIbgeMunicipioNascimento.Trim()) ?
+                int? codCidade = !string.IsNullOrEmpty(iden.codigoIbgeMunicipioNascimento?.Trim()) ?
                     Convert.ToInt32(iden.codigoIbgeMunicipioNascimento) : (int?)null;
 
                 var cidade = await db.Cidade.SingleOrDefaultAsync(x => x.CodCidade == codCidade);
@@ -522,7 +528,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
                 cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmedCadastro;
 
-                if (assmedCadastro != null)
+                if (assmedCadastro != null && updateAssmed)
                 {
                     assmedCadastro.IdFicha = cad.IdentificacaoUsuarioCidadao1.id;
                 }
@@ -538,7 +544,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                     cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmedCadastro;
                 }
 
-                if (assmedCadastro != null)
+                if (assmedCadastro != null && updateAssmed)
                 {
                     assmedCadastro.IdFicha = cad.IdentificacaoUsuarioCidadao1.id;
                 }
@@ -577,7 +583,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             };
 
             origem.id_tipo_origem = 2;
-            origem.enviarParaThrift = true;
+            origem.enviarParaThrift = updateAssmed;
             origem.enviado = false;
             origem.UnicaLotacaoTransport.Add(header);
             origem.finalizado = true;
@@ -592,15 +598,22 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             await db.SaveChangesAsync();
 
-            var assmed = await GerarCadastroAssmed(cad, db, url);
-
-            if (assmed != null)
+            if (updateAssmed)
             {
-                cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmed;
-                cad.IdentificacaoUsuarioCidadao1.Codigo = assmed.Codigo;
-                cad.IdentificacaoUsuarioCidadao1.num_contrato = assmed.NumContrato;
+                var assmed = await GerarCadastroAssmed(cad, db, url);
 
-                await db.SaveChangesAsync();
+                if (assmed != null)
+                {
+                    cad.IdentificacaoUsuarioCidadao1.ASSMED_Cadastro1 = assmed;
+                    cad.IdentificacaoUsuarioCidadao1.Codigo = assmed.Codigo;
+                    cad.IdentificacaoUsuarioCidadao1.num_contrato = assmed.NumContrato;
+
+                    await db.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                throw new ValidationException("A Ficha foi salva como histórico, pois, já existe uma ficha mais atual para este cadastro.");
             }
 
             return cad.id;

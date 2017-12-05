@@ -105,7 +105,6 @@
         <EntityTypeShape EntityType="Domain.ASSMED_CadastroIndividualVinc" Width="1.5" PointX="28.75" PointY="26.875" />
         <EntityTypeShape EntityType="Domain.Conflito" Width="1.5" PointX="28.75" PointY="29.875" />
         <EntityTypeShape EntityType="Domain.Nacionalidade" Width="1.5" PointX="3.75" PointY="32.875" />
-        <EntityTypeShape EntityType="Domain.TB_MS_TIPO_LOGRADOURO" Width="1.5" PointX="9.75" PointY="32.875" />
         <EntityTypeShape EntityType="Domain.TP_Conduta" Width="1.5" PointX="29.75" PointY="14.875" />
         <EntityTypeShape EntityType="Domain.TP_Nasf" Width="1.5" PointX="29.75" PointY="17.875" />
         <EntityTypeShape EntityType="Domain.VW_IdentificacaoUsuarioCidadao" Width="1.5" PointX="14.75" PointY="32.875" />
@@ -168,6 +167,13 @@
         <AssociationConnector Association="Domain.Familias" />
         <AssociationConnector Association="Domain.FichaVisitaDomiciliarChild_MotivoVisita" />
         <EntityTypeShape EntityType="Domain.VW_profissional_cns" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Domain.Documentos" Width="1.5" PointX="33.625" PointY="16" />
+        <EntityTypeShape EntityType="Domain.ASSMED_TipoDocPessoal" Width="1.5" PointX="31.375" PointY="8" />
+        <AssociationConnector Association="Domain.FK__Documento__IdIde__74FC6632" />
+        <AssociationConnector Association="Domain.FK__Documentos__77D8D2DD" />
+        <AssociationConnector Association="Domain.FK_IdentificacaoUsuarioCidadao_Etnia1" />
+        <AssociationConnector Association="Domain.FK__ASSMED_CadastroD__70A8B9AE" />
+        <EntityTypeShape EntityType="Domain.TB_MS_TIPO_LOGRADOURO" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -191,11 +191,11 @@ namespace Softpark.Models
                     a.Profissao, a.CNES, a.Unidade,
                     COALESCE(CAST(c.CodINE AS VARCHAR(18)), '') AS INE,
                     COALESCE((a.INE + ' - ' + a.Equipe), '') AS Equipe,
-                    a.CodUsu
+                    a.CodUsu, CAST((CASE b.Ficha WHEN @ficha THEN 1 ELSE 0 END) AS BIT) AS Autorizado
                 FROM [api].[VW_Profissional] AS a
                 INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO))
                 LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
-                WHERE a.CNS IS NOT NULL AND b.Ficha = @ficha" +
+                WHERE a.CNS IS NOT NULL" +
                 (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
                 (string.IsNullOrEmpty(nomeOuCns?.Trim()) ? "" : " AND (a.CNS = @cns OR a.Nome LIKE @nome)") +
                 " ORDER BY a.Nome, a.Profissao, a.Unidade, a.Equipe", parameters: parameters.ToArray());

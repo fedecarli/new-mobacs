@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Softpark.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
-using static Softpark.Infrastructure.Extensions.WithStatement;
 
 namespace Softpark.WS.ViewModels.SIGSM
 {
@@ -118,6 +116,7 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="db"></param>
         public static async Task<DetalheCadastroDomiciliarVW> ToVM(CadastroDomiciliar model, DomainContainer db)
         {
             var vm = new DetalheCadastroDomiciliarVW();
@@ -275,7 +274,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 : CadastroDomiciliar.uuidFichaOriginadora;
 
             var proc = await db.SIGSM_Transmissao_Processos.FindAsync(CadastroDomiciliar.uuidFichaOriginadora);
-
+            
             if (CabecalhoTransporte.ine != null)
             {
                 int.TryParse(CabecalhoTransporte.ine, out int ine);
@@ -420,7 +419,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 else
                     break;
             }
-
+            
             if (dadoAnterior != null &&
                 !dadoAnterior.UnicaLotacaoTransport.OrigemVisita.enviado &&
                 dadoAnterior.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
