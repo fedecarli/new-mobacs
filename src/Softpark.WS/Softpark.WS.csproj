@@ -445,6 +445,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="installation\api-1.5.1.sql" />
+    <Content Include="installation\api-1.8.0.5.sql" />
     <Content Include="installation\api.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
