@@ -586,7 +586,6 @@ warning 6002: The table/view 'SIGSM.api.Conflito' does not have a primary key de
           <Property Name="Justificativa" Type="varchar" MaxLength="500" />
           <Property Name="MotivoHomologacao" Type="varchar" MaxLength="500" />
           <Property Name="IdFicha" Type="uniqueidentifier" />
-          <Property Name="idAuto" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroDocPessoal">
           <Key>
@@ -3866,7 +3865,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="Justificativa" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="MotivoHomologacao" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="IdFicha" Type="Guid" />
-          <Property Name="idAuto" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao" Relationship="Domain.FK__ASSMED_Ca__IdFic__559B2B77" FromRole="ASSMED_Cadastro" ToRole="IdentificacaoUsuarioCidadao" />
           <NavigationProperty Name="IdentificacaoUsuarioCidadao1" Relationship="Domain.FK_Identificacao_Cadastro" FromRole="ASSMED_Cadastro" ToRole="IdentificacaoUsuarioCidadao" />
           <NavigationProperty Name="ASSMED_CadastroDocPessoal" Relationship="Domain.FK__ASSMED_CadastroD__719CDDE7" FromRole="ASSMED_Cadastro" ToRole="ASSMED_CadastroDocPessoal" />
@@ -6169,7 +6167,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="ASSMED_Cadastro">
             <EntityTypeMapping TypeName="Domain.ASSMED_Cadastro">
               <MappingFragment StoreEntitySet="ASSMED_Cadastro">
-                <ScalarProperty Name="idAuto" ColumnName="idAuto" />
                 <ScalarProperty Name="IdFicha" ColumnName="IdFicha" />
                 <ScalarProperty Name="MotivoHomologacao" ColumnName="MotivoHomologacao" />
                 <ScalarProperty Name="Justificativa" ColumnName="Justificativa" />

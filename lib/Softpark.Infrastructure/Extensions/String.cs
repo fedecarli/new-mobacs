@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,6 +11,14 @@ namespace Softpark.Infrastructure.Extensions
     /// </summary>
     public static class String
     {
+        /// <summary>
+        /// Ref
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string UrlReferrer(this HttpRequestMessage request) =>
+            request.Headers.Referrer == null ? "unknown" : request.Headers.Referrer.AbsoluteUri;
+
         /// <summary>
         /// Hash de senha
         /// </summary>

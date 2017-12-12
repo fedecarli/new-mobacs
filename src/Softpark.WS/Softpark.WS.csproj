@@ -387,6 +387,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controllers\Api\DatabaseSupplyController.cs" />
+    <Compile Include="Controllers\Api\ProfileController.cs" />
     <Compile Include="Controllers\Api\SIGSMController.cs" />
     <Compile Include="Controllers\Api\ProcessosController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
@@ -394,6 +395,8 @@
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
     <Compile Include="ViewModels\AutenticacaoViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\LogMobileViewModel.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroIndividual.cs" />
     <Compile Include="ViewModels\SIGSM\VisitaDomiciliar.cs" />
@@ -407,6 +410,7 @@
     <Compile Include="ViewModels\CadastroIndividual.cs" />
     <Compile Include="ViewModels\FichaVisitaDomiciliarChildViewModels.cs" />
     <Compile Include="ViewModels\UnicaLotacaoTransportViewModels.cs" />
+    <Compile Include="ViewModels\UnicoPessoasViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="apidate.js" />

@@ -111,10 +111,10 @@ namespace Softpark.Models
                 errors.Add("O CNS do profissional é inválido.");
             else
             {
-                var profissional = ficha ==  null ?
-                    domain.VW_Profissionais(header.cnes, header.profissionalCNS, 1).ToArray() :
-                    domain.VW_Profissionais(ficha, header.cnes, header.profissionalCNS, 1).ToArray();
-                
+                var profissional = ficha == null ?
+                    domain.VW_Profissionais(header.cnes, header.profissionalCNS, 1000).ToArray() :
+                    domain.VW_Profissionais(ficha, header.cnes, header.profissionalCNS, 1000).ToArray();
+
                 if (profissional.Length == 0)
                     errors.Add("O profissional informado não foi encontrado.");
                 else
@@ -125,7 +125,7 @@ namespace Softpark.Models
                     if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header?.cnes?.Trim()))
                         errors.Add("A unidade do profissional não foi encontrada.");
 
-                    if (header.ine != null && profissional.All(x => x.INE == null || x.INE?.Trim() != header?.ine?.Trim()))
+                    if (header.ine != null && profissional.All(x => x.Equipe == null || x.Equipe?.Split(' ')[0].Trim() != header?.ine?.Trim()))
                         errors.Add("A equipe do profissional não foi encontrada.");
 
                     var validEpoch = Epoch.ValidateESUSDateTime(header.dataAtendimento);
@@ -705,7 +705,7 @@ namespace Softpark.Models
         /// <exception cref="ValidationException"></exception>
         public static void Validar(this CadastroIndividual cad, DomainContainer domain)
         {
-            var errors = new List<string>();
+            var errors = cad.UnicaLotacaoTransport.Validar("CadastroIndividual", domain);
             var empty = new List<string>();
 
             if (cad.UnicaLotacaoTransport == null)
@@ -738,7 +738,10 @@ namespace Softpark.Models
             }
 
             if (cad.uuidFichaOriginadora == null && cad.fichaAtualizada)
-                errors.Add("Informe o Uuid da ficha originadora.");
+            {
+                cad.uuidFichaOriginadora = cad.id;
+                cad.fichaAtualizada = false;
+            }
 
             errors.AddRange(cad.SaidaCidadaoCadastro1?.Validar() ?? empty);
 
@@ -995,7 +998,10 @@ namespace Softpark.Models
             }
 
             if (cad.uuidFichaOriginadora == null && cad.fichaAtualizada)
-                errors.Add("Informe o Uuid da ficha originadora.");
+            {
+                cad.uuidFichaOriginadora = cad.id;
+                cad.fichaAtualizada = false;
+            }
 
             if (cad.InstituicaoPermanencia1 != null && !((new long[] { 7, 8, 9, 10, 11 }).Contains(cad.tipoDeImovel) || cad.statusTermoRecusa))
                 errors.Add("A instituição de permanência não pode ser informada para o tipo de imóvel selecionado.");

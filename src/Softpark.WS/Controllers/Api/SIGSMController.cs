@@ -11,6 +11,8 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using static Softpark.Infrastructure.Extensions.WithStatement;
 using Softpark.WS.ViewModels;
+using Softpark.Infrastructure.Extensions;
+using System.Collections.Generic;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -30,7 +32,49 @@ namespace Softpark.WS.Controllers.Api
 
         #region CadastroIndividual
         /// <summary>
-        /// Buscar cadastros individuais
+        /// Buscar profissionais
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("listar/profissional/{nomeOuCns}/{cnes}")]
+        [ResponseType(typeof(VW_Profissional[]))]
+        public IHttpActionResult ListarProfissionais([FromUri] string nomeOuCns,
+            [FromUri] string cnes = null)
+        {
+            if (!Autenticado())
+            {
+                throw new ValidationException("É preciso estar logado.");
+            }
+
+            var referer = Request.UrlReferrer();
+
+            var ficha = GetTipoFichaFrom(referer);
+
+            return ListarProfissionais(ficha, nomeOuCns, cnes);
+        }
+
+        private string GetTipoFichaFrom(string referer)
+        {
+            referer = referer.ToLower();
+            var fichas = new Dictionary<string, string> {
+                { "cadIndividual.asp", "CadastroIndividual" },
+                { "domicilioCad.asp", "CadastroDomiciliar" },
+                { "atendimentoIndividualCad.asp", "AtendimentoIndividual" },
+                { "atendimentoOdontologicoCad.asp", "AtendimentoOdontologico" },
+                { "procedimentoCad.asp", "Procedimento" },
+                { "atividadeColetivaCad.asp", "AtividadeColetiva" },
+                { "marcadoresConsumoAlimentarCad.asp", "Consumo" },
+                { "visitaDomiciliar.asp", "VisitaDomiciliar" },
+                { "atendimentoDomiciliarCad.asp", "AtendimentoDomiciliar" },
+                { "avaliacaoElegibilidadeAdmissaoCad.asp", "AvaliacaoElegibilidade" }
+            };
+
+            return fichas.Where(x => referer.ToLower().Contains(x.Key.ToLower()))
+                .Select(x => x.Value).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Buscar profissionais
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -45,7 +89,7 @@ namespace Softpark.WS.Controllers.Api
             }
 
             ficha = ficha == null || ficha.ToLower() == "todos" ? null : ficha;
-            
+
             if (cnes != null && cnes.Trim() == "0")
                 cnes = null;
 
@@ -145,19 +189,13 @@ namespace Softpark.WS.Controllers.Api
 
             var setor = Domain.AS_SetoresPar.SingleOrDefault(x => x.CodSetor == cset);
 
-            var data = (await Domain.IdentificacaoUsuarioCidadao.AnyAsync(x => x.Codigo == codigo)) ?
-                Domain.IdentificacaoUsuarioCidadao.Where(x => x.Codigo == codigo)
-                .SelectMany(x => x.CadastroIndividual).OrderByDescending(x => x.DataRegistro)
-                .FirstOrDefault() :
-                (Domain.ASSMED_Cadastro.Where(x => x.Codigo == codigo && x.IdFicha != null)
-                .SelectMany(x => x.IdentificacaoUsuarioCidadao.CadastroIndividual)
-                .FirstOrDefault());
+            var data = cad.IdentificacaoUsuarioCidadao?.CadastroIndividual.FirstOrDefault();
 
             var cont = Domain.ASSMED_Contratos.First();
 
             var cpf = cad.ASSMED_PesFisica?.CPF?.Trim()?.Replace("([^0-9])", "") ?? "00000000000";
 
-            var iden = data?.IdentificacaoUsuarioCidadao1;
+            var iden = cad.IdentificacaoUsuarioCidadao;
 
             var header = data?.UnicaLotacaoTransport;
             var nh = header == null;
@@ -221,7 +259,6 @@ namespace Softpark.WS.Controllers.Api
                 EmSituacaoDeRua1 = null,
                 fichaAtualizada = false,
                 id = Guid.Empty,
-                idAuto = 0,
                 InformacoesSocioDemograficas1 = null,
                 Justificativa = null,
                 SaidaCidadaoCadastro1 = null,

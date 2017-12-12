@@ -9,7 +9,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Softpark.Models
 {
@@ -185,20 +184,105 @@ namespace Softpark.Models
             if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
                 parameters.Add(new SqlParameter("@nome", $"%{nomeOuCns}%"));
 
-            return ficha == null ? VW_Profissionais(cnes, nomeOuCns, limit) :
-            Database.SqlQuery<VW_Profissional>("SELECT TOP " + limit +
+            var query = "SELECT DISTINCT TOP " + limit +
                 @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
                     a.Profissao, a.CNES, a.Unidade,
                     COALESCE(CAST(c.CodINE AS VARCHAR(18)), '') AS INE,
                     COALESCE((a.INE + ' - ' + a.Equipe), '') AS Equipe,
                     a.CodUsu, CAST((CASE b.Ficha WHEN @ficha THEN 1 ELSE 0 END) AS BIT) AS Autorizado
                 FROM [api].[VW_Profissional] AS a
-                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO))
+                LEFT JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO)) AND b.Ficha = @ficha
                 LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
                 WHERE a.CNS IS NOT NULL" +
                 (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
                 (string.IsNullOrEmpty(nomeOuCns?.Trim()) ? "" : " AND (a.CNS = @cns OR a.Nome LIKE @nome)") +
-                " ORDER BY a.Nome, a.Profissao, a.Unidade, a.Equipe", parameters: parameters.ToArray());
+                " ORDER BY Nome, Profissao, Unidade, Equipe, Autorizado DESC";
+
+            return ficha == null ? VW_Profissionais(cnes, nomeOuCns, limit) :
+            Database.SqlQuery<VW_Profissional>(query, parameters: parameters.ToArray());
+        }
+
+        /// <summary>
+        /// Buscar Profissional válido
+        /// </summary>
+        /// <param name="cnes"></param>
+        /// <param name="ine"></param>
+        /// <param name="cbo"></param>
+        /// <param name="cns"></param>
+        /// <returns></returns>
+        public virtual VW_Profissional GetProfissionalMobile(string cnes, string ine, string cbo, string cns)
+        {
+            var parameters = new List<SqlParameter>();
+            
+            if (!string.IsNullOrEmpty(ine?.Trim()))
+                parameters.Add(new SqlParameter("@ine", ine));
+
+            parameters.Add(new SqlParameter("@cnes", cnes));
+
+            parameters.Add(new SqlParameter("@cns", cnes));
+
+            parameters.Add(new SqlParameter("@cbo", cbo));
+
+            var query = "SELECT DISTINCT TOP 10" +
+                @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
+                    a.Profissao, a.CNES, a.Unidade,
+                    COALESCE(CAST(c.CodINE AS VARCHAR(18)), '') AS INE,
+                    COALESCE((a.INE + ' - ' + a.Equipe), '') AS Equipe,
+                    a.CodUsu
+                FROM [api].[VW_Profissional] AS a
+                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO)) AND b.Ficha IN ('CadastroIndividual', 'CadastroDomiciliar', 'VisitaDomiciliar')
+                LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
+                WHERE a.CNS IS NOT NULL" +
+                (string.IsNullOrEmpty(ine?.Trim()) ? "" : " AND a.INE = @ine") +
+                " AND a.CNES = @cnes" +
+                " AND a.CNS = @cns AND a.CBO = @cbo)" +
+                " ORDER BY Nome, Profissao, Unidade, Equipe";
+
+            return Database.SqlQuery<VW_Profissional>(query, parameters: parameters.ToArray()).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Buscar Profissional válido
+        /// </summary>
+        /// <param name="ficha"></param>
+        /// <param name="cnes"></param>
+        /// <param name="ine"></param>
+        /// <param name="nomeOuCns"></param>
+        /// <returns></returns>
+        public virtual VW_Profissional GetProfissional(string ficha, string cnes, string ine, string nomeOuCns)
+        {
+            var parameters = new List<SqlParameter>();
+
+            parameters.Add(new SqlParameter("@ficha", ficha));
+
+            if (!string.IsNullOrEmpty(ine?.Trim()))
+                parameters.Add(new SqlParameter("@ine", ine));
+
+            if (!string.IsNullOrEmpty(cnes?.Trim()))
+                parameters.Add(new SqlParameter("@cnes", cnes));
+
+            if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
+                parameters.Add(new SqlParameter("@cns", nomeOuCns));
+
+            if (!string.IsNullOrEmpty(nomeOuCns?.Trim()))
+                parameters.Add(new SqlParameter("@nome", $"%{nomeOuCns}%"));
+
+            var query = "SELECT DISTINCT TOP 1" +
+                @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
+                    a.Profissao, a.CNES, a.Unidade,
+                    COALESCE(CAST(c.CodINE AS VARCHAR(18)), '') AS INE,
+                    COALESCE((a.INE + ' - ' + a.Equipe), '') AS Equipe,
+                    a.CodUsu
+                FROM [api].[VW_Profissional] AS a
+                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO)) AND b.Ficha = @ficha
+                LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
+                WHERE a.CNS IS NOT NULL" +
+                (string.IsNullOrEmpty(ine?.Trim()) ? "" : " AND a.INE = @ine") +
+                (string.IsNullOrEmpty(cnes?.Trim()) ? "" : " AND a.CNES = @cnes") +
+                (string.IsNullOrEmpty(nomeOuCns?.Trim()) ? "" : " AND (a.CNS = @cns OR a.Nome LIKE @nome)") +
+                " ORDER BY Nome, Profissao, Unidade, Equipe";
+
+            return Database.SqlQuery<VW_Profissional>(query, parameters: parameters.ToArray()).FirstOrDefault();
         }
 
         /// <summary>
@@ -206,19 +290,22 @@ namespace Softpark.Models
         /// </summary>
         public virtual DbRawSqlQuery<VW_Cadastros> VW_Cadastros(string q, int limit)
         {
-            string query = "";
+            string query = "",
+                   qry = "";
 
-            if (q != null && !string.IsNullOrEmpty(q.Trim()))
+            try
             {
-                query = $@"
+                if (q != null && !string.IsNullOrEmpty(q.Trim()))
+                {
+                    query = $@"
         AND (CAST(C.CODIGO AS VARCHAR(18)) = @q
          OR LTRIM(RTRIM(CONVERT(VARCHAR(10),CONVERT(date, COALESCE(ISNULL(C1.DTNASC,C2.DTNASC), ''),106),103))) COLLATE Latin1_General_CI_AI = @q
          OR LTRIM(RTRIM(COALESCE(ISNULL(C1.CPF,C2.CPF), ''))) COLLATE Latin1_General_CI_AI = @q
          OR REPLACE(REPLACE(LTRIM(RTRIM(COALESCE(ISNULL(C1.CPF,C2.CPF), ''))) COLLATE Latin1_General_CI_AI, '-', ''), '.', '') = @q
          OR LTRIM(RTRIM(C.NOME)) COLLATE Latin1_General_CI_AI LIKE '%' + @q + '%')";
-            }
+                }
 
-            return Database.SqlQuery<VW_Cadastros>($@"
+                qry = $@"
      SELECT TOP {limit} C.CODIGO,
 			LTRIM(RTRIM(COALESCE(D.NUMERO, ''))) COLLATE Latin1_General_CI_AI AS CNS,
 			LTRIM(RTRIM(C.NOME)) COLLATE Latin1_General_CI_AI AS NOME,
@@ -236,7 +323,14 @@ namespace Softpark.Models
 	  WHERE Nome IS NOT NULL
 		AND LEN(LTRIM(RTRIM(C.NOME)) COLLATE Latin1_General_CI_AI) > 0
 		AND LTRIM(RTRIM(C.NOME)) COLLATE Latin1_General_CI_AI NOT LIKE '%*%' {query}
-   ORDER BY C.Nome COLLATE Latin1_General_CI_AI", new SqlParameter("@q", q));
+   ORDER BY C.Nome COLLATE Latin1_General_CI_AI";
+
+                return Database.SqlQuery<VW_Cadastros>(qry, new SqlParameter("@q", q));
+            }
+            catch(Exception e)
+            {
+                throw new Exception(qry, e);
+            }
         }
 
         /// <summary>
@@ -254,6 +348,17 @@ namespace Softpark.Models
                 .ToArray()
                 .Select(x => new object[] { x.Data, x.Profissional, x.Profissao, x.Equipe, x.Status, x.UuidFicha })
                 .ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool RunningInSantana()
+        {
+            return Database.SqlQuery<bool>(
+                "SELECT CAST(COUNT(name) AS BIT) FROM sys.views WHERE name LIKE 'VW_ultimo_cadastroIndividual' AND schema_id = SCHEMA_ID('api')"
+                ).Single();
         }
 
         /// <summary>

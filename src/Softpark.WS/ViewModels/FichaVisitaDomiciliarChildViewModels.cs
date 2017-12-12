@@ -359,7 +359,7 @@ namespace Softpark.WS.ViewModels
             child.Justificativa = Justificativa;
             child.latitude = latitude;
             child.longitude = longitude;
-            child.microarea = microarea != null && !string.IsNullOrEmpty(microarea.Trim()) ? microarea : null;
+            child.microarea = !string.IsNullOrEmpty(microarea?.Trim()) ? microarea?.Trim() : null;
             child.nomeCidadao = nomeCidadao;
             child.numProntuario = numProntuario;
             child.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional;
@@ -383,9 +383,12 @@ namespace Softpark.WS.ViewModels
             Guid.TryParse(ficha.uuidFicha.Replace(ficha.UnicaLotacaoTransport.cnes + "-", ""), out Guid idf);
             var proc = await domain.SIGSM_Transmissao_Processos.FindAsync(idf);
 
-            proc.SIGSM_Transmissao_Processos_Log.Clear();
+            if (proc != null)
+            {
+                proc?.SIGSM_Transmissao_Processos_Log.Clear();
 
-            domain.SIGSM_Transmissao_Processos.Remove(proc);
+                domain.SIGSM_Transmissao_Processos.Remove(proc);
+            }
 
             await domain.SaveChangesAsync();
 

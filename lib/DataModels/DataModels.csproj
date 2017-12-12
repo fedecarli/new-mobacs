@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AE91494A-C354-48C7-BC65-4781D200D7C7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataModels</RootNamespace>
+    <AssemblyName>DataModels</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>pk.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper.Extension, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dapper.Extension.1.0.0.1\lib\net45\Dapper.Extension.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnimalNoDomicilio.cs" />
+    <Compile Include="ASSMED_Acesso.cs" />
+    <Compile Include="ASSMED_Cadastro.cs" />
+    <Compile Include="ASSMED_CadastroDocPessoal.cs" />
+    <Compile Include="ASSMED_CadastroDomiciliarVinc.cs" />
+    <Compile Include="ASSMED_CadastroIndividualVinc.cs" />
+    <Compile Include="ASSMED_CadastroPF.cs" />
+    <Compile Include="ASSMED_CadEmails.cs" />
+    <Compile Include="ASSMED_CadTelefones.cs" />
+    <Compile Include="ASSMED_Contratos.cs" />
+    <Compile Include="ASSMED_Endereco.cs" />
+    <Compile Include="ASSMED_PesFisica.cs" />
+    <Compile Include="ASSMED_TipoDocPessoal.cs" />
+    <Compile Include="ASSMED_Usuario.cs" />
+    <Compile Include="AS_Credenciados.cs" />
+    <Compile Include="AS_CredenciadosUsu.cs" />
+    <Compile Include="AS_CredenciadosVinc.cs" />
+    <Compile Include="AS_Profissoes.cs" />
+    <Compile Include="AS_ProfissoesTab.cs" />
+    <Compile Include="AS_SetoresPar.cs" />
+    <Compile Include="CadastroDomiciliar.cs" />
+    <Compile Include="CadastroIndividual.cs" />
+    <Compile Include="CadastroIndividual_recusa.cs" />
+    <Compile Include="Cidade.cs" />
+    <Compile Include="Classes.cs" />
+    <Compile Include="CondicaoMoradia.cs" />
+    <Compile Include="CondicoesDeSaude.cs" />
+    <Compile Include="Conflito.cs" />
+    <Compile Include="DbObject.cs" />
+    <Compile Include="DeficienciasCidadao.cs" />
+    <Compile Include="Documentos.cs" />
+    <Compile Include="DoencaCardiaca.cs" />
+    <Compile Include="DoencaRespiratoria.cs" />
+    <Compile Include="DoencaRins.cs" />
+    <Compile Include="DomainContainer.cs" />
+    <Compile Include="EmSituacaoDeRua.cs" />
+    <Compile Include="EnderecoLocalPermanencia.cs" />
+    <Compile Include="Etnia.cs" />
+    <Compile Include="FamiliaRow.cs" />
+    <Compile Include="FichaVisitaDomiciliarChild.cs" />
+    <Compile Include="FichaVisitaDomiciliarMaster.cs" />
+    <Compile Include="HigienePessoalSituacaoRua.cs" />
+    <Compile Include="IdentificacaoUsuarioCidadao.cs" />
+    <Compile Include="InformacoesSocioDemograficas.cs" />
+    <Compile Include="InstituicaoPermanencia.cs" />
+    <Compile Include="Lote.cs" />
+    <Compile Include="Nacionalidade.cs" />
+    <Compile Include="OrigemAlimentoSituacaoRua.cs" />
+    <Compile Include="OrigemVisita.cs" />
+    <Compile Include="ProfCidadaoVinc.cs" />
+    <Compile Include="ProfCidadaoVincAgendaProd.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais1_Result.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result1.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result2.cs" />
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result3.cs" />
+    <Compile Include="RastroFicha.cs" />
+    <Compile Include="RegrasCadastro.cs" />
+    <Compile Include="ResponsavelPorCrianca.cs" />
+    <Compile Include="SaidaCidadaoCadastro.cs" />
+    <Compile Include="Setores.cs" />
+    <Compile Include="SetoresINEs.cs" />
+    <Compile Include="SIGSM_MotivoVisita.cs" />
+    <Compile Include="SIGSM_ServicoSerializador_Agenda.cs" />
+    <Compile Include="SIGSM_ServicoSerializador_Config.cs" />
+    <Compile Include="SIGSM_ServicoSerializador_Fichas.cs" />
+    <Compile Include="SIGSM_Transmissao.cs" />
+    <Compile Include="SIGSM_Transmissao_Processos.cs" />
+    <Compile Include="SIGSM_Transmissao_Processos_Log.cs" />
+    <Compile Include="SIGSM_Transmissao_StatusGeracao.cs" />
+    <Compile Include="TB_MS_TIPO_LOGRADOURO.cs" />
+    <Compile Include="TipoOrigem.cs" />
+    <Compile Include="TP_Abastecimento_Agua.cs" />
+    <Compile Include="TP_Acesso_Domicilio.cs" />
+    <Compile Include="TP_Animais.cs" />
+    <Compile Include="TP_Condicao_Avaliada.cs" />
+    <Compile Include="TP_Conduta.cs" />
+    <Compile Include="TP_Cond_Posse_Uso_Terra.cs" />
+    <Compile Include="TP_Consideracao_Peso.cs" />
+    <Compile Include="TP_Construcao_Domicilio.cs" />
+    <Compile Include="TP_Crianca.cs" />
+    <Compile Include="TP_Curso.cs" />
+    <Compile Include="TP_Deficiencia.cs" />
+    <Compile Include="TP_Destino_Lixo.cs" />
+    <Compile Include="TP_Doenca_Cardiaca.cs" />
+    <Compile Include="TP_Doenca_Renal.cs" />
+    <Compile Include="TP_Doenca_Respiratoria.cs" />
+    <Compile Include="TP_Domicilio.cs" />
+    <Compile Include="TP_Escoamento_Esgoto.cs" />
+    <Compile Include="TP_EstadoCivil.cs" />
+    <Compile Include="TP_Exames.cs" />
+    <Compile Include="TP_Higiene_Pessoal.cs" />
+    <Compile Include="TP_Identidade_Genero_Cidadao.cs" />
+    <Compile Include="TP_Imovel.cs" />
+    <Compile Include="TP_Localizacao.cs" />
+    <Compile Include="TP_Motivo_Saida.cs" />
+    <Compile Include="TP_Nacionalidade.cs" />
+    <Compile Include="TP_Nasf.cs" />
+    <Compile Include="TP_Orientacao_Sexual.cs" />
+    <Compile Include="TP_Origem_Alimentacao.cs" />
+    <Compile Include="TP_Quantas_Vezes_Alimentacao.cs" />
+    <Compile Include="TP_Raca_Cor.cs" />
+    <Compile Include="TP_Relacao_Parentesco.cs" />
+    <Compile Include="TP_Renda_Familiar.cs" />
+    <Compile Include="TP_Saida_Cadastro.cs" />
+    <Compile Include="TP_Sexo.cs" />
+    <Compile Include="TP_Sexo_Genero.cs" />
+    <Compile Include="TP_Situacao_Moradia.cs" />
+    <Compile Include="TP_Situacao_Moradia_Rural.cs" />
+    <Compile Include="TP_Sit_Mercado.cs" />
+    <Compile Include="TP_Sit_Rua.cs" />
+    <Compile Include="TP_Tratamento_Agua.cs" />
+    <Compile Include="UF.cs" />
+    <Compile Include="UnicaLotacaoTransport.cs" />
+    <Compile Include="VW_CadastroDomiciliar.cs" />
+    <Compile Include="VW_CadastroIndividual.cs" />
+    <Compile Include="VW_Cadastros.cs" />
+    <Compile Include="VW_ConsultaCadastrosDomiciliares.cs" />
+    <Compile Include="VW_ConsultaCadastrosIndividuais.cs" />
+    <Compile Include="VW_FichasMaster.cs" />
+    <Compile Include="VW_IdentificacaoUsuarioCidadao.cs" />
+    <Compile Include="VW_Profissional.cs" />
+    <Compile Include="VW_profissional_cns.cs" />
+    <Compile Include="VW_ultimo_cadastroDomiciliar.cs" />
+    <Compile Include="VW_ultimo_cadastroIndividual.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="key.snk" />
+    <None Include="packages.config" />
+    <None Include="pk.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

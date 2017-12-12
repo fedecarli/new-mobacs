@@ -284,8 +284,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CabecalhoTransporte.ine = (await db.SetoresINEs.FirstOrDefaultAsync(x => x.CodINE == ine && x.CodSetor == setorPar))?.Numero;
             }
 
-            var profissional = db.VW_Profissionais("CadastroDomiciliar", CabecalhoTransporte.cnes, CabecalhoTransporte.profissionalCNS, 1)
-                            .FirstOrDefault(x => x.INE == null || x.INE.Trim() == CabecalhoTransporte.ine);
+            var profissional = db.GetProfissional("CadastroDomiciliar", CabecalhoTransporte.cnes, CabecalhoTransporte.ine, CabecalhoTransporte.profissionalCNS);
 
             if (profissional != null)
             {
@@ -473,7 +472,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             var codtplog = cods.FirstOrDefault(x => x != end.tipoLogradouroNumeroDne);
 
             int? tplog = null;
-            if (int.TryParse(codtplog, out int tl))
+            if (int.TryParse(codtplog??"_", out int tl))
                 tplog = tl;
 
             var cid = await db.Cidade.FirstOrDefaultAsync(x => x.CodIbge != null && x.CodIbge.Trim() == end.codigoIbgeMunicipio);
@@ -495,7 +494,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                     .SelectMany(x => x.ASSMED_Cadastro)
                     .ToListAsync();
 
-                    var item = resp.ASSMED_Endereco.Max(x => x.ItemEnd) + 1;
+                    var item = (resp.ASSMED_Endereco.Count == 0 ? 0 : resp.ASSMED_Endereco.Max(x => x.ItemEnd)) + 1;
 
                     var respEnd = resp.ASSMED_Endereco.Where(x => x.TipoEnd == "R").OrderByDescending(x => x.ItemEnd).FirstOrDefault();
                     respEnd = new ASSMED_Endereco
@@ -530,7 +529,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
                     foreach (var depend in depends)
                     {
-                        item = depend.ASSMED_Endereco.Max(x => x.ItemEnd) + 1;
+                        item = (depend.ASSMED_Endereco.Count == 0 ? 0 : depend.ASSMED_Endereco.Max(x => x.ItemEnd)) + 1;
 
                         var respDep = depend.ASSMED_Endereco.Where(x => x.TipoEnd == "R")
                             .OrderByDescending(x => x.ItemEnd).FirstOrDefault();
