@@ -364,8 +364,9 @@ namespace Softpark.WS.ViewModels
             child.numProntuario = numProntuario;
             child.pesoAcompanhamentoNutricional = pesoAcompanhamentoNutricional;
             child.sexo = sexo;
-            child.SIGSM_MotivoVisita = motivosVisita.Select(x => domain.SIGSM_MotivoVisita.Find(x))
-                .Where(x => x != null).ToList();
+            child.SIGSM_MotivoVisita.Clear();
+            motivosVisita.Select(x => domain.SIGSM_MotivoVisita.Find(x))
+                .Where(x => x != null).ToList().ForEach(child.SIGSM_MotivoVisita.Add);
             child.statusVisitaCompartilhadaOutroProfissional = statusVisitaCompartilhadaOutroProfissional;
             child.stForaArea = stForaArea || child.microarea == null;
             child.tipoDeImovel = tipoDeImovel;

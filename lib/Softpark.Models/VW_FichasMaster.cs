@@ -113,7 +113,7 @@ namespace Softpark.Models
 	 INNER JOIN api.VW_Profissional AS p
 			 ON u.cboCodigo_2002 = p.CBO
 			AND u.cnes = p.CNES
-			AND u.ine = p.INE
+			AND (u.ine = p.INE OR (p.INE IS NULL AND u.INE IS NULL))
 			AND u.profissionalCNS = p.CNS
 	 INNER JOIN api.OrigemVisita AS o
 			 ON u.token = o.token

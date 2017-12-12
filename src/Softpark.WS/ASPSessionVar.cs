@@ -39,9 +39,12 @@ namespace Softpark.WS
 
             var cfg = db?.SIGSM_ServicoSerializador_Config?.Find("sessionLocation");
 
-            var uri = cfg?.Valor ?? "http://localhost/sigsm/v2/SessionVar.asp";
-
+            var uri = cfg?.Valor ?? "/sigsm/v2/SessionVar.asp";
+            
             uri += $"?SessionVar={varName}";
+
+            if (uri[0] == '/')
+                uri = $"http://localhost{uri}";
 
             var client = new WebServiceClient();
 

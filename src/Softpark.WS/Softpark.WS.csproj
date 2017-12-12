@@ -459,6 +459,7 @@
     <Content Include="installation\api-1.8.0.0.sql" />
     <Content Include="key.snk" />
     <Content Include="pk.snk" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <EmbeddedResource Include="SwaggerExtensions\loadTest.js" />
     <Content Include="SessionVar.asp" />

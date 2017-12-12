@@ -193,7 +193,7 @@ namespace Softpark.WS.Controllers.Api
 
             var cont = Domain.ASSMED_Contratos.First();
 
-            var cpf = cad.ASSMED_PesFisica?.CPF?.Trim()?.Replace("([^0-9])", "") ?? "00000000000";
+            var cpf = cad.ASSMED_PesFisica?.CPF?.Trim()?.Replace("([^0-9])", "") ?? "";
 
             var iden = cad.IdentificacaoUsuarioCidadao;
 
@@ -302,7 +302,7 @@ namespace Softpark.WS.Controllers.Api
                 cnsResponsavelFamiliar = null,
                 codigoIbgeMunicipioNascimento = Domain.Cidade.SingleOrDefault(x => x.CodCidade == mun)?.CodIbge,
                 ComplementoRG = rg?.ComplementoRG,
-                CPF = cpf.Length == 11 ? cpf : "00000000000",
+                CPF = cpf.Length == 11 ? cpf : null,
                 dataNascimentoCidadao = cad.ASSMED_PesFisica?.DtNasc,
                 desconheceNomeMae = cad.ASSMED_PesFisica?.NomeMae == null,
                 desconheceNomePai = cad.ASSMED_PesFisica?.NomePai == null,
@@ -692,17 +692,25 @@ namespace Softpark.WS.Controllers.Api
             var child = ficha.FichaVisitaDomiciliarChild.SingleOrDefault(x => x.childId == childId);
 
             if (child == null) return Ok();
-
+            
             child.SIGSM_MotivoVisita.Clear();
-            ficha.FichaVisitaDomiciliarChild.Remove(child);
+
+            await Domain.SaveChangesAsync();
+
             Domain.FichaVisitaDomiciliarChild.Remove(child);
 
-            Guid.TryParse(ficha.uuidFicha.Replace(ficha.UnicaLotacaoTransport.cnes + "-", ""), out Guid id);
+            await Domain.SaveChangesAsync();
+            
+            Guid.TryParse(ficha.uuidFicha.Substring(8), out Guid id);
+
             var proc = await Domain.SIGSM_Transmissao_Processos.FindAsync(id);
 
-            proc.SIGSM_Transmissao_Processos_Log.Clear();
+            if (proc != null)
+            {
+                proc.SIGSM_Transmissao_Processos_Log.Clear();
 
-            Domain.SIGSM_Transmissao_Processos.Remove(proc);
+                Domain.SIGSM_Transmissao_Processos.Remove(proc);
+            }
 
             await Domain.SaveChangesAsync();
 
