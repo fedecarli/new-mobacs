@@ -19,6 +19,8 @@ namespace Softpark.Models
         {
             this.AS_CredenciadosUsu = new HashSet<AS_CredenciadosUsu>();
             this.AS_CredenciadosVinc = new HashSet<AS_CredenciadosVinc>();
+            this.SIGSM_Check_Cadastros = new HashSet<SIGSM_Check_Cadastros>();
+            this.SIGSM_MicroArea_CredenciadoVinc = new HashSet<SIGSM_MicroArea_CredenciadoVinc>();
         }
     
         public int NumContrato { get; set; }
@@ -35,5 +37,9 @@ namespace Softpark.Models
         public virtual ICollection<AS_CredenciadosUsu> AS_CredenciadosUsu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AS_CredenciadosVinc> AS_CredenciadosVinc { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_Check_Cadastros> SIGSM_Check_Cadastros { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_MicroArea_CredenciadoVinc> SIGSM_MicroArea_CredenciadoVinc { get; set; }
     }
 }

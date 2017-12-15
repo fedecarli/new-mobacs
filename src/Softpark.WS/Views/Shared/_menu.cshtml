@@ -1,65 +1,43 @@
-﻿@using Softpark.WS.Controllers
+﻿@using Softpark.WS.Helpers
 @using Softpark.Models
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; height: 115px; background-color: @System.Parametros.corPrincipalSistema; border-bottom: 2px solid @System.Parametros.corPrincipalSistema; background: url('@Url.Content("~/img/SIGSM_TOPO.png")') no-repeat top center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; height: 115px; background-color: @ViewData["corPrincipalSistema"]; border-bottom: 2px solid @ViewData["corPrincipalSistema"]; background: url(@Url.Content("~/../../_inc/img/SIGSM_TOPO.png")) no-repeat top center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="height: 34px;">
             <span class="sr-only">Menu</span>
+            <!--<span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>-->
             <span class="glyphicon glyphicon-align-justify"></span>
         </button>
-        <a class="navbar-brand" href="index.asp">
-            <img src="@Url.Content($"~/{System.Parametros.logoInicialSistema}")" style="width: 85px; margin-left: 30px;" />
+        <a class="navbar-brand" href="@Url.Content("~/../")">
+            <img src="@ViewData["logoInicialSistema"]" style="width: 85px; margin-left: 30px;" />
         </a>
     </div>
     <!-- /.navbar-header -->
 
     <div id="dvNomeSist" class="pull-right" style="width: 330px;">
-        <span class="pull-right" style="font-size: 30px;">SIGSM - Saúde (e-sus)</span><br />
+        <span class="pull-right" style="font-size: 30px;">SIGSM - @ViewBag.NomeSistema</span><br />
         <span id="spNomeSist" class="pull-right">Sistema Integrado da Gestão da Saúde Municipal</span>
     </div>
 
     <div id="dvFaixaTop" class="row">
         <div id="dv2FaixaTop">
-            <span id="spSetorTop" class="pull-left text-capitalize"><i class="fa fa-home fa-fw" style="font-size: 18px;"></i>@Session["setor"]</span>
-            @Html.ActionLink("Sair", "Sair", "Usuario", new { }, new { title="Sair", @class="pull-right", @style= "margin-left: 20px; margin-top: -2px; font-size: 17px;" })
-            <span class="pull-right"><span id="spSaudacao"></span><a href="#nogo" class="text-capitalize" onclick="alteraSenha();" title="Alterar Senha" style="color: #fff; font-weight: inherit;"><i class="fa fa-user fa-fw" style="font-size: 16px;"></i>@User.Usuario().Nome</a><span id="spSaudacaoCid">, @System.Parametros.nomeCliente</span><span id="spSaudacaoHr"></span></span>
+            <span id="spSetorTop" class="pull-left text-capitalize"><i class="fa fa-home fa-fw" style="font-size: 18px;"></i>@ViewBag.Setor</span>
+            <a href="@Url.Content("~/../../_inc/logoff.asp")" class="pull-right" title="Sair" style="margin-left: 20px; margin-top: -2px; font-size: 17px;">Sair</a>
+            <span class="pull-right"><span id="spSaudacao"></span><a href="#nogo" class="text-capitalize" onclick="alteraSenha();" title="Alterar Senha" style="color: #fff; font-weight: inherit;"><i class="fa fa-user fa-fw" style="font-size: 16px;"></i>@ViewBag.Usuario</a><span id="spSaudacaoCid">, @ViewData["nomeCliente"]</span><span id="spSaudacaoHr"></span></span>
         </div>
     </div>
 
-    @{
-        var _db = DomainContainer.Current;
-
-        <input id="lang" type="hidden" value="pt-BR" />
-
-        string page = ViewBag.OldPageMap;
-
-        int? menu = null;
-        int? mFirst = null;
-        int? mSecund = null;
-        int? idMenus = null;
-
-        var _menu = _db.Menu.Where(x => x.link == page || x.sublink == page).ToArray()
-    .Select(x => new { x.id_menu, id_pai_direto = x.id_menu_pai, id_pai_indireto = _db.Menu.SingleOrDefault(y => y.id_menu == x.id_menu_pai)?.id_menu_pai })
-    .FirstOrDefault();
-
-        if (_menu != null)
-        {
-            menu = _menu.id_menu;
-
-            mFirst = _menu.id_pai_direto;
-
-            if (_menu.id_pai_indireto != null)
-            {
-                mSecund = _menu.id_pai_direto;
-                mFirst = _menu.id_pai_indireto;
-            }
-        }
-
-        idMenus = menu;
-    }
+    <input id="lang" type="hidden" value="pt-BR" />
 
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
-            @Html.Menu()
+            @{
+                int idUsuario = ViewBag.idUsuario;
+                int idSistema = ViewBag.idSistema;
+                DomainContainer domain = ViewBag.Domain;
+            }
+            @Html.CarregaMenu(Url, idUsuario, null, idSistema, domain)
         </div>
         <!-- /.sidebar-collapse -->
     </div>

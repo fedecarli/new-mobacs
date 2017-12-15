@@ -36,8 +36,10 @@ namespace Softpark.Models
         public string ENDAREAMICRO { get; set; }
         public Nullable<int> ENDSEMAREA { get; set; }
         public Nullable<System.Guid> IdFicha { get; set; }
+        public string MicroArea { get; set; }
     
         public virtual EnderecoLocalPermanencia EnderecoLocalPermanencia { get; set; }
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
+        public virtual SIGSM_MicroAreas SIGSM_MicroAreas { get; set; }
     }
 }

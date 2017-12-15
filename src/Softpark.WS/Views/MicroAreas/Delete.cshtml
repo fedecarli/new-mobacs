@@ -1,0 +1,50 @@
+﻿@model Softpark.Models.SIGSM_MicroAreas
+@{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper"
+    };
+
+    if (IsAjax)
+    {
+        Layout = null;
+    }
+}
+<div id="page-wrapper">
+    <h2>Remover Micro Área</h2>
+
+    <h3>Tem certeza que deseja remover esta Micro Área?</h3>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Código
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Codigo)
+            </dd>
+
+            <dt>
+                Descrição
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descricao)
+            </dd>
+        </dl>
+
+        @using (Ajax.BeginForm(options))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Remover" class="btn btn-default" /> |
+                @{ options.HttpMethod = "GET"; }
+                @Ajax.ActionLink("Voltar", "Index", options)
+            </div>
+        }
+    </div>
+</div>

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Softpark.WS.ViewModels
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class UnicoPessoasViewModel
     {
-        public int CodMunicipe { get; set; }
+        public decimal? CodMunicipe { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Nome { get; set; }
         public string PrimeiroNome { get; set; }
         public string UltimoNome { get; set; }
@@ -48,7 +50,7 @@ namespace Softpark.WS.ViewModels
         public string Fone3 { get; set; }
         public string Fone4 { get; set; }
         public DateTime? DataAtualizacao { get; set; }
-        public int? cd_responsavel { get; set; }
+        public decimal cd_responsavel { get; set; }
         public string Nome_Responsavel { get; set; }
         public string NIS { get; set; }
         public string PrimeiroNomeSOUNDEX { get; set; }

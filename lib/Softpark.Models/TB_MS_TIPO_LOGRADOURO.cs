@@ -17,6 +17,5 @@ namespace Softpark.Models
         public string CO_TIPO_LOGRADOURO { get; set; }
         public string DS_TIPO_LOGRADOURO { get; set; }
         public string DS_TIPO_LOGRADOURO_ABREV { get; set; }
-        public Nullable<int> CodTpLogra { get; set; }
     }
 }

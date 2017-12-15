@@ -1,0 +1,25 @@
+﻿@model Softpark.Models.SIGSM_MicroArea_Unidade
+@{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "GET",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper"
+    };
+
+    if (IsAjax)
+    {
+        Layout = null;
+    }
+}
+<div id="page-wrapper">
+
+    <h2>Editando Associação de Unidade</h2>
+    
+    @Html.Partial("Form", Model)
+
+    <div>
+        @Ajax.ActionLink("Voltar", "Index", options)
+    </div>
+</div>

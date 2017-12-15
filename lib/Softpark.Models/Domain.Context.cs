@@ -32,7 +32,6 @@ namespace Softpark.Models
         public virtual DbSet<AnimalNoDomicilio> AnimalNoDomicilio { get; set; }
         public virtual DbSet<CadastroDomiciliar> CadastroDomiciliar { get; set; }
         public virtual DbSet<CadastroIndividual> CadastroIndividual { get; set; }
-        public virtual DbSet<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
         public virtual DbSet<CondicaoMoradia> CondicaoMoradia { get; set; }
         public virtual DbSet<CondicoesDeSaude> CondicoesDeSaude { get; set; }
         public virtual DbSet<DeficienciasCidadao> DeficienciasCidadao { get; set; }
@@ -48,7 +47,6 @@ namespace Softpark.Models
         public virtual DbSet<IdentificacaoUsuarioCidadao> IdentificacaoUsuarioCidadao { get; set; }
         public virtual DbSet<InformacoesSocioDemograficas> InformacoesSocioDemograficas { get; set; }
         public virtual DbSet<InstituicaoPermanencia> InstituicaoPermanencia { get; set; }
-        public virtual DbSet<Lote> Lote { get; set; }
         public virtual DbSet<OrigemAlimentoSituacaoRua> OrigemAlimentoSituacaoRua { get; set; }
         public virtual DbSet<OrigemVisita> OrigemVisita { get; set; }
         public virtual DbSet<RastroFicha> RastroFicha { get; set; }
@@ -74,8 +72,6 @@ namespace Softpark.Models
         public virtual DbSet<ASSMED_Usuario> ASSMED_Usuario { get; set; }
         public virtual DbSet<Cidade> Cidade { get; set; }
         public virtual DbSet<Etnia> Etnia { get; set; }
-        public virtual DbSet<ProfCidadaoVinc> ProfCidadaoVinc { get; set; }
-        public virtual DbSet<ProfCidadaoVincAgendaProd> ProfCidadaoVincAgendaProd { get; set; }
         public virtual DbSet<Setores> Setores { get; set; }
         public virtual DbSet<SetoresINEs> SetoresINEs { get; set; }
         public virtual DbSet<SIGSM_MotivoVisita> SIGSM_MotivoVisita { get; set; }
@@ -125,21 +121,18 @@ namespace Softpark.Models
         public virtual DbSet<TP_Situacao_Moradia_Rural> TP_Situacao_Moradia_Rural { get; set; }
         public virtual DbSet<TP_Tratamento_Agua> TP_Tratamento_Agua { get; set; }
         public virtual DbSet<UF> UF { get; set; }
-        public virtual DbSet<ASSMED_CadastroDomiciliarVinc> ASSMED_CadastroDomiciliarVinc { get; set; }
-        public virtual DbSet<ASSMED_CadastroIndividualVinc> ASSMED_CadastroIndividualVinc { get; set; }
-        public virtual DbSet<Conflito> Conflito { get; set; }
         public virtual DbSet<Nacionalidade> Nacionalidade { get; set; }
         public virtual DbSet<TB_MS_TIPO_LOGRADOURO> TB_MS_TIPO_LOGRADOURO { get; set; }
         public virtual DbSet<TP_Conduta> TP_Conduta { get; set; }
         public virtual DbSet<TP_Nasf> TP_Nasf { get; set; }
-        public virtual DbSet<VW_IdentificacaoUsuarioCidadao> VW_IdentificacaoUsuarioCidadao { get; set; }
-        public virtual DbSet<VW_ultimo_cadastroDomiciliar> VW_ultimo_cadastroDomiciliar { get; set; }
-        public virtual DbSet<VW_ultimo_cadastroIndividual> VW_ultimo_cadastroIndividual { get; set; }
         public virtual DbSet<VW_ConsultaCadastrosDomiciliares> VW_ConsultaCadastrosDomiciliares { get; set; }
         public virtual DbSet<VW_ConsultaCadastrosIndividuais> VW_ConsultaCadastrosIndividuais { get; set; }
-        public virtual DbSet<VW_profissional_cns> VW_profissional_cns { get; set; }
         public virtual DbSet<Documentos> Documentos { get; set; }
         public virtual DbSet<ASSMED_TipoDocPessoal> ASSMED_TipoDocPessoal { get; set; }
+        public virtual DbSet<SIGSM_Check_Cadastros> SIGSM_Check_Cadastros { get; set; }
+        public virtual DbSet<SIGSM_MicroArea_CredenciadoVinc> SIGSM_MicroArea_CredenciadoVinc { get; set; }
+        public virtual DbSet<SIGSM_MicroAreas> SIGSM_MicroAreas { get; set; }
+        public virtual DbSet<SIGSM_MicroArea_Unidade> SIGSM_MicroArea_Unidade { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

@@ -12,17 +12,18 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class VW_profissional_cns
+    public partial class SIGSM_Check_Cadastros
     {
+        public System.Guid id { get; set; }
+        public int NumContrato { get; set; }
         public decimal Codigo { get; set; }
-        public Nullable<int> IdProfissional { get; set; }
-        public string cnsProfissional { get; set; }
-        public Nullable<int> IdCidadao { get; set; }
-        public string cnsCidadao { get; set; }
-        public string CBO { get; set; }
-        public string CNES { get; set; }
-        public string INE { get; set; }
-        public int IdVinc { get; set; }
-        public decimal CodigoCidadao { get; set; }
+        public int CodCred { get; set; }
+        public bool BaixarEndereco { get; set; }
+        public System.DateTime Data { get; set; }
+        public Nullable<System.DateTime> DataDownload { get; set; }
+    
+        public virtual AS_Credenciados AS_Credenciados { get; set; }
+        public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
+        public virtual ASSMED_Contratos ASSMED_Contratos { get; set; }
     }
 }

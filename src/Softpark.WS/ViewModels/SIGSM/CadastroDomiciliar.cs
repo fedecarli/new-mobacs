@@ -212,11 +212,12 @@ namespace Softpark.WS.ViewModels.SIGSM
 
                     if (asc != null)
                     {
-                        asc.ASSMED_Cadastro.IdFicha = cad.EnderecoLocalPermanencia1.id;
+                        asc.ASSMED_Cadastro.IdFicha = cad.EnderecoLocalPermanencia1.ASSMED_Endereco
+                            .OrderByDescending(x => x.ItemEnd).Select(x => x.IdFicha).FirstOrDefault();
                     }
                 }
             }
-
+            
             return cad;
         }
 
@@ -274,7 +275,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 : CadastroDomiciliar.uuidFichaOriginadora;
 
             var proc = await db.SIGSM_Transmissao_Processos.FindAsync(CadastroDomiciliar.uuidFichaOriginadora);
-            
+
             if (CabecalhoTransporte.ine != null)
             {
                 int.TryParse(CabecalhoTransporte.ine, out int ine);
@@ -418,7 +419,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 else
                     break;
             }
-            
+
             if (dadoAnterior != null &&
                 !dadoAnterior.UnicaLotacaoTransport.OrigemVisita.enviado &&
                 dadoAnterior.UnicaLotacaoTransport.OrigemVisita.id_tipo_origem != 1)
@@ -472,12 +473,21 @@ namespace Softpark.WS.ViewModels.SIGSM
             var codtplog = cods.FirstOrDefault(x => x != end.tipoLogradouroNumeroDne);
 
             int? tplog = null;
-            if (int.TryParse(codtplog??"_", out int tl))
+            if (int.TryParse(codtplog ?? "_", out int tl))
                 tplog = tl;
 
             var cid = await db.Cidade.FirstOrDefaultAsync(x => x.CodIbge != null && x.CodIbge.Trim() == end.codigoIbgeMunicipio);
 
             var uf = await db.UF.FirstOrDefaultAsync(x => x.DNE != null && x.DNE.Trim() == end.numeroDneUf);
+
+            if (end.microarea != null && db.SIGSM_MicroAreas.All(x => x.Codigo != end.microarea))
+            {
+                db.SIGSM_MicroAreas.Add(new SIGSM_MicroAreas
+                {
+                    Codigo = end.microarea,
+                    Descricao = $"{end.nomeLogradouro}, {(end.stSemNumero ? "SN" : end.numero)}, {end.bairro} - {end.cep}"
+                });
+            }
 
             foreach (var fam in cad.FamiliaRow)
             {
@@ -510,6 +520,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                         Complemento = end.complemento,
                         Corresp = respEnd?.Corresp,
                         ENDAREAMICRO = end.microarea,
+                        MicroArea = end.microarea,
                         EnderecoLocalPermanencia = end,
                         ENDREFERENCIA = end.pontoReferencia,
                         ENDSEMAREA = end.stForaArea ? 1 : 0,
@@ -524,6 +535,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                         UF = uf?.UF1,
                         ENDAREA = respEnd?.ENDAREA
                     };
+
+                    resp.MicroArea = end.microarea;
 
                     resp.ASSMED_Endereco.Add(respEnd);
 
@@ -547,6 +560,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                             Complemento = end.complemento,
                             Corresp = respDep?.Corresp,
                             ENDAREAMICRO = end.microarea,
+                            MicroArea = end.microarea,
                             EnderecoLocalPermanencia = end,
                             ENDREFERENCIA = end.pontoReferencia,
                             ENDSEMAREA = end.stForaArea ? 1 : 0,
@@ -561,6 +575,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                             UF = uf?.UF1,
                             ENDAREA = respDep?.ENDAREA
                         };
+
+                        depend.MicroArea = end.microarea;
 
                         depend.ASSMED_Endereco.Add(respDep);
                     }

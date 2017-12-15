@@ -12,11 +12,17 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ASSMED_CadastroIndividualVinc
+    public partial class SIGSM_MicroArea_CredenciadoVinc
     {
         public int id { get; set; }
-        public Nullable<System.Guid> idCadastroIndividual { get; set; }
-        public Nullable<decimal> Codigo { get; set; }
-        public Nullable<System.DateTime> Data { get; set; }
+        public int idMicroAreaUnidade { get; set; }
+        public int NumContrato { get; set; }
+        public int CodCred { get; set; }
+        public int ItemVinc { get; set; }
+    
+        public virtual AS_Credenciados AS_Credenciados { get; set; }
+        public virtual AS_CredenciadosVinc AS_CredenciadosVinc { get; set; }
+        public virtual ASSMED_Contratos ASSMED_Contratos { get; set; }
+        public virtual SIGSM_MicroArea_Unidade SIGSM_MicroArea_Unidade { get; set; }
     }
 }

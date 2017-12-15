@@ -56,13 +56,14 @@
       <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommonServiceLocator.2.0.1\lib\net45\CommonServiceLocator.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Flurl, Version=2.3.0.0, Culture=neutral, PublicKeyToken=1308302a96879dfb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Flurl.Signed.2.3.0\lib\portable40-net40+sl5+win8+wp8+wpa81\Flurl.dll</HintPath>
@@ -127,7 +128,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Data.Edm.5.8.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.DotNet.InternalAbstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.DotNet.InternalAbstractions.1.0.0\lib\net451\Microsoft.DotNet.InternalAbstractions.dll</HintPath>
@@ -173,9 +173,6 @@
     </Reference>
     <Reference Include="Microsoft.Net.Http.Headers, Version=1.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Net.Http.Headers.1.0.3\lib\netstandard1.1\Microsoft.Net.Http.Headers.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
@@ -258,7 +255,6 @@
     </Reference>
     <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Spatial.5.8.2\lib\net40\System.Spatial.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encodings.Web.4.3.1\lib\netstandard1.0\System.Text.Encodings.Web.dll</HintPath>
@@ -348,6 +344,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\ApiHandleErrorAttribute.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWeb.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
@@ -392,6 +389,11 @@
     <Compile Include="Controllers\Api\ProcessosController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MicroAreaCredenciadoController.cs" />
+    <Compile Include="Controllers\MicroAreasController.cs" />
+    <Compile Include="Controllers\MicroAreaUnidadeController.cs" />
+    <Compile Include="Controllers\PreparoMobileController.cs" />
+    <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
     <Compile Include="ViewModels\AutenticacaoViewModel.cs" />
@@ -415,6 +417,7 @@
   <ItemGroup>
     <Content Include="apidate.js" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -455,6 +458,10 @@
     </Content>
     <Content Include="installation\api-1.3-final.sql" />
     <Content Include="installation\api-1.6.0.1.sql" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="installation\lock" />
     <Content Include="installation\api-1.8.0.0.sql" />
     <Content Include="key.snk" />
@@ -462,6 +469,31 @@
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <EmbeddedResource Include="SwaggerExtensions\loadTest.js" />
+    <Content Include="Scripts\bootstrap-select.js.map" />
+    <Content Include="Scripts\fichas.coffee" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\fichas.js">
+      <DependentUpon>fichas.coffee</DependentUpon>
+    </Content>
+    <Content Include="Scripts\fichas.min.js">
+      <DependentUpon>fichas.js</DependentUpon>
+    </Content>
+    <None Include="Scripts\jquery-3.2.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.2.1.js" />
+    <Content Include="Scripts\jquery-3.2.1.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.2.1.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
     <Content Include="SessionVar.asp" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -499,6 +531,26 @@
     <Content Include="Views\Shared\_LayoutHelp.cshtml" />
     <Content Include="Views\Shared\Common\_Cabecalho.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <Content Include="Views\MicroAreas\Create.cshtml" />
+    <Content Include="Views\MicroAreas\Delete.cshtml" />
+    <Content Include="Views\MicroAreas\Edit.cshtml" />
+    <Content Include="Views\MicroAreas\Index.cshtml" />
+    <Content Include="Views\MicroAreaUnidade\Create.cshtml" />
+    <Content Include="Views\MicroAreaUnidade\Delete.cshtml" />
+    <Content Include="Views\MicroAreaUnidade\Edit.cshtml" />
+    <Content Include="Views\MicroAreaUnidade\Index.cshtml" />
+    <Content Include="Views\MicroAreaUnidade\Form.cshtml" />
+    <Content Include="Views\MicroAreaCredenciado\Create.cshtml" />
+    <Content Include="Views\MicroAreaCredenciado\Delete.cshtml" />
+    <Content Include="Views\MicroAreaCredenciado\Edit.cshtml" />
+    <Content Include="Views\MicroAreaCredenciado\Index.cshtml" />
+    <Content Include="Views\ProparoMobile\Create.cshtml" />
+    <Content Include="Views\ProparoMobile\Delete.cshtml" />
+    <Content Include="Views\ProparoMobile\Details.cshtml" />
+    <Content Include="Views\ProparoMobile\Edit.cshtml" />
+    <Content Include="Views\ProparoMobile\Index.cshtml" />
+    <Content Include="Views\MicroAreas\Form.cshtml" />
+    <Content Include="Views\MicroAreaCredenciado\Form.cshtml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

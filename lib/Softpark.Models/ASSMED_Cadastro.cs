@@ -22,6 +22,7 @@ namespace Softpark.Models
             this.ASSMED_CadEmails = new HashSet<ASSMED_CadEmails>();
             this.ASSMED_CadTelefones = new HashSet<ASSMED_CadTelefones>();
             this.ASSMED_Endereco = new HashSet<ASSMED_Endereco>();
+            this.SIGSM_Check_Cadastros = new HashSet<SIGSM_Check_Cadastros>();
         }
     
         public int NumContrato { get; set; }
@@ -38,6 +39,8 @@ namespace Softpark.Models
         public string Justificativa { get; set; }
         public string MotivoHomologacao { get; set; }
         public Nullable<System.Guid> IdFicha { get; set; }
+        public long idAuto { get; set; }
+        public string MicroArea { get; set; }
     
         public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -51,5 +54,8 @@ namespace Softpark.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ASSMED_Endereco> ASSMED_Endereco { get; set; }
         public virtual ASSMED_PesFisica ASSMED_PesFisica { get; set; }
+        public virtual SIGSM_MicroAreas SIGSM_MicroAreas { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_Check_Cadastros> SIGSM_Check_Cadastros { get; set; }
     }
 }

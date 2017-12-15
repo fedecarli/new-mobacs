@@ -78,63 +78,12 @@ namespace Softpark.WS.ViewModels.SIGSM
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator DetalheIdentificacaoUsuarioCidadaoViewModel(VW_IdentificacaoUsuarioCidadao model)
-        {
-            var vm = new DetalheIdentificacaoUsuarioCidadaoViewModel();
-
-            vm.ApplyModel(model);
-
-            return vm;
-        }
-
-        /// <summary>
-        /// DataBind
-        /// </summary>
-        /// <param name="model"></param>
-        private void ApplyModel(VW_IdentificacaoUsuarioCidadao model)
-        {
-            if (model == null) return;
-
-            id = model.id;
-            Codigo = model.Codigo;
-            nomeSocial = model.nomeSocial;
-            codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao;
-            desconheceNomeMae = model.desconheceNomeMae ?? false;
-            emailCidadao = model.emailCidadao;
-            nacionalidadeCidadao = model.nacionalidadeCidadao ?? 1;
-            nomeCidadao = model.nomeCidadao;
-            nomeMaeCidadao = model.nomeMaeCidadao;
-            cnsCidadao = model.cnsCidadao;
-            cnsResponsavelFamiliar = model.cnsResponsavelFamiliar;
-            telefoneCelular = model.telefoneCelular;
-            numeroNisPisPasep = model.numeroNisPisPasep;
-            paisNascimento = model.paisNascimento;
-            racaCorCidadao = model.racaCorCidadao;
-            sexoCidadao = model.sexoCidadao;
-            statusEhResponsavel = model.statusEhResponsavel ?? false;
-            etnia = model.etnia;
-            nomePaiCidadao = model.nomePaiCidadao;
-            desconheceNomePai = model.desconheceNomePai ?? false;
-            dtNaturalizacao = model.dtNaturalizacao;
-            portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil;
-            microarea = model.microarea;
-            stForaArea = model.stForaArea ?? false;
-            RG = model.RG;
-            ComplementoRG = model.ComplementoRG;
-            CPF = model.CPF;
-            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia ?? false;
-            EstadoCivil = model.EstadoCivil;
-        }
-
-        /// <summary>
-        /// DataBind
-        /// </summary>
-        /// <param name="model"></param>
         private void ApplyModel(IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
+
+            microarea = model.ASSMED_Cadastro1.ASSMED_Endereco.OrderBy(x => x.ItemEnd).Select(x => x.MicroArea)
+                .LastOrDefault() ?? model.ASSMED_Cadastro1.MicroArea;
 
             id = model.id;
             Codigo = model.Codigo;
@@ -160,7 +109,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             dtNaturalizacao = model.dtNaturalizacao;
             portariaNaturalizacao = model.portariaNaturalizacao;
             dtEntradaBrasil = model.dtEntradaBrasil;
-            microarea = model.microarea;
+            microarea = microarea;
             stForaArea = model.stForaArea;
             RG = model.RG;
             ComplementoRG = model.ComplementoRG;
@@ -319,7 +268,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             Clear(CadastroIndividual.emSituacaoDeRua);
             Clear(CadastroIndividual.saidaCidadaoCadastro);
         }
-        
+
         /// <summary>
         /// Este método é responsável por tratar e processar os cadastros individuais
         /// </summary>
@@ -359,7 +308,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             cad.tpCdsOrigem = 3;
             cad.UnicaLotacaoTransport = h;
             cad.DataRegistro = DateTime.Now;
-            
+
             // registra o modelo
             domain.CadastroIndividual.Add(cad);
 
@@ -379,7 +328,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             CleanStrings();
 
             CabecalhoTransporte.codigoIbgeMunicipio = db.Database.SqlQuery<ASSMED_Contratos>("SELECT * FROM ASSMED_Contratos").First().CodigoIbgeMunicipio;
-            
+
             if (CabecalhoTransporte.ine != null)
             {
                 int.TryParse(CabecalhoTransporte.ine, out int ine);
@@ -428,7 +377,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroIndividual.uuidFichaOriginadora = CadastroIndividual.uuid;
                 CadastroIndividual.fichaAtualizada = false;
             }
-            
+
             SIGSM_Transmissao_Processos proc = await db.SIGSM_Transmissao_Processos.FindAsync(ultimaFicha?.id);
 
             var updateAssmed = assmedCadastro == null || ultimaFicha == null || (ultimaFicha.UnicaLotacaoTransport.dataAtendimento <= CabecalhoTransporte.dataAtendimento);
@@ -562,7 +511,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             CleanStrings();
 
             var cad = await ProcessarIndividuo(db);
-            
+
             if (cad.IdentificacaoUsuarioCidadao1 != null)
             {
                 cad.IdentificacaoUsuarioCidadao1.Codigo = assmedCadastro?.Codigo ?? CadastroIndividual.identificacaoUsuarioCidadao?.Codigo;
@@ -595,7 +544,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             }
 
             var header = cad.UnicaLotacaoTransport;
-            
+
             cad.Validar(db);
 
             var da = dadoAnterior == null ? null :
@@ -697,6 +646,8 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             var iden = cad.IdentificacaoUsuarioCidadao1;
 
+            var microarea = iden.microarea;
+
             var requester = (url.Request.Properties.ContainsKey("MS_HttpContext") ? url.Request.Properties["MS_HttpContext"] as HttpContextWrapper : null)?
                 .Request.UserHostAddress ?? (HttpContext.Current?.Request?.UserHostAddress);
 
@@ -733,7 +684,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             ASSMED_CadastroDocPessoal cns = null;
             ASSMED_CadastroDocPessoal rg = null;
             ASSMED_CadastroDocPessoal pis = null;
-            
+
             if (iden.cnsCidadao != null && novo)
             {
                 var _cns = iden.cnsCidadao;
@@ -888,7 +839,8 @@ namespace Softpark.WS.ViewModels.SIGSM
                 Nome = iden.nomeCidadao,
                 NomeSocial = iden.nomeSocial,
                 NumIP = requester,
-                Tipo = "F"
+                Tipo = "F",
+                MicroArea = microarea
             }, novo ? new string[0] : new[] {
                 nameof(ASSMED_Cadastro.Codigo),
                 nameof(ASSMED_Cadastro.NumContrato),
@@ -901,6 +853,24 @@ namespace Softpark.WS.ViewModels.SIGSM
                 nameof(ASSMED_Cadastro.IdentificacaoUsuarioCidadao1),
                 nameof(ASSMED_Cadastro.IdFicha)
             });
+
+            var end = assmed.ASSMED_Endereco.OrderBy(x => x.ItemEnd).LastOrDefault();
+
+            if (microarea != null && db.SIGSM_MicroAreas.All(x => x.Codigo != microarea))
+            {
+                var desc = end != null ? $"{end.Logradouro}, {(end.SEMNUMERO == 1 ? "SN" : end.Numero)}, {end.Bairro} - {end.CEP}" : microarea;
+
+                db.SIGSM_MicroAreas.Add(new SIGSM_MicroAreas
+                {
+                    Codigo = microarea,
+                    Descricao = desc
+                });
+
+                if (end != null)
+                {
+                    end.MicroArea = microarea;
+                }
+            }
 
             if (novo)
             {
@@ -963,7 +933,7 @@ namespace Softpark.WS.ViewModels.SIGSM
             if (iden.cnsCidadao != null)
             {
                 var n = cns == null;
-                
+
                 if (n)
                 {
                     cns = new ASSMED_CadastroDocPessoal
@@ -977,7 +947,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                         NumContrato = 22,
                         Codigo = assmed.Codigo
                     };
-                    
+
                     assmed.ASSMED_CadastroDocPessoal.Add(cns);
                 }
                 else

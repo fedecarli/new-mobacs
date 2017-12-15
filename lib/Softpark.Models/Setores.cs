@@ -20,6 +20,7 @@ namespace Softpark.Models
             this.AS_CredenciadosVinc = new HashSet<AS_CredenciadosVinc>();
             this.AS_SetoresPar = new HashSet<AS_SetoresPar>();
             this.SetoresINEs = new HashSet<SetoresINEs>();
+            this.SIGSM_MicroArea_Unidade = new HashSet<SIGSM_MicroArea_Unidade>();
         }
     
         public int CodSetor { get; set; }
@@ -38,5 +39,7 @@ namespace Softpark.Models
         public virtual ICollection<AS_SetoresPar> AS_SetoresPar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SetoresINEs> SetoresINEs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_MicroArea_Unidade> SIGSM_MicroArea_Unidade { get; set; }
     }
 }

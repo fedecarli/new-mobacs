@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Softpark.Models
 {
@@ -213,7 +214,7 @@ namespace Softpark.Models
         public virtual VW_Profissional GetProfissionalMobile(string cnes, string ine, string cbo, string cns)
         {
             var parameters = new List<SqlParameter>();
-            
+
             if (!string.IsNullOrEmpty(ine?.Trim()))
                 parameters.Add(new SqlParameter("@ine", ine));
 
@@ -235,8 +236,10 @@ namespace Softpark.Models
                 WHERE a.CNS IS NOT NULL" +
                 (string.IsNullOrEmpty(ine?.Trim()) ? "" : " AND a.INE = @ine") +
                 " AND a.CNES = @cnes" +
-                " AND a.CNS = @cns AND a.CBO = @cbo)" +
+                " AND a.CNS = @cns AND a.CBO = @cbo" +
                 " ORDER BY Nome, Profissao, Unidade, Equipe";
+
+            HttpContext.Current.Response.Write(query + $"[{ine},{cnes},{cns},{cbo}]");
 
             return Database.SqlQuery<VW_Profissional>(query, parameters: parameters.ToArray()).FirstOrDefault();
         }
@@ -286,6 +289,106 @@ namespace Softpark.Models
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbRawSqlQuery<VW_UsuariosACS> VW_UsuariosACS()
+        {
+            var qry = @"select distinct u.CodUsu, RTRIM(LTRIM(u.Login)) AS [Login], p.Nome,
+u.Senha, RTRIM(LTRIM(u.Email)) AS Email, c.CodCred, RTRIM(LTRIM(cv.Matricula)) AS Matricula, cv.ItemVinc,
+c.Codigo, p.CNS, p.INE, p.CNES, p.CBO
+from ASSMED_Usuario u
+inner join AS_CredenciadosUsu cu on u.CodUsu = cu.CodUsuD
+inner join AS_Credenciados c on cu.CodCred = c.CodCred
+inner join AS_CredenciadosVinc cv on c.CodCred = cv.CodCred
+inner join ASSMED_Cadastro cad on c.Codigo = cad.Codigo
+inner join ASSMED_CadastroDocPessoal cdp on cad.Codigo = cdp.Codigo
+INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(cv.CodProfTab COLLATE Latin1_General_CI_AI)) = LTRIM(RTRIM(b.CBO)) AND b.Ficha IN ('CadastroIndividual', 'CadastroDomiciliar', 'VisitaDomiciliar')
+LEFT JOIN dbo.SetoresINEs AS d ON cv.CodINE = d.CodINE
+INNER JOIN dbo.Setores s ON cv.CodSetor = s.CodSetor
+INNER JOIN dbo.AS_SetoresPar sp ON s.CodSetor = sp.CodSetor
+INNER JOIN api.VW_Profissional p ON p.CNS = RTRIM(LTRIM(cdp.Numero)) COLLATE Latin1_General_CI_AI AND p.CNES = sp.CNES COLLATE Latin1_General_CI_AI
+AND LTRIM(RTRIM(b.CBO)) = p.CBO AND (p.INE = RTRIM(LTRIM(d.Numero COLLATE Latin1_General_CI_AI)) OR p.INE IS NULL)
+where cdp.CodTpDocP = 6 AND Ativo = 1 AND RTRIM(LTRIM(cv.CodProfTab)) like '515105'";
+
+            try
+            {
+                return Database.SqlQuery<VW_UsuariosACS>(qry);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(qry, e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbRawSqlQuery<VW_MenuSistema> VW_MenuSistema(string page)
+        {
+            var qry = $"SELECT * FROM VW_MenuSistema WHERE link = @page or sublink = @page";
+
+            try
+            {
+                return Database.SqlQuery<VW_MenuSistema>(qry, new SqlParameter("@page", page));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(qry, e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbRawSqlQuery<VW_MenuSistema> VW_MenuSistema(int idUsuario, int? idPai, int idSistema)
+        {
+            var qry = $@"
+                     SELECT m.id_menu,
+                            m.id_pai_indireto,
+                            m.id_pai_direto,
+                            m.link,
+                            m.sublink,
+                            m.icone,
+                            m.descricao,
+                            m.ordem
+                       FROM VW_MenuSistema AS m
+                 INNER JOIN grupo_menu AS gm
+                         ON m.id_menu = gm.id_menu
+                        AND (gm.excluir = 1
+                         OR gm.atualizar = 1
+                         OR gm.ler = 1
+                         OR gm.cadastrar = 1
+                         OR gm.imprimir = 1)
+                 INNER JOIN grupo_usuario AS gu
+                         ON gm.id_grupo = gu.id_grupo
+                        AND gu.CodUsu = @idUsuario
+                      WHERE m.id_sistema = @idSistema
+                        AND m.id_pai_direto {(Nullable.Equals(null, idPai) ? "IS NULL" : $" = {idPai}")}
+                   GROUP BY m.id_menu,
+                            m.id_pai_indireto,
+                            m.id_pai_direto,
+                            m.link,
+                            m.sublink,
+                            m.icone,
+                            m.descricao,
+                            m.ordem
+                   ORDER BY m.ordem";
+
+            try
+            {
+                return Database.SqlQuery<VW_MenuSistema>(qry, new SqlParameter("@idUsuario", idUsuario),
+                    new SqlParameter("@idSistema", idSistema));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(qry, e);
+            }
+        }
+
+        /// <summary>
         /// ASSMED Cadastros
         /// </summary>
         public virtual DbRawSqlQuery<VW_Cadastros> VW_Cadastros(string q, int limit)
@@ -327,7 +430,7 @@ namespace Softpark.Models
 
                 return Database.SqlQuery<VW_Cadastros>(qry, new SqlParameter("@q", q));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception(qry, e);
             }

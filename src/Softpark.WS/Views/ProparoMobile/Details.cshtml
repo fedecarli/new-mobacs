@@ -1,0 +1,66 @@
+﻿@model Softpark.Models.SIGSM_Check_Cadastros
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SIGSM_Check_Cadastros</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BaixarEndereco)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BaixarEndereco)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Data)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Data)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataDownload)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataDownload)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AS_Credenciados.CNES)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AS_Credenciados.CNES)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ASSMED_Cadastro.Tipo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ASSMED_Cadastro.Tipo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ASSMED_Contratos.NomeContratante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ASSMED_Contratos.NomeContratante)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

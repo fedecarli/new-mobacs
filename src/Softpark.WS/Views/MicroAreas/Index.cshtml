@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Softpark.Models.SIGSM_MicroAreas>
+@{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "GET",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper"
+    };
+
+    if (IsAjax)
+    {
+        Layout = null;
+    }
+}
+<div id="page-wrapper">
+    <h2>Micro Áreas</h2>
+
+    <p>
+        @Ajax.ActionLink("Nova Micro Área", "Create", options)
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Código
+                </th>
+                <th>
+                    Descrição
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th>
+                        @Html.DisplayFor(modelItem => item.Codigo)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descricao)
+                    </td>
+                    <td>
+                        @Ajax.ActionLink("Editar", "Edit", new { id = item.Codigo }, options) |
+                        @Ajax.ActionLink("Remover", "Delete", new { id = item.Codigo }, options)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

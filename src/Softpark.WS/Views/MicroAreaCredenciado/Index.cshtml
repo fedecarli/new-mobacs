@@ -1,0 +1,42 @@
+﻿@using DataTables.AspNet.WebApi2
+@{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "GET",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper"
+    };
+
+    if (IsAjax)
+    {
+        Layout = null;
+    }
+}
+
+<div id="page-wrapper">
+    <h2>Index</h2>
+
+    <p>
+        @Ajax.ActionLink("Create New", "Create", options)
+    </p>
+
+    <table class="table" id="table"></table>
+
+@section scripts {
+    @Ajax.DataTable("table", new AjaxOptions
+    {
+        HttpMethod = "GET",
+        Url = Url.Action("List")
+    }, new DataTableAttributes
+    {
+        ColumnDefs = new List<ColumnDef> {
+                new ColumnDef { DataProp = "Unidade", Title = "Unidade" },
+                new ColumnDef { DataProp = "Nome", Title = "Nome" },
+                new ColumnDef { DataProp = "Contrato", Title = "Contrato" },
+                new ColumnDef { DataProp = "MicroArea", Title = "Micro Área" },
+                new ColumnDef { DataProp = "btn", Title = "", FnRender = "renderHtmlCell" }
+            }
+    })
+}
+</div>

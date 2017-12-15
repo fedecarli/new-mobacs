@@ -1,9 +1,8 @@
 ﻿using Softpark.Models;
-using Softpark.WS.Controllers.Api;
 using System;
-using System.Data.Entity;
+using System.Configuration;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Mvc;
 
@@ -36,7 +35,6 @@ namespace Softpark.WS.Controllers
     /// <summary>
     /// Base Ajax Controller
     /// </summary>
-    [SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public abstract class BaseAjaxController : Controller
     {
         /// <summary>
@@ -59,6 +57,74 @@ namespace Softpark.WS.Controllers
         {
             Response.StatusCode = 400;
             return Json(message);
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            var asp = ConfigurationManager.AppSettings["aspDbConnPath"].Replace("_config", @"\v2\_inc\config.asp");
+
+            var content = System.IO.File.ReadAllText(asp);
+
+            var keys = new[]
+            {
+                "idPaisCliente",
+                "nomePaisCliente",
+                "idMunicipioCliente",
+                "nomeCliente",
+                "estadoCliente",
+                "siglaEstadoCliente",
+                "nomeInicialSistema",
+                "logoInicialSistema",
+                "exibirMensagemSistema",
+                "mensagemSistema",
+                "rodapeMensagemSistema",
+                "corPrincipalSistema",
+                "corMenuTop",
+                "corMenuTopHover",
+                "corLinks",
+                "corHoverLinks",
+                "corHoverMenu",
+                "corFundoMenu",
+                "corFundoMenuActive",
+                "corFundoAbaActive"
+            };
+
+            var getValue = new Regex("^(.+ = \")([^\"]+)(\".*)$");
+
+            keys.Where(x => content.Split('\n').Any(y => y.Contains(x)))
+                .AsParallel().ForAll(x =>
+                {
+                    var lines = content.Split('\n');
+                    var line = lines.FirstOrDefault(y => y.Contains(x));
+                    if (line == null)
+                    {
+                        ViewData.Add(x, string.Empty);
+                        return;
+                    }
+
+                    var value = getValue.Replace(line, "$2") ?? string.Empty;
+
+                    if (x == "logoInicialSistema")
+                    {
+                        value = (Domain.SIGSM_ServicoSerializador_Config.SingleOrDefault(y => y.Configuracao == "sessionLocation")?.Valor ?? string.Empty)
+                        .Replace("SessionVar.asp", value);
+                    }
+
+                    ViewData.Add(x, value);
+                });
+
+            if (ASPSessionVar.Read("acesso") != "True")
+                HttpContext.Response.Redirect("~/../", true);
+
+            ViewBag.idUsuario = Convert.ToInt32(ASPSessionVar.Read("idUsuario") ?? "0");
+            ViewBag.idSistema = Convert.ToInt32(ASPSessionVar.Read("idSistema") ?? "0");
+            ViewBag.Setor = ASPSessionVar.Read("setor");
+            ViewBag.NomeSistema = ASPSessionVar.Read("NomeSistema");
+            ViewBag.Usuario = ASPSessionVar.Read("usuario");
+            ViewBag.Domain = Domain;
+            ViewBag.Alert = ASPSessionVar.Read("alert");
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -85,12 +85,6 @@
     <Compile Include="ASSMED_CadastroDocPessoal.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="ASSMED_CadastroDomiciliarVinc.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_CadastroIndividualVinc.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
     <Compile Include="ASSMED_CadastroPF.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -139,9 +133,6 @@
     <Compile Include="CadastroIndividual.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="CadastroIndividual_recusa.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
     <Compile Include="Cidade.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -149,9 +140,6 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="CondicoesDeSaude.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Conflito.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="DeficienciasCidadao.cs">
@@ -215,9 +203,6 @@
     <Compile Include="InstituicaoPermanencia.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
-    <Compile Include="Lote.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
     <Compile Include="Nacionalidade.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
@@ -225,12 +210,6 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="OrigemVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ProfCidadaoVinc.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ProfCidadaoVincAgendaProd.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -264,6 +243,18 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SetoresINEs.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_Check_Cadastros.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_MicroAreas.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_MicroArea_CredenciadoVinc.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SIGSM_MicroArea_Unidade.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="SIGSM_MotivoVisita.cs">
@@ -432,19 +423,9 @@
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
     <Compile Include="VW_FichasMaster.cs" />
-    <Compile Include="VW_IdentificacaoUsuarioCidadao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
+    <Compile Include="VW_MenuSistema.cs" />
     <Compile Include="VW_Profissional.cs" />
-    <Compile Include="VW_profissional_cns.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VW_ultimo_cadastroDomiciliar.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VW_ultimo_cadastroIndividual.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
+    <Compile Include="VW_UsuariosACS.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

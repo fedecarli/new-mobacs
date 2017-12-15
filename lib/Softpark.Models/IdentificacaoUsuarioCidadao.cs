@@ -45,7 +45,7 @@ namespace Softpark.Models
         public string portariaNaturalizacao { get; set; }
         public string microarea { get; set; }
         public bool stForaArea { get; set; }
-        public Nullable<System.DateTime> dataNascimentoCidadao { get; set; }
+        public System.DateTime dataNascimentoCidadao { get; set; }
         public Nullable<System.DateTime> dtNaturalizacao { get; set; }
         public Nullable<System.DateTime> dtEntradaBrasil { get; set; }
         public string RG { get; set; }

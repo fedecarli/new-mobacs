@@ -18,5 +18,6 @@ namespace Softpark.Models
         public System.Guid IdTransmissao { get; set; }
         public bool Executando { get; set; }
         public Nullable<System.DateTime> ExecutadoEm { get; set; }
+        public string LogMessage { get; set; }
     }
 }

@@ -1,0 +1,69 @@
+﻿@model Softpark.Models.SIGSM_MicroArea_CredenciadoVinc
+@{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper"
+    };
+
+    if (IsAjax)
+    {
+        Layout = null;
+    }
+}
+<div id="page-wrapper">
+    <h2>Delete</h2>
+
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>SIGSM_MicroArea_CredenciadoVinc</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.AS_Credenciados.CNES)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AS_Credenciados.CNES)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.AS_CredenciadosVinc.CNESLocal)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AS_CredenciadosVinc.CNESLocal)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ASSMED_Contratos.NomeContratante)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ASSMED_Contratos.NomeContratante)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.SIGSM_MicroArea_Unidade.MicroArea)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SIGSM_MicroArea_Unidade.MicroArea)
+            </dd>
+
+        </dl>
+
+        @using (Ajax.BeginForm(options))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @{ options.HttpMethod = "GET"; }
+                @Ajax.ActionLink("Back to List", "Index", options)
+            </div>
+        }
+    </div>
+</div>

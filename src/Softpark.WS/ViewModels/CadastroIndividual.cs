@@ -116,11 +116,6 @@ namespace Softpark.WS.ViewModels
         public string Justificativa { get; set; } = null;
 
         /// <summary>
-        /// Em caso de recusa, preencher os dados de recusa
-        /// </summary>
-        public CadastroIndividualRecusaViewModel Recusa { get; set; }
-
-        /// <summary>
         /// DataBind
         /// </summary>
         /// <param name="domain"></param>
@@ -142,12 +137,6 @@ namespace Softpark.WS.ViewModels
             ci.longitude = longitude;
             ci.Justificativa = Justificativa;
             ci.DataRegistro = DataRegistro;
-
-            if (Recusa != null)
-            {
-                var rec = Recusa.ToModel(domain, ci);
-                ci.CadastroIndividual_recusa.Add(rec);
-            }
 
             return ci;
         }
@@ -217,102 +206,6 @@ namespace Softpark.WS.ViewModels
             vm.ApplyModel(model);
 
             return vm;
-        }
-    }
-
-    /// <summary>
-    /// Endereço da recusa
-    /// </summary>
-    public class CadastroIndividualRecusaViewModel
-    {
-        /// <summary>
-        /// Preenchido na consulta
-        /// </summary>
-        public int? Id { get; set; }
-
-        /// <summary>
-        /// Id do Cadastro Individual
-        /// </summary>
-        public Guid? IdCadastroIndividual { get; set; }
-
-        /// <summary>
-        /// Bairro
-        /// </summary>
-        [Required]
-        public string Bairro { get; set; }
-
-        /// <summary>
-        /// Cep
-        /// </summary>
-        [Required]
-        public string Cep { get; set; }
-
-        /// <summary>
-        /// Codigo IBGE do Municipio
-        /// </summary>
-        [Required]
-        public string CodigoIbgeMunicipio { get; set; }
-
-        /// <summary>
-        /// Complemento
-        /// </summary>
-        public string Complemento { get; set; }
-
-        /// <summary>
-        /// Logradouro
-        /// </summary>
-        [Required]
-        public string NomeLogradouro { get; set; }
-
-        /// <summary>
-        /// Número
-        /// </summary>
-        public string Numero { get; set; }
-
-        /// <summary>
-        /// Número DNE da UF
-        /// </summary>
-        [Required]
-        public string NumeroDneUf { get; set; }
-
-        /// <summary>
-        /// Residência sem número?
-        /// </summary>
-        [Required]
-        public bool StSemNumero { get; set; }
-
-        /// <summary>
-        /// Ponto de referência da residência
-        /// </summary>
-        public string PontoReferencia { get; set; }
-
-        /// <summary>
-        /// Data da recusa
-        /// </summary>
-        [Required]
-        public DateTime Data { get; set; }
-
-        /// <summary>
-        /// DataBind
-        /// </summary>
-        /// <returns></returns>
-        public CadastroIndividual_recusa ToModel(DomainContainer domain, CadastroIndividual cad)
-        {
-            var model = domain.CadastroIndividual_recusa.Create();
-
-            model.CadastroIndividual = cad;
-            model.bairro = Bairro;
-            model.cep = Cep;
-            model.codigoIbgeMunicipio = CodigoIbgeMunicipio;
-            model.complemento = Complemento;
-            model.Data = Data;
-            model.nomeLogradouro = NomeLogradouro;
-            model.numero = Numero;
-            model.numeroDneUf = NumeroDneUf;
-            model.pontoReferencia = PontoReferencia;
-            model.stSemNumero = StSemNumero;
-
-            return model;
         }
     }
 
@@ -592,7 +485,7 @@ namespace Softpark.WS.ViewModels
         /// <summary>
         /// data de nascimento
         /// </summary>
-        public DateTime? dataNascimentoCidadao { get; set; }
+        public DateTime dataNascimentoCidadao { get; set; }
         /// <summary>
         /// desconhece o nome da mãe
         /// </summary>
@@ -716,59 +609,6 @@ namespace Softpark.WS.ViewModels
         /// DataBind
         /// </summary>
         /// <param name="model"></param>
-        public static implicit operator IdentificacaoUsuarioCidadaoViewModel(VW_IdentificacaoUsuarioCidadao model)
-        {
-            var vm = new IdentificacaoUsuarioCidadaoViewModel();
-
-            vm.ApplyModel(model);
-
-            return vm;
-        }
-
-        /// <summary>
-        /// DataBind
-        /// </summary>
-        /// <param name="model"></param>
-        private void ApplyModel(VW_IdentificacaoUsuarioCidadao model)
-        {
-            if (model == null) return;
-
-            id = model.id;
-            nomeSocial = model.nomeSocial;
-            codigoIbgeMunicipioNascimento = model.codigoIbgeMunicipioNascimento;
-            dataNascimentoCidadao = model.dataNascimentoCidadao;
-            desconheceNomeMae = model.desconheceNomeMae ?? false;
-            emailCidadao = model.emailCidadao;
-            nacionalidadeCidadao = model.nacionalidadeCidadao ?? 1;
-            nomeCidadao = model.nomeCidadao;
-            nomeMaeCidadao = model.nomeMaeCidadao;
-            cnsCidadao = model.cnsCidadao;
-            cnsResponsavelFamiliar = model.cnsResponsavelFamiliar;
-            telefoneCelular = model.telefoneCelular;
-            numeroNisPisPasep = model.numeroNisPisPasep;
-            paisNascimento = model.paisNascimento;
-            racaCorCidadao = model.racaCorCidadao;
-            sexoCidadao = model.sexoCidadao;
-            statusEhResponsavel = model.statusEhResponsavel ?? false;
-            etnia = model.etnia;
-            nomePaiCidadao = model.nomePaiCidadao;
-            desconheceNomePai = model.desconheceNomePai ?? false;
-            dtNaturalizacao = model.dtNaturalizacao;
-            portariaNaturalizacao = model.portariaNaturalizacao;
-            dtEntradaBrasil = model.dtEntradaBrasil;
-            microarea = model.microarea;
-            stForaArea = model.stForaArea ?? false;
-            RG = model.RG;
-            ComplementoRG = model.ComplementoRG;
-            CPF = model.CPF;
-            beneficiarioBolsaFamilia = model.beneficiarioBolsaFamilia ?? false;
-            EstadoCivil = model.EstadoCivil;
-        }
-
-        /// <summary>
-        /// DataBind
-        /// </summary>
-        /// <param name="model"></param>
         private void ApplyModel(IdentificacaoUsuarioCidadao model)
         {
             if (model == null) return;
@@ -810,42 +650,42 @@ namespace Softpark.WS.ViewModels
         /// </summary>
         /// <param name="domain"></param>
         internal virtual IdentificacaoUsuarioCidadao ToModel(DomainContainer domain)
-            {
-                var iuc = domain.IdentificacaoUsuarioCidadao.Create();
+        {
+            var iuc = domain.IdentificacaoUsuarioCidadao.Create();
 
-                iuc.id = Guid.NewGuid();
-                iuc.nomeSocial = nomeSocial;
-                iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
-                iuc.dataNascimentoCidadao = dataNascimentoCidadao;
-                iuc.desconheceNomeMae = desconheceNomeMae;
-                iuc.emailCidadao = emailCidadao;
-                iuc.nacionalidadeCidadao = nacionalidadeCidadao;
-                iuc.nomeCidadao = nomeCidadao;
-                iuc.nomeMaeCidadao = nomeMaeCidadao;
-                iuc.cnsCidadao = cnsCidadao;
-                iuc.cnsResponsavelFamiliar = cnsResponsavelFamiliar;
-                iuc.telefoneCelular = telefoneCelular;
-                iuc.numeroNisPisPasep = numeroNisPisPasep;
-                iuc.paisNascimento = paisNascimento;
-                iuc.racaCorCidadao = racaCorCidadao;
-                iuc.sexoCidadao = sexoCidadao;
-                iuc.statusEhResponsavel = statusEhResponsavel;
-                iuc.etnia = etnia;
-                iuc.nomePaiCidadao = nomePaiCidadao;
-                iuc.desconheceNomePai = desconheceNomePai;
-                iuc.dtNaturalizacao = dtNaturalizacao;
-                iuc.portariaNaturalizacao = portariaNaturalizacao;
-                iuc.dtEntradaBrasil = dtEntradaBrasil;
-                iuc.microarea = microarea;
-                iuc.stForaArea = stForaArea;
-                iuc.RG = RG;
-                iuc.ComplementoRG = ComplementoRG;
-                iuc.CPF = CPF;
-                iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
-                iuc.EstadoCivil = EstadoCivil;
+            iuc.id = Guid.NewGuid();
+            iuc.nomeSocial = nomeSocial;
+            iuc.codigoIbgeMunicipioNascimento = codigoIbgeMunicipioNascimento;
+            iuc.dataNascimentoCidadao = dataNascimentoCidadao;
+            iuc.desconheceNomeMae = desconheceNomeMae;
+            iuc.emailCidadao = emailCidadao;
+            iuc.nacionalidadeCidadao = nacionalidadeCidadao;
+            iuc.nomeCidadao = nomeCidadao;
+            iuc.nomeMaeCidadao = nomeMaeCidadao;
+            iuc.cnsCidadao = cnsCidadao;
+            iuc.cnsResponsavelFamiliar = cnsResponsavelFamiliar;
+            iuc.telefoneCelular = telefoneCelular;
+            iuc.numeroNisPisPasep = numeroNisPisPasep;
+            iuc.paisNascimento = paisNascimento;
+            iuc.racaCorCidadao = racaCorCidadao;
+            iuc.sexoCidadao = sexoCidadao;
+            iuc.statusEhResponsavel = statusEhResponsavel;
+            iuc.etnia = etnia;
+            iuc.nomePaiCidadao = nomePaiCidadao;
+            iuc.desconheceNomePai = desconheceNomePai;
+            iuc.dtNaturalizacao = dtNaturalizacao;
+            iuc.portariaNaturalizacao = portariaNaturalizacao;
+            iuc.dtEntradaBrasil = dtEntradaBrasil;
+            iuc.microarea = microarea;
+            iuc.stForaArea = stForaArea;
+            iuc.RG = RG;
+            iuc.ComplementoRG = ComplementoRG;
+            iuc.CPF = CPF;
+            iuc.beneficiarioBolsaFamilia = beneficiarioBolsaFamilia;
+            iuc.EstadoCivil = EstadoCivil;
 
-                return iuc;
-            }
+            return iuc;
+        }
     }
 
     /// <summary>

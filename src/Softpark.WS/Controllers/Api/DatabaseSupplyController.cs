@@ -686,12 +686,11 @@ namespace Softpark.WS.Controllers.Api
         /// Endpoint para buscar pacientes atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
-        /// <param name="microarea">microárea</param>
         /// <returns>Coleção de Pacientes</returns>
         [HttpGet]
         [Route("api/dados/paciente/{token:guid}", Name = "PacienteSupplyAction")]
         [ResponseType(typeof(GetCadastroIndividualViewModel[]))]
-        public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token, [FromUri] string microarea = null)
+        public async Task<IHttpActionResult> GetPacientes([FromUri, Required] Guid token)
         {
             Log.Info("-----");
             Log.Info($"GET api/dados/paciente/{token}");
@@ -707,68 +706,117 @@ namespace Softpark.WS.Controllers.Api
                 return error;
             }
 
-            var ids = Domain.VW_IdentificacaoUsuarioCidadao.Where(x => x.id != null).Select(x => x.id);
+            var prof = Domain.GetProfissionalMobile(headerToken.cnes, headerToken.ine, headerToken.cboCodigo_2002, headerToken.profissionalCNS);
 
-            var pessoas = from pc in Domain.VW_profissional_cns
-                          join cad in Domain.VW_ultimo_cadastroIndividual
-                          on pc.CodigoCidadao equals cad.Codigo
-                          where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim()
-                          select new { pc, cad };
+            var pessoas = (from scc in Domain.SIGSM_Check_Cadastros
+                           join mcv in Domain.SIGSM_MicroArea_CredenciadoVinc
+                           on scc.CodCred equals mcv.CodCred
+                           join cad in Domain.ASSMED_Cadastro
+                           on scc.Codigo equals cad.Codigo
+                           let end = (from end in Domain.ASSMED_Endereco
+                                      where cad.Codigo == end.Codigo
+                                      orderby end.ItemEnd descending
+                                      select end).FirstOrDefault()
+                           let cpf = (from cf in Domain.ASSMED_CadastroPF
+                                      where cad.Codigo == cf.Codigo
+                                      select cf).FirstOrDefault()
+                           where !scc.BaixarEndereco &&
+                           scc.DataDownload == null &&
+                           scc.AS_Credenciados.Codigo == prof.CodUsu
+                           select new { scc, end, cad, cpf, mcv }).ToList();
 
-            var idProf = pessoas.FirstOrDefault()?.pc.IdProfissional;
-
-            var profs = Domain.ProfCidadaoVincAgendaProd
-                .Where(x =>
-                    x.AgendamentoMarcado == true &&
-                    x.DataCarregado == null &&
-                    x.FichaGerada == true &&
-                    x.ProfCidadaoVinc.IdProfissional == idProf);
-
-            var idsCids = profs.Select(x => x.ProfCidadaoVinc.IdCidadao).ToArray();
-
-            var cads = pessoas.Where(x => idsCids.Contains(x.pc.IdCidadao))
-                .Select(x => x.cad.idCadastroIndividual).ToArray();
-
-            var cadastros = Domain.CadastroIndividual
-                .Where(x => x.identificacaoUsuarioCidadao != null && ids.Contains(x.identificacaoUsuarioCidadao.Value)
-                            && cads.Contains(x.id)).ToArray();
-
-            CadastroIndividualViewModelCollection results = cadastros;
-
-            if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
+            pessoas.ForEach(x =>
             {
-                results = results.Where(r => r.identificacaoUsuarioCidadao?.microarea == null || r.identificacaoUsuarioCidadao.microarea == microarea).ToArray();
-            }
-
-            var rs = results.ToArray();
-
-            var data = Ok(rs);
-
-            var ps = profs.Where(x => pessoas.Any(z => x.IdVinc == z.pc.IdVinc)).ToList();
-
-            ps.ForEach(x =>
-            {
-                Domain.PR_EncerrarAgenda(x.IdAgendaProd, false, false);
+                x.scc.DataDownload = DateTime.Now;
             });
 
             await Domain.SaveChangesAsync();
 
+            var cads = pessoas.Select(x =>
+            {
+                var cad = x.cad.IdentificacaoUsuarioCidadao?.CadastroIndividual.FirstOrDefault();
+
+                if (cad == null)
+                {
+                    cad = new CadastroIndividual
+                    {
+                        id = Guid.NewGuid(),
+                        DataRegistro = DateTime.Now,
+                        UnicaLotacaoTransport = headerToken,
+                        tpCdsOrigem = 3
+                    };
+                }
+
+                var iden = cad.IdentificacaoUsuarioCidadao1;
+
+                if (iden == null)
+                {
+                    iden = new IdentificacaoUsuarioCidadao
+                    {
+                        id = Guid.NewGuid()
+                    };
+                    cad.IdentificacaoUsuarioCidadao1 = iden;
+                }
+
+                var codc = x.cad.ASSMED_PesFisica?.MUNICIPIONASC ?? x.cpf?.MUNICIPIONASC;
+
+                var cid = Domain.Cidade.FirstOrDefault(y => y.CodCidade == codc)?.CodIbge?.Trim() ??
+                headerToken.codigoIbgeMunicipio;
+
+                iden.ASSMED_Cadastro1 = x.cad;
+                iden.cnsCidadao = x.cad.ASSMED_CadastroDocPessoal.LastOrDefault(y => y.CodTpDocP == 6 && y.Numero != null
+                && y.Numero.Trim().Length == 15)?.Numero;
+                iden.cnsResponsavelFamiliar = iden.cnsCidadao;
+                iden.Codigo = x.cad.Codigo;
+                iden.codigoIbgeMunicipioNascimento = cid;
+                var rg = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 1 && y.Numero != null);
+                iden.RG = rg != null ? (rg.Numero.Trim() + (rg.ComplementoRG ?? "").Trim()) : null;
+                iden.CPF = x.cad.ASSMED_PesFisica?.CPF ?? x.cpf?.CPF;
+                iden.dataNascimentoCidadao = x.cad.ASSMED_PesFisica?.DtNasc ?? x.cpf?.DtNasc ?? DateTime.MinValue;
+                iden.dtEntradaBrasil = x.cad.ASSMED_PesFisica?.ESTRANGEIRADATA ?? x.cpf?.ESTRANGEIRADATA;
+                iden.dtNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZADADATA ?? x.cpf?.NATURALIZADADATA;
+                iden.emailCidadao = x.cad.ASSMED_CadEmails.Select(y => y.EMail.ToLower()).LastOrDefault();
+                iden.EstadoCivil = x.cad.ASSMED_PesFisica?.EstCivil ?? x.cpf?.EstCivil ?? "I";
+                iden.etnia = x.cad.ASSMED_PesFisica?.CodEtnia ?? x.cpf?.CodEtnia;
+                iden.microarea = x.cad.ASSMED_Endereco.OrderByDescending(y => y.ItemEnd).Select(y => y.MicroArea)
+                .FirstOrDefault() ?? x.cad.MicroArea;
+                iden.nacionalidadeCidadao = x.cad.ASSMED_PesFisica?.Nacionalidade ?? x.cpf?.Nacionalidade ?? 10;
+                iden.nomeCidadao = x.cad.Nome;
+                iden.nomeSocial = x.cad.NomeSocial;
+                iden.nomeMaeCidadao = x.cad.ASSMED_PesFisica?.NomeMae ?? x.cpf?.NomeMae;
+                iden.nomePaiCidadao = x.cad.ASSMED_PesFisica?.NomePai ?? x.cpf?.NomePai;
+                iden.numeroNisPisPasep = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 7 && y.Numero != null)?
+                .Numero?.Trim();
+                iden.num_contrato = 22;
+                iden.paisNascimento = x.cad.ASSMED_PesFisica?.ENDPAIS ?? x.cpf?.ENDPAIS;
+                iden.portariaNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA ?? x.cpf?.NATURALIZACAOPORTARIA;
+                iden.racaCorCidadao = x.cad.ASSMED_PesFisica?.CodCor ?? x.cpf?.CodCor ?? 6;
+                var sexo = (x.cad.ASSMED_PesFisica?.Sexo ?? x.cpf?.Sexo ?? "I");
+                iden.sexoCidadao = sexo == "M" ? 0 : sexo == "F" ? 1 : 4;
+                iden.stForaArea = iden.microarea == null;
+                var fone = x.cad.ASSMED_CadTelefones.FirstOrDefault(y => y.TipoTel == "P" && y.NumTel != null);
+                iden.telefoneCelular = fone == null ? null : $"{fone.DDD}{fone.NumTel}";
+
+                return cad;
+            }).Distinct().ToArray();
+
+            CadastroIndividualViewModelCollection results = cads;
+
             var serializer = new JavaScriptSerializer();
             Log.Info(serializer.Serialize(results.ToArray()));
 
-            return data;
+            return Ok(results.ToArray());
         }
 
         /// <summary>
         /// Endpoint para buscar os domicílios atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
-        /// <param name="microarea">Microárea</param>
         /// <returns>Coleção de domicilios</returns>
         [HttpGet]
         [Route("api/dados/domicilio/{token:guid}", Name = "DomicilioSupplyAction")]
         [ResponseType(typeof(GetCadastroDomiciliarViewModel[]))]
-        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token, [FromUri] string microarea = null)
+        public async Task<IHttpActionResult> GetDomicilios([FromUri, Required] Guid token)
         {
             try
             {
@@ -779,45 +827,95 @@ namespace Softpark.WS.Controllers.Api
 
                 if (headerToken == null) return BadRequest("Token Inválido.");
 
-                //Alteração Cristiano, David 
-                var domicilios = (from pc in Domain.VW_profissional_cns
-                                  join pcv in Domain.ProfCidadaoVinc on pc.IdVinc equals pcv.IdVinc
-                                  join agenda in Domain.ProfCidadaoVincAgendaProd on pcv.IdVinc equals agenda.IdVinc
-                                  join cad in Domain.VW_ultimo_cadastroDomiciliar on pc.CodigoCidadao equals cad.Codigo
-                                  join cd in Domain.CadastroDomiciliar on cad.idCadastroDomiciliar equals cd.id
-                                  join ultCadIdv in Domain.VW_ultimo_cadastroIndividual on cad.Codigo equals ultCadIdv.Codigo
-                                  join cadIdv in Domain.CadastroIndividual on ultCadIdv.idCadastroIndividual equals cadIdv.id
-                                  join idtUserCid in Domain.IdentificacaoUsuarioCidadao on cadIdv.identificacaoUsuarioCidadao equals idtUserCid.id
-                                  where pc.cnsProfissional.Trim() == headerToken.profissionalCNS.Trim() &&
-                                    agenda.AgendamentoMarcado == true &&
-                                    agenda.DataCarregadoDomiciliar == null &&
-                                    agenda.FichaDomiciliarGerada == true &&
-                                    idtUserCid.cnsResponsavelFamiliar == null
-                                  select new { cd, agenda }).ToList();
+                var prof = Domain.GetProfissionalMobile(headerToken.cnes, headerToken.ine, headerToken.cboCodigo_2002, headerToken.profissionalCNS);
 
-                var cadastros = domicilios.Select(x => x.cd).ToArray();
-
-                CadastroDomiciliarViewModelCollection results = cadastros;
-
-                if (microarea != null && Regex.IsMatch(microarea, "^([0-9][0-9])$"))
-                {
-                    results = results.Where(r => r.enderecoLocalPermanencia?.microarea == null || r.enderecoLocalPermanencia?.microarea == microarea).ToArray();
-                }
+                var domicilios = (from scc in Domain.SIGSM_Check_Cadastros
+                                  join mcv in Domain.SIGSM_MicroArea_CredenciadoVinc
+                                  on scc.CodCred equals mcv.CodCred
+                                  join cad in Domain.ASSMED_Cadastro
+                                  on scc.Codigo equals cad.Codigo
+                                  let end = (from end in Domain.ASSMED_Endereco
+                                             where cad.Codigo == end.Codigo
+                                             orderby end.ItemEnd descending
+                                             select end).FirstOrDefault()
+                                  let cpf = (from cf in Domain.ASSMED_CadastroPF
+                                             where cad.Codigo == cf.Codigo
+                                             select cf).FirstOrDefault()
+                                  where scc.BaixarEndereco &&
+                                  scc.DataDownload == null &&
+                                  scc.AS_Credenciados.Codigo == prof.CodUsu
+                                  select new { scc, end, cad, cpf, mcv }).ToList();
 
                 domicilios.ForEach(x =>
                 {
-                    Domain.PR_EncerrarAgenda(x.agenda.IdAgendaProd, false, true);
+                    x.scc.DataDownload = DateTime.Now;
                 });
 
                 await Domain.SaveChangesAsync();
 
+                var cadastros = domicilios.Select(x =>
+                {
+                    var dom = x.end?.EnderecoLocalPermanencia?.CadastroDomiciliar?.FirstOrDefault();
+
+                    if (dom == null)
+                    {
+                        dom = new CadastroDomiciliar
+                        {
+                            id = Guid.NewGuid(),
+                            AnimalNoDomicilio = new AnimalNoDomicilio[0],
+                            DataRegistro = DateTime.Now,
+                            Erro = false,
+                            FamiliaRow = new[] {
+                                new FamiliaRow {
+                                    dataNascimentoResponsavel = x.cpf?.DtNasc??x.cad.ASSMED_PesFisica?.DtNasc,
+                                    id = Guid.NewGuid(),
+                                    numeroCnsResponsavel = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 6 && y.Numero != null && y.Numero.Trim().Length == 15)?
+                                    .Numero?.Trim(),
+                                    numeroMembrosFamilia = 1
+                                }
+                            },
+                            fichaAtualizada = false,
+                            UnicaLotacaoTransport = headerToken,
+                            tpCdsOrigem = 3
+                        };
+                    }
+
+                    var end = dom.EnderecoLocalPermanencia1;
+
+                    if (end == null)
+                    {
+                        end = new EnderecoLocalPermanencia
+                        {
+                            id = Guid.NewGuid()
+                        };
+                        dom.EnderecoLocalPermanencia1 = end;
+                    }
+
+                    end.microarea = x.end?.MicroArea ?? x.cad.MicroArea ?? x.mcv.SIGSM_MicroArea_Unidade.MicroArea;
+                    end.stForaArea = end.microarea == null;
+                    end.nomeLogradouro = x.end?.Logradouro;
+                    end.numero = x.end?.Numero;
+                    end.numeroDneUf = x.end != null ? Domain.UF.SingleOrDefault(y => y.UF1 == x.end.UF)?.DNE : null;
+                    end.pontoReferencia = x.end?.ENDREFERENCIA;
+                    end.stSemNumero = (end.numero ?? "").Length == 0;
+                    var fone = x.cad.ASSMED_CadTelefones.LastOrDefault(y => y.TipoTel != "R" && y.NumTel != null);
+                    end.telefoneContato = fone == null ? null : (fone.DDD + fone.NumTel);
+                    fone = x.cad.ASSMED_CadTelefones.LastOrDefault(y => y.TipoTel == "R" && y.NumTel != null);
+                    end.telefoneResidencia = fone == null ? null : (fone.DDD + fone.NumTel);
+                    end.tipoLogradouroNumeroDne = x.end == null ? null :
+                        Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(y => y.DS_TIPO_LOGRADOURO_ABREV == x.end.TipoEnd)?
+                        .CO_TIPO_LOGRADOURO;
+                    return dom;
+                }).ToArray();
+
+                CadastroDomiciliarViewModelCollection results = cadastros;
+                
                 var resultados = results.ToArray();
 
                 var serializer = new JavaScriptSerializer();
                 Log.Info(serializer.Serialize(resultados));
 
                 return Ok(resultados);
-
             }
             catch (Exception ex)
             {

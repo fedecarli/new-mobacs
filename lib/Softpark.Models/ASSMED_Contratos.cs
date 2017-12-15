@@ -14,6 +14,14 @@ namespace Softpark.Models
     
     public partial class ASSMED_Contratos
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ASSMED_Contratos()
+        {
+            this.SIGSM_Check_Cadastros = new HashSet<SIGSM_Check_Cadastros>();
+            this.SIGSM_MicroArea_CredenciadoVinc = new HashSet<SIGSM_MicroArea_CredenciadoVinc>();
+            this.SIGSM_MicroArea_Unidade = new HashSet<SIGSM_MicroArea_Unidade>();
+        }
+    
         public int NumContrato { get; set; }
         public Nullable<System.DateTime> DtInicio { get; set; }
         public string NomeContratante { get; set; }
@@ -31,5 +39,12 @@ namespace Softpark.Models
         public string PastaCli { get; set; }
         public string PastaImagens { get; set; }
         public string CodigoIbgeMunicipio { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_Check_Cadastros> SIGSM_Check_Cadastros { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_MicroArea_CredenciadoVinc> SIGSM_MicroArea_CredenciadoVinc { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_MicroArea_Unidade> SIGSM_MicroArea_Unidade { get; set; }
     }
 }

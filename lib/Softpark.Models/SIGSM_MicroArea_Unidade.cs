@@ -12,22 +12,23 @@ namespace Softpark.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProfCidadaoVinc
+    public partial class SIGSM_MicroArea_Unidade
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ProfCidadaoVinc()
+        public SIGSM_MicroArea_Unidade()
         {
-            this.ProfCidadaoVincAgendaProd = new HashSet<ProfCidadaoVincAgendaProd>();
+            this.SIGSM_MicroArea_CredenciadoVinc = new HashSet<SIGSM_MicroArea_CredenciadoVinc>();
         }
     
-        public int IdVinc { get; set; }
-        public Nullable<int> IdProfissional { get; set; }
-        public Nullable<int> IdCidadao { get; set; }
-        public Nullable<bool> Marcado { get; set; }
-        public Nullable<int> OrigemPerfilVinc { get; set; }
-        public Nullable<System.DateTime> DataVinc { get; set; }
+        public int id { get; set; }
+        public string MicroArea { get; set; }
+        public int NumContrato { get; set; }
+        public int CodSetor { get; set; }
     
+        public virtual ASSMED_Contratos ASSMED_Contratos { get; set; }
+        public virtual Setores Setores { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProfCidadaoVincAgendaProd> ProfCidadaoVincAgendaProd { get; set; }
+        public virtual ICollection<SIGSM_MicroArea_CredenciadoVinc> SIGSM_MicroArea_CredenciadoVinc { get; set; }
+        public virtual SIGSM_MicroAreas SIGSM_MicroAreas { get; set; }
     }
 }

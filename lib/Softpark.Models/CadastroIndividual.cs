@@ -14,12 +14,6 @@ namespace Softpark.Models
     
     public partial class CadastroIndividual
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CadastroIndividual()
-        {
-            this.CadastroIndividual_recusa = new HashSet<CadastroIndividual_recusa>();
-        }
-    
         public long idAuto { get; set; }
         public System.Guid id { get; set; }
         public Nullable<System.Guid> condicoesDeSaude { get; set; }
@@ -42,8 +36,6 @@ namespace Softpark.Models
         public virtual EmSituacaoDeRua EmSituacaoDeRua1 { get; set; }
         public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao1 { get; set; }
         public virtual InformacoesSocioDemograficas InformacoesSocioDemograficas1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CadastroIndividual_recusa> CadastroIndividual_recusa { get; set; }
         public virtual SaidaCidadaoCadastro SaidaCidadaoCadastro1 { get; set; }
         public virtual UnicaLotacaoTransport UnicaLotacaoTransport { get; set; }
     }

@@ -40,35 +40,42 @@ namespace Softpark.WS
             var cfg = db?.SIGSM_ServicoSerializador_Config?.Find("sessionLocation");
 
             var uri = cfg?.Valor ?? "/sigsm/v2/SessionVar.asp";
-            
+
             uri += $"?SessionVar={varName}";
 
             if (uri[0] == '/')
-                uri = $"http://localhost{uri}";
+                uri = $"http://{HttpContext.Current.Request.Url.Host}{uri}";
 
-            var client = new WebServiceClient();
-
-            for (int i = 0; i < HttpContext.Current.Request.Headers.Keys.Count; i++)
+            try
             {
-                var key = HttpContext.Current.Request.Headers.Keys[i];
+                var client = new WebServiceClient();
 
-                if ((new[] { "Cookie", "Host", "User-Agent" }).Contains(key))
+                for (int i = 0; i < HttpContext.Current.Request.Headers.Keys.Count; i++)
                 {
-                    var value = HttpContext.Current.Request.Headers[key];
+                    var key = HttpContext.Current.Request.Headers.Keys[i];
 
-                    client.Headers.Add(key, value);
+                    if ((new[] { "Cookie", "Host", "User-Agent" }).Contains(key))
+                    {
+                        var value = HttpContext.Current.Request.Headers[key];
+
+                        client.Headers.Add(key, value);
+                    }
                 }
+
+                string data = null;
+
+                using (var s = client.OpenRead(uri))
+                using (var sr = new StreamReader(s))
+                {
+                    data = sr.ReadToEnd();
+                }
+
+                return data;
             }
-
-            string data = null;
-
-            using (var s = client.OpenRead(uri))
-            using (var sr = new StreamReader(s))
+            catch (Exception e)
             {
-                data = sr.ReadToEnd();
+                throw new Exception($"Erro ao tentar buscar a sessão em: {uri}.", e);
             }
-
-            return data;
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

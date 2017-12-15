@@ -489,7 +489,7 @@ namespace Softpark.Models
                     errors.Add("Em dados pessoais, o município de nascimento é inválido, não está cadastrado ou não foi encontrado o código do IBGE para o município.");
             }
 
-            if (cond.dataNascimentoCidadao != null && !cond.dataNascimentoCidadao.Value.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
+            if (cond.dataNascimentoCidadao.IsValidBirthDateTime(cad.UnicaLotacaoTransport.dataAtendimento))
                 errors.Add("Em dados pessoais, a data de nascimento do cidadão é inválida, a data deve ser anterior ou igual à data de atendimento e não deve ter mais de 130 anos antes da data de atendimento.");
 
             try

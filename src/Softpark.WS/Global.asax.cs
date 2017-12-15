@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
 using DataTables.AspNet.WebApi2;
+using System.Web.Optimization;
 
 #pragma warning disable 1591
 namespace Softpark.WS
@@ -32,6 +33,7 @@ namespace Softpark.WS
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //Log4Net
             log4net.Config.XmlConfigurator.Configure();

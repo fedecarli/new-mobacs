@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Softpark.Models.SIGSM_MicroArea_Unidade>
+@{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "GET",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper"
+    };
+
+    if (IsAjax)
+    {
+        Layout = null;
+    }
+}
+<div id="page-wrapper">
+
+    <h2>Associações de Unidades e Micro Áreas</h2>
+
+    <p>
+        @Ajax.ActionLink("Associar", "Create", options)
+    </p>
+
+    <table class="table">
+        <tr>
+            <th>
+                Contrato
+            </th>
+            <th>
+                Setor
+            </th>
+            <th>
+                Micro Área
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ASSMED_Contratos.NomeContratante)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Setores.DesSetor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SIGSM_MicroAreas.Descricao)
+                </td>
+                <td>
+                    @Ajax.ActionLink("Editar", "Edit", new { id = item.id }, options)
+                    @Ajax.ActionLink("Remover", "Delete", new { id = item.id }, options)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

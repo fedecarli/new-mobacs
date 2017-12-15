@@ -1,133 +1,135 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Softpark.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using Softpark.WS.ViewModels;
+using System.Web.Http.Description;
+using System.Threading.Tasks;
+using System.Data.Entity;
+using Newtonsoft.Json;
 
 namespace Softpark.WS.Controllers.Api
 {
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    //[System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
-    //[System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
-    //public class ProfileController : BaseApiController
-    //{
-    //    /// <summary>
-    //    /// 
-    //    /// </summary>
-    //    protected ProfileController() : base(new DomainContainer()) { }
+    /// <summary>
+    /// 
+    /// </summary>
+    [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
+    [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
+    public class ProfileController : BaseApiController
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public ProfileController() : base(new DomainContainer()) { }
 
-    //    [HttpGet, Route("api/Login/ConsultarLogin/{login}/{senha}")]
-    //    public IHttpActionResult ConsultarLogin([FromUri, Required(AllowEmptyStrings = false, ErrorMessage = "Informe um Login.")] string login,
-    //        [FromUri, Required(AllowEmptyStrings = false, ErrorMessage = "Informe a senha.")] string senha)
-    //    {
-    //        if (!ModelState.IsValid || Domain.ASSMED_Usuario.Count(x => x.Login == login) != 1)
-    //            return BadRequest("Usuário ou Senha inválidos.");
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="senha"></param>
+        /// <returns></returns>
+        [HttpGet, Route("api/Login/ConsultarLogin/{login}/{senha}")]
+        [ResponseType(typeof(LoginViewModel[]))]
+        public async Task<IHttpActionResult> ConsultarLogin([FromUri, Required(AllowEmptyStrings = false, ErrorMessage = "Informe um Login.")] string login,
+            [FromUri, Required(AllowEmptyStrings = false, ErrorMessage = "Informe a senha.")] string senha)
+        {
+            var lvm = new[]{ new LoginViewModel {
+                CBO = null,
+                CNES = null,
+                CNS = null,
+                CodUsuario = 0,
+                Email = null,
+                INE = null,
+                Login = null,
+                NomeUsuario = null,
+                Mensagem = "Usuário ou Senha inválidos",
+                Senha = null,
+                Sucesso = false
+            }};
 
-    //        var usuario = Domain.ASSMED_Usuario.Single(x => x.Login == login);
+            if (!ModelState.IsValid)
+                return Ok(lvm);
 
-    //        var cp = (Domain.SIGSM_ServicoSerializador_Config.SingleOrDefault(x => x.Configuracao == "authCryptAlg")?.Valor ?? "MD5").ToUpper();
+            var acesso = Domain.VW_UsuariosACS().Where(x => x.CNS == login || x.CodCred.ToString() == login ||
+            x.Matricula == login || x.Codigo.ToString() == login || x.CodUsu.ToString() == login || x.Email == login);
 
-    //        HashAlgorithm hashAlgorithm;
+            if (acesso.Count() != 1)
+                return Ok(lvm);
 
-    //        switch (cp)
-    //        {
-    //            case "SHA512":
-    //                hashAlgorithm = SHA512.Create();
-    //                break;
+            var ua = acesso.Single();
 
-    //            case "SHA256":
-    //                hashAlgorithm = SHA256.Create();
-    //                break;
+            var usuario = Domain.ASSMED_Usuario.Single(x => x.CodUsu == ua.CodUsu);
 
-    //            case "SHA1":
-    //                hashAlgorithm = SHA1.Create();
-    //                break;
+            var cp = (Domain.SIGSM_ServicoSerializador_Config.SingleOrDefault(x => x.Configuracao == "authCryptAlg")?.Valor ?? "MD5").ToUpper();
 
-    //            default:
-    //                hashAlgorithm = MD5.Create();
-    //                break;
-    //        }
+            HashAlgorithm hashAlgorithm;
 
-    //        var pass = Encoding.ASCII.GetBytes(senha);
+            switch (cp)
+            {
+                case "SHA512":
+                    hashAlgorithm = SHA512.Create();
+                    break;
 
-    //        var crypted = hashAlgorithm.ComputeHash(pass);
+                case "SHA256":
+                    hashAlgorithm = SHA256.Create();
+                    break;
 
-    //        var compare = crypted.Aggregate("", (a, b) => a + b.ToString("X2"));
+                case "SHA1":
+                    hashAlgorithm = SHA1.Create();
+                    break;
 
-    //        if (compare != usuario.Senha)
-    //            return BadRequest("Usuário ou Senha inválidos.");
+                default:
+                    hashAlgorithm = MD5.Create();
+                    break;
+            }
 
-    //        var ines = Domain.Database.SqlQuery<SetoresINEs>("SELECT CodINE, NumContrato, CodSetor, Numero, Descricao FROM SetoresINEs");
+            var pass = Encoding.ASCII.GetBytes(senha);
 
-    //        var profs = (from ac in Domain.ASSMED_Cadastro
-    //                     join acdp in Domain.ASSMED_CadastroDocPessoal
-    //                     on ac.Codigo equals acdp.Codigo
-    //                     join acr in Domain.AS_Credenciados
-    //                     on ac.Codigo equals acr.Codigo
-    //                     join acv in Domain.AS_CredenciadosVinc
-    //                     on acr.CodCred equals acv.CodCred
-    //                     join acu in Domain.AS_CredenciadosUsu
-    //                     on acr.CodCred equals acu.CodCred
-    //                     join asu in Domain.ASSMED_Usuario
-    //                     on acu.CodUsuD equals asu.CodUsu
-    //                     join apt in Domain.AS_ProfissoesTab
-    //                     on acv.CodProfTab.Trim() equals apt.CodProfTab.Trim()
-    //                     join asp in Domain.AS_SetoresPar
-    //                     on acv.CNESLocal.Trim() equals asp.CNES.Trim()
-    //                     join set in Domain.Setores
-    //                     on asp.CodSetor equals set.CodSetor
-    //                     let ine = Domain.SetoresINEs.Where(x => x.CodSetor == set.CodSetor && x.Numero != null).DefaultIfEmpty().FirstOrDefault()
-    //                     where asu.CodUsu == usuario.CodUsu &&
-    //                     apt.CodProfTab != null &&
-    //                     acdp.Numero != null &&
-    //                     acdp.CodTpDocP == 6 &&
-    //                     acv.CNESLocal != null
-    //                     select new LoginViewModel
-    //                     {
-    //                         CBO = apt.CodProfTab.Trim(),
-    //                         CNES = acv.CNESLocal.Trim(),
-    //                         CNS = acdp.Numero.ToString(),
-    //                         CodUsuario = asu.CodUsu,
-    //                         Email = asu.Email,
-    //                         INE = ine.Numero != null ? ine.Numero.Trim() : null,
-    //                         Login = asu.Login,
-    //                         NomeUsuario = asu.Nome,
-    //                         Mensagem = string.Empty,
-    //                         Senha = asu.Senha
-    //                     }).Distinct().ToList()
-    //                    .Where(prof => null != Domain.GetProfissionalMobile(prof.CNES, prof.INE, prof.CBO, prof.CNS));
+            var crypted = hashAlgorithm.ComputeHash(pass);
 
-    //        return Ok(profs.ToArray());
-    //    }
+            var compare = crypted.Aggregate("", (a, b) => a + b.ToString("X2"));
 
-    //    [HttpPost, Route("api/LogMobile")]
-    //    public void LogMobile([FromBody]string value)
-    //    {
-    //        LogMobileModel logMLogMobileModel = new LogMobileModel();
+            if (compare.ToUpper() != usuario.Senha?.ToUpper())
+                return Ok(lvm);
 
-    //        logMLogMobileModel.LogDescricao = value;
-    //        logMLogMobileModel.DtLog = DateTime.Now;
+            var ines = Domain.Database.SqlQuery<SetoresINEs>("SELECT CodINE, NumContrato, CodSetor, Numero, Descricao FROM SetoresINEs");
 
-    //        ServiceLogMobile serviceLogMobile = new ServiceLogMobile();
-    //        serviceLogMobile.GravaLogMobile(logMLogMobileModel);
-    //    }
+            lvm = new[] {new LoginViewModel
+            {
+                CBO = ua.CBO,
+                CNES = ua.CNES,
+                CNS = ua.CNS,
+                CodUsuario = ua.CodUsu,
+                Email = ua.Email,
+                INE = ua.INE,
+                Login = ua.Login,
+                NomeUsuario = ua.Nome,
+                Mensagem = string.Empty,
+                Senha = ua.Senha,
+                Sucesso = true
+            }};
 
-    //    // POST: api/Pesquisa/PesquisaResponsavel
-    //    [HttpPost, Route("api/Pesquisa/PesquisaResponsavel")]
-    //    public IHttpActionResult PesquisaResponsavel([FromBody] UnicoPessoasModel model)
-    //    {
-    //        ServicePesquisa ServicePesquisa = new ServicePesquisa();
-    //        var resposta = ServicePesquisa.BuscaResponsavel(model);
+            return Ok(lvm);
+        }
 
-    //        return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, resposta));
-    //    }
-    //}
+        private static log4net.ILog Log { get; set; } = log4net.LogManager.GetLogger(typeof(ProfileController));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        [HttpPost, Route("api/LogMobile")]
+        public void LogMobile([FromBody] string value)
+        {
+            Log.Info("-----");
+            Log.Info("POST api/LogMobile");
+
+            var serializer = new JsonSerializer();
+
+            Log.Info(JsonConvert.SerializeObject(new { LogDescricao = value, DtLog = DateTime.Now }));
+        }
+    }
 }

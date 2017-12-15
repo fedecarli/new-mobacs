@@ -13,10 +13,19 @@ namespace Softpark.Infrastructure.Extensions
             obj.WithMe(fn, without);
         }
 
-        public static void WithMe<T>(this T obj, Func<T> fn, string[] without = null) where T : class, new () =>
+        public static T Merge<T>(T obj, Func<T> fn) where T : class, new()
+        {
+            if (obj == null) obj = new T();
+
+            With(ref obj, fn);
+
+            return obj;
+        }
+
+        public static void WithMe<T>(this T obj, Func<T> fn, string[] without = null) where T : class, new() =>
             obj.CopyValues(fn(), without);
 
-        public static void CopyValues<T>(this T target, T source, string[] without = null) where T : class, new ()
+        public static void CopyValues<T>(this T target, T source, string[] without = null) where T : class, new()
         {
             Type t = typeof(T);
             var empty = new T();

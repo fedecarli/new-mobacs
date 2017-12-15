@@ -14,6 +14,12 @@ namespace Softpark.Models
     
     public partial class AS_CredenciadosVinc
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public AS_CredenciadosVinc()
+        {
+            this.SIGSM_MicroArea_CredenciadoVinc = new HashSet<SIGSM_MicroArea_CredenciadoVinc>();
+        }
+    
         public int NumContrato { get; set; }
         public int CodCred { get; set; }
         public int ItemVinc { get; set; }
@@ -31,5 +37,7 @@ namespace Softpark.Models
     
         public virtual AS_Credenciados AS_Credenciados { get; set; }
         public virtual Setores Setores { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SIGSM_MicroArea_CredenciadoVinc> SIGSM_MicroArea_CredenciadoVinc { get; set; }
     }
 }

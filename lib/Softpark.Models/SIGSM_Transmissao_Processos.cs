@@ -28,6 +28,7 @@ namespace Softpark.Models
         public string ArquivoGerado { get; set; }
         public string TipoFicha { get; set; }
         public string SerializarEm { get; set; }
+        public string CNES { get; set; }
     
         public virtual SIGSM_Transmissao SIGSM_Transmissao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
