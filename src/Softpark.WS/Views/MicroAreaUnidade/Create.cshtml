@@ -5,21 +5,32 @@
         AllowCache = false,
         HttpMethod = "GET",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
 }
 <div id="page-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Associando uma Unidade</h1>
+        </div>
+    </div>
 
-    <h2>Associar Unidade</h2>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Partial("Form", Model)
+        </div>
+    </div>
 
-    @Html.Partial("Form", Model)
-
-    <div>
-        @Ajax.ActionLink("Voltar", "Index", options)
+    <div class="row">
+        <div class="col-md-12">
+            @Ajax.ActionLinkButton("Index", options, new { @class = "btn btn-md btn-primary btn-outline" }, "Voltar")
+        </div>
     </div>
 </div>

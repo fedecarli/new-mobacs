@@ -12560,3 +12560,103 @@ ERROR 2017-12-15 09:33:14,336 175681ms ptionHandlingAttribute OnException       
    em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
    em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
    em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+INFO  2017-12-18 14:27:07,268 249239ms ProfileController      LogMobile          - -----
+INFO  2017-12-18 14:27:07,381 249352ms ProfileController      LogMobile          - POST api/LogMobile
+INFO  2017-12-18 14:27:07,406 249377ms ProfileController      LogMobile          - {"LogDescricao":"[{\"Descricao\":{\"TipoChamada\":\"Erro: Processo de Download de Usuários\",\"Token\":{\"Message\":\"An error has occurred.\",\"ExceptionMessage\":\"An error occurred when trying to create a controller of type ","DtLog":"2017-12-18T14:27:07.3815465-02:00"}
+INFO  2017-12-18 17:38:23,444 48869ms ProfileController      LogMobile          - -----
+INFO  2017-12-18 17:38:23,531 48956ms ProfileController      LogMobile          - POST api/LogMobile
+INFO  2017-12-18 17:38:23,557 48982ms ProfileController      LogMobile          - {"LogDescricao":"[{\"Descricao\":{\"TipoChamada\":\"Erro: Processo de Download de Usuários\",\"Token\":\"<!DOCTYPE html>\r\n<html>\r\n    <head>\r\n        <title>The resource cannot be found.</title>\r\n        <meta name=\"viewport\" content=\"width=device-width\" />\r\n        <style>\r\n         body {font-family:\"Verdana\";font-weight:normal;font-size: .7em;color:black;} \r\n         p {font-family:\"Verdana\";font-weight:normal;color:black;margin-top: -5px}\r\n         b {font-family:\"Verdana\";font-weight:bold;color:black;margin-top: -5px}\r\n         H1 { font-family:\"Verdana\";font-weight:normal;font-size:18pt;color:red }\r\n         H2 { font-family:\"Verdana\";font-weight:normal;font-size:14pt;color:maroon }\r\n         pre {font-family:\"Consolas\",\"Lucida Console\",Monospace;font-size:11pt;margin:0;padding:0.5em;line-height:14pt}\r\n         .marker {font-weight: bold; color: black;text-decoration: none;}\r\n         .version {color: gray;}\r\n         .error {margin-bottom: 10px;}\r\n         .expandable { text-decoration:underline; font-weight:bold; color:navy; cursor:hand; }\r\n         @media screen and (max-width: 639px) {\r\n          pre { width: 440px; overflow: auto; white-space: pre-wrap; word-wrap: break-word; }\r\n         }\r\n         @media screen and (max-width: 479px) {\r\n          pre { width: 280px; }\r\n         }\r\n        </style>\r\n    </head>\r\n\r\n    <body bgcolor=\"white\">\r\n\r\n            <span><H1>Server Error in ","DtLog":"2017-12-18T17:38:23.5312139-02:00"}
+INFO  2017-12-18 17:43:38,754 364179ms ProfileController      LogMobile          - -----
+INFO  2017-12-18 17:43:38,755 364180ms ProfileController      LogMobile          - POST api/LogMobile
+INFO  2017-12-18 17:43:38,756 364181ms ProfileController      LogMobile          - {"LogDescricao":"[{\"Descricao\":{\"TipoChamada\":\"Erro: Processo de Download de Usuários\",\"Token\":{\"Message\":\"An error has occurred.\",\"ExceptionMessage\":\"An error occurred when trying to create a controller of type ","DtLog":"2017-12-18T17:43:38.7561437-02:00"}
+INFO  2017-12-18 17:48:38,026  1171ms ProcessosController    MoveNext           - ----
+INFO  2017-12-18 17:48:38,097  1243ms ProcessosController    MoveNext           - enviar/cabecalho
+INFO  2017-12-18 17:48:38,119  1265ms ProcessosController    MoveNext           - {"profissionalCNS":"980016289609829","cboCodigo_2002":"515105","cnes":"2087901","ine":"0000333573","codine":null,"dataAtendimento":"\/Date(1513619305994)\/","codigoIbgeMunicipio":"3522109","profissionalNome":null,"Equipe":null,"Profissao":null,"Unidade":null,"Codigo":0}
+ERROR 2017-12-18 17:48:45,543  8688ms ptionHandlingAttribute OnException        - Unhandled exception thrown in POST for request http://192.168.2.131/sigsm/v2/ESUS/fichas/api/processos/enviar/cabecalho: System.ComponentModel.DataAnnotations.ValidationException: A equipe do profissional não foi encontrada.<br/>
+
+   at Softpark.Models.RegrasCadastro.ThrowError(List`1 errors) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\lib\Softpark.Models\RegrasCadastro.cs:line 154
+   at Softpark.Models.RegrasCadastro.ThrowErrors(List`1 errors) in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\lib\Softpark.Models\RegrasCadastro.cs:line 148
+   at Softpark.WS.Controllers.Api.ProcessosController.<EnviarCabecalho>d__7.MoveNext() in C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\ProcessosController.cs:line 130
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Threading.Tasks.TaskHelpersExtensions.<CastToObject>d__3`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+INFO  2017-12-18 17:48:45,601  8747ms ProfileController      LogMobile          - -----
+INFO  2017-12-18 17:48:45,602  8748ms ProfileController      LogMobile          - POST api/LogMobile
+INFO  2017-12-18 17:48:45,706  8852ms ProfileController      LogMobile          - {"LogDescricao":"[{\"Descricao\":{\"TipoChamada\":\"Erro: Processo de Download de Usuários\",\"Token\":\"A equipe do profissional não foi encontrada.<br/>\n\",\"ProfissionalCNS\":\"980016289609829\",\"NomeACS\":\"ANA CAROLINA FELIX FREITAS - CANCELAR\"},\"cabecalho\":{\"profissionalCNS\":\"980016289609829\",\"cboCodigo_2002\":\"515105\",\"cnes\":\"2087901\",\"ine\":\"0000333573\",\"dataAtendimento\":\"2017-12-18T17:48:45.565Z\",\"codigoIbgeMunicipio\":\"3522109\"},\"visitas\":[],\"domicilios\":[],\"individuos\":[]}]","DtLog":"2017-12-18T17:48:45.6027072-02:00"}
+INFO  2017-12-18 17:52:56,817 259962ms ProcessosController    MoveNext           - ----
+INFO  2017-12-18 17:52:56,817 259963ms ProcessosController    MoveNext           - enviar/cabecalho
+INFO  2017-12-18 17:52:56,818 259963ms ProcessosController    MoveNext           - {"profissionalCNS":"980016289609829","cboCodigo_2002":"515105","cnes":"2087901","ine":"0000333573","codine":null,"dataAtendimento":"\/Date(1513619576730)\/","codigoIbgeMunicipio":"3522109","profissionalNome":null,"Equipe":null,"Profissao":null,"Unidade":null,"Codigo":0}
+INFO  2017-12-18 17:58:29,376 592522ms ProcessosController    MoveNext           - 7309faf2-8c16-4e7f-9ad2-a537333de935
+INFO  2017-12-18 17:58:29,683 592828ms tabaseSupplyController MoveNext           - -----
+INFO  2017-12-18 17:58:29,684 592829ms tabaseSupplyController MoveNext           - GET api/dados/paciente/7309faf2-8c16-4e7f-9ad2-a537333de935
+ERROR 2017-12-18 17:58:34,915 598060ms ptionHandlingAttribute OnException        - Unhandled exception thrown in GET for request http://192.168.2.131/sigsm/v2/ESUS/fichas/api/dados/paciente/7309faf2-8c16-4e7f-9ad2-a537333de935: System.NullReferenceException: Referência de objeto não definida para uma instância de um objeto.
+   em System.Data.Entity.Core.Objects.ELinq.QueryParameterExpression.EvaluateParameter(Object[] arguments)
+   em System.Data.Entity.Core.Objects.ELinq.ELinqQueryState.GetExecutionPlan(Nullable`1 forMergeOption)
+   em System.Data.Entity.Core.Objects.ObjectQuery`1.<>c__DisplayClass7.<GetResults>b__6()
+   em System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   em System.Data.Entity.Core.Objects.ObjectQuery`1.<>c__DisplayClass7.<GetResults>b__5()
+   em System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   em System.Data.Entity.Core.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   em System.Data.Entity.Core.Objects.ObjectQuery`1.<System.Collections.Generic.IEnumerable<T>.GetEnumerator>b__0()
+   em System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   em System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   em System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   em Softpark.WS.Controllers.Api.DatabaseSupplyController.<GetPacientes>d__13.MoveNext() na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\DatabaseSupplyController.cs:linha 711
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Threading.Tasks.TaskHelpersExtensions.<CastToObject>d__3`1.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()
+INFO  2017-12-18 17:58:35,064 598209ms ProfileController      LogMobile          - -----
+INFO  2017-12-18 17:58:35,065 598210ms ProfileController      LogMobile          - POST api/LogMobile
+INFO  2017-12-18 17:58:35,066 598212ms ProfileController      LogMobile          - {"LogDescricao":"[{\"Descricao\":{\"TipoChamada\":\"Erro: Processo de Download de Usuários\",\"ProfissionalCNS\":\"980016289609829\",\"NomeACS\":\"ANA CAROLINA FELIX FREITAS - CANCELAR\"},\"cabecalho\":{\"profissionalCNS\":\"980016289609829\",\"cboCodigo_2002\":\"515105\",\"cnes\":\"2087901\",\"ine\":\"0000333573\",\"dataAtendimento\":\"2017-12-18T17:58:35.035Z\",\"codigoIbgeMunicipio\":\"3522109\"},\"visitas\":[],\"domicilios\":[],\"individuos\":[]}]","DtLog":"2017-12-18T17:58:35.0663137-02:00"}
+ERROR 2017-12-19 14:03:34,200 51721ms ptionHandlingAttribute OnException        - Unhandled exception thrown in POST for request http://192.168.2.131/sigsm/v2/ESUS/fichas/api/Login/ConsultarLogin/: System.Security.Cryptography.CryptographicException: Comprimento inválido dos dados a serem descriptografados.
+   em System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   em System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   em System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   em System.IO.Stream.Close()
+   em System.IO.StreamReader.Dispose(Boolean disposing)
+   em System.IO.TextReader.Dispose()
+   em Softpark.WS.Controllers.Api.ProfileController.DecryptStringFromBytes(Byte[] cipherText, Byte[] key, Byte[] iv) na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\ProfileController.cs:linha 181
+   em Softpark.WS.Controllers.Api.ProfileController.DecryptStringAES(String text) na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\ProfileController.cs:linha 131
+   em Softpark.WS.Controllers.Api.ProfileController.<ConsultarLogin>d__1.MoveNext() na C:\Users\Elton Schivei Costa\Source\Repos\SIGSMAPI\src\Softpark.WS\Controllers\Api\ProfileController.cs:linha 77
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Threading.Tasks.TaskHelpersExtensions.<CastToObject>d__3`1.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__0.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- Fim do rastreamento de pilha do local anterior onde a exceção foi gerada ---
+   em System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   em System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   em System.Web.Http.Controllers.ExceptionFilterResult.<ExecuteAsync>d__0.MoveNext()

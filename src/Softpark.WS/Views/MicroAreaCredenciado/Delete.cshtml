@@ -5,65 +5,73 @@
         AllowCache = false,
         HttpMethod = "POST",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
 }
+
 <div id="page-wrapper">
-    <h2>Delete</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Remover Associação de Credenciado</h1>
+        </div>
+    </div>
 
-    <h3>Are you sure you want to delete this?</h3>
-    <div>
-        <h4>SIGSM_MicroArea_CredenciadoVinc</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.AS_Credenciados.CNES)
-            </dt>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Deseja realmente remover este registro?</h3>
+        </div>
+    </div>
 
-            <dd>
-                @Html.DisplayFor(model => model.AS_Credenciados.CNES)
-            </dd>
+    <div class="row">
+        <div class="col-md-12">
+            <dl class="dl-horizontal">
+                <dt>
+                    Credenciado
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.AS_CredenciadosVinc.CNESLocal)
-            </dt>
+                <dd>
+                    @ViewBag.Credenciado
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.AS_CredenciadosVinc.CNESLocal)
-            </dd>
+                <dt>
+                    Unidade
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.ASSMED_Contratos.NomeContratante)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AS_CredenciadosVinc.Setores.AS_SetoresPar.FirstOrDefault().CNES) - @Html.DisplayFor(model => model.AS_CredenciadosVinc.Setores.DesSetor)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.ASSMED_Contratos.NomeContratante)
-            </dd>
+                <dt>
+                    Micro Área
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.SIGSM_MicroArea_Unidade.MicroArea)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.SIGSM_MicroArea_Unidade.MicroArea) - @Html.DisplayFor(model => model.SIGSM_MicroArea_Unidade.SIGSM_MicroAreas.Descricao)
+                </dd>
+            </dl>
+        </div>
+    </div>
 
-            <dd>
-                @Html.DisplayFor(model => model.SIGSM_MicroArea_Unidade.MicroArea)
-            </dd>
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(options))
+            {
+                @Html.AntiForgeryToken()
 
-        </dl>
-
-        @using (Ajax.BeginForm(options))
-        {
-            @Html.AntiForgeryToken()
-
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @{ options.HttpMethod = "GET"; }
-                @Ajax.ActionLink("Back to List", "Index", options)
-            </div>
-        }
+                <div class="form-actions">
+                    <input type="submit" value="Remover" class="btn btn-danger btn-outline" />
+                    @{ options.HttpMethod = "GET"; }
+                    @Ajax.ActionLinkButton("Index", options,
+                    new { @class = "btn btn-md btn-primary btn-outline" }, "Voltar")
+                </div>
+            }
+        </div>
     </div>
 </div>

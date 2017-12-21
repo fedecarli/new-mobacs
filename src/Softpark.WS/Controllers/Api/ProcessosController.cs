@@ -9,6 +9,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using System.Web.Script.Serialization;
 
@@ -17,7 +18,7 @@ namespace Softpark.WS.Controllers.Api
     /// <summary>
     /// Endpoints dos processos de transmissão de dados provenientes do APP
     /// </summary>
-    [Route("/api/processos")]
+    [RoutePrefix("api/processos")]
     [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*", NoStore = true)]
     [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class ProcessosController : BaseApiController
@@ -26,13 +27,13 @@ namespace Softpark.WS.Controllers.Api
         /// <summary>
         /// Este construtor é usado para o sistema de documentação poder gerar o swagger e o Help
         /// </summary>
-        protected ProcessosController() : base(new DomainContainer()) { }
+        public ProcessosController() : base(new DomainContainer()) { }
 
         /// <summary>
         /// Este construtor é inicializado pelo asp.net usando injeção de dependência
         /// </summary>
         /// <param name="domain">Domínio do banco inicializado por injeção de dependência</param>
-        public ProcessosController(DomainContainer domain) : base(domain)
+        protected ProcessosController(DomainContainer domain) : base(domain)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
         }
@@ -98,7 +99,6 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="header">ViewModel com os dados do cabeçalho</param>
         /// <returns>Token para envio das fichas não atômicas</returns>
         [Route("enviar/cabecalho")]
-        [Route("api/processos/enviar/cabecalho")]
         [HttpPost, ResponseType(typeof(Guid))]
         public async Task<IHttpActionResult> EnviarCabecalho([FromBody, Required] UnicaLotacaoTransportCadastroViewModel header)
         {
@@ -146,7 +146,6 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="child">ViewModel com os dados da ficha</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/visita/child")]
-        [Route("api/processos/enviar/visita/child")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarFichaVisita([FromBody, Required] FichaVisitaDomiciliarChildCadastroViewModel child)
         {
@@ -220,7 +219,6 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="cadInd">ViewModel contendo os dados de cadastro individual</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/cadastro/individual")]
-        [Route("api/processos/enviar/cadastro/individual")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroIndividual([FromBody, Required] CadastroIndividualViewModel cadInd)
         {
@@ -276,7 +274,6 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="cadDom">ViewModel contendo os dados de cadastro domiciliar</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("enviar/cadastro/domiciliar")]
-        [Route("api/processos/enviar/cadastro/domiciliar")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> EnviarCadastroDomiciliar([FromBody, Required] CadastroDomiciliarViewModel cadDom)
         {
@@ -549,7 +546,6 @@ namespace Softpark.WS.Controllers.Api
         /// <param name="token">Token gerado anteriormente</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
         [Route("encerrar/{token}")]
-        [Route("api/processos/encerrar/{token}")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> FinalizarTransmissao([FromUri, Required] Guid token)
         {

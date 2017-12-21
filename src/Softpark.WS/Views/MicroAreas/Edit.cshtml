@@ -1,24 +1,38 @@
 ﻿@model Softpark.Models.SIGSM_MicroAreas
+
 @{
     var options = new AjaxOptions
     {
         AllowCache = false,
         HttpMethod = "GET",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
 }
+
 <div id="page-wrapper">
-    <h2>Editando</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Editando Micro Área</h1>
+        </div>
+    </div>
 
-    @Html.Partial("Form", Model)
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Partial("Form", Model)
+        </div>
+    </div>
 
-    <div>
-        @Ajax.ActionLink("Voltar", "Index", options)
+    <div class="row">
+        <div class="col-md-12">
+            @Ajax.ActionLinkButton("Index", options, new { @class = "btn btn-md btn-primary btn-outline" }, "Voltar")
+        </div>
     </div>
 </div>

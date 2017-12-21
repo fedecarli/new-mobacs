@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using Softpark.Infrastructure.Extras;
-using static Softpark.Infrastructure.Extensions.WithStatement;
+using System.Web.Http.Cors;
 
 namespace Softpark.WS.Controllers.Api
 {
@@ -27,13 +27,13 @@ namespace Softpark.WS.Controllers.Api
         /// <summary>
         /// Este construtor é usado para o sistema de documentação poder gerar o swagger e o Help
         /// </summary>
-        protected DatabaseSupplyController() : base(new DomainContainer()) { }
+        public DatabaseSupplyController() : base(new DomainContainer()) { }
 
         /// <summary>
         /// Este construtor é inicializado pelo asp.net usando injeção de dependência
         /// </summary>
         /// <param name="domain">Domínio do banco inicializado por injeção de dependência</param>
-        public DatabaseSupplyController(DomainContainer domain) : base(domain)
+        protected DatabaseSupplyController(DomainContainer domain) : base(domain)
         {
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

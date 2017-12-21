@@ -1,0 +1,455 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewPeople()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">CADASTRO INDIVIDUAL</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item active">
+        <i class="icon ion-ios-person"></i>
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="card">
+      <div class="item item-divider">
+        IDENTIFICAÇÃO DO USUÁRIO/CIDADÃO
+      </div>
+      <div class="item item-text-wrap">
+        <span>CNS do Cidadão: {{dataPeople.cnsCidadao}}</span></br>
+        <span>Responsável Familiar:
+            <span ng-show="dataPeople.statusEhResponsavel == 1">Sim</span>
+        <span ng-show="dataPeople.statusEhResponsavel != 1">Não</span>
+        </span>
+        </br>
+        <span>CNS do Responsável Familiar: {{dataPeople.cnsResponsavelFamiliar}}</span></br>
+        <span>CPF: {{dataPeople.CPF}}</span></br>
+        <span>RG: {{dataPeople.RG}}</span></br>
+        <span>Complemento RG: {{dataPeople.ComplementoRG}}</span></br>
+        <span>Microárea: {{dataPeople.microarea}}</span></br>
+        <span>Está fora de área:
+            <span ng-show="dataPeople.stForaArea == 1">Sim</span>
+        <span ng-show="dataPeople.stForaArea != 1">Não</span>
+        </span>
+        </br>
+        <span>Nome do Cidadão: {{dataPeople.nomeCidadao}}</span></br>
+        <span>Nome Social: {{dataPeople.nomeSocial}}</span></br>
+        <span>Data de Nascimento: {{dataPeople.dataNascimentoCidadao | date: 'dd/MM/yyyy'}}</span></br>
+        <span>Sexo:
+            <span ng-show="dataPeople.sexoCidadao == 0">Masculino</span>
+        <span ng-show="dataPeople.sexoCidadao == 1">Feminino</span>
+        <span ng-show="dataPeople.sexoCidadao == 4">Ignorado</span>
+        </span>
+        </br>
+        <span>Estado Civil:
+            <span ng-show="dataPeople.EstadoCivil == 'C'">Casado(a)</span>
+        <span ng-show="dataPeople.EstadoCivil == 'D'">Divorciado(a)</span>
+        <span ng-show="dataPeople.EstadoCivil == 'P'">Separado(a)</span>
+        <span ng-show="dataPeople.EstadoCivil == 'S'">Solteiro(a)</span>
+        <span ng-show="dataPeople.EstadoCivil == 'U'">União Estável</span>
+        <span ng-show="dataPeople.EstadoCivil == 'V'">Viúvo(a)</span>
+        </span>
+        </br>
+        <span>Raça/Cor:
+            <span ng-show="dataPeople.racaCorCidadao == 1">Branca</span>
+        <span ng-show="dataPeople.racaCorCidadao == 2">Preta</span>
+        <span ng-show="dataPeople.racaCorCidadao == 3">Amarela</span>
+        <span ng-show="dataPeople.racaCorCidadao == 4">Parda</span>
+        <span ng-show="dataPeople.racaCorCidadao == 5">Indígena</span>
+        <span ng-show="dataPeople.racaCorCidadao == 6">Sem Informação</span>
+        </span>
+        </br>
+        <span ng-show="dataPeople.racaCorCidadao == 5">Etnia: {{dataPeople.etnia}}</br></span>
+        <span> Beneficiário do Bolsa Familia? :
+            <span ng-show="dataPeople.beneficiarioBolsaFamilia == 1">Sim</span>
+        <span ng-show="dataPeople.beneficiarioBolsaFamilia != 1">Não</span>
+        </span>
+        </br>
+        <span>Número PIS/PASEP: {{dataPeople.numeroNisPisPasep}}</span></br>
+        <span>Nome Completo da Mãe: {{dataPeople.nomeMaeCidadao}}</span></br>
+        <span> Mãe Desconhecida? :
+            <span ng-show="dataPeople.desconheceNomeMae == 1">Sim</span>
+        <span ng-show="dataPeople.desconheceNomeMae != 1">Não</span>
+        </span>
+        </br>
+        <span> Nome Completo do Pai: {{dataPeople.nomePaiCidadao}}</span></br>
+        <span>Pai Desconhecido? :
+            <span ng-show="dataPeople.desconheceNomePai == 1">Sim</span>
+        <span ng-show="dataPeople.desconheceNomePai != 1">Não</span>
+        </span>
+        </br>
+        <span>Nacionalidade:
+            <span ng-show="dataPeople.nacionalidadeCidadao == 1">Brasileira</span>
+        <span ng-show="dataPeople.nacionalidadeCidadao == 2">Naturalizado</span>
+        <span ng-show="dataPeople.nacionalidadeCidadao == 3">Estrangeiro</span>
+        </span>
+        </br>
+        <span>País de Nascimento: {{dataPeople.paisNascimento}}</span></br>
+        <span ng-show="dataPeople.nacionalidadeCidadao == 2">Data de Naturalização: {{dataPeople.dtNaturalizacao |date: 'dd/MM/yyyy'}}</br></span>
+        <span ng-show="dataPeople.nacionalidadeCidadao == 2">Portaria de Naturalização: {{dataPeople.portariaNaturalizacao}}</br></span>
+        <span ng-show="dataPeople.nacionalidadeCidadao == 1">Município de Nascimento: {{dataPeople.codigoIbgeMunicipioNascimento}}</br></span>
+        <span ng-show="dataPeople.nacionalidadeCidadao == 3">Data de Entrada no Brasil: {{dataPeople.dtEntradaBrasil |date: 'dd/MM/yyyy'}}</br></span>
+        <span>Telefone Celular: {{dataPeople.telefoneCelular}}</span></br>
+        <span>Email: {{dataPeople.emailCidadao}}</span></br>
+        <span>Observação: {{dataPeople.observacao}}</span></br>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        INFORMAÇÕES SOCIODEMOGRÁFICAS
+      </div>
+      <div class="item item-text-wrap">
+        <span ng-show="dataPeople.statusEhResponsavel != 1">Relação de Parentesco com o Responsável Familiar:
+            <span ng-show="dataPeople.relacaoParentescoCidadao == 137">Cônjugue/Companheiro(a)</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==138">Filho(a)</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==139">Enteado(a)</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==140">Neto(a)/Bisneto(a)</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==141">Pai/Mãe</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==142">Sogro(a)</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==143">Irmão/Irmã</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==144">Genro/Nora</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==145">Outro parente</br></span>
+        <span ng-show="dataPeople.relacaoParentescoCidadao ==146">Não parente</br></span>
+        </span>
+        <br>
+        <span>Ocupação: {{dataPeople.ocupacaoCodigoCbo2002}}</span>
+        <br>
+        <span>Frequenta Escola ou Creche:
+            <span ng-show="dataPeople.statusFrequentaEscola == 1">Sim</span>
+        <span ng-show="dataPeople.statusFrequentaEscola != 1">Não</span>
+        </span>
+        <br>
+        <span>Qual é o curso mais elevado que frequentou? :
+            <span ng-show="dataPeople.grauInstrucaoCidadao ==51">Creche<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==52">Ensino Fundamental EJA - séries finais (Supletivo 5 a 8)<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==53">Pré-escola (exceto CA)<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==54">Ensino Médio, Médio 2 Ciclo (Científico, Técnico etc.)<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==55">Classe de Alfabetização - CA<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==56">Ensino Médio Especial<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==61">Ensino Fundamental 1 a 4 séries<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==58">Ensino Médio EJA (Supletivo)<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==59">Ensino Fundamental 5 a 8 séries<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==60">Superior, Aperfeiçoamento, Especialização, Mestrado, Doutorado<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==57">Ensino Fundamental Completo<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==62">Alfabetização para Adultos (Mobral etc.)<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==63">Ensino Fundamental Especial<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==64">Ensino Fundamental EJA - séries iniciais (Supletivo 1 a 4)<br></span>
+        <span ng-show="dataPeople.grauInstrucaoCidadao ==65">Nenhum<br></span>
+        </span>
+        <br>
+        <span>Situação no mercado de trabalho:
+            <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 66">Empregador<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 67">Assalariado com carteira de trabalho<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 68">Assalariado sem carteira de trabalho<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 69">Autônomo com previdência social<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 70">Autônomo sem previdência social<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 71">Aponsentado/Pensionalista<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 72">Servidor público/militar<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 73">Desempregado<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 147">Não trabalha<br></span>
+        <span ng-show="dataPeople.situacaoMercadoTrabalhoCidadao == 74">Outro<br></span>
+        </span>
+        <br>
+        <span>Crianças de 0 a 9 anos, com quem fica?:
+            <span ng-show="dataPeople.AdultoResponsavelresponsavelPorCrianca == 1">Adulto responsável<br></span>
+        <span ng-show="dataPeople.OutrasCriancasresponsavelPorCrianca == 2">Outra(s) criança(s)<br></span>
+        <span ng-show="dataPeople.AdolescenteresponsavelPorCrianca == 133">Adolescente<br></span>
+        <span ng-show="dataPeople.SozinharesponsavelPorCrianca == 3">Sozinha<br></span>
+        <span ng-show="dataPeople.CrecheresponsavelPorCrianca == 134">Creche<br></span>
+        <span ng-show="dataPeople.OutroresponsavelPorCrianca == 4">Outro<br></span>
+        </span>
+        <br>
+        <span>Frequenta Cuidador Tradicional?:
+            <span ng-show="dataPeople.statusFrequentaBenzedeira == 1">Sim</span>
+        <span ng-show="dataPeople.statusFrequentaBenzedeira != 1">Não</span>
+        </span>
+        <br>
+        <span>Participa de algum grupo comunitário?:
+            <span ng-show="dataPeople.statusParticipaGrupoComunitario == 1">Sim</span>
+        <span ng-show="dataPeople.statusParticipaGrupoComunitario != 1">Não</span>
+        </span>
+        <br>
+        <span>Possui plano de saúde privado?:
+            <span ng-show="dataPeople.statusPossuiPlanoSaudePrivado == 1">Sim</span>
+        <span ng-show="dataPeople.statusPossuiPlanoSaudePrivado != 1">Não</span>
+        </span>
+        <br>
+        <span>É membro de povo ou comunidade tradicional?:
+            <span ng-show="dataPeople.statusMembroPovoComunidadeTradicional == 1">Sim</span>
+        <span ng-show="dataPeople.statusMembroPovoComunidadeTradicional != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusMembroPovoComunidadeTradicional == 1">Se sim, qual? : {{dataPeople.povoComunidadeTradicional}}<br></span>
+        <span>Deseja informar orientação sexual?:
+            <span ng-show="dataPeople.statusDesejaInformarOrientacaoSexual == 1">Sim</span>
+        <span ng-show="dataPeople.statusDesejaInformarOrientacaoSexual != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusDesejaInformarOrientacaoSexual == 1">Se sim, qual?
+            <span ng-show="dataPeople.orientacaoSexualCidadao == 148">Heterossexual<br></span>
+        <span ng-show="dataPeople.orientacaoSexualCidadao == 153">Homossexual (gay / lésbica)<br></span>
+        <span ng-show="dataPeople.orientacaoSexualCidadao == 154">Bissexual<br></span>
+        <span ng-show="dataPeople.orientacaoSexualCidadao == 155">Outro<br></span>
+        <br>
+        </span>
+        <span>Deseja informar identidade de gênero?:
+            <span ng-show="dataPeople.statusDesejaInformarIdentidadeGenero == 1">Sim</span>
+        <span ng-show="dataPeople.statusDesejaInformarIdentidadeGenero != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusDesejaInformarIdentidadeGenero == 1">Se sim, qual?
+            <span ng-show="dataPeople.identidadeGeneroCidadao == 149">Homem transsexual<br></span>
+        <span ng-show="dataPeople.identidadeGeneroCidadao == 150">Mulher transsexual<br></span>
+        <span ng-show="dataPeople.identidadeGeneroCidadao == 156">Travesti<br></span>
+        <span ng-show="dataPeople.identidadeGeneroCidadao == 151">Outro<br></span>
+        <br>
+        </span>
+        <span>Tem alguma deficiência?:
+            <span ng-show="dataPeople.statusTemAlgumaDeficiencia == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemAlgumaDeficiencia != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusTemAlgumaDeficiencia == 1">Se sim, qual?<br>
+            <span ng-show="dataPeople.AuditivaDeficiencias == 12">Auditiva<br></span>
+        <span ng-show="dataPeople.VisualDeficiencias == 13">Visual<br></span>
+        <span ng-show="dataPeople.Intelectual_CognitivaDeficiencias == 14">Intelectual<br></span>
+        <span ng-show="dataPeople.FisicaDeficiencias == 15">Física<br></span>
+        <span ng-show="dataPeople.OutraDeficiencias == 16">Outra<br></span>
+        <br>
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        SAÍDA DO CIDADÃO DO CADASTRO
+      </div>
+      <div class="item item-text-wrap">
+        <span>Saída do Cidadão do Cadastro :
+            <span ng-show="dataPeople.motivoSaidaCidadao == 135">Óbito<br></span>
+        <span ng-show="dataPeople.motivoSaidaCidadao == 136">Mudança de território<br></span>
+        </span>
+        <span ng-show="dataPeople.motivoSaidaCidadao == 135">SE ÓBITO, INDIQUE:<br>
+            <span>Data de Óbito: {{dataPeople.dataObito | date: 'dd/MM/yyyy'}}</span></br>
+        <span>Número da D.O.: {{dataPeople.numeroDO}}</span></br>
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        TERMO DE RECUSA DO CADASTRO INDIVIDUAL DA ATENÇÃO BÁSICA
+      </div>
+      <div class="item item-text-wrap">
+        <span>Houve recusa no cadastro individual?:
+            <span ng-show="dataPeople.statusTermoRecusaCadastroIndividualAtencaoBasica == 1">Sim</span>
+        <span ng-show="dataPeople.statusTermoRecusaCadastroIndividualAtencaoBasica != 1">Não</span>
+        </span>
+        <br>
+        <span>Justificativa: {{dataPeople.Justificativa}}</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        CONDIÇÕES/SITUAÇÕES DE SAÚDE GERAIS
+      </div>
+      <div class="item item-text-wrap">
+        <span ng-show="dataPeople.sexoCidadao == 1">Está gestante?:
+            <span ng-show="dataPeople.statusEhGestante == 1">Sim</span>
+        <span ng-show="dataPeople.statusEhGestante != 1">Não</span>
+        <br>
+        </span>
+        <span ng-show="dataPeople.sexoCidadao == 1">Se sim, qual a maternidade de referência?: {{dataPeople.maternidadeDeReferencia}}</br></span>
+        <span>Sobre o seu peso, você se considera?:
+            <span ng-show="dataPeople.situacaoPeso == 21">Abaixo do peso</span>
+        <span ng-show="dataPeople.situacaoPeso == 22">Peso adequado</span>
+        <span ng-show="dataPeople.situacaoPeso == 23">Acima do peso</span>
+        </span>
+        </br>
+        <span>Está fumante?:
+            <span ng-show="dataPeople.statusEhFumante == 1">Sim</span>
+        <span ng-show="dataPeople.statusEhFumante != 1">Não</span>
+        </span>
+        <br>
+        <span>Faz uso de álcool?:
+            <span ng-show="dataPeople.statusEhDependenteAlcool == 1">Sim</span>
+        <span ng-show="dataPeople.statusEhDependenteAlcool != 1">Não</span>
+        </span>
+        <br>
+        <span>Faz uso de outras drogas?:
+            <span ng-show="dataPeople.statusEhDependenteOutrasDrogas == 1">Sim</span>
+        <span ng-show="dataPeople.statusEhDependenteOutrasDrogas != 1">Não</span>
+        </span>
+        <br>
+        <span>Tem Hipertensão Arterial?:
+            <span ng-show="dataPeople.statusTemHipertensaoArterial == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemHipertensaoArterial != 1">Não</span>
+        </span>
+        <br>
+        <span>Tem Diabetes?:
+            <span ng-show="dataPeople.statusTemDiabetes == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemDiabetes != 1">Não</span>
+        </span>
+        <br>
+        <span>Teve AVC/Derrame?:
+            <span ng-show="dataPeople.statusTeveAvcDerrame == 1">Sim</span>
+        <span ng-show="dataPeople.statusTeveAvcDerrame != 1">Não</span>
+        </span>
+        <br>
+        <span>Teve Infarto?:
+            <span ng-show="dataPeople.statusTeveInfarto == 1">Sim</span>
+        <span ng-show="dataPeople.statusTeveInfarto != 1">Não</span>
+        </span>
+        <br>
+        <span>Tem ou teve Doença Cardíaca?:
+            <span ng-show="dataPeople.statusTeveDoencaCardiaca == 1">Sim</span>
+        <span ng-show="dataPeople.statusTeveDoencaCardiaca != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusTeveDoencaCardiaca == 1">Se sim, quais?<br>
+            <span ng-show="dataPeople.Insuficiencia_cardiaca == 24 "> Insuficiência Cardíaca<br></span>
+        <span ng-show="dataPeople.Outro_Doenca_Cardiaca == 25"> Outra<br></span>
+        <span ng-show="dataPeople.Nao_Sabe_Doenca_Cardiaca == 26">Não Sabe <br></span>
+        </span>
+        <span>Tem ou teve problemas nos Rins?:
+            <span ng-show="dataPeople.statusTemTeveDoencasRins == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemTeveDoencasRins != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusTemTeveDoencasRins == 1">Se sim, quais?<br>
+            <span ng-show="dataPeople.Insuficiencia_renal == 27 "> Insuficiência Renal<br></span>
+        <span ng-show="dataPeople.Outro_Doenca_Rins == 28"> Outra<br></span>
+        <span ng-show="dataPeople.Nao_Sabe_Doenca_Rins == 29">Não Sabe <br></span>
+        </span>
+        <span>Tem ou teve Doença Respiratória/Pulmão?:
+            <span ng-show="dataPeople.statusTemDoencaRespiratoria == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemDoencaRespiratoria != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusTemDoencaRespiratoria == 1">Se sim, quais?<br>
+            <span ng-show="dataPeople.Asma == 27"> Asma<br></span>
+        <span ng-show="dataPeople.DPOC_Enfisema == 28"> DPOC/Enfisema<br></span>
+        <span ng-show="dataPeople.Outro_Doenca_Respiratoria == 29">Outra <br></span>
+        <span ng-show="dataPeople.Nao_Sabe_Doenca_Respiratoria == 29">Não Sabe <br></span>
+        </span>
+        <span>Está com Hanseníase?:
+            <span ng-show="dataPeople.statusTemHanseniase == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemHanseniase != 1">Não</span>
+        </span>
+        <br>
+        <span>Está com Tuberculose?:
+            <span ng-show="dataPeople.statusTemTuberculose == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemTuberculose != 1">Não</span>
+        </span>
+        <br>
+        <span>Teve alguma doença nos últimos 12 meses?:
+            <span ng-show="dataPeople.statusTeveInternadoem12Meses == 1">Sim</span>
+        <span ng-show="dataPeople.statusTeveInternadoem12Meses != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusTeveInternadoem12Meses == 1">Se sim, por qual causa? {{dataPeople.descricaoCausaInternacaoEm12Meses}}<br>
+          </span>
+        <span>Teve diagnóstico de algum problema de saúde mental por profissional de saúde?:
+            <span ng-show="dataPeople.statusDiagnosticoMental == 1">Sim</span>
+        <span ng-show="dataPeople.statusDiagnosticoMental != 1">Não</span>
+        </span>
+        <br>
+        <span>Esta acamado?:
+            <span ng-show="dataPeople.statusEstaAcamado == 1">Sim</span>
+        <span ng-show="dataPeople.statusEstaAcamado != 1">Não</span>
+        </span>
+        <br>
+        <span>Esta domiciliado?:
+            <span ng-show="dataPeople.statusEstaDomiciliado == 1">Sim</span>
+        <span ng-show="dataPeople.statusEstaDomiciliado != 1">Não</span>
+        </span>
+        <br>
+        <span>Usa plantas medicinais?:
+            <span ng-show="dataPeople.statusUsaPlantasMedicinais == 1">Sim</span>
+        <span ng-show="dataPeople.statusUsaPlantasMedicinais != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusUsaPlantasMedicinais == 1">Se sim, indique qual(is)? {{dataPeople.descricaoPlantasMedicinaisUsadas}}<br>
+          </span>
+        <span>Usa outras práticas integrativas e complementares?:
+            <span ng-show="dataPeople.statusUsaOutrasPraticasIntegrativasOuComplementares == 1">Sim</span>
+        <span ng-show="dataPeople.statusUsaOutrasPraticasIntegrativasOuComplementares != 1">Não</span>
+        </span>
+        <br>
+        <span>Outra condição de saúde</span>
+        <br>
+        <span>Qual 1? :{{dataPeople.descricaoOutraCondicao1}}</span>
+        <br>
+        <span>Qual 2? :{{dataPeople.descricaoOutraCondicao2}}</span>
+        <br>
+        <span>Qual 3? :{{dataPeople.descricaoOutraCondicao3}}</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        CIDADÃO EM SITUAÇÃO DE RUA
+      </div>
+      <div class="item item-text-wrap">
+        <span>Está em situação de rua?:
+            <span ng-show="dataPeople.statusSituacaoRua == 1">Sim</span>
+        <span ng-show="dataPeople.statusSituacaoRua != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">Tempo em situação de rua:
+            <span ng-show="dataPeople.tempoSituacaoRua == 17">Menos de 6 meses<br></span>
+        <span ng-show="dataPeople.tempoSituacaoRua == 18">6 a 12 meses<br></span>
+        <span ng-show="dataPeople.tempoSituacaoRua == 19">1 a 5 anos<br></span>
+        <span ng-show="dataPeople.tempoSituacaoRua == 20">Mais de 5 anos<br></span>
+        </span>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">Possui referência familiar?: {{dataPeople.statusPossuiReferenciaFamiliar}}
+            <br>
+          </span>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">Tempo em situação de rua:
+            <span ng-show="dataPeople.quantidadeAlimentacoesAoDiaSituacaoRua == 34">1 vez<br></span>
+        <span ng-show="dataPeople.quantidadeAlimentacoesAoDiaSituacaoRua == 35">2 ou 3 vezes<br></span>
+        <span ng-show="dataPeople.quantidadeAlimentacoesAoDiaSituacaoRua == 36">mais de 3 vezes<br></span>
+        </span>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">Qual a origem da alimentação?:<br>
+            <span ng-show="dataPeople.Restaurante_popular == 37">Restaurante popular<br></span>
+        <span ng-show="dataPeople.Doacao_grupo_religioso == 88">Doação grupo religioso<br></span>
+        <span ng-show="dataPeople.Doacao_restaurante == 39">Doação restaurante<br></span>
+        <span ng-show="dataPeople.Doacao_popular == 40">Doação popular<br></span>
+        <span ng-show="dataPeople.Outros_origemAlimentoSituacaoRua == 41">Outros<br></span>
+        </span>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">É acompanhado por outra instituição?:
+            <span ng-show="dataPeople.statusAcompanhadoPorOutraInstituicao == 1">Sim</span>
+        <span ng-show="dataPeople.statusAcompanhadoPorOutraInstituicao != 1">Não</span>
+        <br>
+        </span>
+        <span ng-show="dataPeople.statusAcompanhadoPorOutraInstituicao == 1">Se sim, indique quais: {{dataPeople.outraInstituicaoQueAcompanha}}<br></span>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">Visita algum familiar com frequência?:
+            <span ng-show="dataPeople.statusVisitaFamiliarFrequentemente == 1">Sim</span>
+        <span ng-show="dataPeople.statusVisitaFamiliarFrequentemente != 1">Não</span>
+        <br>
+        </span>
+        <span ng-show="dataPeople.statusVisitaFamiliarFrequentemente == 1">Se sim, qual é o grau de parentesco: {{dataPeople.grauParentescoFamiliarFrequentado}}<br></span>
+        <span ng-show="dataPeople.statusSituacaoRua == 1">Tem acesso a higiene pessoal?:
+            <span ng-show="dataPeople.statusTemAcessoHigienePessoalSituacaoRua == 1">Sim</span>
+        <span ng-show="dataPeople.statusTemAcessoHigienePessoalSituacaoRua != 1">Não</span>
+        <br>
+        </span>
+        <span ng-show="dataPeople.statusTemAcessoHigienePessoalSituacaoRua == 1">
+            <span ng-show="dataPeople.Banho == 42">Banho<br></span>
+        <span ng-show="dataPeople.Acesso_a_sanitario == 43">Acesso a Sanitário<br></span>
+        <span ng-show="dataPeople.Higiene_bucal == 44">Higiene Buscal<br></span>
+        <span ng-show="dataPeople.Outros_higienePessoalSituacaoRua == 45">Outras<br></span>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-100">
+        <button class="button button-block button-default-application" ng-click="viewToEditPeople()">Editar Cadastro Individual</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

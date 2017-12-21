@@ -13,58 +13,11 @@ namespace DataTables.AspNet.WebApi2
         public static MvcHtmlString DataTable(this AjaxHelper ajaxHelper,
             String tableName,
             AjaxOptions ajaxOptions,
-            DataTableAttributes dataTableParams
-            )
+            DataTableAttributes dataTableParams,
+            UrlHelper url,
+            bool isAjax)
         {
-            //ajaxOptions.Confirm
-            //ajaxOptions.HttpMethod  // fnServerData :: type
-            //ajaxOptions.InsertionMode
-            //ajaxOptions.LoadingElementDuration
-            //ajaxOptions.LoadingElementId
-            //ajaxOptions.OnBegin // fnServerParams ??
-            //ajaxOptions.OnComplete // $.ajax :: complete(jqXHR, textStatus)
-            //ajaxOptions.OnFailure // $.ajax :: error(jqXHR, textStatus, errorThrown)
-            //ajaxOptions.OnSuccess // $.ajax :: success 
-            //ajaxOptions.UpdateTargetId ???
-            //ajaxOptions.Url= // sAjaxSource 
-
-
-            //            string tableId = ResolveTableId(tableName, ajaxOptions.UpdateTargetId);
-            //            TagBuilder tableTag = TableTagBuilder(tableId, tableName, ajaxOptions.UpdateTargetId);
-
-            //            TagBuilder builder = new TagBuilder("script");
-
-            //            builder.InnerHtml = @"
-            ////var oTable;
-            ////var generated_aoColumnDefs = [@generateColumnsForOTable()];
-            ////var generated_sAjaxSource = '@Url.Action(""GetTableRows"", new { TableName = Model.TableDefinition.Name })';
-            //
-            //$(document).ready(function () {
-            //
-            //    var oTable = $('#tblRows').dataTable({
-            //        ""aoColumnDefs"": {0},
-            //        ""bJQueryUI"": true,
-            //        ""aLengthMenu"": [[5, 10, 25, 100, -1], [5, 10, 25, 100, ""All""]],
-            //        ""bSort"": true,
-            //        ""aaSorting"": [[1, ""asc""]],
-            //        ""bFilter"": false, /* Searching will not be implemented in the this release */
-            //        ""bPaginate"": true,
-            //        ""sPaginationType"": ""full_numbers"",
-            //        ""bAutoWidth"": false,
-            //        ""bProcessing"": true,
-            //        ""bServerSide"": true,
-            //        ""bStateSave"": true, //why it doesn't work?
-            //        ""sAjaxSource"": generated_sAjaxSource,
-            //        ""fnServerData"": function (sSource, aoData, fnCallback) {
-            //            UpdateUrl();
-            //            FetchServerData(this, sSource, aoData, fnCallback);
-            //        }
-            //
-            //});
-            //";
-
-            //return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
-            return MvcHtmlString.Create(string.Format("<script type='text/javascript'>\n{0}\n</script>", GenerateOTableScript(tableName, dataTableParams, ajaxOptions)));
+            return MvcHtmlString.Create(string.Format("<script type='text/javascript'>\n{0}\n</script>", GenerateOTableScript(tableName, dataTableParams, ajaxOptions, url, isAjax)));
         }
 
         public static string ToLowerString(this bool boolean)
@@ -72,41 +25,59 @@ namespace DataTables.AspNet.WebApi2
             return boolean.ToString().ToLower();
         }
 
-        private static string GenerateOTableScript(String tableName, DataTableAttributes dataTableParams, AjaxOptions ajaxOptions)
+        private static string GenerateOTableScript(String tableName, DataTableAttributes dataTableParams, AjaxOptions ajaxOptions, UrlHelper url, bool isAjax)
         {
-            string scriptText = string.Empty;
-            scriptText += "$(document).ready(function () {\n";
-            //scriptText += "alert('hey!');\n";
-            scriptText += string.Format("\tvar oTable = $('#{0}').dataTable({{\n", tableName);
-            scriptText += string.Format("\t\"aoColumnDefs\": {0},\n", GenerateColumnDefsForOTable(dataTableParams.ColumnDefs));
-            scriptText += string.Format("\t\"bAutoWidth\": {0},\n", dataTableParams.AutoWidth.ToLowerString());
-            scriptText += string.Format("\t\"bDeferRender\": {0},\n", dataTableParams.DeferRender.ToLowerString());
-            scriptText += string.Format("\t\"bFilter\": {0},\n", dataTableParams.Filter.ToLowerString());
-            scriptText += string.Format("\t\"bInfo\": {0},\n", dataTableParams.Info.ToLowerString());
-            scriptText += string.Format("\t\"bJQueryUI\": {0},\n", dataTableParams.JQueryUI.ToLowerString());
-            scriptText += string.Format("\t\"bLengthChange\": {0},\n", dataTableParams.LengthChange.ToLowerString());
-            scriptText += string.Format("\t\"bPaginate\": {0},\n", true.ToLowerString());
-            scriptText += string.Format("\t\"bProcessing\": {0},\n", true.ToLowerString());
-            scriptText += string.Format("\t\"bScrollInfinite\": {0},\n", dataTableParams.ScrollInfinite.ToLowerString());
-            scriptText += string.Format("\t\"bServerSide\": {0},\n", true.ToLowerString());
-            scriptText += string.Format("\t\"bSort\": {0},\n", dataTableParams.Sort.ToLowerString());
-            scriptText += string.Format("\t\"bSortClasses\": {0},\n", dataTableParams.SortClasses.ToLowerString());
-            scriptText += string.Format("\t\"bStateSave\": {0},\n", dataTableParams.StateSave.ToLowerString());
-            if (!string.IsNullOrEmpty(dataTableParams.ScrollX))
-                scriptText += string.Format("\t\"sScrollX\": {0},\n", dataTableParams.ScrollX);
-            if (!string.IsNullOrEmpty(dataTableParams.ScrollY))
-                scriptText += string.Format("\t\"sScrollY\": {0},\n", dataTableParams.ScrollY);
-            scriptText += string.Format("\t\"sPaginationType\": \"{0}\",\n", GetDescription(dataTableParams.PaginationType));
-
-            scriptText += string.Format("\t\"sAjaxSource\": \"{0}\",\n", ajaxOptions.Url);
-            scriptText += string.Format("\t\"sServerMethod\": \"{0}\"\n", ajaxOptions.HttpMethod);
-
-            scriptText += "\t}); \n";
-            scriptText += "});";
-
-            //+ string.Format("\t\"\": {0},\n", )
-
-            return scriptText;
+            return $@"
+    var draws = {Newtonsoft.Json.JsonConvert.SerializeObject(dataTableParams.Doms.ToArray())};
+    {(!isAjax ? "window.addEventListener('DOMContentLoaded', function () {" : "$(function () {")}
+        var oTable = $('#{tableName}').dataTable({{{(!string.IsNullOrEmpty(dataTableParams.Dom)?$@"
+            dom: '{dataTableParams.Dom}',":"")}{(dataTableParams.Doms.Any() ? $@"
+            drawCallback: drawCallback," : "")}
+            aoColumnDefs: {GenerateColumnDefsForOTable(dataTableParams.ColumnDefs)},
+            bAutoWidth: {dataTableParams.AutoWidth.ToLowerString()},
+            bDeferRender: {dataTableParams.DeferRender.ToLowerString()},
+            bFilter: {dataTableParams.Filter.ToLowerString()},
+            bInfo: {dataTableParams.Info.ToLowerString()},
+            bLengthChange: {dataTableParams.LengthChange.ToLowerString()},
+            bPaginate: {dataTableParams.Paginate.ToLowerString()},
+            bProcessing: true,
+            bScrollInfinite: {dataTableParams.ScrollInfinite.ToLowerString()},
+            bScrollCollapse: {dataTableParams.ScrollCollapse.ToLowerString()},
+            bServerSide: true,
+            bSort: {dataTableParams.Sort.ToLowerString()},
+            bSortClasses: {dataTableParams.SortClasses.ToLowerString()},
+            bStateSave: {dataTableParams.StateSave.ToLowerString()},{(!string.IsNullOrEmpty(dataTableParams.ScrollX) ? $@"
+            sScrollX: {'"' + dataTableParams.ScrollX + '"'}," : "")}{(!string.IsNullOrEmpty(dataTableParams.ScrollY) ? $@"
+            sScrollY: {'"' + dataTableParams.ScrollY + '"'}," : "")}
+            sPaginationType: {'"' + GetDescription(dataTableParams.PaginationType) + '"'},
+            sAjaxSource: {('"' + ajaxOptions.Url + '"')},
+            sServerMethod: {'"' + ajaxOptions.HttpMethod + '"'},
+            language: {{
+                sEmptyTable: '<center>Nenhum registro encontrado</center>',
+                sInfo: 'Exibindo de _START_ a _END_ de _TOTAL_ registro(s)',
+                sInfoEmpty: '',
+                sInfoFiltered: '',
+                sInfoPostFix: '',
+                sInfoThousands: '.',
+                sLengthMenu: '_MENU_ resultados por página',
+                sLoadingRecords: 'Carregando...',
+                sProcessing: '<img src={'"' + url.Content("~/../img/ajax-loader-2.gif") + '"'} />',
+                sZeroRecords: '<center>Nenhum registro encontrado</center>',
+                sSearch: 'Pesquisar ',
+                oPaginate: {{
+                    sNext: 'Próximo',
+                    sPrevious: 'Anterior',
+                    sFirst: 'Primeiro',
+                    sLast: 'Último'
+                }},
+                oAria: {{
+                    sSortAscending: ': Ordenar colunas de forma ascendente',
+                    sSortDescending: ': Ordenar colunas de forma descendente'
+                }},
+            }},
+        }});
+    }});
+";
         }
 
         private static TagBuilder TableTagBuilder(string tableId, string tableName, string updateTargetId)
@@ -117,30 +88,6 @@ namespace DataTables.AspNet.WebApi2
             TagBuilder containerDiv = new TagBuilder("div");
 
             return containerDiv;
-
-
-            /*
-            <div id="tblRows-table-container" class="ui-widget">
-                <table id="tblRows" class="display">
-                    <thead>
-                        <tr>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="@Model.TableDefinition.ColumnDefinitions.Count" class="dataTables_empty">
-                                Trying to load data from server...
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>              
-             
-             */
 
         }
 

@@ -5,46 +5,64 @@
         AllowCache = false,
         HttpMethod = "POST",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
 }
+
 <div id="page-wrapper">
-    <h2>Remover Micro Área</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Remover Micro Área</h1>
+        </div>
+    </div>
 
-    <h3>Tem certeza que deseja remover esta Micro Área?</h3>
-    <div>
-        <dl class="dl-horizontal">
-            <dt>
-                Código
-            </dt>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Deseja realmente remover este registro?</h3>
+        </div>
+    </div>
 
-            <dd>
-                @Html.DisplayFor(model => model.Codigo)
-            </dd>
+    <div class="row">
+        <div class="col-md-12">
+            <dl class="dl-horizontal">
+                <dt>
+                    Código
+                </dt>
 
-            <dt>
-                Descrição
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Codigo)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Descricao)
-            </dd>
-        </dl>
+                <dt>
+                    Descrição
+                </dt>
 
-        @using (Ajax.BeginForm(options))
-        {
-            @Html.AntiForgeryToken()
+                <dd>
+                    @Html.DisplayFor(model => model.Descricao)
+                </dd>
+            </dl>
+        </div>
+    </div>
 
-            <div class="form-actions no-color">
-                <input type="submit" value="Remover" class="btn btn-default" /> |
-                @{ options.HttpMethod = "GET"; }
-                @Ajax.ActionLink("Voltar", "Index", options)
-            </div>
-        }
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(options))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions">
+                    <input type="submit" value="Remover" class="btn btn-default" /> |
+                    @{ options.HttpMethod = "GET"; }
+                    @Ajax.ActionLinkButton("Index", options, new { @class = "btn btn-md btn-primary btn-outline" }, "Voltar")
+                </div>
+            }
+        </div>
     </div>
 </div>

@@ -26,8 +26,6 @@ namespace Softpark.WS
             //config.AddDbContext<Domain>();
             config.Filters.Add(new ExceptionHandlingAttribute());
             
-            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
-
             log4net.Config.XmlConfigurator.Configure();
 
             // Web API routes

@@ -1,0 +1,1 @@
+ adb shell pm clear br.com.softpark.mobacs && adb uninstall br.com.softpark.mobacs && adb install "platforms/android/build/outputs/apk/android-debug.apk" && adb shell am start -n br.com.softpark.mobacs/.MainActivity

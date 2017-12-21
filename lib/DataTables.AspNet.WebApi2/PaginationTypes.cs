@@ -7,6 +7,16 @@ namespace DataTables.AspNet.WebApi2
         [Description("two_button")]
         TwoButton,
         [Description("full_numbers")]
-        FullNumbers
+        FullNumbers,
+        [Description("simple_numbers")]
+        SimpleNumbers,
+        [Description("numbers")]
+        Numbers,
+        [Description("simple")]
+        Simple,
+        [Description("full")]
+        Full,
+        [Description("first_last_numbers")]
+        FirstLastNumbers
     }
 }

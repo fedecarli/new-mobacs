@@ -1,0 +1,25 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewHomeAdress()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">MORADORES DO DOMICÍLIO</h1>
+    <!--<div class="buttons">-->
+      <!--<button class="button button-clear" ng-click="direcionaHomeVisit()"><i class="icon ion-plus-circled"></i></button>-->
+    <!--</div>-->
+  </div>
+  <ion-content>
+    <br><br>
+    <div class="list">
+      <a ng-repeat="people in listUsersByHouseholds" class="item item-avatar item-icon-left item-icon-right" ng-click="createHomeVisitForUser(people)">
+        <img src="assets/img/logo.png" />
+        <h2>{{people.nomeCidadao}}</h2>
+        <p ng-show="people.cnsCidadao != null">CNS: {{people.cnsCidadao}}</p>
+        <p ng-show="people.cnsResponsavelFamiliar != null">CNS Resp: {{people.cnsResponsavelFamiliar}}</p>
+        <p>Cadastro Individual de : {{people.dataAtendimento | date: 'dd/MM/yyyy'}}</p>
+        <i class="icon ion-ios-arrow-right color-default"></i>
+      </a>
+    </div>
+
+  </ion-content>
+</ion-view>

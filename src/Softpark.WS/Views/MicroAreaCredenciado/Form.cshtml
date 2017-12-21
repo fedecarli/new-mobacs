@@ -1,59 +1,65 @@
-﻿@model Softpark.Models.SIGSM_MicroArea_CredenciadoVinc
+﻿@model Softpark.WS.ViewModels.SIGSM.CadastroMicroAreaCredenciadoViewModel
 @{
     var options = new AjaxOptions
     {
         AllowCache = false,
         HttpMethod = "POST",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 }
 @using (Ajax.BeginForm(options))
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>SIGSM_MicroArea_CredenciadoVinc</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.id)
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.idMicroAreaUnidade, "idMicroAreaUnidade", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("idMicroAreaUnidade", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.idMicroAreaUnidade, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <div class="form-group">
+        <label for="unidade" class="control-label col-md-2">Unidade</label>
+        <div class="col-md-10">
+            @{ 
+                SelectList ma = ViewBag.idMicroAreaUnidade;
+                var unidades = new SelectList(
+                ma.Select(x =>
+                {
+                    var CNES = x.Text.Split('/')[1].Split('-')[0].Trim();
+                    var DesSetor = x.Text.Split('/')[1].Trim();
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumContrato, "NumContrato", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("NumContrato", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.NumContrato, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    return new { CNES, DesSetor };
+                }), "CNES", "DesSetor");
+            }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CodCred, "CodCred", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CodCred", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CodCred, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ItemVinc, "ItemVinc", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ItemVinc", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ItemVinc, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+            @Html.DropDownList("unidadeCred", unidades, "Selecione uma Unidade", htmlAttributes: new { @class = "form-control" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.idMicroAreaUnidade, "Micro Área Associada", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("idMicroAreaUnidade", null, "Selecione uma Micro Área", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.idMicroAreaUnidade, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ItemVinc, "Credenciado Associado", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("ItemVinc", null, "Selcione um Credenciado", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ItemVinc, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Salvar" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+@if (IsAjax)
+{
+<script>$('select#idMicroAreaUnidade option, select#ItemVinc option').each(ddlChange)</script>
 }

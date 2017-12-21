@@ -70,7 +70,7 @@ namespace Softpark.WS
                     data = sr.ReadToEnd();
                 }
 
-                return data;
+                return (data??"").Trim().Length == 0 ? null : data.Trim();
             }
             catch (Exception e)
             {

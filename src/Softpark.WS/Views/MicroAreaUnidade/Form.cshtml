@@ -1,16 +1,13 @@
 ﻿@model Softpark.Models.SIGSM_MicroArea_Unidade
-@{ 
-    var options = new AjaxOptions {
+@{
+    var options = new AjaxOptions
+    {
         AllowCache = false,
         HttpMethod = "POST",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
-
-    if (IsAjax)
-    {
-        Layout = null;
-    }
 }
 @using (Ajax.BeginForm(options))
 {
@@ -18,27 +15,21 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.MicroArea, "MicroArea", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("MicroArea", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.MicroArea, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @Html.HiddenFor(m => m.NumContrato, htmlAttributes: new { value = 22 })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.NumContrato, "NumContrato", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("NumContrato", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.NumContrato, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CodSetor, "CodSetor", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CodSetor, "Unidade", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("CodSetor", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CodSetor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MicroArea, "Micro Área", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("MicroArea", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MicroArea, "", new { @class = "text-danger" })
             </div>
         </div>
 

@@ -1,0 +1,214 @@
+/* Empty. Add your own CSS if you like */
+
+.icon-color-default {
+    color: #3b5998 !important;
+}
+
+.bar-default-application {
+    border-color: #008AB8;
+    /* background-color: #3b5998; */
+    background-color: #152c5a;
+    background-image: linear-gradient(0deg, #008AB8, #008AB8 50%, transparent 50%);
+    color: #fff;
+}
+
+.bar-default-application h1,
+.bar-default-application span {
+    /*color: #ffcd2b;*/
+    color: #ffffff;
+}
+
+.tab-item.active {
+    border-color: #ffcd2b !important;
+}
+
+.tab-item.active i {
+    color: #ffcd2b !important;
+}
+
+.tabs-default-application .tabs {
+    background-color: #152c5a;
+    background-image: none;
+}
+
+.button-default-application {
+    border-color: transparent;
+    /* background-color: #008AB8;
+    color: #ffcd2b; */
+    background-color: #3b5998;
+    color: #ffffff;
+}
+
+i,
+.ion-navicon {
+    color: #ffffff !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.settings .bar i {
+    font-size: 36px;
+}
+
+.home-controller .item {
+    border-color: #008AB8;
+    background-color: #008AB8;
+}
+
+.home-controller .item i {
+    font-size: 46px;
+    color: #ffffff;
+}
+
+.home-controller .item i.icon-small {
+    font-size: 26px;
+}
+
+.home-controller h2 {
+    color: #ffffff;
+}
+
+.bg-default {
+    background: #008AB8;
+    color: #FFFFFF;
+}
+
+.bg-default a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.bg-default font {
+    color: #FFFFFF;
+}
+
+.tabs-informations i {
+    font-size: 32px;
+    color: #152c5a;
+}
+
+.tabs-informations span {
+    float: left;
+    width: 100%;
+    font-weighDt: bold;
+    color: #152c5a;
+}
+
+.page-cad span {
+    font-weight: bold;
+}
+
+.page-cad .list li {
+    border: none !important;
+}
+
+.page-cad .list .item input {
+    width: 100%;
+    margin-top: 5px;
+    background: #F8F8FF;
+    padding: 0 10px;
+    font-size: 22px;
+}
+
+.page-cad .photo-user-icon {
+    font-size: 46px;
+}
+
+.item-input.box-search {
+    padding: 15px 10px;
+}
+
+.color-default {
+    color: #3b5998 !important;
+}
+
+.error-formatting {
+    color: #FFFFFF;
+}
+
+.information-formatting {
+    color: #008AB8;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.failure {
+    color: red;
+}
+
+#dashboard-page .row {
+    display: block !important;
+}
+
+#dashboard-page .card {
+    margin: 2.5vw 4.5vw !important;
+    box-shadow: 0px 4px 6px rgba(00, 00, 00, 0.25) !important;
+    border-radius: 3px;
+}
+
+#dashboard-page h2 {
+    text-transform: uppercase;
+    color: #333333;
+    font-size: 5vw;
+    margin: auto 0px auto 8vw;
+    text-align: center;
+}
+
+#dashboard-page i {
+    color: #333333 !important;
+    font-size: 10vw;
+    /* margin: auto 10px; */
+}
+
+#dashboard-page a.item {
+    display: flex;
+}
+
+#dashboard-page .item {
+    border-color: #999;
+    background-color: #fff;
+    padding: 2.5vw 0 2.5vw 3vw;
+}
+
+#page-login label {
+    border-width: 0px;
+    border-bottom-width: 1px;
+    padding-left: 5px;
+    border-color: #3c3c7c;
+    width: 35vw;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#page-login label span {
+    text-align: center;
+    width: 100% !important;
+    max-width: 1024px;
+    padding-right: 24px;
+}
+
+#page-login label input {
+    display: block;
+    margin: 0px auto;
+    text-align: center;
+}
+
+#page-login h4 {
+    color: #666666;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+    text-align: center;
+    s font-weight: 400;
+}
+
+#page-login h4 span {
+    color: #2f2f2f;
+    font-weight: 700;
+}

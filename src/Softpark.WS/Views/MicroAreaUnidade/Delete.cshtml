@@ -1,67 +1,69 @@
 ﻿@model Softpark.Models.SIGSM_MicroArea_Unidade
 @{
+    var options = new AjaxOptions
+    {
+        AllowCache = false,
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
+    };
+
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
 }
+
 <div id="page-wrapper">
-    <h2>Remover Associação de Unidade</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Remover Associação de Unidade</h1>
+        </div>
+    </div>
 
-    <h3>Deseja realmente remover essa associação?</h3>
-    <div>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.ASSMED_Contratos.NomeContratante)
-            </dt>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Deseja realmente remover este registro?</h3>
+        </div>
+    </div>
 
-            <dd>
-                @Html.DisplayFor(model => model.ASSMED_Contratos.NomeContratante)
-            </dd>
+    <div class="row">
+        <div class="col-md-12">
+            <dl class="dl-horizontal">
+                <dt>
+                    Unidade
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Setores.DesSetor)
-            </dt>
+                <dd>
+                    @ViewBag.Unidade
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Setores.DesSetor)
-            </dd>
+                <dt>
+                    Micro Área
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.SIGSM_MicroAreas.Descricao)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.SIGSM_MicroAreas.Codigo) - @Html.DisplayFor(model => model.SIGSM_MicroAreas.Descricao)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.SIGSM_MicroAreas.Descricao)
-            </dd>
+            </dl>
+        </div>
+    </div>
 
-        </dl>
-        @{
-            var options = new AjaxOptions
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(options))
             {
-                AllowCache = false,
-                HttpMethod = "POST",
-                InsertionMode = InsertionMode.ReplaceWith,
-                UpdateTargetId = "page-wrapper"
-            };
-        }
-        @using (Ajax.BeginForm(options))
-        {
-            @Html.AntiForgeryToken()
+                @Html.AntiForgeryToken()
 
-            <div class="form-actions no-color">
-                <input type="submit" value="Remover" class="btn btn-default" /> |
-                @{
-                    var opt = new AjaxOptions
-                    {
-                        AllowCache = false,
-                        HttpMethod = "GET",
-                        InsertionMode = InsertionMode.ReplaceWith,
-                        UpdateTargetId = "page-wrapper"
-                    };
-                }
-                @Ajax.ActionLink("Voltar", "Index", opt)
-            </div>
-                    }
+                <div class="form-actions">
+                    <input type="submit" value="Remover" class="btn btn-default" /> |
+                    @{ options.HttpMethod = "GET"; }
+                    @Ajax.ActionLinkButton("Index", options, new { @class = "btn btn-md btn-primary btn-outline" }, "Voltar")
+                </div>
+            }
+        </div>
     </div>
 </div>

@@ -1,0 +1,6 @@
+﻿# .gitignore
+/[Pp]latforms/
+/[Bb]in/
+/[Oo]bj/
+/[Bb]ld/
+/node_modules/

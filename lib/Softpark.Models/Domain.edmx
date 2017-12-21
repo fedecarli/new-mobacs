@@ -521,7 +521,6 @@
           <Property Name="CodTpHomologacao" Type="int" />
           <Property Name="Justificativa" Type="varchar" MaxLength="500" />
           <Property Name="MotivoHomologacao" Type="varchar" MaxLength="500" />
-          <Property Name="idAuto" Type="bigint" Nullable="false" />
           <Property Name="MicroArea" Type="char" MaxLength="2" />
         </EntityType>
         <EntityType Name="ASSMED_CadastroDocPessoal">
@@ -3806,7 +3805,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="ASSMED_CadTelefones" Relationship="Domain.FK__ASSMED_CadTelefo__47FBA9D6" FromRole="ASSMED_Cadastro" ToRole="ASSMED_CadTelefones" />
           <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_Endereco__5649C92D" FromRole="ASSMED_Cadastro" ToRole="ASSMED_Endereco" />
           <NavigationProperty Name="ASSMED_PesFisica" Relationship="Domain.FK__ASSMED_PesFisica__7BE56230" FromRole="ASSMED_Cadastro" ToRole="ASSMED_PesFisica" />
-          <Property Name="idAuto" Type="Int64" Nullable="false" />
           <Property Name="MicroArea" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="SIGSM_MicroAreas" Relationship="Domain.FK__ASSMED_Ca__Micro__3B59D482" FromRole="ASSMED_Cadastro" ToRole="SIGSM_MicroAreas" />
           <NavigationProperty Name="SIGSM_Check_Cadastros" Relationship="Domain.FK_Chk_Cadastro_Pessoa" FromRole="ASSMED_Cadastro" ToRole="SIGSM_Check_Cadastros" />
@@ -6125,7 +6123,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <EntityTypeMapping TypeName="Domain.ASSMED_Cadastro">
               <MappingFragment StoreEntitySet="ASSMED_Cadastro">
                 <ScalarProperty Name="MicroArea" ColumnName="MicroArea" />
-                <ScalarProperty Name="idAuto" ColumnName="idAuto" />
                 <ScalarProperty Name="IdFicha" ColumnName="IdFicha" />
                 <ScalarProperty Name="MotivoHomologacao" ColumnName="MotivoHomologacao" />
                 <ScalarProperty Name="Justificativa" ColumnName="Justificativa" />

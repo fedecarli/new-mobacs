@@ -1,0 +1,36 @@
+<ion-view ng-controller="LoginController" hide-nav-bar="true">
+    <!--hide-nav-bar="true"-->
+    <ion-nav-bar align-title="center" class="bar bar-default-application">
+        <ion-nav-title>MobACS</ion-nav-bar>
+    </ion-nav-bar>
+    <ion-content id="page-login" scroll="true">
+        <div>
+            <div class="item item-body" align="center" style="border-width: 0px;">
+                <!-- <h2>SOFTPARK </h2> -->
+                <img src="assets/img/logo.png" style="margin: 15% auto 25% auto; height: 100%; width: auto;" />
+                <!-- <h3 style="padding-left: 90px; padding-right: 90px; margin-bottom: 50px; font-weight: 600; text-transform: uppercase; font-size: 14px;">Aplicativo para cadastro e homologação de indivíduos feito pelo agente comunitário de saúde. </h3> -->
+                <!-- <h4 ng-show="login.environment == 'dev'" style="color:#900">Ambiente de {{login.description}}</h4> -->
+                <!-- <h4 style="color:#900; margin-bottom: 50px;">Ambiente de {{login.description}}</h4> -->
+            </div>
+        </div>
+        <form name="loginForm" ng-submit="loginApplication(login)">
+            <div class="list" style="">
+                <label class="item item-input item-floating-label">
+					<span class="input-label">LOGIN</span>
+					<input type="text" ng-model="login.userLogin" placeholder="LOGIN">
+				</label>
+                <br>
+                <label class="item item-input item-floating-label">
+					<span class="input-label">SENHA</span>
+					<input type="password" ng-model="login.password" placeholder="SENHA">
+				</label>
+                <br>
+                <button class="button button-outline" style="border-color: #3c3c7c; color: #3c3c7c; font-weight: 600; display: block; margin: 5vh auto 13vh auto; width: 40vw;" type="submit">ENTRAR</button>
+            </div>
+            <!-- fim componente formulario -->
+        </form>
+        <!-- fim do formulario -->
+        <h4 id="versao"><span>v.</span>{{login.version}}</h4>
+    </ion-content>
+    <!-- fim da tag content -->
+</ion-view>

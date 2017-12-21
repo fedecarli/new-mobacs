@@ -25,7 +25,7 @@ namespace Softpark.WS
             CultureInfo.DefaultThreadCurrentUICulture =
             Thread.CurrentThread.CurrentUICulture =
             Thread.CurrentThread.CurrentCulture = custom;
-
+            
             GlobalConfiguration.Configuration.RegisterDataTables();
 
             AreaRegistration.RegisterAllAreas();
@@ -61,7 +61,7 @@ namespace Softpark.WS
                 responseMessage = Encoding.UTF8.GetBytes(response.ReasonPhrase);
 
             await OutgoingMessageAsync(corrId, requestInfo, responseMessage);
-            
+
             return response;
         }
 

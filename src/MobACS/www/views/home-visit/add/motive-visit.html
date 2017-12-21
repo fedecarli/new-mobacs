@@ -1,0 +1,294 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="updateMotiveVisit(dataHomeVisit, 'return')">
+        <i class="icon ion-chevron-left"></i>
+      </button>
+    </div>
+    <h1 class="title">MOTIVO DA VISITA</h1>
+  </div>
+
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs" >
+      <a class="tab-item">
+        <i class="icon ion-android-alert"></i>
+        INFORMAÇÕES
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-ios-paper" ></i>
+        MOTIVO
+      </a>
+      <a class="tab-item ">
+        <i class="icon ion-android-walk"></i>
+        ANTROPOMETRIA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-folder"></i>
+        DESFECHO
+      </a>
+    </div>
+  </div>
+
+  <ion-content >
+    <br><br><br><br><br>
+
+    <form name="motiveVisit" ng-submit="updateMotiveVisit(dataHomeVisit,'this')">
+      <div class="list">
+        <div class="list">
+
+          <div class="row">
+            <div class="col col-100">
+              <ul class="list">
+                <li class="item item-divider bg-default">
+
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Cadastramento_Atualizacao" ng-true-value="1" ng-false-value="null" ng-disabled="disabledInput.Cadastramento_Atualizacao">
+                  </label>
+                  Cadastramento/Atualização
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Visita_periodica" ng-true-value="29" ng-false-value="null" ng-disabled="disabledInput.Visita_periodica">
+                  </label>
+                  Visita periódica
+                </li>
+                <li class="item item-divider bg-default">
+                  Busca ativa
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Consulta" ng-true-value="2" ng-false-value="null" ng-disabled="disabledInput.Consulta">
+                  </label>
+                  Consulta
+                </li>
+                <li class="item item-checkbox" >
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Exame" ng-true-value="3" ng-false-value="null" ng-disabled="disabledInput.Exame">
+                  </label>
+                  Exame
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Vacina" ng-true-value="4" ng-false-value="null" ng-disabled="disabledInput.Vacina">
+                  </label>
+                  Vacina
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Condicionalidadesdobolsafamilia" ng-true-value="30" ng-false-value="null" ng-disabled="disabledInput.Condicionalidadesdobolsafamilia">
+                  </label>
+                  Condicionalidades do Bolsa Família
+                </li>
+                <li class="item item-divider bg-default">
+                  Acompanhamento
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Gestante" ng-true-value="5" ng-false-value="null" ng-disabled="disabledInput.Gestante">
+                  </label>
+                  Gestante
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Puerpera" ng-true-value="6" ng-false-value="null" ng-disabled="disabledInput.Puerpera">
+                  </label>
+                  Puérpera
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Recem_nascido" ng-true-value="7" ng-false-value="null" ng-disabled="disabledInput.Recem_nascido">
+                  </label>
+                  Recém-nascido
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Crianca" ng-true-value="8" ng-false-value="null" ng-disabled="disabledInput.Crianca">
+                  </label>
+                  Criança
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.PessoaDesnutricao" ng-true-value="9" ng-false-value="null" ng-disabled="disabledInput.PessoaDesnutricao">
+                  </label>
+                  Pessoa com desnutrição
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.PessoaReabilitacaoDeficiencia" ng-true-value="10" ng-false-value="null" ng-disabled="disabledInput.PessoaReabilitacaoDeficiencia">
+                  </label>
+                  Pessoa em reabilitação ou com deficiência
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Hipertensao" ng-true-value="11" ng-false-value="null" ng-disabled="disabledInput.Hipertensao">
+                  </label>
+                  Pessoa com hipertensão
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Diabetes" ng-true-value="12" ng-false-value="null" ng-disabled="disabledInput.Diabetes">
+                  </label>
+                  Pessoa com diabetes
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Asma" ng-true-value="13" ng-false-value="null" ng-disabled="disabledInput.Asma">
+                  </label>
+                  Pessoa com asma
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.DPOC_enfisema" ng-true-value="14" ng-false-value="null" ng-disabled="disabledInput.DPOC_enfisema">
+                  </label>
+                  Pessoa com DPOC/enfisema
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Cancer" ng-true-value="15" ng-false-value="null" ng-disabled="disabledInput.Cancer">
+                  </label>
+                  Pessoa com câncer
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Outras_doencas_cronicas" ng-true-value="16" ng-false-value="null" ng-disabled="disabledInput.Outras_doencas_cronicas">
+                  </label>
+                  Pessoa com outras doenças crônicas
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Hanseniase" ng-true-value="17" ng-false-value="null" ng-disabled="disabledInput.Hanseniase">
+                  </label>
+                  Pessoa com hanseníase
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Tuberculose" ng-true-value="18" ng-false-value="null" ng-disabled="disabledInput.Tuberculose">
+                  </label>
+                  Pessoa com tuberculose
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Sintomaticos_Respiratorios" ng-true-value="32" ng-false-value="null" ng-disabled="disabledInput.Sintomaticos_Respiratorios">
+                  </label>
+                  Sintomáticos respiratórios
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Tabagista" ng-true-value="33" ng-false-value="null" ng-disabled="disabledInput.Tabagista">
+                  </label>
+                  Tabagista
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Domiciliados_Acamados" ng-true-value="19" ng-false-value="null" ng-disabled="disabledInput.Domiciliados_Acamados">
+                  </label>
+                  Domiciliados/Acamados
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Condicoes_vulnerabilidade_social" ng-true-value="20" ng-false-value="null" ng-disabled="disabledInput.Condicoes_vulnerabilidade_social">
+                  </label>
+                  Condições de vulnerabilidade social
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Condicionalidades_bolsa_familia" ng-true-value="21" ng-false-value="null" ng-disabled="disabledInput.Condicionalidades_bolsa_familia">
+                  </label>
+                  Condicionalidades do Bolsa Família
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Saude_mental" ng-true-value="22" ng-false-value="null" ng-disabled="disabledInput.Saude_mental">
+                  </label>
+                  Saúde mental
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Usuario_alcool" ng-true-value="23" ng-false-value="null" ng-disabled="disabledInput.Usuario_alcool">
+                  </label>
+                  Usuário de álcool
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Usuario_outras_drogas" ng-true-value="24" ng-false-value="null" ng-disabled="disabledInput.Usuario_outras_drogas">
+                  </label>
+                  Usuário de outras drogas
+                </li>
+                <li class="item item-divider bg-default">
+                  Controle ambiental/vetorial
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Acao_educativa" ng-true-value="34" ng-false-value="null" ng-disabled="disabledInput.Acao_educativa">
+                  </label>
+                  Ação educativa
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Imovel_com_foco" ng-true-value="35" ng-false-value="null" ng-disabled="disabledInput.Imovel_com_foco">
+                  </label>
+                  Imóvel com foco
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Acao_mecanica" ng-true-value="36" ng-false-value="null" ng-disabled="disabledInput.Acao_mecanica">
+                  </label>
+                  Ação mecânica
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Tratamento_focal" ng-true-value="37" ng-false-value="null" ng-disabled="disabledInput.Tratamento_focal">
+                  </label>
+                  Tratamento focal
+                </li>
+                <li class="item item-divider bg-default">
+
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Egresso_de_internacao" ng-true-value="25" ng-false-value="null" ng-disabled="disabledInput.Egresso_de_internacao">
+                  </label>
+                  Egresso de Internação
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Convite_atividades_coletivas_campanha_saude" ng-true-value="27" ng-false-value="null" ng-disabled="disabledInput.Convite_atividades_coletivas_campanha_saude">
+                  </label>
+                  Convite atividades coletivas/campanha de saúde
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Orientacao_Prevencao" ng-true-value="31" ng-false-value="null" ng-disabled="disabledInput.Orientacao_Prevencao">
+                  </label>
+                  Orientação/prevenção
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataHomeVisit.Outros" ng-true-value="28" ng-false-value="null" ng-disabled="disabledInput.Outros">
+                  </label>
+                  Outros
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col col-50">
+              <button type="button" class="button button-full button-energized" ng-click="updateMotiveVisit(dataHomeVisit, 'return')">
+                ETAPA ANTERIOR
+              </button>
+            </div>
+            <div class="col col-50">
+              <button type="submit" class="button button-full button-default-application">
+                PRÓXIMA ETAPA
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+
+</ion-view>

@@ -39,7 +39,6 @@ namespace Softpark.Models
         public string Justificativa { get; set; }
         public string MotivoHomologacao { get; set; }
         public Nullable<System.Guid> IdFicha { get; set; }
-        public long idAuto { get; set; }
         public string MicroArea { get; set; }
     
         public virtual IdentificacaoUsuarioCidadao IdentificacaoUsuarioCidadao { get; set; }

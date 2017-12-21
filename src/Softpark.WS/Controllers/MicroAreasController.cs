@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
 using Softpark.Models;
+using DataTables.AspNet.WebApi2;
+using System.Linq;
+using System;
+using System.Linq.Expressions;
 
 namespace Softpark.WS.Controllers
 {
@@ -20,9 +24,38 @@ namespace Softpark.WS.Controllers
         /// GET: MicroAreas
         /// </summary>
         /// <returns></returns>
-        public async Task<ActionResult> Index()
+        public ActionResult Index() => View();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> List([Bind(Include = "iDisplayStart,iDisplayLength,iSortingCols,iSortCol_0,sSortDir_0,sSearch,sEcho")] DataTableParameters request)
         {
-            return View(await Domain.SIGSM_MicroAreas.ToListAsync());
+            if (request == null) request = new DataTableParameters(Request.QueryString);
+
+            var vincs = Domain.SIGSM_MicroAreas.AsQueryable();
+
+            request.Total = await Domain.SIGSM_MicroAreas.CountAsync();
+
+            Expression<Func<SIGSM_MicroAreas, object>> sort;
+            if (request.iSortCol_0 == 1)
+                sort = ((a) => a.Descricao);
+            else
+                sort = ((a) => a.Codigo);
+
+            var comp = request.Compose(vincs, sort,
+                x => x.Codigo.Contains(request.sSearch) || x.Descricao.Contains(request.sSearch), x => new
+            {
+                x.Codigo,
+                x.Descricao,
+                btn = "<a data-ajax=\"true\" data-ajax-method=\"GET\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#page-wrapper\" href=\"" + Url.Action("Edit", new { id = x.Codigo }) + "\" class=\"btn btn-outline btn-xs btn-warning\" title=\"Editar\" data-ajax-begin=\"beginRequest\"><i class='fa fa-pencil'></i></a>&nbsp;" +
+                    "<a data-ajax=\"true\" data-ajax-method=\"GET\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#page-wrapper\" href=\"" + Url.Action("Delete", new { id = x.Codigo }) + "\" class=\"btn btn-outline btn-xs btn-danger\" title=\"Remover\" data-ajax-begin=\"beginRequest\"><i class='fa fa-times'></i></a>"
+                });
+
+            return Json(await comp.Result(), JsonRequestBehavior.AllowGet);
         }
 
         /// GET: MicroAreas/Create

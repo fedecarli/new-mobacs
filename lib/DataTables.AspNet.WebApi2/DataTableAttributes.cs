@@ -2,6 +2,12 @@
 
 namespace DataTables.AspNet.WebApi2
 {
+    public class DataTableDom
+    {
+        public string el { get; set; }
+        public string content { get; set; }
+    }
+    
     public class DataTableAttributes
     {
         public bool AutoWidth { get; set; } //bAutoWidth 
@@ -11,7 +17,7 @@ namespace DataTables.AspNet.WebApi2
         public bool JQueryUI { get; set; } //bJQueryUI  
         public bool LengthChange { get; set; } //bLengthChange  
         //Paginate should be always enabled!
-        private bool Paginate { get; set; } //bPaginate  
+        public bool Paginate { get; set; } //bPaginate  
         public bool ScrollInfinite { get; set; } //bScrollInfinite
         //bServerSide 
         public bool Sort { get; set; } //bSort  
@@ -21,6 +27,9 @@ namespace DataTables.AspNet.WebApi2
         public string ScrollY { get; set; } //sScrollY 
         public List<ColumnDef> ColumnDefs { get; set; }
         public PaginationTypes PaginationType { get; set; } //sPaginationType 
+        public bool ScrollCollapse { get; set; }
+        public string Dom { get; set; }
+        public List<DataTableDom> Doms { get; set; }
 
         public DataTableAttributes()
         {
@@ -32,6 +41,7 @@ namespace DataTables.AspNet.WebApi2
             Sort = true;
             SortClasses = true;
             PaginationType = PaginationTypes.FullNumbers;
+            Doms = new List<DataTableDom>();
         }
 
     }

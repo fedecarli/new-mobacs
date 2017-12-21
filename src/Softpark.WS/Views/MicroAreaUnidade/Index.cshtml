@@ -1,58 +1,54 @@
-﻿@model IEnumerable<Softpark.Models.SIGSM_MicroArea_Unidade>
+﻿@using DataTables.AspNet.WebApi2
+@model List<ColumnDef>
 @{
     var options = new AjaxOptions
     {
         AllowCache = false,
         HttpMethod = "GET",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
+
+    var idUsuario = ASPSessionVar.Read("idUsuario");
 }
+
+@Ajax.DataTable($"tbl_list_assoc_{idUsuario}", new AjaxOptions
+{
+    HttpMethod = "GET",
+    Url = Url.Action("List"),
+    AllowCache = true
+}, new DataTableAttributes
+{
+    ColumnDefs = Model,
+    DeferRender = false,
+    JQueryUI = true,
+    StateSave = true,
+    PaginationType = PaginationTypes.FullNumbers,
+    Paginate = true,
+    Dom = "<\"toolbar\">frtip",
+    Doms = new List<DataTableDom> { new DataTableDom { el = "div.toolbar", content = Ajax.ActionLinkButton("Create", options, new { @class = "btn btn-md btn-success pull-right btn-create" },
+"<i class=\"fa fa-plus\"></i> Nova Associação").ToHtmlString() } }
+}, Url, IsAjax)
+
 <div id="page-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Associações de Unidades e Micro Áreas</h1>
+        </div>
+    </div>
 
-    <h2>Associações de Unidades e Micro Áreas</h2>
-
-    <p>
-        @Ajax.ActionLink("Associar", "Create", options)
-    </p>
-
-    <table class="table">
-        <tr>
-            <th>
-                Contrato
-            </th>
-            <th>
-                Setor
-            </th>
-            <th>
-                Micro Área
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ASSMED_Contratos.NomeContratante)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Setores.DesSetor)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SIGSM_MicroAreas.Descricao)
-                </td>
-                <td>
-                    @Ajax.ActionLink("Editar", "Edit", new { id = item.id }, options)
-                    @Ajax.ActionLink("Remover", "Delete", new { id = item.id }, options)
-                </td>
-            </tr>
-        }
-
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tbl_list_assoc_@idUsuario"></table>
+            </div>
+        </div>
+    </div>
 </div>

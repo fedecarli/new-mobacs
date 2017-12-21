@@ -5,38 +5,52 @@
         AllowCache = false,
         HttpMethod = "GET",
         InsertionMode = InsertionMode.ReplaceWith,
-        UpdateTargetId = "page-wrapper"
+        UpdateTargetId = "page-wrapper",
+        OnBegin = "beginRequest"
     };
 
     if (IsAjax)
     {
         Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
     }
+
+    var idUsuario = ASPSessionVar.Read("idUsuario");
 }
 
+@Ajax.DataTable($"tbl_list_cred_{idUsuario}", new AjaxOptions
+{
+    HttpMethod = "GET",
+    Url = Url.Action("List")
+}, new DataTableAttributes
+{
+    ColumnDefs = new List<ColumnDef> {
+new ColumnDef { DataProp = "Unidade", Title = "Unidade", Sorting = SortingDirections.Assending },
+new ColumnDef { DataProp = "Nome", Title = "Credenciado" },
+new ColumnDef { DataProp = "MicroArea", Title = "Micro Área" },
+new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
+},
+    DeferRender = false,
+    JQueryUI = true,
+    StateSave = true,
+    PaginationType = PaginationTypes.FullNumbers,
+    Paginate = true,
+    Dom = "<\"toolbar\">frtip",
+    Doms = new List<DataTableDom> { new DataTableDom { el = "div.toolbar", content = Ajax.ActionLinkButton("Create", options, new { @class = "btn btn-md btn-success pull-right btn-create" },
+"<i class=\"fa fa-plus\"></i> Associar Credenciado").ToHtmlString() } }
+}, Url, IsAjax)
 <div id="page-wrapper">
-    <h2>Index</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Credenciados</h1>
+        </div>
+    </div>
 
-    <p>
-        @Ajax.ActionLink("Create New", "Create", options)
-    </p>
-
-    <table class="table" id="table"></table>
-
-@section scripts {
-    @Ajax.DataTable("table", new AjaxOptions
-    {
-        HttpMethod = "GET",
-        Url = Url.Action("List")
-    }, new DataTableAttributes
-    {
-        ColumnDefs = new List<ColumnDef> {
-                new ColumnDef { DataProp = "Unidade", Title = "Unidade" },
-                new ColumnDef { DataProp = "Nome", Title = "Nome" },
-                new ColumnDef { DataProp = "Contrato", Title = "Contrato" },
-                new ColumnDef { DataProp = "MicroArea", Title = "Micro Área" },
-                new ColumnDef { DataProp = "btn", Title = "", FnRender = "renderHtmlCell" }
-            }
-    })
-}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tbl_list_cred_@idUsuario"></table>
+            </div>
+        </div>
+    </div>
 </div>

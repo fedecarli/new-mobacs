@@ -1,0 +1,135 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goBackPageHistory()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">ADICIONAR FAMÍLIAS</h1>
+  </div>
+  <ion-content>
+    <br><br><br>
+
+    <form novalidate name="Families" ng-submit="addFamilia(familia)">
+      <div classs="list">
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              Nº DO PRONTUÁRIO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="numeroProntuario" ng-model="familia.numeroProntuario" ng-disabled="disabledInput.numeroProntuario" ui-medical-records>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              CNS DO RESPONSÁVEL*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="numeroCnsResponsavel" ng-model="familia.numeroCnsResponsavel" ng-minlength="15" ng-disabled="disabledInput.numeroCnsResponsavel"  ng-required="requiredInput.numeroCnsResponsavel" ui-cns-citizen>-->
+              <input type="tel" name="numeroCnsResponsavel" ng-model="familia.numeroCnsResponsavel" ng-minlength="15" ng-disabled="disabledInput.numeroCnsResponsavel" ui-cns-citizen>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Families.$invalid}" ng-show="Families.numeroCnsResponsavel.$error.minlength">
+              * No mínimo 15 dígitos
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>DATA DE NASCIMENTO DO RESPONSÁVEL</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" id="dataNascimentoResponsavel" name="dataNascimentoResponsavel" ng-change="valueInDataFamily('dataNascimentoResponsavel')" ng-model="familia.dataNascimentoResponsavel" ng-disabled="disabledInput.dataNascimentoResponsavel" ui-date>
+            </label>
+            <span id="dataNascimentoResponsavelError" class="error-formatting" ng-class="{'information-formatting': Families.$invalid}">
+              * Insira a data no formato dd/MM/yyyy
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>RENDA FAMILIAR (SAL. MÍNIMO)</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="rendaFamiliar" ng-model="familia.rendaFamiliar" ng-disabled="disabledInput.rendaFamiliar">
+                <option value="1">1/4 de salário mínimo</option>
+                <option value="2">Meio salário mínimo</option>
+                <option value="3">Um salário mínimo</option>
+                <option value="4">Dois salários mínimos</option>
+                <option value="7">Três salários mínimos</option>
+                <option value="5">Quatro salários mínimos</option>
+                <option value="6">Acima de quatro salários mínimos</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>NÚMERO DE MEMBROS DA FAMÍLIA</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="numeroMembrosFamilia" ng-model="familia.numeroMembrosFamilia" ng-disabled="disabledInput.numeroMembrosFamilia">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>RESIDE DESDE</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" id="resideDesde" name="resideDesde" ng-change="valueInDataFamily('resideDesde')" ng-model="familia.resideDesde" ng-disabled="disabledInput.resideDesde" ui-date-month-year-month-year>
+            </label>
+            <span id="resideDesdeError" class="error-formatting" ng-class="{'information-formatting': Families.$invalid}">
+              * Insira a data no formato MM/yyyy
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>MUDOU-SE</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="stMudanca" ng-model="familia.stMudanca" ng-true-value="1" ng-false-value="null" ng-disabled="disabledInput.stMudanca">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <button type="submit" class="button button-block icon-left ion-checkmark-round button-balanced" ng-disabled="Families.$invalid">
+              Salvar Família
+            </button>
+          </div>
+        </div>
+
+        <!--<div class="row">-->
+          <!--<div class="col col-100">-->
+            <!--<button type="button" class="button button-block icon-left ion-trash-a button-assertive" ng-show="removeButton" ng-click="removeFamily(familia.numeroCnsResponsavel)">-->
+              <!--Remover Família-->
+            <!--</button>-->
+          <!--</div>-->
+        <!--</div>-->
+
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>
