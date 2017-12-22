@@ -248,6 +248,9 @@
     <Compile Include="SIGSM_Check_Cadastros.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>
+    <Compile Include="SIGSM_FichaProfissao.cs">
+      <DependentUpon>Domain.tt</DependentUpon>
+    </Compile>
     <Compile Include="SIGSM_MicroAreas.cs">
       <DependentUpon>Domain.tt</DependentUpon>
     </Compile>

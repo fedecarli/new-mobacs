@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AnimalNoDomicilio">
           <Key>
             <PropertyRef Name="id_cadastro_domiciliar" />
@@ -33,8 +33,8 @@
           <Property Name="longitude" Type="nvarchar" MaxLength="20" />
           <Property Name="DataRegistro" Type="datetime" />
           <Property Name="Justificativa" Type="nvarchar" MaxLength="500" />
+          <Property Name="idAuto" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Erro" Type="bit" />
-          <Property Name="idAuto" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="CadastroIndividual">
           <Key>
@@ -55,8 +55,8 @@
           <Property Name="longitude" Type="nvarchar" MaxLength="20" />
           <Property Name="DataRegistro" Type="datetime" />
           <Property Name="Justificativa" Type="nvarchar" MaxLength="500" />
+          <Property Name="idAuto" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Erro" Type="bit" />
-          <Property Name="idAuto" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="CondicaoMoradia">
           <Key>
@@ -792,7 +792,7 @@
           <Property Name="DesEtnia" Type="varchar" MaxLength="150" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'onlinecidade.dbo.Nacionalidade' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'Onlinecidade3.dbo.Nacionalidade' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Nacionalidade">
           <Key>
             <PropertyRef Name="CodNacao" />
@@ -833,10 +833,18 @@ warning 6002: The table/view 'onlinecidade.dbo.Nacionalidade' does not have a pr
           <Property Name="id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="NumContrato" Type="int" Nullable="false" />
           <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="CodCred" Type="int" Nullable="false" />
+          <Property Name="idMaCredVinc" Type="int" Nullable="false" />
           <Property Name="BaixarEndereco" Type="bit" Nullable="false" />
           <Property Name="Data" Type="datetime" Nullable="false" />
           <Property Name="DataDownload" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SIGSM_FichaProfissao">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ficha" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="CBO" Type="char" MaxLength="6" Nullable="false" />
         </EntityType>
         <EntityType Name="SIGSM_MicroArea_CredenciadoVinc">
           <Key>
@@ -940,7 +948,7 @@ warning 6002: The table/view 'onlinecidade.dbo.Nacionalidade' does not have a pr
           <Property Name="Icone" Type="nvarchar" MaxLength="60" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'onlinecidade.dbo.TB_MS_TIPO_LOGRADOURO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'Onlinecidade3.dbo.TB_MS_TIPO_LOGRADOURO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TB_MS_TIPO_LOGRADOURO">
           <Key>
             <PropertyRef Name="CO_TIPO_LOGRADOURO" />
@@ -1008,7 +1016,7 @@ warning 6002: The table/view 'onlinecidade.dbo.TB_MS_TIPO_LOGRADOURO' does not h
           <Property Name="codigo" Type="nvarchar" MaxLength="12" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'onlinecidade.dbo.TP_Conduta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'Onlinecidade3.dbo.TP_Conduta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TP_Conduta">
           <Key>
             <PropertyRef Name="id_tp_conduta" />
@@ -1231,7 +1239,7 @@ warning 6002: The table/view 'onlinecidade.dbo.TP_Conduta' does not have a prima
           <Property Name="observacao" Type="nvarchar" MaxLength="512" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'onlinecidade.dbo.TP_Nasf' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'Onlinecidade3.dbo.TP_Nasf' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TP_Nasf">
           <Key>
             <PropertyRef Name="id_tp_nasf" />
@@ -1405,7 +1413,7 @@ warning 6002: The table/view 'onlinecidade.dbo.TP_Nasf' does not have a primary 
           <Property Name="DNE" Type="char" MaxLength="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosDomiciliares' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'Onlinecidade3.dbo.VW_ConsultaCadastrosDomiciliares' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_ConsultaCadastrosDomiciliares">
           <Key>
             <PropertyRef Name="Codigo" />
@@ -1419,7 +1427,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosDomiciliares'
           <Property Name="Codigo" Type="decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'Onlinecidade3.dbo.VW_ConsultaCadastrosIndividuais' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="VW_ConsultaCadastrosIndividuais">
           <Key>
             <PropertyRef Name="Codigo" />
@@ -1526,7 +1534,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ASSMED_Ca__Micro__3B59D482">
+        <Association Name="FK__ASSMED_Ca__Micro__09035EDF">
           <End Role="SIGSM_MicroAreas" Type="Self.SIGSM_MicroAreas" Multiplicity="0..1" />
           <End Role="ASSMED_Cadastro" Type="Self.ASSMED_Cadastro" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1606,7 +1614,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ASSMED_En__Micro__3A65B049">
+        <Association Name="FK__ASSMED_En__Micro__080F3AA6">
           <End Role="SIGSM_MicroAreas" Type="Self.SIGSM_MicroAreas" Multiplicity="0..1" />
           <End Role="ASSMED_Endereco" Type="Self.ASSMED_Endereco" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1646,7 +1654,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Documento__IdIde__7897ECEC">
+        <Association Name="FK__Documento__IdIde__74FC6632">
           <End Role="IdentificacaoUsuarioCidadao" Type="Self.IdentificacaoUsuarioCidadao" Multiplicity="1" />
           <End Role="Documentos" Type="Self.Documentos" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1658,7 +1666,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Documentos__7B745997">
+        <Association Name="FK__Documentos__77D8D2DD">
           <End Role="ASSMED_TipoDocPessoal" Type="Self.ASSMED_TipoDocPessoal" Multiplicity="1" />
           <End Role="Documentos" Type="Self.Documentos" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1672,7 +1680,19 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SIGSM_Che__NumCo__4C846084">
+        <Association Name="FK__SIGSM_Che__idMaC__1198A4E0">
+          <End Role="SIGSM_MicroArea_CredenciadoVinc" Type="Self.SIGSM_MicroArea_CredenciadoVinc" Multiplicity="1" />
+          <End Role="SIGSM_Check_Cadastros" Type="Self.SIGSM_Check_Cadastros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_MicroArea_CredenciadoVinc">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="SIGSM_Check_Cadastros">
+              <PropertyRef Name="idMaCredVinc" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SIGSM_Che__NumCo__10A480A7">
           <End Role="ASSMED_Contratos" Type="Self.ASSMED_Contratos" Multiplicity="1" />
           <End Role="SIGSM_Check_Cadastros" Type="Self.SIGSM_Check_Cadastros" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1684,7 +1704,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SIGSM_Mic__idMic__59DE5BA2">
+        <Association Name="FK__SIGSM_Mic__idMic__043EA9C2">
           <End Role="SIGSM_MicroArea_Unidade" Type="Self.SIGSM_MicroArea_Unidade" Multiplicity="1" />
           <End Role="SIGSM_MicroArea_CredenciadoVinc" Type="Self.SIGSM_MicroArea_CredenciadoVinc" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1696,7 +1716,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SIGSM_Mic__Micro__53315E13">
+        <Association Name="FK__SIGSM_Mic__Micro__7F79F4A5">
           <End Role="SIGSM_MicroAreas" Type="Self.SIGSM_MicroAreas" Multiplicity="1" />
           <End Role="SIGSM_MicroArea_Unidade" Type="Self.SIGSM_MicroArea_Unidade" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1708,7 +1728,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SIGSM_Mic__NumCo__5425824C">
+        <Association Name="FK__SIGSM_Mic__NumCo__006E18DE">
           <End Role="ASSMED_Contratos" Type="Self.ASSMED_Contratos" Multiplicity="1" />
           <End Role="SIGSM_MicroArea_Unidade" Type="Self.SIGSM_MicroArea_Unidade" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1720,7 +1740,7 @@ warning 6002: The table/view 'onlinecidade.dbo.VW_ConsultaCadastrosIndividuais' 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SIGSM_Mic__NumCo__5AD27FDB">
+        <Association Name="FK__SIGSM_Mic__NumCo__0532CDFB">
           <End Role="ASSMED_Contratos" Type="Self.ASSMED_Contratos" Multiplicity="1" />
           <End Role="SIGSM_MicroArea_CredenciadoVinc" Type="Self.SIGSM_MicroArea_CredenciadoVinc" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1912,20 +1932,6 @@ warning 6035: The relationship 'FK_AnimalNoDomicilio_TP_Animais' has columns tha
             </Principal>
             <Dependent Role="CadastroIndividual">
               <PropertyRef Name="headerTransport" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Chk_Cadastro_Credenciado">
-          <End Role="AS_Credenciados" Type="Self.AS_Credenciados" Multiplicity="1" />
-          <End Role="SIGSM_Check_Cadastros" Type="Self.SIGSM_Check_Cadastros" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AS_Credenciados">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="CodCred" />
-            </Principal>
-            <Dependent Role="SIGSM_Check_Cadastros">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="CodCred" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2434,6 +2440,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="Setores" EntityType="Self.Setores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SetoresINEs" EntityType="Self.SetoresINEs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_Check_Cadastros" EntityType="Self.SIGSM_Check_Cadastros" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIGSM_FichaProfissao" EntityType="Self.SIGSM_FichaProfissao" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_MicroArea_CredenciadoVinc" EntityType="Self.SIGSM_MicroArea_CredenciadoVinc" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_MicroArea_Unidade" EntityType="Self.SIGSM_MicroArea_Unidade" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SIGSM_MicroAreas" EntityType="Self.SIGSM_MicroAreas" Schema="dbo" store:Type="Tables" />
@@ -2563,7 +2570,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
           </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_Ca__Micro__3B59D482" Association="Self.FK__ASSMED_Ca__Micro__3B59D482">
+          <AssociationSet Name="FK__ASSMED_Ca__Micro__09035EDF" Association="Self.FK__ASSMED_Ca__Micro__09035EDF">
             <End Role="SIGSM_MicroAreas" EntitySet="SIGSM_MicroAreas" />
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
           </AssociationSet>
@@ -2587,7 +2594,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="EnderecoLocalPermanencia" EntitySet="EnderecoLocalPermanencia" />
             <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
           </AssociationSet>
-          <AssociationSet Name="FK__ASSMED_En__Micro__3A65B049" Association="Self.FK__ASSMED_En__Micro__3A65B049">
+          <AssociationSet Name="FK__ASSMED_En__Micro__080F3AA6" Association="Self.FK__ASSMED_En__Micro__080F3AA6">
             <End Role="SIGSM_MicroAreas" EntitySet="SIGSM_MicroAreas" />
             <End Role="ASSMED_Endereco" EntitySet="ASSMED_Endereco" />
           </AssociationSet>
@@ -2599,31 +2606,35 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
             <End Role="ASSMED_PesFisica" EntitySet="ASSMED_PesFisica" />
           </AssociationSet>
-          <AssociationSet Name="FK__Documento__IdIde__7897ECEC" Association="Self.FK__Documento__IdIde__7897ECEC">
+          <AssociationSet Name="FK__Documento__IdIde__74FC6632" Association="Self.FK__Documento__IdIde__74FC6632">
             <End Role="IdentificacaoUsuarioCidadao" EntitySet="IdentificacaoUsuarioCidadao" />
             <End Role="Documentos" EntitySet="Documentos" />
           </AssociationSet>
-          <AssociationSet Name="FK__Documentos__7B745997" Association="Self.FK__Documentos__7B745997">
+          <AssociationSet Name="FK__Documentos__77D8D2DD" Association="Self.FK__Documentos__77D8D2DD">
             <End Role="ASSMED_TipoDocPessoal" EntitySet="ASSMED_TipoDocPessoal" />
             <End Role="Documentos" EntitySet="Documentos" />
           </AssociationSet>
-          <AssociationSet Name="FK__SIGSM_Che__NumCo__4C846084" Association="Self.FK__SIGSM_Che__NumCo__4C846084">
+          <AssociationSet Name="FK__SIGSM_Che__idMaC__1198A4E0" Association="Self.FK__SIGSM_Che__idMaC__1198A4E0">
+            <End Role="SIGSM_MicroArea_CredenciadoVinc" EntitySet="SIGSM_MicroArea_CredenciadoVinc" />
+            <End Role="SIGSM_Check_Cadastros" EntitySet="SIGSM_Check_Cadastros" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SIGSM_Che__NumCo__10A480A7" Association="Self.FK__SIGSM_Che__NumCo__10A480A7">
             <End Role="ASSMED_Contratos" EntitySet="ASSMED_Contratos" />
             <End Role="SIGSM_Check_Cadastros" EntitySet="SIGSM_Check_Cadastros" />
           </AssociationSet>
-          <AssociationSet Name="FK__SIGSM_Mic__idMic__59DE5BA2" Association="Self.FK__SIGSM_Mic__idMic__59DE5BA2">
+          <AssociationSet Name="FK__SIGSM_Mic__idMic__043EA9C2" Association="Self.FK__SIGSM_Mic__idMic__043EA9C2">
             <End Role="SIGSM_MicroArea_Unidade" EntitySet="SIGSM_MicroArea_Unidade" />
             <End Role="SIGSM_MicroArea_CredenciadoVinc" EntitySet="SIGSM_MicroArea_CredenciadoVinc" />
           </AssociationSet>
-          <AssociationSet Name="FK__SIGSM_Mic__Micro__53315E13" Association="Self.FK__SIGSM_Mic__Micro__53315E13">
+          <AssociationSet Name="FK__SIGSM_Mic__Micro__7F79F4A5" Association="Self.FK__SIGSM_Mic__Micro__7F79F4A5">
             <End Role="SIGSM_MicroAreas" EntitySet="SIGSM_MicroAreas" />
             <End Role="SIGSM_MicroArea_Unidade" EntitySet="SIGSM_MicroArea_Unidade" />
           </AssociationSet>
-          <AssociationSet Name="FK__SIGSM_Mic__NumCo__5425824C" Association="Self.FK__SIGSM_Mic__NumCo__5425824C">
+          <AssociationSet Name="FK__SIGSM_Mic__NumCo__006E18DE" Association="Self.FK__SIGSM_Mic__NumCo__006E18DE">
             <End Role="ASSMED_Contratos" EntitySet="ASSMED_Contratos" />
             <End Role="SIGSM_MicroArea_Unidade" EntitySet="SIGSM_MicroArea_Unidade" />
           </AssociationSet>
-          <AssociationSet Name="FK__SIGSM_Mic__NumCo__5AD27FDB" Association="Self.FK__SIGSM_Mic__NumCo__5AD27FDB">
+          <AssociationSet Name="FK__SIGSM_Mic__NumCo__0532CDFB" Association="Self.FK__SIGSM_Mic__NumCo__0532CDFB">
             <End Role="ASSMED_Contratos" EntitySet="ASSMED_Contratos" />
             <End Role="SIGSM_MicroArea_CredenciadoVinc" EntitySet="SIGSM_MicroArea_CredenciadoVinc" />
           </AssociationSet>
@@ -2686,10 +2697,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <AssociationSet Name="FK_CadastroIndividual_UnicaLotacaoTransport" Association="Self.FK_CadastroIndividual_UnicaLotacaoTransport">
             <End Role="UnicaLotacaoTransport" EntitySet="UnicaLotacaoTransport" />
             <End Role="CadastroIndividual" EntitySet="CadastroIndividual" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Chk_Cadastro_Credenciado" Association="Self.FK_Chk_Cadastro_Credenciado">
-            <End Role="AS_Credenciados" EntitySet="AS_Credenciados" />
-            <End Role="SIGSM_Check_Cadastros" EntitySet="SIGSM_Check_Cadastros" />
           </AssociationSet>
           <AssociationSet Name="FK_Chk_Cadastro_Pessoa" Association="Self.FK_Chk_Cadastro_Pessoa">
             <End Role="ASSMED_Cadastro" EntitySet="ASSMED_Cadastro" />
@@ -3161,10 +3168,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySet Name="SIGSM_Check_Cadastros" EntityType="Domain.SIGSM_Check_Cadastros" />
           <EntitySet Name="SIGSM_MicroArea_CredenciadoVinc" EntityType="Domain.SIGSM_MicroArea_CredenciadoVinc" />
           <EntitySet Name="SIGSM_MicroAreas" EntityType="Domain.SIGSM_MicroAreas" />
-          <AssociationSet Name="FK_Chk_Cadastro_Credenciado" Association="Domain.FK_Chk_Cadastro_Credenciado">
-            <End Role="AS_Credenciados" EntitySet="AS_Credenciados" />
-            <End Role="SIGSM_Check_Cadastros" EntitySet="SIGSM_Check_Cadastros" />
-          </AssociationSet>
           <AssociationSet Name="FK_MicroArea_Credenciado" Association="Domain.FK_MicroArea_Credenciado">
             <End Role="AS_Credenciados" EntitySet="AS_Credenciados" />
             <End Role="SIGSM_MicroArea_CredenciadoVinc" EntitySet="SIGSM_MicroArea_CredenciadoVinc" />
@@ -3210,6 +3213,11 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             <End Role="SIGSM_MicroAreas" EntitySet="SIGSM_MicroAreas" />
             <End Role="SIGSM_MicroArea_Unidade" EntitySet="SIGSM_MicroArea_Unidade" />
           </AssociationSet>
+          <AssociationSet Name="FK__SIGSM_Che__idMaC__1198A4E0" Association="Domain.FK__SIGSM_Che__idMaC__1198A4E0">
+            <End Role="SIGSM_MicroArea_CredenciadoVinc" EntitySet="SIGSM_MicroArea_CredenciadoVinc" />
+            <End Role="SIGSM_Check_Cadastros" EntitySet="SIGSM_Check_Cadastros" />
+          </AssociationSet>
+          <EntitySet Name="SIGSM_FichaProfissao" EntityType="Domain.SIGSM_FichaProfissao" />
           </EntityContainer>
         <ComplexType Name="PR_ConsultaCadastroIndividuais_Result">
           <Property Type="String" Name="Nome" Nullable="true" MaxLength="100" />
@@ -3680,7 +3688,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="UF1" Relationship="Domain.FK__AS_Credencia__UF__23A93AC7" FromRole="AS_Credenciados" ToRole="UF" />
           <NavigationProperty Name="AS_CredenciadosUsu" Relationship="Domain.FK__AS_CredenciadosU__286DEFE4" FromRole="AS_Credenciados" ToRole="AS_CredenciadosUsu" />
           <NavigationProperty Name="AS_CredenciadosVinc" Relationship="Domain.FK__AS_CredenciadosV__5AF96FB1" FromRole="AS_Credenciados" ToRole="AS_CredenciadosVinc" />
-          <NavigationProperty Name="SIGSM_Check_Cadastros" Relationship="Domain.FK_Chk_Cadastro_Credenciado" FromRole="AS_Credenciados" ToRole="SIGSM_Check_Cadastros" />
           <NavigationProperty Name="SIGSM_MicroArea_CredenciadoVinc" Relationship="Domain.FK_MicroArea_Credenciado" FromRole="AS_Credenciados" ToRole="SIGSM_MicroArea_CredenciadoVinc" />
         </EntityType>
         <EntityType Name="AS_CredenciadosUsu">
@@ -5430,13 +5437,13 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <Property Name="id" Type="Guid" Nullable="false" />
           <Property Name="NumContrato" Type="Int32" Nullable="false" />
           <Property Name="Codigo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="CodCred" Type="Int32" Nullable="false" />
           <Property Name="BaixarEndereco" Type="Boolean" Nullable="false" />
           <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DataDownload" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="AS_Credenciados" Relationship="Domain.FK_Chk_Cadastro_Credenciado" FromRole="SIGSM_Check_Cadastros" ToRole="AS_Credenciados" />
           <NavigationProperty Name="ASSMED_Cadastro" Relationship="Domain.FK_Chk_Cadastro_Pessoa" FromRole="SIGSM_Check_Cadastros" ToRole="ASSMED_Cadastro" />
           <NavigationProperty Name="ASSMED_Contratos" Relationship="Domain.FK__SIGSM_Che__NumCo__4C846084" FromRole="SIGSM_Check_Cadastros" ToRole="ASSMED_Contratos" />
+          <Property Name="idMaCredVinc" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SIGSM_MicroArea_CredenciadoVinc" Relationship="Domain.FK__SIGSM_Che__idMaC__1198A4E0" FromRole="SIGSM_Check_Cadastros" ToRole="SIGSM_MicroArea_CredenciadoVinc" />
         </EntityType>
         <EntityType Name="SIGSM_MicroArea_CredenciadoVinc">
           <Key>
@@ -5451,6 +5458,7 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="AS_CredenciadosVinc" Relationship="Domain.FK_MicroArea_CredenciadoVinc" FromRole="SIGSM_MicroArea_CredenciadoVinc" ToRole="AS_CredenciadosVinc" />
           <NavigationProperty Name="ASSMED_Contratos" Relationship="Domain.FK__SIGSM_Mic__NumCo__3789439E" FromRole="SIGSM_MicroArea_CredenciadoVinc" ToRole="ASSMED_Contratos" />
           <NavigationProperty Name="SIGSM_MicroArea_Unidade" Relationship="Domain.FK__SIGSM_Mic__idMic__59DE5BA2" FromRole="SIGSM_MicroArea_CredenciadoVinc" ToRole="SIGSM_MicroArea_Unidade" />
+          <NavigationProperty Name="SIGSM_Check_Cadastros" Relationship="Domain.FK__SIGSM_Che__idMaC__1198A4E0" FromRole="SIGSM_MicroArea_CredenciadoVinc" ToRole="SIGSM_Check_Cadastros" />
         </EntityType>
         <EntityType Name="SIGSM_MicroAreas">
           <Key>
@@ -5462,20 +5470,6 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <NavigationProperty Name="ASSMED_Endereco" Relationship="Domain.FK__ASSMED_En__Micro__3A65B049" FromRole="SIGSM_MicroAreas" ToRole="ASSMED_Endereco" />
           <NavigationProperty Name="SIGSM_MicroArea_Unidade" Relationship="Domain.FK__SIGSM_Mic__Micro__53315E13" FromRole="SIGSM_MicroAreas" ToRole="SIGSM_MicroArea_Unidade" />
         </EntityType>
-        <Association Name="FK_Chk_Cadastro_Credenciado">
-          <End Type="Domain.AS_Credenciados" Role="AS_Credenciados" Multiplicity="1" />
-          <End Type="Domain.SIGSM_Check_Cadastros" Role="SIGSM_Check_Cadastros" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AS_Credenciados">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="CodCred" />
-            </Principal>
-            <Dependent Role="SIGSM_Check_Cadastros">
-              <PropertyRef Name="NumContrato" />
-              <PropertyRef Name="CodCred" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MicroArea_Credenciado">
           <End Type="Domain.AS_Credenciados" Role="AS_Credenciados" Multiplicity="1" />
           <End Type="Domain.SIGSM_MicroArea_CredenciadoVinc" Role="SIGSM_MicroArea_CredenciadoVinc" Multiplicity="*" />
@@ -5631,6 +5625,26 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__SIGSM_Che__idMaC__1198A4E0">
+          <End Type="Domain.SIGSM_MicroArea_CredenciadoVinc" Role="SIGSM_MicroArea_CredenciadoVinc" Multiplicity="1" />
+          <End Type="Domain.SIGSM_Check_Cadastros" Role="SIGSM_Check_Cadastros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SIGSM_MicroArea_CredenciadoVinc">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="SIGSM_Check_Cadastros">
+              <PropertyRef Name="idMaCredVinc" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SIGSM_FichaProfissao">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ficha" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="CBO" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7097,10 +7111,10 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
           <EntitySetMapping Name="SIGSM_Check_Cadastros">
             <EntityTypeMapping TypeName="Domain.SIGSM_Check_Cadastros">
               <MappingFragment StoreEntitySet="SIGSM_Check_Cadastros">
+                <ScalarProperty Name="idMaCredVinc" ColumnName="idMaCredVinc" />
                 <ScalarProperty Name="DataDownload" ColumnName="DataDownload" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="BaixarEndereco" ColumnName="BaixarEndereco" />
-                <ScalarProperty Name="CodCred" ColumnName="CodCred" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -7133,6 +7147,15 @@ warning 6035: The relationship 'FK_ResponsavelPorCrianca_TP_Crianca' has columns
                 <ScalarProperty Name="NumContrato" ColumnName="NumContrato" />
                 <ScalarProperty Name="MicroArea" ColumnName="MicroArea" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SIGSM_FichaProfissao">
+            <EntityTypeMapping TypeName="Domain.SIGSM_FichaProfissao">
+              <MappingFragment StoreEntitySet="SIGSM_FichaProfissao">
+                <ScalarProperty Name="CBO" ColumnName="CBO" />
+                <ScalarProperty Name="Ficha" ColumnName="Ficha" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

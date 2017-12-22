@@ -133,6 +133,7 @@ namespace Softpark.Models
         public virtual DbSet<SIGSM_MicroArea_CredenciadoVinc> SIGSM_MicroArea_CredenciadoVinc { get; set; }
         public virtual DbSet<SIGSM_MicroAreas> SIGSM_MicroAreas { get; set; }
         public virtual DbSet<SIGSM_MicroArea_Unidade> SIGSM_MicroArea_Unidade { get; set; }
+        public virtual DbSet<SIGSM_FichaProfissao> SIGSM_FichaProfissao { get; set; }
     
         public virtual int PR_ProcessarFichasAPI(Nullable<System.Guid> token)
         {

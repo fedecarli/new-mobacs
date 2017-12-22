@@ -341,6 +341,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
     <Folder Include="Views\Helpers\" />
+    <Folder Include="Views\Zoneamento\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\ApiHandleErrorAttribute.cs" />
@@ -393,6 +394,7 @@
     <Compile Include="Controllers\MicroAreasController.cs" />
     <Compile Include="Controllers\MicroAreaUnidadeController.cs" />
     <Compile Include="Controllers\PreparoMobileController.cs" />
+    <Compile Include="Controllers\ZoneamentoController.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />

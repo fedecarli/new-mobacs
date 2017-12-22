@@ -17,8 +17,15 @@ namespace Softpark.WS.Controllers
     {
         public MicroAreaCredenciadoController() : base(new DomainContainer()) { }
 
+        private readonly List<ColumnDef> tblColumns = new List<ColumnDef> {
+            new ColumnDef { DataProp = "Unidade", Title = "Unidade", Sorting = SortingDirections.Assending },
+            new ColumnDef { DataProp = "Nome", Title = "Credenciado" },
+            new ColumnDef { DataProp = "MicroArea", Title = "Micro Área" },
+            new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
+        };
+
         // GET: MicroAreaCredenciado
-        public ActionResult Index() => View();
+        public ActionResult Index() => View(tblColumns);
 
         [HttpGet]
         public async Task<JsonResult> List([Bind(Include = "iDisplayStart,iDisplayLength,iSortingCols,iSortCol_0,sSortDir_0,sSearch,sEcho")] DataTableParameters request)
@@ -60,13 +67,16 @@ namespace Softpark.WS.Controllers
             request.Total = await Domain.SIGSM_MicroArea_CredenciadoVinc.CountAsync();
 
             Expression<Func<ListagemMicroAreaCredenciadoViewModel, object>> sort;
-            if (request.iSortCol_0 == 0)
+            
+            var col = tblColumns.Count < request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
+
+            if (col == "Unidade")
                 sort = ((a) => a.Unidade);
-            else if (request.iSortCol_0 == 1)
-                sort = ((a) => a.Nome);
+            else if(col == "Nome")
+                sort = ((a) => a.Unidade);
             else
                 sort = ((a) => a.MicroArea);
-
+            
             var comp = request.Compose(vincs, sort,
                 x => x.Unidade.Contains(request.sSearch) ||
                 x.Nome.Contains(request.sSearch) ||
@@ -96,51 +106,52 @@ namespace Softpark.WS.Controllers
 
         private IQueryable<CredSelect> Credenciados =>
             (from acv in Domain.AS_CredenciadosVinc
-            join ac in Domain.AS_Credenciados
-            on acv.CodCred equals ac.CodCred
-            join acu in Domain.AS_CredenciadosUsu
-            on ac.CodCred equals acu.CodCred
-            join usu in Domain.ASSMED_Usuario
-            on acu.CodUsuD equals usu.CodUsu
-            join cad in Domain.ASSMED_Cadastro
-            on ac.Codigo equals cad.Codigo
-            join doc in Domain.ASSMED_CadastroDocPessoal
-            on cad.Codigo equals doc.Codigo
-            join mu in Domain.SIGSM_MicroArea_Unidade
-            on acv.CodSetor equals mu.CodSetor
-            join ma in Domain.SIGSM_MicroAreas
-            on mu.MicroArea equals ma.Codigo
-            join se in Domain.Setores
-            on mu.CodSetor equals se.CodSetor
-            join sp in Domain.AS_SetoresPar
-            on se.CodSetor equals sp.CodSetor
-            where doc.CodTpDocP == 6 && doc.Numero != null && doc.Numero.Trim().Length == 15
-            && usu.Ativo == 1 && sp.CNES != null && sp.CNES.Trim().Length == 7
-            orderby cad.Nome
-            select new CredSelect
-            {
-                Id = acv.ItemVinc + ":" + ac.CodCred,
-                Nome = doc.Numero.Trim() + " - " + cad.Nome + " / "
-                + sp.CNES + " - " + se.DesSetor
-            }).Distinct();
+             join ac in Domain.AS_Credenciados
+             on acv.CodCred equals ac.CodCred
+             join acu in Domain.AS_CredenciadosUsu
+             on ac.CodCred equals acu.CodCred
+             join usu in Domain.ASSMED_Usuario
+             on acu.CodUsuD equals usu.CodUsu
+             join cad in Domain.ASSMED_Cadastro
+             on ac.Codigo equals cad.Codigo
+             join doc in Domain.ASSMED_CadastroDocPessoal
+             on cad.Codigo equals doc.Codigo
+             join mu in Domain.SIGSM_MicroArea_Unidade
+             on acv.CodSetor equals mu.CodSetor
+             join ma in Domain.SIGSM_MicroAreas
+             on mu.MicroArea equals ma.Codigo
+             join se in Domain.Setores
+             on mu.CodSetor equals se.CodSetor
+             join sp in Domain.AS_SetoresPar
+             on se.CodSetor equals sp.CodSetor
+             where doc.CodTpDocP == 6 && doc.Numero != null && doc.Numero.Trim().Length == 15
+             && usu.Ativo == 1 && sp.CNES != null && sp.CNES.Trim().Length == 7
+             orderby cad.Nome
+             select new CredSelect
+             {
+                 Id = acv.ItemVinc + ":" + ac.CodCred,
+                 Nome = doc.Numero.Trim() + " - " + cad.Nome + " / "
+                 + sp.CNES + " - " + se.DesSetor
+             }).Distinct();
 
         private IEnumerable<MicroAreaSelect> MicroAreaAssociada =>
             (from mu in Domain.SIGSM_MicroArea_Unidade
-            join ma in Domain.SIGSM_MicroAreas
-            on mu.MicroArea equals ma.Codigo
-            join se in Domain.Setores
-            on mu.CodSetor equals se.CodSetor
-            join sp in Domain.AS_SetoresPar
-            on se.CodSetor equals sp.CodSetor
-            select new
+             join ma in Domain.SIGSM_MicroAreas
+             on mu.MicroArea equals ma.Codigo
+             join se in Domain.Setores
+             on mu.CodSetor equals se.CodSetor
+             join sp in Domain.AS_SetoresPar
+             on se.CodSetor equals sp.CodSetor
+             select new
+             {
+                 mu.id,
+                 ma.Codigo,
+                 ma.Descricao,
+                 sp.CNES,
+                 se.DesSetor
+             }).ToList()
+            .Select(x => new MicroAreaSelect
             {
-                mu.id,
-                ma.Codigo,
-                ma.Descricao,
-                sp.CNES,
-                se.DesSetor
-            }).ToList()
-            .Select(x => new MicroAreaSelect {
                 id = x.id,
                 MicroArea = x.Codigo + " - " + x.Descricao + " / " + x.CNES + " - " + x.DesSetor
             }).Distinct();
@@ -183,11 +194,12 @@ namespace Softpark.WS.Controllers
                 {
                     Domain.SIGSM_MicroArea_CredenciadoVinc.Add(sIGSM_MicroArea_CredenciadoVinc);
                     await Domain.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", "O Credenciado e a Micro Área informados já estão associados.");
             }
-            else if(item.Length <= 0)
+            else if (item.Length <= 0)
             {
                 ModelState.AddModelError(nameof(form.ItemVinc), "Selecione um Credenciado");
             }
@@ -242,7 +254,7 @@ namespace Softpark.WS.Controllers
                 var micro = form.idMicroAreaUnidade;
 
                 if (!await Domain.SIGSM_MicroArea_CredenciadoVinc.AnyAsync(x => x.CodCred == codCred && x.ItemVinc == itemVinc
-                 && x.idMicroAreaUnidade == micro))
+                 && x.idMicroAreaUnidade == micro && x.id != form.id))
                 {
                     mcv.idMicroAreaUnidade = micro;
                     mcv.NumContrato = 22;
@@ -251,9 +263,10 @@ namespace Softpark.WS.Controllers
 
                     Domain.Entry(mcv).State = EntityState.Modified;
                     await Domain.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", "O Credenciado e a Micro Área informados já estão associados.");
             }
 
             ViewBag.ItemVinc = new SelectList(Credenciados, "Id", "Nome", form.ItemVinc);
@@ -292,9 +305,27 @@ namespace Softpark.WS.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             SIGSM_MicroArea_CredenciadoVinc sIGSM_MicroArea_CredenciadoVinc = await Domain.SIGSM_MicroArea_CredenciadoVinc.FindAsync(id);
-            Domain.SIGSM_MicroArea_CredenciadoVinc.Remove(sIGSM_MicroArea_CredenciadoVinc);
-            await Domain.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            if(sIGSM_MicroArea_CredenciadoVinc == null)
+                return RedirectToAction("Index");
+            
+            if (!sIGSM_MicroArea_CredenciadoVinc.SIGSM_Check_Cadastros.Any())
+            {
+                Domain.SIGSM_MicroArea_CredenciadoVinc.Remove(sIGSM_MicroArea_CredenciadoVinc);
+                await Domain.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            
+            ModelState.AddModelError("", "Não é possível remover este registro, ele já possui um histórico de Download de Fichas.");
+
+            var pessoa = Domain.ASSMED_Cadastro
+                .Include(x => x.ASSMED_CadastroDocPessoal)
+                .SingleOrDefault(x => x.Codigo == sIGSM_MicroArea_CredenciadoVinc.AS_Credenciados.Codigo);
+
+            ViewBag.Credenciado = (pessoa.ASSMED_CadastroDocPessoal.FirstOrDefault(x => x.CodTpDocP == 6 && x.Numero != null && x.Numero.Trim().Length == 15)?
+                .Numero.Trim() ?? "") + " " + pessoa.Nome;
+
+            return View(sIGSM_MicroArea_CredenciadoVinc);
         }
 
         protected override void Dispose(bool disposing)

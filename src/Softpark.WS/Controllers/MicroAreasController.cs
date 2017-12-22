@@ -7,6 +7,7 @@ using DataTables.AspNet.WebApi2;
 using System.Linq;
 using System;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace Softpark.WS.Controllers
 {
@@ -15,6 +16,12 @@ namespace Softpark.WS.Controllers
     /// </summary>
     public class MicroAreasController : BaseAjaxController
     {
+        private readonly List<ColumnDef> tblColumns = new List<ColumnDef> {
+                new ColumnDef { DataProp = "Codigo", Title = "Código" },
+                new ColumnDef { DataProp = "Descricao", Title = "Descrição" },
+                new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
+            };
+
         /// <summary>
         /// 
         /// </summary>
@@ -24,7 +31,7 @@ namespace Softpark.WS.Controllers
         /// GET: MicroAreas
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index() => View();
+        public ActionResult Index() => View(tblColumns);
 
         /// <summary>
         /// 
@@ -46,6 +53,13 @@ namespace Softpark.WS.Controllers
             else
                 sort = ((a) => a.Codigo);
 
+            var col = tblColumns.Count < request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "Codigo";
+
+            if (col == "Descricao")
+                sort = ((a) => a.Descricao);
+            else
+                sort = ((a) => a.Codigo);
+
             var comp = request.Compose(vincs, sort,
                 x => x.Codigo.Contains(request.sSearch) || x.Descricao.Contains(request.sSearch), x => new
             {
@@ -62,6 +76,7 @@ namespace Softpark.WS.Controllers
         [Route("MicroAreas/Create")]
         public ActionResult Create()
         {
+            ViewBag.Edit = false;
             return View();
         }
 
@@ -73,11 +88,19 @@ namespace Softpark.WS.Controllers
         [Route("MicroAreas/Create")]
         public async Task<ActionResult> Create([Bind(Include = "Codigo,Descricao")] SIGSM_MicroAreas sIGSM_MicroAreas)
         {
+            ViewBag.Edit = false;
             if (ModelState.IsValid)
             {
-                Domain.SIGSM_MicroAreas.Add(sIGSM_MicroAreas);
-                await Domain.SaveChangesAsync();
-                return RedirectToAction("Index");
+                if (await Domain.SIGSM_MicroAreas.AnyAsync(x => x.Codigo == sIGSM_MicroAreas.Codigo))
+                {
+                    ModelState.AddModelError(nameof(SIGSM_MicroAreas.Codigo), "Já existe uma Micro Área com este código.");
+                }
+                else
+                {
+                    Domain.SIGSM_MicroAreas.Add(sIGSM_MicroAreas);
+                    await Domain.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(sIGSM_MicroAreas);
@@ -87,6 +110,7 @@ namespace Softpark.WS.Controllers
         [Route("MicroAreas/Edit/{id}")]
         public async Task<ActionResult> Edit(string id)
         {
+            ViewBag.Edit = true;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -107,6 +131,7 @@ namespace Softpark.WS.Controllers
         [Route("MicroAreas/Edit/{id}")]
         public async Task<ActionResult> Edit([Bind(Include = "Codigo,Descricao")] SIGSM_MicroAreas sIGSM_MicroAreas)
         {
+            ViewBag.Edit = true;
             if (ModelState.IsValid)
             {
                 Domain.Entry(sIGSM_MicroAreas).State = EntityState.Modified;
@@ -139,9 +164,22 @@ namespace Softpark.WS.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             SIGSM_MicroAreas sIGSM_MicroAreas = await Domain.SIGSM_MicroAreas.FindAsync(id);
-            Domain.SIGSM_MicroAreas.Remove(sIGSM_MicroAreas);
-            await Domain.SaveChangesAsync();
-            return RedirectToAction("Index");
+            
+            if (sIGSM_MicroAreas == null)
+                return RedirectToAction("Index");
+
+            var assocs = 0;
+
+            if (0 == (assocs = sIGSM_MicroAreas.SIGSM_MicroArea_Unidade.Count()))
+            {
+                Domain.SIGSM_MicroAreas.Remove(sIGSM_MicroAreas);
+                await Domain.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", $"Não é possível remover este registro, ele possui {assocs} associação(ões) de Unidades(s).");
+
+            return View(sIGSM_MicroAreas);
         }
 
         /// <summary>

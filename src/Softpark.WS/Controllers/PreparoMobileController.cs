@@ -12,14 +12,14 @@ namespace Softpark.WS.Controllers
     {
         public PreparoMobileController() : base(new DomainContainer()) { }
 
-        // GET: ProparoMobile
+        // GET: PreparoMobile
         public async Task<ActionResult> Index()
         {
             var sIGSM_Check_Cadastros = Domain.SIGSM_Check_Cadastros.Include(s => s.AS_Credenciados).Include(s => s.ASSMED_Cadastro).Include(s => s.ASSMED_Contratos);
             return View(await sIGSM_Check_Cadastros.ToListAsync());
         }
 
-        // GET: ProparoMobile/Details/5
+        // GET: PreparoMobile/Details/5
         public async Task<ActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,7 +34,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_Check_Cadastros);
         }
 
-        // GET: ProparoMobile/Create
+        // GET: PreparoMobile/Create
         public ActionResult Create()
         {
             ViewBag.NumContrato = new SelectList(Domain.AS_Credenciados, "NumContrato", "CNES");
@@ -43,7 +43,7 @@ namespace Softpark.WS.Controllers
             return View();
         }
 
-        // POST: ProparoMobile/Create
+        // POST: PreparoMobile/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -64,7 +64,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_Check_Cadastros);
         }
 
-        // GET: ProparoMobile/Edit/5
+        // GET: PreparoMobile/Edit/5
         public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -82,7 +82,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_Check_Cadastros);
         }
 
-        // POST: ProparoMobile/Edit/5
+        // POST: PreparoMobile/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -101,7 +101,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_Check_Cadastros);
         }
 
-        // GET: ProparoMobile/Delete/5
+        // GET: PreparoMobile/Delete/5
         public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -116,7 +116,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_Check_Cadastros);
         }
 
-        // POST: ProparoMobile/Delete/5
+        // POST: PreparoMobile/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)

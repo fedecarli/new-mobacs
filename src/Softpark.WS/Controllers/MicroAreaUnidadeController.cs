@@ -65,7 +65,7 @@ namespace Softpark.WS.Controllers
                          }).Distinct();
 
             Expression<Func<TableList, object>> sort;
-            
+
             var col = tblColumns.Count < request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
 
             if (col == "Setor")
@@ -119,8 +119,10 @@ namespace Softpark.WS.Controllers
                 {
                     Domain.SIGSM_MicroArea_Unidade.Add(sIGSM_MicroArea_Unidade);
                     await Domain.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+
+                ModelState.AddModelError("", "A Micro Área e a Unidade informadas já estão associadas.");
             }
 
             ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
@@ -177,12 +179,14 @@ namespace Softpark.WS.Controllers
             if (ModelState.IsValid)
             {
                 if (!Domain.SIGSM_MicroArea_Unidade.Any(x => x.MicroArea == sIGSM_MicroArea_Unidade.MicroArea &&
-                 x.CodSetor == sIGSM_MicroArea_Unidade.CodSetor))
+                 x.CodSetor == sIGSM_MicroArea_Unidade.CodSetor && x.id != sIGSM_MicroArea_Unidade.id))
                 {
                     Domain.Entry(sIGSM_MicroArea_Unidade).State = EntityState.Modified;
                     await Domain.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+
+                ModelState.AddModelError("", "A Micro Área e a Unidade informadas já estão associadas.");
             }
             ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
                 .Include(x => x.Setores)
@@ -230,12 +234,22 @@ namespace Softpark.WS.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             SIGSM_MicroArea_Unidade sIGSM_MicroArea_Unidade = await Domain.SIGSM_MicroArea_Unidade.FindAsync(id);
-            if (sIGSM_MicroArea_Unidade != null)
+
+            if (sIGSM_MicroArea_Unidade == null)
+                return RedirectToAction("Index");
+
+            var assocs = 0;
+
+            if (0 == (assocs = sIGSM_MicroArea_Unidade.SIGSM_MicroArea_CredenciadoVinc.Count()))
             {
                 Domain.SIGSM_MicroArea_Unidade.Remove(sIGSM_MicroArea_Unidade);
                 await Domain.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+
+            ModelState.AddModelError("", $"Não é possível remover este registro, ele possui {assocs} associação(ões) de Credenciado(s).");
+
+            return View(sIGSM_MicroArea_Unidade);
         }
 
         protected override void Dispose(bool disposing)

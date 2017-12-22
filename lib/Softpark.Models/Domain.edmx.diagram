@@ -36,7 +36,7 @@
         <EntityTypeShape EntityType="Domain.AS_Profissoes" Width="1.5" PointX="0.75" PointY="14.25" />
         <EntityTypeShape EntityType="Domain.AS_ProfissoesTab" Width="1.5" PointX="3" PointY="14.125" />
         <EntityTypeShape EntityType="Domain.AS_SetoresPar" Width="1.5" PointX="17" PointY="19.75" />
-        <EntityTypeShape EntityType="Domain.ASSMED_Acesso" Width="1.5" PointX="15.75" PointY="7.875" />
+        <EntityTypeShape EntityType="Domain.ASSMED_Acesso" Width="1.5" PointX="17.125" PointY="7.625" />
         <EntityTypeShape EntityType="Domain.ASSMED_Cadastro" Width="1.5" PointX="5.25" PointY="26.125" />
         <EntityTypeShape EntityType="Domain.ASSMED_CadastroDocPessoal" Width="1.5" PointX="7.5" PointY="37.625" />
         <EntityTypeShape EntityType="Domain.ASSMED_CadastroPF" Width="1.5" PointX="22.75" PointY="3.875" />
@@ -177,6 +177,8 @@
         <AssociationConnector Association="Domain.FK_MicroArea_Unidade1" />
         <AssociationConnector Association="Domain.FK__SIGSM_Mic__idMic__59DE5BA2" />
         <AssociationConnector Association="Domain.FK__SIGSM_Mic__Micro__53315E13" />
+        <AssociationConnector Association="Domain.FK__SIGSM_Che__idMaC__1198A4E0" />
+        <EntityTypeShape EntityType="Domain.SIGSM_FichaProfissao" Width="1.5" PointX="7.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

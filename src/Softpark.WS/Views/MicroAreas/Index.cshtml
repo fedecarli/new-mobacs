@@ -1,4 +1,5 @@
 ﻿@using DataTables.AspNet.WebApi2
+@model List<ColumnDef>
 @{
     var options = new AjaxOptions
     {
@@ -25,11 +26,8 @@
     AllowCache = true
 }, new DataTableAttributes
 {
-    ColumnDefs = new List<ColumnDef> {
-new ColumnDef { DataProp = "Codigo", Title = "Código" },
-new ColumnDef { DataProp = "Descricao", Title = "Descrição" },
-new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
-},
+    ColumnDefs = Model,
+    AutoWidth = false,
     DeferRender = false,
     JQueryUI = true,
     StateSave = true,

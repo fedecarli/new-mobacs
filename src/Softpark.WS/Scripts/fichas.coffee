@@ -43,13 +43,13 @@ window.drawCallback = () ->
     for draw in draws
         $(draw.el).append(draw.content)
 
-jQuery.ajaxPrefilter (options, originalOptions) ->
+jQuery.ajaxPrefilter (options, originalOptions, xhr) ->
     if options.url is 'ajax/default.asp'
         options.url = originalOptions.url = "#{appPath}../#{options.url}"
 
-    if options.url is 'ajax/login/verificaSessao.asp'
+    if options.url is 'ajax/login/verificaSessao.asp' || options.url is '../_inc/ajax/login/verificaSessao.asp'
         options.url = originalOptions.url = "#{appPath}../#{options.url}"
-        options
+        xhr
         .done (data) ->
             if not data.sessao
                 modalAlerta "Sessão Expirada", "Sua sessão expirou!"
@@ -108,7 +108,14 @@ $ ->
                 $(this).attr('disabled', true)
     return
 
+loadings = []
+
 window.criaLoading = (alvoID) ->
+    if 0 is $('#' + alvoID).length then return
+
+    out = 0 > loadings.indexOf alvoID
+    if out then loadings.push(alvoID)
+
     boxCarregando = '<div class="div-carregando" id="div-carregando-' + alvoID + '">'
     boxCarregando +=    '<div class="div-carregando-fundo"></div>'
     boxCarregando +=    '<div class="div-carregando-conteudo">'
@@ -128,3 +135,25 @@ window.criaLoading = (alvoID) ->
         left: $('#' + alvoID).offset().left
     })
     return
+
+window.destroiLoading = (alvoID) ->
+    a = $.extend [], [], loadings
+    b = a.splice(a.indexOf(alvoID))
+    b.shift()
+    a = [].concat(a, b)
+    loadings = a
+    $('#div-carregando-' + alvoID).remove()
+
+$(window).on 'resize', ->
+    for alvoID in loadings
+        $('#div-carregando-' + alvoID).css({
+            width: 0,
+            height: 0,
+            top: $('#' + alvoID).offset().top,
+            left: $('#' + alvoID).offset().left
+        }).css({
+            width: $('#' + alvoID).css("width"),
+            height: $('#' + alvoID).css("height"),
+            top: $('#' + alvoID).offset().top,
+            left: $('#' + alvoID).offset().left
+        })

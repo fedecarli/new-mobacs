@@ -17,13 +17,13 @@ namespace Softpark.Models
         public System.Guid id { get; set; }
         public int NumContrato { get; set; }
         public decimal Codigo { get; set; }
-        public int CodCred { get; set; }
         public bool BaixarEndereco { get; set; }
         public System.DateTime Data { get; set; }
         public Nullable<System.DateTime> DataDownload { get; set; }
+        public int idMaCredVinc { get; set; }
     
-        public virtual AS_Credenciados AS_Credenciados { get; set; }
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
         public virtual ASSMED_Contratos ASSMED_Contratos { get; set; }
+        public virtual SIGSM_MicroArea_CredenciadoVinc SIGSM_MicroArea_CredenciadoVinc { get; set; }
     }
 }

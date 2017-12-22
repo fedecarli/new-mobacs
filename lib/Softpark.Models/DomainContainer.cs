@@ -102,8 +102,7 @@ namespace Softpark.Models
         /// <summary>
         /// 
         /// </summary>
-        public DomainContainer() :
-            base(string.Format(ConfigurationManager.ConnectionStrings[ContainerName]
+        public DomainContainer() : this(string.Format(ConfigurationManager.ConnectionStrings[ContainerName]
                 .ConnectionString, DbConn))
         {
             _ctorDomainContainer();
