@@ -1,13 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataTables.AspNet.WebApi2;
+using System.ComponentModel.DataAnnotations;
 
 namespace Softpark.WS.ViewModels.SIGSM
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ListagemMicroAreaCredenciadoViewModel
     {
+        [ColumnDef(0, Sorting = SortingDirections.Ascending)]
         public string Unidade { get; set; }
+
+        [ColumnDef(1, Title = "Profissional")]
         public string Nome { get; set; }
+
+        [ColumnDef(2, Title = "Micro Área")]
         public string MicroArea { get; set; }
+
+        [ColumnDef(3, Title = "", Sortable = false)]
         public string btn { get; set; }
     }
     

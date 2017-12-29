@@ -17,12 +17,7 @@ namespace Softpark.WS.Controllers
     {
         public MicroAreaCredenciadoController() : base(new DomainContainer()) { }
 
-        private readonly List<ColumnDef> tblColumns = new List<ColumnDef> {
-            new ColumnDef { DataProp = "Unidade", Title = "Unidade", Sorting = SortingDirections.Assending },
-            new ColumnDef { DataProp = "Nome", Title = "Credenciado" },
-            new ColumnDef { DataProp = "MicroArea", Title = "Micro Área" },
-            new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
-        };
+        private readonly List<ColumnDef> tblColumns = ColumnDef.From<ListagemMicroAreaCredenciadoViewModel>();
 
         // GET: MicroAreaCredenciado
         public ActionResult Index() => View(tblColumns);
@@ -67,16 +62,16 @@ namespace Softpark.WS.Controllers
             request.Total = await Domain.SIGSM_MicroArea_CredenciadoVinc.CountAsync();
 
             Expression<Func<ListagemMicroAreaCredenciadoViewModel, object>> sort;
-            
-            var col = tblColumns.Count < request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
+
+            var col = tblColumns.Count > request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
 
             if (col == "Unidade")
                 sort = ((a) => a.Unidade);
-            else if(col == "Nome")
-                sort = ((a) => a.Unidade);
+            else if (col == "Nome")
+                sort = ((a) => a.Nome);
             else
                 sort = ((a) => a.MicroArea);
-            
+
             var comp = request.Compose(vincs, sort,
                 x => x.Unidade.Contains(request.sSearch) ||
                 x.Nome.Contains(request.sSearch) ||
@@ -306,16 +301,16 @@ namespace Softpark.WS.Controllers
         {
             SIGSM_MicroArea_CredenciadoVinc sIGSM_MicroArea_CredenciadoVinc = await Domain.SIGSM_MicroArea_CredenciadoVinc.FindAsync(id);
 
-            if(sIGSM_MicroArea_CredenciadoVinc == null)
+            if (sIGSM_MicroArea_CredenciadoVinc == null)
                 return RedirectToAction("Index");
-            
-            if (!sIGSM_MicroArea_CredenciadoVinc.SIGSM_Check_Cadastros.Any())
+
+            if (!sIGSM_MicroArea_CredenciadoVinc.SIGSM_MicroArea_CredenciadoCidadao.Any())
             {
                 Domain.SIGSM_MicroArea_CredenciadoVinc.Remove(sIGSM_MicroArea_CredenciadoVinc);
                 await Domain.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            
+
             ModelState.AddModelError("", "Não é possível remover este registro, ele já possui um histórico de Download de Fichas.");
 
             var pessoa = Domain.ASSMED_Cadastro

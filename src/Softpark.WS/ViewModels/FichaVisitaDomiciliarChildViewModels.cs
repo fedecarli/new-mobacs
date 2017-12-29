@@ -246,7 +246,6 @@ namespace Softpark.WS.ViewModels
             turno = model.turno;
             latitude = model.latitude;
             longitude = model.longitude;
-            Justificativa = model.Justificativa;
             DataRegistro = model.DataRegistro;
             nomeCidadao = model.nomeCidadao;
             id = model.childId;
@@ -278,7 +277,6 @@ namespace Softpark.WS.ViewModels
             fvdc.turno = turno;
             fvdc.latitude = latitude;
             fvdc.longitude = longitude;
-            fvdc.Justificativa = Justificativa;
             fvdc.DataRegistro = DataRegistro;
             fvdc.nomeCidadao = nomeCidadao;
             fvdc.Codigo = Codigo;
@@ -356,7 +354,6 @@ namespace Softpark.WS.ViewModels
             child.DataRegistro = DateTime.Now;
             child.desfecho = desfecho;
             child.FichaVisitaDomiciliarMaster = ficha;
-            child.Justificativa = Justificativa;
             child.latitude = latitude;
             child.longitude = longitude;
             child.microarea = !string.IsNullOrEmpty(microarea?.Trim()) ? microarea?.Trim() : null;

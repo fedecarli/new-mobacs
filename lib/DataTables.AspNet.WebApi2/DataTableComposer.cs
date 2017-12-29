@@ -13,24 +13,26 @@ namespace DataTables.AspNet.WebApi2
         public Expression<Func<T, object>> Sort { get; }
         public Expression<Func<T, bool>> Search { get; }
         public Expression<Func<T, object>> Select { get; }
+        public int Total { get; set; } = -1;
 
-        private DataTableComposer(Expression<Func<T, object>> select) =>
-            Select = select;
+        private DataTableComposer(Expression<Func<T, object>> select = null) =>
+            Select = select ?? (a => a);
 
-        private DataTableComposer(Expression<Func<T, bool>> search, Expression<Func<T, object>> select) : this(select) =>
+        private DataTableComposer(Expression<Func<T, bool>> search, Expression<Func<T, object>> select = null) :
+            this(select) =>
             Search = search;
 
         private DataTableComposer(Expression<Func<T, object>> sort, Expression<Func<T, bool>> search,
-            Expression<Func<T, object>> select) : this(search, select) =>
+            Expression<Func<T, object>> select = null) : this(search, select) =>
             Sort = sort;
 
         private DataTableComposer(IQueryable<T> queryable, Expression<Func<T, object>> sort,
-            Expression<Func<T, bool>> search, Expression<Func<T, object>> select) : this(sort, search, select) =>
+            Expression<Func<T, bool>> search, Expression<Func<T, object>> select = null) : this(sort, search, select) =>
             Query = queryable;
 
         public DataTableComposer(DataTableParameters parameters, IQueryable<T> queryable,
             Expression<Func<T, object>> sort, Expression<Func<T, bool>> search,
-            Expression<Func<T, object>> select) : this(queryable, sort, search, select) =>
+            Expression<Func<T, object>> select = null) : this(queryable, sort, search, select) =>
             Parameters = parameters;
 
         public async Task<DataTableResult> Result()
@@ -45,19 +47,19 @@ namespace DataTables.AspNet.WebApi2
             if (!string.IsNullOrEmpty(Parameters.sSearch?.Trim()))
                 qry = qry.Where(Search);
 
-            qry = (await qry.ToListAsync()).AsQueryable();
-
-            iTotalRecords = qry.Count();
+            iTotalRecords = Total >= 0 ? Total : await qry.CountAsync();
 
             var ordered = Parameters.sSortDir_0 == "asc" ?
                 qry.OrderBy(Sort) :
                 qry.OrderByDescending(Sort);
             
-            var query = ordered
+            qry = ordered
                         .Skip(Parameters.iDisplayStart)
                         .Take(Parameters.iDisplayLength);
+            
+            var query = await qry.ToArrayAsync();
 
-            dataTableResult.aaData = query.Select(Select).ToArray();
+            dataTableResult.aaData = query.AsQueryable().Select(Select).ToArray();
             dataTableResult.iTotalRecords = dataTableResult.aaData.Length;
             dataTableResult.iTotalDisplayRecords = iTotalRecords;
             dataTableResult.sEcho = Parameters.sEcho.ToString();

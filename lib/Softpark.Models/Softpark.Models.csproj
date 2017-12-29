@@ -73,394 +73,139 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimalNoDomicilio.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_Acesso.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_Cadastro.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_CadastroDocPessoal.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_CadastroPF.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_CadEmails.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_CadTelefones.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_Contratos.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_Endereco.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_PesFisica.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_TipoDocPessoal.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ASSMED_Usuario.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AS_Credenciados.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AS_CredenciadosUsu.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AS_CredenciadosVinc.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AS_Profissoes.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AS_ProfissoesTab.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AS_SetoresPar.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CadastroDomiciliar.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CadastroIndividual.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Cidade.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CondicaoMoradia.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CondicoesDeSaude.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DeficienciasCidadao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Documentos.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DoencaCardiaca.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DoencaRespiratoria.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DoencaRins.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Domain.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Domain.edmx</DependentUpon>
-    </Compile>
+    <Compile Include="AnimalNoDomicilio.cs" />
+    <Compile Include="ASSMED_Acesso.cs" />
+    <Compile Include="ASSMED_Cadastro.cs" />
+    <Compile Include="ASSMED_CadastroDocPessoal.cs" />
+    <Compile Include="ASSMED_CadastroPF.cs" />
+    <Compile Include="ASSMED_CadEmails.cs" />
+    <Compile Include="ASSMED_CadTelefones.cs" />
+    <Compile Include="ASSMED_Contratos.cs" />
+    <Compile Include="ASSMED_Endereco.cs" />
+    <Compile Include="ASSMED_PesFisica.cs" />
+    <Compile Include="ASSMED_TipoDocPessoal.cs" />
+    <Compile Include="ASSMED_Usuario.cs" />
+    <Compile Include="AS_Credenciados.cs" />
+    <Compile Include="AS_CredenciadosUsu.cs" />
+    <Compile Include="AS_CredenciadosVinc.cs" />
+    <Compile Include="AS_Profissoes.cs" />
+    <Compile Include="AS_ProfissoesTab.cs" />
+    <Compile Include="AS_SetoresPar.cs" />
+    <Compile Include="CadastroDomiciliar.cs" />
+    <Compile Include="CadastroIndividual.cs" />
+    <Compile Include="Cidade.cs" />
+    <Compile Include="CondicaoMoradia.cs" />
+    <Compile Include="CondicoesDeSaude.cs" />
+    <Compile Include="DeficienciasCidadao.cs" />
+    <Compile Include="Documentos.cs" />
+    <Compile Include="DoencaCardiaca.cs" />
+    <Compile Include="DoencaRespiratoria.cs" />
+    <Compile Include="DoencaRins.cs" />
     <Compile Include="DomainContainer.cs" />
-    <Compile Include="EmSituacaoDeRua.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EnderecoLocalPermanencia.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Etnia.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="FamiliaRow.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="FichaVisitaDomiciliarChild.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="FichaVisitaDomiciliarMaster.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="HigienePessoalSituacaoRua.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="IdentificacaoUsuarioCidadao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InformacoesSocioDemograficas.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InstituicaoPermanencia.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Nacionalidade.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="OrigemAlimentoSituacaoRua.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="OrigemVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
+    <Compile Include="EmSituacaoDeRua.cs" />
+    <Compile Include="EnderecoLocalPermanencia.cs" />
+    <Compile Include="Etnia.cs" />
+    <Compile Include="FamiliaRow.cs" />
+    <Compile Include="FichaVisitaDomiciliarChild.cs" />
+    <Compile Include="FichaVisitaDomiciliarMaster.cs" />
+    <Compile Include="HigienePessoalSituacaoRua.cs" />
+    <Compile Include="IdentificacaoUsuarioCidadao.cs" />
+    <Compile Include="InformacoesSocioDemograficas.cs" />
+    <Compile Include="InstituicaoPermanencia.cs" />
+    <Compile Include="Nacionalidade.cs" />
+    <Compile Include="OrigemAlimentoSituacaoRua.cs" />
+    <Compile Include="OrigemVisita.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PR_ConsultaCadastroIndividuais1_Result.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PR_ConsultaCadastroIndividuais_Result.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PR_ConsultaCadastroIndividuais_Result1.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PR_ConsultaCadastroIndividuais_Result2.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PR_ConsultaCadastroIndividuais_Result3.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="RastroFicha.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
+    <Compile Include="PR_ConsultaCadastroIndividuais_Result.cs" />
+    <Compile Include="RastroFicha.cs" />
     <Compile Include="RegrasCadastro.cs" />
     <Compile Include="Classes.cs" />
-    <Compile Include="ResponsavelPorCrianca.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SaidaCidadaoCadastro.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Setores.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SetoresINEs.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_Check_Cadastros.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_FichaProfissao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_MicroAreas.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_MicroArea_CredenciadoVinc.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_MicroArea_Unidade.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_MotivoVisita.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_ServicoSerializador_Agenda.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_ServicoSerializador_Config.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_ServicoSerializador_Fichas.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_Transmissao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_Transmissao_Processos.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_Transmissao_Processos_Log.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SIGSM_Transmissao_StatusGeracao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TB_MS_TIPO_LOGRADOURO.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TipoOrigem.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Abastecimento_Agua.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Acesso_Domicilio.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Animais.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Condicao_Avaliada.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Conduta.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Cond_Posse_Uso_Terra.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Consideracao_Peso.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Construcao_Domicilio.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Crianca.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Curso.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Deficiencia.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Destino_Lixo.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Doenca_Cardiaca.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Doenca_Renal.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Doenca_Respiratoria.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Domicilio.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Escoamento_Esgoto.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_EstadoCivil.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Exames.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Higiene_Pessoal.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Identidade_Genero_Cidadao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Imovel.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Localizacao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Motivo_Saida.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Nacionalidade.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Nasf.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Orientacao_Sexual.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Origem_Alimentacao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Quantas_Vezes_Alimentacao.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Raca_Cor.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Relacao_Parentesco.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Renda_Familiar.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Saida_Cadastro.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Sexo.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Sexo_Genero.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Situacao_Moradia.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Situacao_Moradia_Rural.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Sit_Mercado.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Sit_Rua.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TP_Tratamento_Agua.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UF.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UnicaLotacaoTransport.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VW_CadastroDomiciliar.cs" />
-    <Compile Include="VW_CadastroIndividual.cs" />
-    <Compile Include="VW_Cadastros.cs" />
-    <Compile Include="VW_ConsultaCadastrosDomiciliares.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VW_ConsultaCadastrosIndividuais.cs">
-      <DependentUpon>Domain.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VW_FichasMaster.cs" />
+    <Compile Include="ResponsavelPorCrianca.cs" />
+    <Compile Include="SaidaCidadaoCadastro.cs" />
+    <Compile Include="Setores.cs" />
+    <Compile Include="SetoresINEs.cs" />
+    <Compile Include="SIGSM_FichaProfissao.cs" />
+    <Compile Include="SIGSM_MicroAreas.cs" />
+    <Compile Include="SIGSM_MicroArea_CredenciadoCidadao.cs" />
+    <Compile Include="SIGSM_MicroArea_CredenciadoVinc.cs" />
+    <Compile Include="SIGSM_MicroArea_Unidade.cs" />
+    <Compile Include="SIGSM_MotivoVisita.cs" />
+    <Compile Include="SIGSM_ServicoSerializador_Agenda.cs" />
+    <Compile Include="SIGSM_ServicoSerializador_Config.cs" />
+    <Compile Include="SIGSM_ServicoSerializador_Fichas.cs" />
+    <Compile Include="SIGSM_Transmissao.cs" />
+    <Compile Include="SIGSM_Transmissao_Processos.cs" />
+    <Compile Include="SIGSM_Transmissao_Processos_Log.cs" />
+    <Compile Include="SIGSM_Transmissao_StatusGeracao.cs" />
+    <Compile Include="TB_MS_TIPO_LOGRADOURO.cs" />
+    <Compile Include="TipoOrigem.cs" />
+    <Compile Include="TP_Abastecimento_Agua.cs" />
+    <Compile Include="TP_Acesso_Domicilio.cs" />
+    <Compile Include="TP_Animais.cs" />
+    <Compile Include="TP_Condicao_Avaliada.cs" />
+    <Compile Include="TP_Conduta.cs" />
+    <Compile Include="TP_Cond_Posse_Uso_Terra.cs" />
+    <Compile Include="TP_Consideracao_Peso.cs" />
+    <Compile Include="TP_Construcao_Domicilio.cs" />
+    <Compile Include="TP_Crianca.cs" />
+    <Compile Include="TP_Curso.cs" />
+    <Compile Include="TP_Deficiencia.cs" />
+    <Compile Include="TP_Destino_Lixo.cs" />
+    <Compile Include="TP_Doenca_Cardiaca.cs" />
+    <Compile Include="TP_Doenca_Renal.cs" />
+    <Compile Include="TP_Doenca_Respiratoria.cs" />
+    <Compile Include="TP_Domicilio.cs" />
+    <Compile Include="TP_Escoamento_Esgoto.cs" />
+    <Compile Include="TP_EstadoCivil.cs" />
+    <Compile Include="TP_Exames.cs" />
+    <Compile Include="TP_Higiene_Pessoal.cs" />
+    <Compile Include="TP_Identidade_Genero_Cidadao.cs" />
+    <Compile Include="TP_Imovel.cs" />
+    <Compile Include="TP_Localizacao.cs" />
+    <Compile Include="TP_Motivo_Saida.cs" />
+    <Compile Include="TP_Nacionalidade.cs" />
+    <Compile Include="TP_Nasf.cs" />
+    <Compile Include="TP_Orientacao_Sexual.cs" />
+    <Compile Include="TP_Origem_Alimentacao.cs" />
+    <Compile Include="TP_Quantas_Vezes_Alimentacao.cs" />
+    <Compile Include="TP_Raca_Cor.cs" />
+    <Compile Include="TP_Relacao_Parentesco.cs" />
+    <Compile Include="TP_Renda_Familiar.cs" />
+    <Compile Include="TP_Saida_Cadastro.cs" />
+    <Compile Include="TP_Sexo.cs" />
+    <Compile Include="TP_Sexo_Genero.cs" />
+    <Compile Include="TP_Situacao_Moradia.cs" />
+    <Compile Include="TP_Situacao_Moradia_Rural.cs" />
+    <Compile Include="TP_Sit_Mercado.cs" />
+    <Compile Include="TP_Sit_Rua.cs" />
+    <Compile Include="TP_Tratamento_Agua.cs" />
+    <Compile Include="UF.cs" />
+    <Compile Include="UnicaLotacaoTransport.cs" />
+    <Compile Include="VW_CadastroDomiciliar_.cs" />
+    <Compile Include="VW_CadastroIndividual_.cs" />
+    <Compile Include="VW_Cadastros_.cs" />
+    <Compile Include="VW_Cadastros_Zoneamento.cs" />
+    <Compile Include="VW_ConsultaCadastrosDomiciliares.cs" />
+    <Compile Include="VW_ConsultaCadastrosIndividuais.cs" />
+    <Compile Include="VW_FichasMaster_.cs" />
     <Compile Include="VW_MenuSistema.cs" />
-    <Compile Include="VW_Profissional.cs" />
-    <Compile Include="VW_UsuariosACS.cs" />
+    <Compile Include="VW_MenuSistema_.cs" />
+    <Compile Include="VW_Profissional_.cs" />
+    <Compile Include="VW_SystemLanguage.cs" />
+    <Compile Include="VW_UsuariosACS_.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Domain.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Domain.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="App.Config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Domain.edmx.diagram">
-      <DependentUpon>Domain.edmx</DependentUpon>
     </None>
     <Content Include="key.snk" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="pk.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Domain.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Domain.Context.cs</LastGenOutput>
-      <DependentUpon>Domain.edmx</DependentUpon>
-    </Content>
-    <Content Include="Domain.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Domain.cs</LastGenOutput>
-      <DependentUpon>Domain.edmx</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Softpark.Infrastructure\Softpark.Infrastructure.csproj">

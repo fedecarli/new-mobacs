@@ -82,8 +82,8 @@ namespace Softpark.WS.ViewModels.SIGSM
         {
             if (model == null) return;
 
-            microarea = model.ASSMED_Cadastro1.ASSMED_Endereco.OrderBy(x => x.ItemEnd).Select(x => x.MicroArea)
-                .LastOrDefault() ?? model.ASSMED_Cadastro1.MicroArea;
+            microarea = model.ASSMED_Cadastro1?.ASSMED_Endereco.OrderBy(x => x.ItemEnd).Select(x => x.MicroArea)
+                .LastOrDefault() ?? model.ASSMED_Cadastro1?.MicroArea;
 
             id = model.id;
             Codigo = model.Codigo;
@@ -109,8 +109,8 @@ namespace Softpark.WS.ViewModels.SIGSM
             dtNaturalizacao = model.dtNaturalizacao;
             portariaNaturalizacao = model.portariaNaturalizacao;
             dtEntradaBrasil = model.dtEntradaBrasil;
-            microarea = microarea;
-            stForaArea = model.stForaArea;
+            microarea = model.stForaArea ? null : microarea;
+            stForaArea = microarea == null || model.stForaArea;
             RG = model.RG;
             ComplementoRG = model.ComplementoRG;
             CPF = model.CPF;
@@ -575,6 +575,29 @@ namespace Softpark.WS.ViewModels.SIGSM
                 db.SIGSM_Transmissao_Processos.Remove(proc);
             }
 
+            if (ultimaFicha != null && ultimaFicha.IdentificacaoUsuarioCidadao1 != null && cad.IdentificacaoUsuarioCidadao1 != null &&
+                cad.IdentificacaoUsuarioCidadao1.statusEhResponsavel && ultimaFicha.IdentificacaoUsuarioCidadao1.statusEhResponsavel &&
+                ultimaFicha.IdentificacaoUsuarioCidadao1.cnsCidadao != cad.IdentificacaoUsuarioCidadao1.cnsCidadao)
+            {
+                var cads = db.ASSMED_Cadastro
+                    .Where(x => x.IdentificacaoUsuarioCidadao != null &&
+                    x.IdentificacaoUsuarioCidadao.cnsResponsavelFamiliar == ultimaFicha.IdentificacaoUsuarioCidadao1.cnsCidadao &&
+                    !x.IdentificacaoUsuarioCidadao.statusEhResponsavel)
+                    .Select(x => x.IdentificacaoUsuarioCidadao)
+                    .ToList();
+
+                cads.ForEach(x => x.cnsResponsavelFamiliar = cad.IdentificacaoUsuarioCidadao1.cnsCidadao);
+
+                var doms = db.ASSMED_Endereco
+                    .Where(x => x.EnderecoLocalPermanencia != null)
+                    .SelectMany(x => x.EnderecoLocalPermanencia.CadastroDomiciliar)
+                    .SelectMany(x => x.FamiliaRow)
+                    .Where(x => x.numeroCnsResponsavel == ultimaFicha.IdentificacaoUsuarioCidadao1.cnsCidadao)
+                    .ToList();
+
+                doms.ForEach(x => x.numeroCnsResponsavel = cad.IdentificacaoUsuarioCidadao1.cnsCidadao);
+            }
+
             await db.SaveChangesAsync();
 
             if (updateAssmed)
@@ -858,7 +881,7 @@ namespace Softpark.WS.ViewModels.SIGSM
 
             if (microarea != null && db.SIGSM_MicroAreas.All(x => x.Codigo != microarea))
             {
-                var desc = end != null ? $"{end.Logradouro}, {(end.SEMNUMERO == 1 ? "SN" : end.Numero)}, {end.Bairro} - {end.CEP}" : microarea;
+                var desc = end != null ? $"{end.Logradouro}, {(end.Numero == null || end.Numero?.Trim().Length == 0 ? "SN" : end.Numero)}, {end.Bairro} - {end.CEP}" : microarea;
 
                 db.SIGSM_MicroAreas.Add(new SIGSM_MicroAreas
                 {

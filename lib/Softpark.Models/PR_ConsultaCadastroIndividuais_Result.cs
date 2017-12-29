@@ -14,12 +14,10 @@ namespace Softpark.Models
     public partial class PR_ConsultaCadastroIndividuais_Result
     {
         public string Nome { get; set; }
-        public Nullable<System.DateTime> DtNasc { get; set; }
+        public string DtNasc { get; set; }
         public string NomeMae { get; set; }
         public string Cns { get; set; }
         public string NomeCidade { get; set; }
-        public decimal Codigo { get; set; }
-        public Nullable<System.Guid> Id { get; set; }
-        public Nullable<long> Row { get; set; }
+        public string Codigo { get; set; }
     }
 }

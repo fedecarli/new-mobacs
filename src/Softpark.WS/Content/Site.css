@@ -52,3 +52,12 @@ textarea {
     .btn-group .dropdown-menu > li.selected > a .glyphicon, .btn-group .dropdown-menu > li.selected > a .glyphicon {
         color: white !important;
     }
+
+select.microArea {
+    width: 100%;
+    min-width: 100%;
+}
+
+#updateZon.disabled {
+    cursor: not-allowed !important;
+}

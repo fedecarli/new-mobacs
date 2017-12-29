@@ -5,7 +5,7 @@ namespace DataTables.AspNet.WebApi2
     public enum SortingDirections
     {
         [Description("asc")]
-        Assending,
+        Ascending,
         [Description("desc")]
         Descending,
         Both = 0

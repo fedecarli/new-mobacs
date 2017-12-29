@@ -217,7 +217,7 @@ namespace Softpark.WS.ViewModels.SIGSM
                     }
                 }
             }
-            
+
             return cad;
         }
 
@@ -430,6 +430,11 @@ namespace Softpark.WS.ViewModels.SIGSM
                 CadastroDomiciliar.uuidFichaOriginadora = dadoAnterior.id;
                 CadastroDomiciliar.fichaAtualizada = true;
             }
+            else
+            {
+                CadastroDomiciliar.uuidFichaOriginadora = CadastroDomiciliar.uuid;
+                CadastroDomiciliar.fichaAtualizada = false;
+            }
 
             origem.id_tipo_origem = 2;
             origem.enviarParaThrift = true;
@@ -519,21 +524,16 @@ namespace Softpark.WS.ViewModels.SIGSM
                         CodTpLogra = tplog,
                         Complemento = end.complemento,
                         Corresp = respEnd?.Corresp,
-                        ENDAREAMICRO = end.microarea,
                         MicroArea = end.microarea,
                         EnderecoLocalPermanencia = end,
-                        ENDREFERENCIA = end.pontoReferencia,
-                        ENDSEMAREA = end.stForaArea ? 1 : 0,
                         IdFicha = end.id,
                         Latitude = cad.latitude,
                         Longitude = cad.longitude,
                         Logradouro = end.nomeLogradouro,
                         NomeCidade = cid?.NomeCidade,
                         Numero = end.numero,
-                        SEMNUMERO = end.stSemNumero ? 1 : 0,
                         TipoEnd = "R",
-                        UF = uf?.UF1,
-                        ENDAREA = respEnd?.ENDAREA
+                        UF = uf?.UF1
                     };
 
                     resp.MicroArea = end.microarea;
@@ -559,21 +559,16 @@ namespace Softpark.WS.ViewModels.SIGSM
                             CodTpLogra = tplog,
                             Complemento = end.complemento,
                             Corresp = respDep?.Corresp,
-                            ENDAREAMICRO = end.microarea,
                             MicroArea = end.microarea,
                             EnderecoLocalPermanencia = end,
-                            ENDREFERENCIA = end.pontoReferencia,
-                            ENDSEMAREA = end.stForaArea ? 1 : 0,
                             IdFicha = end.id,
                             Latitude = cad.latitude,
                             Longitude = cad.longitude,
                             Logradouro = end.nomeLogradouro,
                             NomeCidade = cid?.NomeCidade,
                             Numero = end.numero,
-                            SEMNUMERO = end.stSemNumero ? 1 : 0,
                             TipoEnd = "R",
-                            UF = uf?.UF1,
-                            ENDAREA = respDep?.ENDAREA
+                            UF = uf?.UF1
                         };
 
                         depend.MicroArea = end.microarea;

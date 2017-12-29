@@ -8,7 +8,7 @@ using DataTables.AspNet.WebApi2;
 using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
-using Softpark.Infrastructure.Extensions;
+using Softpark.WS.Validators;
 
 namespace Softpark.WS.Controllers
 {
@@ -17,23 +17,27 @@ namespace Softpark.WS.Controllers
     {
         public MicroAreaUnidadeController() : base(new DomainContainer()) { }
 
-        private readonly List<ColumnDef> tblColumns = new List<ColumnDef>
-            {
-                new ColumnDef { DataProp = "MicroArea", Title = "Micro Área" },
-                new ColumnDef { DataProp = "Setor", Title = "Unidade" },
-                new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
-            };
-
-        // GET: MicroAreaUnidade
-        public ActionResult Index() => View(tblColumns);
-
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public class TableList
         {
-            public string Setor { get; set; }
-            public string MicroArea { get; set; }
             public int id { get; set; }
-        }
 
+            [ColumnDef(0, Sorting = SortingDirections.Ascending)]
+            public string Setor { get; set; }
+
+            [ColumnDef(1, Title = "Micro Área")]
+            public string MicroArea { get; set; }
+
+            [ColumnDef(2, Title = "", Sortable = false)]
+            public string btn { get; set; }
+        }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+        private readonly List<ColumnDef> tblColumns = ColumnDef.From<TableList>();
+
+        /// GET: MicroAreaUnidade
+        public ActionResult Index() => View(tblColumns);
+        
         /// <summary>
         /// 
         /// </summary>
@@ -45,9 +49,7 @@ namespace Softpark.WS.Controllers
             if (request == null) request = new DataTableParameters(Request.QueryString);
 
             request.Total = await Domain.SIGSM_MicroArea_Unidade.CountAsync();
-
-            var codSetor = Convert.ToInt32(ASPSessionVar.Read("idSetor") ?? "0");
-
+            
             var vincs = (from sp in Domain.AS_SetoresPar
                          join se in Domain.Setores
                          on sp.CodSetor equals se.CodSetor
@@ -56,7 +58,6 @@ namespace Softpark.WS.Controllers
                          join ma in Domain.SIGSM_MicroAreas
                          on mu.MicroArea equals ma.Codigo
                          where sp.CNES != null && sp.CNES.Trim().Length == 7 && sp.Setores.DesSetor != null
-                         && se.CodSetor == codSetor
                          select new TableList
                          {
                              id = mu.id,
@@ -66,7 +67,7 @@ namespace Softpark.WS.Controllers
 
             Expression<Func<TableList, object>> sort;
 
-            var col = tblColumns.Count < request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
+            var col = tblColumns.Count > request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
 
             if (col == "Setor")
                 sort = ((a) => a.Setor);
@@ -85,7 +86,7 @@ namespace Softpark.WS.Controllers
             return Json(await comp.Result(), JsonRequestBehavior.AllowGet);
         }
 
-        // GET: MicroAreaUnidade/Create
+        /// GET: MicroAreaUnidade/Create
         public ActionResult Create()
         {
             ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
@@ -105,12 +106,12 @@ namespace Softpark.WS.Controllers
             return View();
         }
 
-        // POST: MicroAreaUnidade/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        /// POST: MicroAreaUnidade/Create
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "id,MicroArea,NumContrato,CodSetor")] SIGSM_MicroArea_Unidade sIGSM_MicroArea_Unidade)
+        [ValidateAntiForgeryToken, ValidateActionParameters]
+        public async Task<ActionResult> Create([Bind(Include = "MicroArea,NumContrato,CodSetor"), MAUValidation(ErrorMessage = "A Micro Área e a Unidade informadas já estão associadas.")] SIGSM_MicroArea_Unidade sIGSM_MicroArea_Unidade)
         {
             if (ModelState.IsValid)
             {
@@ -141,7 +142,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_MicroArea_Unidade);
         }
 
-        // GET: MicroAreaUnidade/Edit/5
+        /// GET: MicroAreaUnidade/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -169,12 +170,12 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_MicroArea_Unidade);
         }
 
-        // POST: MicroAreaUnidade/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        /// POST: MicroAreaUnidade/Edit/5
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "id,MicroArea,NumContrato,CodSetor")] SIGSM_MicroArea_Unidade sIGSM_MicroArea_Unidade)
+        [ValidateAntiForgeryToken, ValidateActionParameters]
+        public async Task<ActionResult> Edit([Bind(Include = "id,MicroArea,NumContrato,CodSetor"), MAUValidation(true, ErrorMessage = "A Micro Área e a Unidade informadas já estão associadas.")] SIGSM_MicroArea_Unidade sIGSM_MicroArea_Unidade)
         {
             if (ModelState.IsValid)
             {
@@ -186,7 +187,7 @@ namespace Softpark.WS.Controllers
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError("", "A Micro Área e a Unidade informadas já estão associadas.");
+                ModelState.AddModelError("MicroArea", "A Micro Área e a Unidade informadas já estão associadas.");
             }
             ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
                 .Include(x => x.Setores)
@@ -204,7 +205,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_MicroArea_Unidade);
         }
 
-        // GET: MicroAreaUnidade/Delete/5
+        /// GET: MicroAreaUnidade/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -228,7 +229,7 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_MicroArea_Unidade);
         }
 
-        // POST: MicroAreaUnidade/Delete/5
+        /// POST: MicroAreaUnidade/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
@@ -252,6 +253,10 @@ namespace Softpark.WS.Controllers
             return View(sIGSM_MicroArea_Unidade);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

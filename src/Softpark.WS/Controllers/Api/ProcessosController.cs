@@ -28,15 +28,8 @@ namespace Softpark.WS.Controllers.Api
         /// Este construtor é usado para o sistema de documentação poder gerar o swagger e o Help
         /// </summary>
         public ProcessosController() : base(new DomainContainer()) { }
-
-        /// <summary>
-        /// Este construtor é inicializado pelo asp.net usando injeção de dependência
-        /// </summary>
-        /// <param name="domain">Domínio do banco inicializado por injeção de dependência</param>
-        protected ProcessosController(DomainContainer domain) : base(domain)
+        
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        {
-        }
 
         /// <summary>
         /// Propriedade de registro do log4net
@@ -568,20 +561,26 @@ namespace Softpark.WS.Controllers.Api
             else if (origem.UnicaLotacaoTransport.Sum(x => x.FichaVisitaDomiciliarMaster.Count + x.CadastroDomiciliar.Count + x.CadastroIndividual.Count) > 0)
             {
                 // finaliza o token
-                Domain.PR_ProcessarFichasAPI(token);
+                var cc = await Domain.SIGSM_MicroArea_CredenciadoCidadao.Where(x => x.RealizarDownload && (x.DownloadDomiciliar != null || x.DownloadIndividual != null))
+                    .ToListAsync();
+
+                cc.ForEach(x =>
+                {
+                    x.DownloadDomiciliar = null;
+                    x.DownloadIndividual = null;
+                    x.RealizarDownload = false;
+                });
             }
-            else
+
+            try
             {
-                try
-                {
-                    // finaliza o token sem processar fichas
-                    origem.finalizado = true;
-                    //await Domain.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    Log.Warn("Erro ao tentar finalizar token.", e);
-                }
+                // finaliza o token sem processar fichas
+                origem.finalizado = true;
+                await Domain.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Warn("Erro ao tentar finalizar token.", e);
             }
 
             Log.Info(Ok(true));

@@ -341,7 +341,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
     <Folder Include="Views\Helpers\" />
-    <Folder Include="Views\Zoneamento\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\ApiHandleErrorAttribute.cs" />
@@ -390,13 +389,17 @@
     <Compile Include="Controllers\Api\ProcessosController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MarcacaoController.cs" />
     <Compile Include="Controllers\MicroAreaCredenciadoController.cs" />
     <Compile Include="Controllers\MicroAreasController.cs" />
     <Compile Include="Controllers\MicroAreaUnidadeController.cs" />
-    <Compile Include="Controllers\PreparoMobileController.cs" />
     <Compile Include="Controllers\ZoneamentoController.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Validators\AddCustomHeaderFilter.cs" />
+    <Compile Include="Validators\MAUValidationAttribute.cs" />
+    <Compile Include="Validators\MicroAreaValidationAttribute.cs" />
+    <Compile Include="Validators\ValidateActionParametersAttribute.cs" />
+    <Compile Include="Validators\ZoneamentoValidationAttribute.cs" />
     <Compile Include="ViewModels\AtomicTransporViewModel.cs" />
     <Compile Include="ViewModels\AutenticacaoViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -414,6 +417,7 @@
     <Compile Include="ViewModels\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\CadastroIndividual.cs" />
     <Compile Include="ViewModels\FichaVisitaDomiciliarChildViewModels.cs" />
+    <Compile Include="ViewModels\SIGSM\ZoneamentoViewModel.cs" />
     <Compile Include="ViewModels\UnicaLotacaoTransportViewModels.cs" />
     <Compile Include="ViewModels\UnicoPessoasViewModel.cs" />
   </ItemGroup>
@@ -548,14 +552,10 @@
     <Content Include="Views\MicroAreaCredenciado\Delete.cshtml" />
     <Content Include="Views\MicroAreaCredenciado\Edit.cshtml" />
     <Content Include="Views\MicroAreaCredenciado\Index.cshtml" />
-    <Content Include="Views\PreparoMobile\Create.cshtml" />
-    <Content Include="Views\PreparoMobile\Delete.cshtml" />
-    <Content Include="Views\PreparoMobile\Details.cshtml" />
-    <Content Include="Views\PreparoMobile\Edit.cshtml" />
-    <Content Include="Views\PreparoMobile\Index.cshtml" />
     <Content Include="Views\MicroAreas\Form.cshtml" />
     <Content Include="Views\MicroAreaCredenciado\Form.cshtml" />
-    <Content Include="Views\PreparoMobile\Form.cshtml" />
+    <Content Include="Views\Zoneamento\Index.cshtml" />
+    <Content Include="Views\Marcacao\Index.cshtml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

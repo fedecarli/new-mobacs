@@ -28,14 +28,6 @@ namespace Softpark.WS.Controllers.Api
         /// Este construtor é usado para o sistema de documentação poder gerar o swagger e o Help
         /// </summary>
         public DatabaseSupplyController() : base(new DomainContainer()) { }
-
-        /// <summary>
-        /// Este construtor é inicializado pelo asp.net usando injeção de dependência
-        /// </summary>
-        /// <param name="domain">Domínio do banco inicializado por injeção de dependência</param>
-        protected DatabaseSupplyController(DomainContainer domain) : base(domain)
-        {
-        }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
@@ -708,9 +700,11 @@ namespace Softpark.WS.Controllers.Api
 
             var prof = Domain.GetProfissionalMobile(headerToken.cnes, headerToken.ine, headerToken.cboCodigo_2002, headerToken.profissionalCNS);
 
-            var pessoas = (from scc in Domain.SIGSM_Check_Cadastros
+            var pessoas = (from scc in Domain.SIGSM_MicroArea_CredenciadoCidadao
                            join mcv in Domain.SIGSM_MicroArea_CredenciadoVinc
-                           on scc.CodCred equals mcv.CodCred
+                           on scc.idMaCredVinc equals mcv.id
+                           join cre in Domain.AS_Credenciados
+                           on mcv.CodCred equals cre.CodCred
                            join cad in Domain.ASSMED_Cadastro
                            on scc.Codigo equals cad.Codigo
                            let end = (from end in Domain.ASSMED_Endereco
@@ -720,85 +714,93 @@ namespace Softpark.WS.Controllers.Api
                            let cpf = (from cf in Domain.ASSMED_CadastroPF
                                       where cad.Codigo == cf.Codigo
                                       select cf).FirstOrDefault()
-                           where !scc.BaixarEndereco &&
-                           scc.DataDownload == null &&
-                           scc.AS_Credenciados.Codigo == prof.CodUsu
+                           where scc.RealizarDownload && scc.DownloadIndividual == null &&
+                           cre.Codigo == prof.CodUsu
                            select new { scc, end, cad, cpf, mcv }).ToList();
 
-            pessoas.ForEach(x =>
-            {
-                x.scc.DataDownload = DateTime.Now;
-            });
+            pessoas.ForEach(x => x.scc.DownloadIndividual = DateTime.Now);
 
             await Domain.SaveChangesAsync();
 
             var cads = pessoas.Select(x =>
             {
-                var cad = x.cad.IdentificacaoUsuarioCidadao?.CadastroIndividual.FirstOrDefault();
+                ISet<CadastroIndividual> cadastros = new HashSet<CadastroIndividual>();
 
-                if (cad == null)
+                Func<CadastroIndividual, CadastroIndividual> cadi = (cad) =>
                 {
-                    cad = new CadastroIndividual
+                    if (cad == null)
                     {
-                        id = Guid.NewGuid(),
-                        DataRegistro = DateTime.Now,
-                        UnicaLotacaoTransport = headerToken,
-                        tpCdsOrigem = 3
-                    };
-                }
+                        cad = new CadastroIndividual
+                        {
+                            id = Guid.NewGuid(),
+                            DataRegistro = DateTime.Now,
+                            UnicaLotacaoTransport = headerToken,
+                            tpCdsOrigem = 3
+                        };
+                    }
 
-                var iden = cad.IdentificacaoUsuarioCidadao1;
+                    var iden = cad.IdentificacaoUsuarioCidadao1;
 
-                if (iden == null)
-                {
-                    iden = new IdentificacaoUsuarioCidadao
+                    if (iden == null)
                     {
-                        id = Guid.NewGuid()
-                    };
-                    cad.IdentificacaoUsuarioCidadao1 = iden;
-                }
+                        iden = new IdentificacaoUsuarioCidadao
+                        {
+                            id = Guid.NewGuid()
+                        };
+                        cad.IdentificacaoUsuarioCidadao1 = iden;
+                    }
 
-                var codc = x.cad.ASSMED_PesFisica?.MUNICIPIONASC ?? x.cpf?.MUNICIPIONASC;
+                    var codc = x.cad.ASSMED_PesFisica?.MUNICIPIONASC ?? x.cpf?.MUNICIPIONASC;
 
-                var cid = Domain.Cidade.FirstOrDefault(y => y.CodCidade == codc)?.CodIbge?.Trim() ??
-                headerToken.codigoIbgeMunicipio;
+                    var cid = Domain.Cidade.FirstOrDefault(y => y.CodCidade == codc)?.CodIbge?.Trim() ??
+                    headerToken.codigoIbgeMunicipio;
 
-                iden.ASSMED_Cadastro1 = x.cad;
-                iden.cnsCidadao = x.cad.ASSMED_CadastroDocPessoal.LastOrDefault(y => y.CodTpDocP == 6 && y.Numero != null
-                && y.Numero.Trim().Length == 15)?.Numero;
-                iden.cnsResponsavelFamiliar = iden.cnsCidadao;
-                iden.Codigo = x.cad.Codigo;
-                iden.codigoIbgeMunicipioNascimento = cid;
-                var rg = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 1 && y.Numero != null);
-                iden.RG = rg != null ? (rg.Numero.Trim() + (rg.ComplementoRG ?? "").Trim()) : null;
-                iden.CPF = x.cad.ASSMED_PesFisica?.CPF ?? x.cpf?.CPF;
-                iden.dataNascimentoCidadao = x.cad.ASSMED_PesFisica?.DtNasc ?? x.cpf?.DtNasc ?? DateTime.MinValue;
-                iden.dtEntradaBrasil = x.cad.ASSMED_PesFisica?.ESTRANGEIRADATA ?? x.cpf?.ESTRANGEIRADATA;
-                iden.dtNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZADADATA ?? x.cpf?.NATURALIZADADATA;
-                iden.emailCidadao = x.cad.ASSMED_CadEmails.Select(y => y.EMail.ToLower()).LastOrDefault();
-                iden.EstadoCivil = x.cad.ASSMED_PesFisica?.EstCivil ?? x.cpf?.EstCivil ?? "I";
-                iden.etnia = x.cad.ASSMED_PesFisica?.CodEtnia ?? x.cpf?.CodEtnia;
-                iden.microarea = x.cad.ASSMED_Endereco.OrderByDescending(y => y.ItemEnd).Select(y => y.MicroArea)
-                .FirstOrDefault() ?? x.cad.MicroArea;
-                iden.nacionalidadeCidadao = x.cad.ASSMED_PesFisica?.Nacionalidade ?? x.cpf?.Nacionalidade ?? 10;
-                iden.nomeCidadao = x.cad.Nome;
-                iden.nomeSocial = x.cad.NomeSocial;
-                iden.nomeMaeCidadao = x.cad.ASSMED_PesFisica?.NomeMae ?? x.cpf?.NomeMae;
-                iden.nomePaiCidadao = x.cad.ASSMED_PesFisica?.NomePai ?? x.cpf?.NomePai;
-                iden.numeroNisPisPasep = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 7 && y.Numero != null)?
-                .Numero?.Trim();
-                iden.num_contrato = 22;
-                iden.paisNascimento = x.cad.ASSMED_PesFisica?.ENDPAIS ?? x.cpf?.ENDPAIS;
-                iden.portariaNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA ?? x.cpf?.NATURALIZACAOPORTARIA;
-                iden.racaCorCidadao = x.cad.ASSMED_PesFisica?.CodCor ?? x.cpf?.CodCor ?? 6;
-                var sexo = (x.cad.ASSMED_PesFisica?.Sexo ?? x.cpf?.Sexo ?? "I");
-                iden.sexoCidadao = sexo == "M" ? 0 : sexo == "F" ? 1 : 4;
-                iden.stForaArea = iden.microarea == null;
-                var fone = x.cad.ASSMED_CadTelefones.FirstOrDefault(y => y.TipoTel == "P" && y.NumTel != null);
-                iden.telefoneCelular = fone == null ? null : $"{fone.DDD}{fone.NumTel}";
+                    iden.ASSMED_Cadastro1 = x.cad;
+                    iden.cnsCidadao = x.cad.ASSMED_CadastroDocPessoal.LastOrDefault(y => y.CodTpDocP == 6 && y.Numero != null
+                    && y.Numero.Trim().Length == 15)?.Numero;
+                    iden.cnsResponsavelFamiliar = iden.cnsCidadao;
+                    iden.Codigo = x.cad.Codigo;
+                    iden.codigoIbgeMunicipioNascimento = cid;
+                    var rg = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 1 && y.Numero != null);
+                    iden.RG = rg != null ? (rg.Numero.Trim() + (rg.ComplementoRG ?? "").Trim()) : null;
+                    iden.CPF = x.cad.ASSMED_PesFisica?.CPF ?? x.cpf?.CPF;
+                    iden.dataNascimentoCidadao = x.cad.ASSMED_PesFisica?.DtNasc ?? x.cpf?.DtNasc ?? DateTime.MinValue;
+                    iden.dtEntradaBrasil = x.cad.ASSMED_PesFisica?.ESTRANGEIRADATA ?? x.cpf?.ESTRANGEIRADATA;
+                    iden.dtNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZADADATA ?? x.cpf?.NATURALIZADADATA;
+                    iden.emailCidadao = x.cad.ASSMED_CadEmails.Select(y => y.EMail.ToLower()).LastOrDefault();
+                    iden.EstadoCivil = x.cad.ASSMED_PesFisica?.EstCivil ?? x.cpf?.EstCivil ?? "I";
+                    iden.etnia = x.cad.ASSMED_PesFisica?.CodEtnia ?? x.cpf?.CodEtnia;
+                    iden.microarea = x.cad.ASSMED_Endereco.OrderByDescending(y => y.ItemEnd).Select(y => y.MicroArea)
+                    .FirstOrDefault() ?? x.cad.MicroArea;
+                    iden.nacionalidadeCidadao = x.cad.ASSMED_PesFisica?.Nacionalidade ?? x.cpf?.Nacionalidade ?? 10;
+                    iden.nomeCidadao = x.cad.Nome;
+                    iden.nomeSocial = x.cad.NomeSocial;
+                    iden.nomeMaeCidadao = x.cad.ASSMED_PesFisica?.NomeMae ?? x.cpf?.NomeMae;
+                    iden.nomePaiCidadao = x.cad.ASSMED_PesFisica?.NomePai ?? x.cpf?.NomePai;
+                    iden.numeroNisPisPasep = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 7 && y.Numero != null)?
+                    .Numero?.Trim();
+                    iden.num_contrato = 22;
+                    iden.paisNascimento = x.cad.ASSMED_PesFisica?.ENDPAIS ?? x.cpf?.ENDPAIS;
+                    iden.portariaNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA ?? x.cpf?.NATURALIZACAOPORTARIA;
+                    iden.racaCorCidadao = x.cad.ASSMED_PesFisica?.CodCor ?? x.cpf?.CodCor ?? 6;
+                    var sexo = (x.cad.ASSMED_PesFisica?.Sexo ?? x.cpf?.Sexo ?? "I");
+                    iden.sexoCidadao = sexo == "M" ? 0 : sexo == "F" ? 1 : 4;
+                    iden.stForaArea = iden.microarea == null;
+                    var fone = x.cad.ASSMED_CadTelefones.FirstOrDefault(y => y.TipoTel == "P" && y.NumTel != null);
+                    iden.telefoneCelular = fone == null ? null : $"{fone.DDD}{fone.NumTel}";
 
-                return cad;
-            }).Distinct().ToArray();
+                    return cad;
+                };
+
+                var cadt = cadi(x.cad.IdentificacaoUsuarioCidadao?.CadastroIndividual.FirstOrDefault());
+                cadastros.Add(cadt);
+
+                Domain.IdentificacaoUsuarioCidadao.Where(y => y.cnsResponsavelFamiliar == cadt.IdentificacaoUsuarioCidadao1.cnsCidadao && !y.statusEhResponsavel
+                    && y.cnsCidadao != y.cnsResponsavelFamiliar).SelectMany(y => y.CadastroIndividual).Distinct().ToList().Select(cadi)
+                    .ToList().ForEach(y => cadastros.Add(y));
+
+                return cadastros;
+            }).SelectMany(x => x).Distinct().ToArray();
 
             CadastroIndividualViewModelCollection results = cads;
 
@@ -829,9 +831,11 @@ namespace Softpark.WS.Controllers.Api
 
                 var prof = Domain.GetProfissionalMobile(headerToken.cnes, headerToken.ine, headerToken.cboCodigo_2002, headerToken.profissionalCNS);
 
-                var domicilios = (from scc in Domain.SIGSM_Check_Cadastros
+                var domicilios = (from scc in Domain.SIGSM_MicroArea_CredenciadoCidadao
                                   join mcv in Domain.SIGSM_MicroArea_CredenciadoVinc
-                                  on scc.CodCred equals mcv.CodCred
+                                  on scc.idMaCredVinc equals mcv.id
+                                  join cre in Domain.AS_Credenciados
+                                  on mcv.CodCred equals cre.CodCred
                                   join cad in Domain.ASSMED_Cadastro
                                   on scc.Codigo equals cad.Codigo
                                   let end = (from end in Domain.ASSMED_Endereco
@@ -841,17 +845,11 @@ namespace Softpark.WS.Controllers.Api
                                   let cpf = (from cf in Domain.ASSMED_CadastroPF
                                              where cad.Codigo == cf.Codigo
                                              select cf).FirstOrDefault()
-                                  where scc.BaixarEndereco &&
-                                  scc.DataDownload == null &&
-                                  scc.AS_Credenciados.Codigo == prof.CodUsu
+                                  where scc.RealizarDownload && scc.DownloadDomiciliar == null &&
+                                  cre.Codigo == prof.CodUsu
                                   select new { scc, end, cad, cpf, mcv }).ToList();
 
-                domicilios.ForEach(x =>
-                {
-                    x.scc.DataDownload = DateTime.Now;
-                });
-
-                await Domain.SaveChangesAsync();
+                domicilios.ForEach(x => x.scc.DownloadDomiciliar = DateTime.Now);
 
                 var cadastros = domicilios.Select(x =>
                 {
@@ -864,7 +862,6 @@ namespace Softpark.WS.Controllers.Api
                             id = Guid.NewGuid(),
                             AnimalNoDomicilio = new AnimalNoDomicilio[0],
                             DataRegistro = DateTime.Now,
-                            Erro = false,
                             FamiliaRow = new[] {
                                 new FamiliaRow {
                                     dataNascimentoResponsavel = x.cpf?.DtNasc??x.cad.ASSMED_PesFisica?.DtNasc,
@@ -896,7 +893,6 @@ namespace Softpark.WS.Controllers.Api
                     end.nomeLogradouro = x.end?.Logradouro;
                     end.numero = x.end?.Numero;
                     end.numeroDneUf = x.end != null ? Domain.UF.SingleOrDefault(y => y.UF1 == x.end.UF)?.DNE : null;
-                    end.pontoReferencia = x.end?.ENDREFERENCIA;
                     end.stSemNumero = (end.numero ?? "").Length == 0;
                     var fone = x.cad.ASSMED_CadTelefones.LastOrDefault(y => y.TipoTel != "R" && y.NumTel != null);
                     end.telefoneContato = fone == null ? null : (fone.DDD + fone.NumTel);
@@ -909,7 +905,7 @@ namespace Softpark.WS.Controllers.Api
                 }).ToArray();
 
                 CadastroDomiciliarViewModelCollection results = cadastros;
-                
+
                 var resultados = results.ToArray();
 
                 var serializer = new JavaScriptSerializer();

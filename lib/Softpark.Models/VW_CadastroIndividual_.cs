@@ -103,17 +103,6 @@ namespace Softpark.Models
 
         private static string GetAllCommand(string col, string dir, bool has_vuci, string where = "")
         {
-            var inc = !has_vuci ? @"
-  LEFT JOIN api.IdentificacaoUsuarioCidadao AS iden
-         ON ac.IdFicha = iden.id
-         OR ac.Codigo = iden.Codigo
-  LEFT JOIN api.CadastroIndividual AS ci
-         ON iden.Id = ci.identificacaoUsuarioCidadao" : @"
-  LEFT JOIN api.VW_ultimo_cadastroIndividual AS ult
-		 ON ac.Codigo = ult.Codigo
-  LEFT JOIN api.CadastroIndividual AS ci
-         ON ult.idCadastroIndividual = ci.id";
-
             return $@"
           ;WITH Pagination AS (
 	 SELECT DISTINCT ac.Nome COLLATE Latin1_General_CI_AI AS [Nome],
@@ -133,7 +122,12 @@ namespace Softpark.Models
 		AND cns.CodTpDocP = 6
   LEFT JOIN Cidade as cid
 		 ON pf.MUNICIPIONASC = cid.CodCidade
-		 OR pf2.MUNICIPIONASC = cid.CodCidade{inc}
+		 OR pf2.MUNICIPIONASC = cid.CodCidade
+  LEFT JOIN api.IdentificacaoUsuarioCidadao AS iden
+         ON ac.IdFicha = iden.id
+         OR ac.Codigo = iden.Codigo
+  LEFT JOIN api.CadastroIndividual AS ci
+         ON iden.Id = ci.identificacaoUsuarioCidadao
 	  WHERE ac.Nome IS NOT NULL
 		AND LEN(RTRIM(LTRIM(ac.Nome COLLATE Latin1_General_CI_AI))) > 0
 		AND ac.Nome COLLATE Latin1_General_CI_AI NOT LIKE '%*%'{where}

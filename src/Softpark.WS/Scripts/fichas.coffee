@@ -37,11 +37,19 @@ window.beginRequest = (promise) ->
     promise.complete ->
         destroiLoading "page-wrapper"
 
+updates = []
+codes = []
+
 window.drawCallback = () ->
-    $('.dataTables_filter button, .btn-create').remove()
+    $('.btn-create').remove()
 
     for draw in draws
         $(draw.el).append(draw.content)
+    
+    if updates.length > 0
+        $('#updateZon').removeClass('disabled').removeAttr('disabled')
+    else
+        $('#updateZon').addClass('disabled').attr('disabled', true)
 
 jQuery.ajaxPrefilter (options, originalOptions, xhr) ->
     if options.url is 'ajax/default.asp'
@@ -157,3 +165,70 @@ $(window).on 'resize', ->
             top: $('#' + alvoID).offset().top,
             left: $('#' + alvoID).offset().left
         })
+
+class ZoneamentoViewModel
+    constructor: (microArea, codigo) ->
+        @MicroArea = microArea
+        @Codigo = codigo
+
+$(document).on 'click', '#updateZon', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    criaLoading('page-wrapper')
+    $('#updateZon').addClass('disabled').attr('disabled', true)
+    $.post window.location.href + '/Edit', { zoneamentos: updates }
+    .always () ->
+        destroiLoading('page-wrapper')
+    .done (d) ->
+        if d is true
+            updates = []
+            codes = []
+            oTable.fnDraw()
+        else
+            console.log arguments, 0
+
+        if updates.length > 0
+            $('#updateZon').removeClass('disabled').removeAttr('disabled')
+        else
+            $('#updateZon').addClass('disabled').attr('disabled', true)
+    .error () ->
+        console.log arguments, 1
+
+$(document).on 'change', '.microArea', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    codigo = +(this.id)
+    ma = $(this).val()
+
+    if not ma
+        if 0 <= codes.indexOf(codigo)
+            delete updates[codes.indexOf(codigo)]
+            delete codes[codes.indexOf(codigo)]
+            updates = updates.filter (x) -> !!x
+            codes = codes.filter (x) -> not isNaN(x)
+    else
+        if 0 <= codes.indexOf(codigo)
+            updates[codes.indexOf(codigo)].MicroArea = ma
+        else
+            codes.push(codigo)
+            updates.push(new ZoneamentoViewModel(ma, codigo))
+
+    if updates.length > 0
+        $('#updateZon').removeClass('disabled').removeAttr('disabled')
+    else
+        $('#updateZon').addClass('disabled').attr('disabled', true)
+
+window.renderMaSelection = (d, s, i) ->
+    codigo = i.Codigo
+    tpl = $($('#tplMaSelection').html().replace('{codigo}', codigo))
+
+    setTimeout () ->
+        if 0 <= codes.indexOf(codigo)
+            u = updates[codes.indexOf(codigo)]
+            d = u.MicroArea
+        
+        if d
+            $('#' + codigo).val(d)
+    , 100
+
+    tpl[0].outerHTML

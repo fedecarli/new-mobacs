@@ -19,7 +19,7 @@ namespace System.Web.Mvc
 
         public static HtmlString CarregaMenu(this HtmlHelper helper, UrlHelper url, int idUsuario, int? idPai, int idSistema, DomainContainer domain)
         {
-            var menus = domain.VW_MenuSistema(idUsuario, idPai, idSistema).ToArray();
+            var menus = domain.Get_VW_MenuSistema(idUsuario, idPai, idSistema).ToArray();
 
             if (menus.Length == 0) return new HtmlString("");
 

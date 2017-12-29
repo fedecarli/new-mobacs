@@ -162,7 +162,6 @@ namespace Softpark.WS.ViewModels
             dc.InstituicaoPermanencia1 = instituicaoPermanencia?.ToModel(domain);
             dc.latitude = latitude;
             dc.longitude = longitude;
-            dc.Justificativa = Justificativa;
             dc.DataRegistro = DataRegistro;
 
             TP_Animais an;
@@ -217,7 +216,6 @@ namespace Softpark.WS.ViewModels
             instituicaoPermanencia = model.InstituicaoPermanencia1;
             latitude = model.latitude;
             longitude = model.longitude;
-            Justificativa = model.Justificativa;
             DataRegistro = model.DataRegistro;
 
             animalNoDomicilio = model.AnimalNoDomicilio.Select(a => a.id_tp_animal).ToArray();

@@ -1,4 +1,9 @@
-﻿namespace DataTables.AspNet.WebApi2
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace DataTables.AspNet.WebApi2
 {
     public class ColumnDef
     {
@@ -19,6 +24,7 @@
         public string Title { get; set; } // DataTables :: aoColumnDefs :: sTitle
         //public DataTypes?? Type { get; set; } // DataTables :: aoColumnDefs :: sType
         public string Width { get; set; } // DataTables :: aoColumnDefs :: sWidth
+        public int Position { get; set; }
 
         public ColumnDef()
         {
@@ -26,6 +32,59 @@
             Sorting = SortingDirections.Both;
             Sortable = true;
             Visible = true;
+        }
+
+        public static List<ColumnDef> From<T>() where T : class, new() =>
+            typeof(T).GetProperties().Where(x => x.GetCustomAttributes(typeof(ColumnDefAttribute), false).Any())
+            .Select(x => new { c = x.GetCustomAttributes(typeof(ColumnDefAttribute), false).First() as ColumnDefAttribute, p = x })
+            .OrderBy(x => x.c.Position)
+            .Select(x => x.c.ToColumn(x.p)).ToList();
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    public class ColumnDefAttribute : Attribute
+    {
+        public SortingDirections Sorting { get; set; }
+        public bool Sortable { get; set; }
+        public bool UseRendered { get; set; }
+        public bool Visible { get; set; }
+        public int Position { get; private set; }
+        public string FnCreatedCell { get; set; }
+        public string FnRender { get; set; }
+        public string DataProp { get; set; }
+        public string CssClass { get; set; }
+        public string DefaultContent { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Width { get; set; }
+
+        public ColumnDefAttribute(int pos)
+        {
+            UseRendered = true;
+            Sorting = SortingDirections.Both;
+            Sortable = true;
+            Visible = true;
+            Position = pos;
+        }
+
+        public ColumnDef ToColumn(PropertyInfo propertyInfo)
+        {
+            return new ColumnDef
+            {
+                CssClass = CssClass,
+                DataProp = DataProp ?? propertyInfo.Name,
+                DefaultContent = DefaultContent,
+                FnCreatedCell = FnCreatedCell,
+                FnRender = FnRender,
+                Name = Name ?? propertyInfo.Name,
+                Sortable = Sortable,
+                Sorting = Sorting,
+                Title = Title ?? propertyInfo.Name,
+                UseRendered = UseRendered,
+                Visible = Visible,
+                Width = Width,
+                Position = Position
+            };
         }
     }
 }

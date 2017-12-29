@@ -21,7 +21,7 @@
 
 @Ajax.DataTable($"tbl_list_mca_{idUsuario}", new AjaxOptions
 {
-    HttpMethod = "POST",
+    HttpMethod = "GET",
     Url = Url.Action("List"),
     AllowCache = true
 }, new DataTableAttributes
@@ -33,8 +33,8 @@
     StateSave = true,
     PaginationType = PaginationTypes.FullNumbers,
     Paginate = true,
-    Dom = "<\"toolbar\">frtip",
-    Doms = new List<DataTableDom> { new DataTableDom { el = "div.toolbar", content = Ajax.ActionLinkButton("Create", options, new { @class = "btn btn-md btn-success pull-right btn-create" },
+    Dom = "<\"toolbar\">lfrtip",
+    Doms = new List<DataTableDom> { new DataTableDom { el = "div.toolbar", content = " " + Ajax.ActionLinkButton("Create", options, new { @class = "btn btn-md btn-success pull-right btn-create" },
 "<i class=\"fa fa-plus\"></i> Adicionar Micro Área").ToHtmlString() } }
 }, Url, IsAjax)
 <div id="page-wrapper">

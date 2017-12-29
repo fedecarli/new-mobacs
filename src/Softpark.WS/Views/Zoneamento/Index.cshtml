@@ -1,0 +1,57 @@
+﻿@using DataTables.AspNet.WebApi2
+@model List<ColumnDef>
+@{
+    if (IsAjax)
+    {
+        Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
+    }
+
+    var idUsuario = ASPSessionVar.Read("idUsuario");
+
+    IEnumerable<SelectListItem> items = ViewBag.MicroArea;
+}
+
+<script id="tplMaSelection" type="text/html">
+    @Html.DropDownList("microArea", items, "Selecione...", new { @class = "form-control microArea", id = "{codigo}" })
+</script>
+
+@Ajax.DataTable($"tbl_zon_{idUsuario}", new AjaxOptions
+{
+    HttpMethod = "GET",
+    Url = Url.Action("List"),
+    AllowCache = false
+}, new DataTableAttributes
+{
+    ColumnDefs = Model,
+    AutoWidth = false,
+    DeferRender = false,
+    JQueryUI = true,
+    StateSave = true,
+    PaginationType = PaginationTypes.FullNumbers,
+    Paginate = true,
+    Dom = "<\"toolbar\">lfrtip",
+    Doms = new List<DataTableDom> {
+        new DataTableDom {
+            el = "div.toolbar",
+            content = " <button class=\"btn btn-md btn-success pull-right btn-create disabled\" disabled id=\"updateZon\"><i class=\"fa fa-floppy-o\"></i> Salvar Alterações</button>"
+        }
+    },
+    Filter = true,
+    LengthChange = true
+}, Url, IsAjax)
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Zoneamento</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover tbl_list_zon" id="tbl_zon_@idUsuario"></table>
+            </div>
+        </div>
+    </div>
+</div>

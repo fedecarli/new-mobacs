@@ -15,7 +15,7 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(m => m.NumContrato, htmlAttributes: new { value = 22 })
+        <input type="hidden" value="22" name="NumContrato" id="NumContrato"/>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CodSetor, "Unidade", htmlAttributes: new { @class = "control-label col-md-2" })

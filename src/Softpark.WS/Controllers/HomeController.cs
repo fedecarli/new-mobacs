@@ -34,7 +34,7 @@ namespace Softpark.WS.Controllers
             int? mFirst = null;
             int? mSecond = null;
 
-            var ms = Domain.VW_MenuSistema(page).FirstOrDefault();
+            var ms = Domain.Get_VW_MenuSistema(page).FirstOrDefault();
 
             if (ms?.id_menu != null)
             {

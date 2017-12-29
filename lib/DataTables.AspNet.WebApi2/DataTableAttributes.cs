@@ -30,6 +30,7 @@ namespace DataTables.AspNet.WebApi2
         public bool ScrollCollapse { get; set; }
         public string Dom { get; set; }
         public List<DataTableDom> Doms { get; set; }
+        public int PageLength { get; set; } = 10;
 
         public DataTableAttributes()
         {
@@ -42,6 +43,7 @@ namespace DataTables.AspNet.WebApi2
             SortClasses = true;
             PaginationType = PaginationTypes.FullNumbers;
             Doms = new List<DataTableDom>();
+            PageLength = 10;
         }
 
     }

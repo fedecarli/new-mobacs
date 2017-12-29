@@ -16,11 +16,7 @@ namespace Softpark.WS.Controllers
     /// </summary>
     public class MicroAreasController : BaseAjaxController
     {
-        private readonly List<ColumnDef> tblColumns = new List<ColumnDef> {
-                new ColumnDef { DataProp = "Codigo", Title = "Código" },
-                new ColumnDef { DataProp = "Descricao", Title = "Descrição" },
-                new ColumnDef { DataProp = "btn", Title = "", Sortable = false }
-            };
+        private readonly List<ColumnDef> tblColumns = ColumnDef.From<TableList>();
 
         /// <summary>
         /// 
@@ -33,27 +29,37 @@ namespace Softpark.WS.Controllers
         /// <returns></returns>
         public ActionResult Index() => View(tblColumns);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public class TableList
+        {
+            [ColumnDef(0, Title = "#", Sorting = SortingDirections.Ascending)]
+            public string Codigo { get; set; }
+
+            [ColumnDef(1, Title = "Descrição")]
+            public string Descricao { get; set; }
+
+            [ColumnDef(2, Title = "", Sortable = false)]
+            public string btn { get; set; }
+        }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public async Task<JsonResult> List([Bind(Include = "iDisplayStart,iDisplayLength,iSortingCols,iSortCol_0,sSortDir_0,sSearch,sEcho")] DataTableParameters request)
         {
             if (request == null) request = new DataTableParameters(Request.QueryString);
 
-            var vincs = Domain.SIGSM_MicroAreas.AsQueryable();
+            var vincs = Domain.SIGSM_MicroAreas.AsQueryable().Select(x => new TableList { Codigo = x.Codigo, Descricao = x.Descricao });
 
             request.Total = await Domain.SIGSM_MicroAreas.CountAsync();
 
-            Expression<Func<SIGSM_MicroAreas, object>> sort;
-            if (request.iSortCol_0 == 1)
-                sort = ((a) => a.Descricao);
-            else
-                sort = ((a) => a.Codigo);
-
-            var col = tblColumns.Count < request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "Codigo";
+            Expression<Func<TableList, object>> sort;
+            
+            var col = tblColumns.Count > request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "Codigo";
 
             if (col == "Descricao")
                 sort = ((a) => a.Descricao);
@@ -61,11 +67,11 @@ namespace Softpark.WS.Controllers
                 sort = ((a) => a.Codigo);
 
             var comp = request.Compose(vincs, sort,
-                x => x.Codigo.Contains(request.sSearch) || x.Descricao.Contains(request.sSearch), x => new
-            {
-                x.Codigo,
-                x.Descricao,
-                btn = "<a data-ajax=\"true\" data-ajax-method=\"GET\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#page-wrapper\" href=\"" + Url.Action("Edit", new { id = x.Codigo }) + "\" class=\"btn btn-outline btn-xs btn-warning\" title=\"Editar\" data-ajax-begin=\"beginRequest\"><i class='fa fa-pencil'></i></a>&nbsp;" +
+                x => x.Codigo.Contains(request.sSearch) || x.Descricao.Contains(request.sSearch), x => new TableList
+                {
+                    Codigo = x.Codigo,
+                    Descricao = x.Descricao,
+                    btn = "<a data-ajax=\"true\" data-ajax-method=\"GET\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#page-wrapper\" href=\"" + Url.Action("Edit", new { id = x.Codigo }) + "\" class=\"btn btn-outline btn-xs btn-warning\" title=\"Editar\" data-ajax-begin=\"beginRequest\"><i class='fa fa-pencil'></i></a>&nbsp;" +
                     "<a data-ajax=\"true\" data-ajax-method=\"GET\" data-ajax-mode=\"replace-with\" data-ajax-update=\"#page-wrapper\" href=\"" + Url.Action("Delete", new { id = x.Codigo }) + "\" class=\"btn btn-outline btn-xs btn-danger\" title=\"Remover\" data-ajax-begin=\"beginRequest\"><i class='fa fa-times'></i></a>"
                 });
 
@@ -164,7 +170,7 @@ namespace Softpark.WS.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             SIGSM_MicroAreas sIGSM_MicroAreas = await Domain.SIGSM_MicroAreas.FindAsync(id);
-            
+
             if (sIGSM_MicroAreas == null)
                 return RedirectToAction("Index");
 

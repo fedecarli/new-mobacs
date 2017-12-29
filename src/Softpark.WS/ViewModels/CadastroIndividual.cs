@@ -135,7 +135,6 @@ namespace Softpark.WS.ViewModels
             ci.SaidaCidadaoCadastro1 = saidaCidadaoCadastro?.ToModel(domain);
             ci.latitude = latitude;
             ci.longitude = longitude;
-            ci.Justificativa = Justificativa;
             ci.DataRegistro = DataRegistro;
 
             return ci;
@@ -179,7 +178,6 @@ namespace Softpark.WS.ViewModels
             saidaCidadaoCadastro = model.SaidaCidadaoCadastro1;
             latitude = model.latitude;
             longitude = model.longitude;
-            Justificativa = model.Justificativa;
             DataRegistro = model.DataRegistro;
         }
     }

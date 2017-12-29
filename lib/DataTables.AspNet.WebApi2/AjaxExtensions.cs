@@ -30,9 +30,10 @@ namespace DataTables.AspNet.WebApi2
             return $@"
     var draws = {Newtonsoft.Json.JsonConvert.SerializeObject(dataTableParams.Doms.ToArray())};
     {(!isAjax ? "window.addEventListener('DOMContentLoaded', function () {" : "$(function () {")}
-        var oTable = $('#{tableName}').dataTable({{{(!string.IsNullOrEmpty(dataTableParams.Dom)?$@"
+        window.oTable = $('#{tableName}').dataTable({{{(!string.IsNullOrEmpty(dataTableParams.Dom)?$@"
             dom: '{dataTableParams.Dom}',":"")}{(dataTableParams.Doms.Any() ? $@"
             drawCallback: drawCallback," : "")}
+            pageLength: {dataTableParams.PageLength},
             aoColumnDefs: {GenerateColumnDefsForOTable(dataTableParams.ColumnDefs)},
             bAutoWidth: {dataTableParams.AutoWidth.ToLowerString()},
             bDeferRender: {dataTableParams.DeferRender.ToLowerString()},
@@ -140,7 +141,7 @@ namespace DataTables.AspNet.WebApi2
             if (!string.IsNullOrEmpty(columnDef.FnCreatedCell))
                 result += string.Format("\t\t\"fnCreatedCell\": {0}, \n", columnDef.FnCreatedCell);
             if (!string.IsNullOrEmpty(columnDef.FnRender))
-                result += string.Format("\t\t\"fnRender\": {0}, \n", columnDef.FnRender);
+                result += string.Format("\t\t\"render\": {0}, \n", columnDef.FnRender);
             if (!string.IsNullOrEmpty(columnDef.CssClass))
                 result += string.Format("\t\t\"sClass\": \"{0}\", \n", columnDef.CssClass);
             if (!string.IsNullOrEmpty(columnDef.DefaultContent))

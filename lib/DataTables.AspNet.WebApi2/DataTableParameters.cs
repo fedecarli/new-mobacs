@@ -49,7 +49,7 @@ namespace DataTables.AspNet.WebApi2
         public DataTableComposer<T> Compose<T>(IQueryable<T> queryable,
             Expression<Func<T, object>> sort,
             Expression<Func<T, bool>> search,
-            Expression<Func<T, object>> select) =>
-            new DataTableComposer<T>(this, queryable, sort, search, select);
+            Expression<Func<T, object>> select = null) =>
+            new DataTableComposer<T>(this, queryable, sort, search, select) { Total = Total };
     }
 }
