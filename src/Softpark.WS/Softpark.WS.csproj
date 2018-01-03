@@ -473,6 +473,7 @@
     </None>
     <None Include="installation\lock" />
     <Content Include="installation\api-1.8.0.0.sql" />
+    <Content Include="installation\migracao-itanhaem-2.0.sql" />
     <Content Include="key.snk" />
     <Content Include="pk.snk" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
