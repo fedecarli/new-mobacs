@@ -59,7 +59,7 @@ namespace Softpark.WS.Controllers
             for (int i = 0; i < 99; i++)
                 micros[i] = i.ToString().PadLeft(2, '0');
 
-            var vincs = from zon in Domain.VW_Cadastros_Zoneamento
+            var vincs = (from zon in Domain.VW_Cadastros_Zoneamento
                         join cad in Domain.ASSMED_Cadastro
                         on zon.Codigo equals cad.Codigo
                         let dom = cad.ASSMED_Endereco.FirstOrDefault(x => x.ItemEnd == zon.ItemEnd)
@@ -74,7 +74,7 @@ namespace Softpark.WS.Controllers
                             (dom.Bairro == null || 0 == dom.Bairro.Trim().Length ? "" : (", " + dom.Bairro))).Trim(),
                             CEP = dom == null ? "" : dom.CEP == null ? "" : dom.CEP.Replace(".", "").Replace("-", ""),
                             MicroArea = zon.MicroArea == null || !micros.Contains(zon.MicroArea) ? "" : zon.MicroArea
-                        };
+                        });
             
             Expression<Func<TableList, object>> sort;
             if (request.iSortCol_0 < 0 || request.iSortCol_0 > tblColumns.Max(x => x.Position))
@@ -82,18 +82,36 @@ namespace Softpark.WS.Controllers
 
             var col = tblColumns[request.iSortCol_0].Name;
 
-            if (col == "Nome")
-                sort = ((a) => a.Nome);
-            else if (col == "Endereco")
-                sort = ((a) => a.Endereco);
-            else if (col == "CEP")
-                sort = ((a) => a.CEP);
-            else if (col == "MicroArea")
-                sort = ((a) => (a.MicroArea == null ? "999" : ("0" + a.MicroArea)));
-            else
-                sort = ((a) => a.Codigo);
+            IOrderedQueryable<TableList> list;
 
-            var comp = request.Compose(vincs, sort,
+            if(request.sSortDir_0 == "asc")
+            {
+                if (col == "Nome")
+                    list = vincs.OrderBy((a) => a.Nome);
+                else if (col == "Endereco")
+                    list = vincs.OrderBy((a) => a.Endereco);
+                else if (col == "CEP")
+                    list = vincs.OrderBy((a) => a.CEP);
+                else if (col == "MicroArea")
+                    list = vincs.OrderBy((a) => (a.MicroArea == null ? "999" : ("0" + a.MicroArea)));
+                else
+                    list = vincs.OrderBy((a) => a.Codigo);
+            }
+            else
+            {
+                if (col == "Nome")
+                    list = vincs.OrderByDescending((a) => a.Nome);
+                else if (col == "Endereco")
+                    list = vincs.OrderByDescending((a) => a.Endereco);
+                else if (col == "CEP")
+                    list = vincs.OrderByDescending((a) => a.CEP);
+                else if (col == "MicroArea")
+                    list = vincs.OrderByDescending((a) => (a.MicroArea == null ? "999" : ("0" + a.MicroArea)));
+                else
+                    list = vincs.OrderByDescending((a) => a.Codigo);
+            }
+            
+            var comp = request.ComposeQueryable(list,
                 x => x.Codigo.ToString() == request.sSearch.Trim() ||
                 x.Nome.Contains(request.sSearch.Trim()) ||
                 x.Endereco.Contains(request.sSearch.Trim()) ||
