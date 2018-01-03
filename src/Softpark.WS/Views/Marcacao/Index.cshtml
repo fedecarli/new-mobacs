@@ -1,1 +1,47 @@
-﻿
+﻿@{
+    if (IsAjax)
+    {
+        Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
+    }
+
+    var idUsuario = ASPSessionVar.Read("idUsuario");
+}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Marcação</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li>
+                    @Ajax.ActionLink("Vínculos", "Associacao", new { }, new AjaxOptions
+               {
+                   AllowCache = true,
+                   HttpMethod = "GET",
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "page-content",
+                   OnBegin = "beginRequest"
+               }, new { dataToggle = "tab" })
+                </li>
+                <li>
+                    @Ajax.ActionLink("Downloads", "Download", new { }, new AjaxOptions
+               {
+                   AllowCache = true,
+                   HttpMethod = "GET",
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "page-content",
+                   OnBegin = "beginRequest"
+               }, new { dataToggle = "tab" })
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="page-content" class="tab-pane active"></div>
+            </div>
+        </div>
+    </div>
+</div>

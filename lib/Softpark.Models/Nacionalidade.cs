@@ -4,6 +4,7 @@ namespace Softpark.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    [Table("Nacionalidade")]
     public partial class Nacionalidade
     {
         [Key]

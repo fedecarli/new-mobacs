@@ -675,6 +675,45 @@ namespace Softpark.WS.Controllers.Api
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public class CadastroIndividualComparer : EqualityComparer<CadastroIndividual>
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
+            public override bool Equals(CadastroIndividual x, CadastroIndividual y)
+            {
+                var an = x.IdentificacaoUsuarioCidadao1 == null && y.IdentificacaoUsuarioCidadao1 == null;
+
+                if (an)
+                    return x.uuidFichaOriginadora == y.uuidFichaOriginadora && x.id == y.id;
+
+                var nn = x.IdentificacaoUsuarioCidadao1 != null && y.IdentificacaoUsuarioCidadao1 != null;
+
+                if (nn)
+                {
+                    return x.IdentificacaoUsuarioCidadao1.cnsCidadao == y.IdentificacaoUsuarioCidadao1.cnsCidadao;
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public override int GetHashCode(CadastroIndividual obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
+        /// <summary>
         /// Endpoint para buscar pacientes atendidos pelo profissional informado
         /// </summary>
         /// <param name="token">Token de acesso</param>
@@ -698,7 +737,12 @@ namespace Softpark.WS.Controllers.Api
                 return error;
             }
 
-            var prof = Domain.GetProfissionalMobile(headerToken.cnes, headerToken.ine, headerToken.cboCodigo_2002, headerToken.profissionalCNS);
+            var prof = Domain.VW_Profissional
+                .SingleOrDefault(x =>
+                x.CNES == headerToken.cnes &&
+                x.INE == headerToken.ine &&
+                x.CBO == headerToken.cboCodigo_2002 &&
+                x.CNS == headerToken.profissionalCNS);
 
             var pessoas = (from scc in Domain.SIGSM_MicroArea_CredenciadoCidadao
                            join mcv in Domain.SIGSM_MicroArea_CredenciadoVinc
@@ -722,7 +766,7 @@ namespace Softpark.WS.Controllers.Api
 
             await Domain.SaveChangesAsync();
 
-            var cads = pessoas.Select(x =>
+            var cads = pessoas.SelectMany(x =>
             {
                 ISet<CadastroIndividual> cadastros = new HashSet<CadastroIndividual>();
 
@@ -755,6 +799,7 @@ namespace Softpark.WS.Controllers.Api
                     var cid = Domain.Cidade.FirstOrDefault(y => y.CodCidade == codc)?.CodIbge?.Trim() ??
                     headerToken.codigoIbgeMunicipio;
 
+                    iden.num_contrato = 22;
                     iden.ASSMED_Cadastro1 = x.cad;
                     iden.cnsCidadao = x.cad.ASSMED_CadastroDocPessoal.LastOrDefault(y => y.CodTpDocP == 6 && y.Numero != null
                     && y.Numero.Trim().Length == 15)?.Numero;
@@ -779,7 +824,6 @@ namespace Softpark.WS.Controllers.Api
                     iden.nomePaiCidadao = x.cad.ASSMED_PesFisica?.NomePai ?? x.cpf?.NomePai;
                     iden.numeroNisPisPasep = x.cad.ASSMED_CadastroDocPessoal.FirstOrDefault(y => y.CodTpDocP == 7 && y.Numero != null)?
                     .Numero?.Trim();
-                    iden.num_contrato = 22;
                     iden.paisNascimento = x.cad.ASSMED_PesFisica?.ENDPAIS ?? x.cpf?.ENDPAIS;
                     iden.portariaNaturalizacao = x.cad.ASSMED_PesFisica?.NATURALIZACAOPORTARIA ?? x.cpf?.NATURALIZACAOPORTARIA;
                     iden.racaCorCidadao = x.cad.ASSMED_PesFisica?.CodCor ?? x.cpf?.CodCor ?? 6;
@@ -795,12 +839,16 @@ namespace Softpark.WS.Controllers.Api
                 var cadt = cadi(x.cad.IdentificacaoUsuarioCidadao?.CadastroIndividual.FirstOrDefault());
                 cadastros.Add(cadt);
 
-                Domain.IdentificacaoUsuarioCidadao.Where(y => y.cnsResponsavelFamiliar == cadt.IdentificacaoUsuarioCidadao1.cnsCidadao && !y.statusEhResponsavel
-                    && y.cnsCidadao != y.cnsResponsavelFamiliar).SelectMany(y => y.CadastroIndividual).Distinct().ToList().Select(cadi)
-                    .ToList().ForEach(y => cadastros.Add(y));
+                Domain.IdentificacaoUsuarioCidadao
+                .Where(y => y.cnsResponsavelFamiliar == cadt.IdentificacaoUsuarioCidadao1.cnsCidadao && !y.statusEhResponsavel
+                    && y.cnsCidadao != y.cnsResponsavelFamiliar && y.cnsCidadao != cadt.IdentificacaoUsuarioCidadao1.cnsCidadao)
+                    .SelectMany(y => y.CadastroIndividual)
+                    .Distinct().ToList()
+                    .Select(cadi).Where(y => y.IdentificacaoUsuarioCidadao1.cnsCidadao != cadt.IdentificacaoUsuarioCidadao1.cnsCidadao).ToList()
+                    .ForEach(y => cadastros.Add(y));
 
                 return cadastros;
-            }).SelectMany(x => x).Distinct().ToArray();
+            }).Distinct(new CadastroIndividualComparer()).ToArray();
 
             CadastroIndividualViewModelCollection results = cads;
 
@@ -829,7 +877,12 @@ namespace Softpark.WS.Controllers.Api
 
                 if (headerToken == null) return BadRequest("Token Inválido.");
 
-                var prof = Domain.GetProfissionalMobile(headerToken.cnes, headerToken.ine, headerToken.cboCodigo_2002, headerToken.profissionalCNS);
+                var prof = Domain.VW_Profissional
+                    .SingleOrDefault(x =>
+                    x.CNES == headerToken.cnes &&
+                    x.INE == headerToken.ine &&
+                    x.CBO == headerToken.cboCodigo_2002 &&
+                    x.CNS == headerToken.profissionalCNS);
 
                 var domicilios = (from scc in Domain.SIGSM_MicroArea_CredenciadoCidadao
                                   join mcv in Domain.SIGSM_MicroArea_CredenciadoVinc
@@ -850,6 +903,8 @@ namespace Softpark.WS.Controllers.Api
                                   select new { scc, end, cad, cpf, mcv }).ToList();
 
                 domicilios.ForEach(x => x.scc.DownloadDomiciliar = DateTime.Now);
+
+                await Domain.SaveChangesAsync();
 
                 var cadastros = domicilios.Select(x =>
                 {
@@ -898,9 +953,7 @@ namespace Softpark.WS.Controllers.Api
                     end.telefoneContato = fone == null ? null : (fone.DDD + fone.NumTel);
                     fone = x.cad.ASSMED_CadTelefones.LastOrDefault(y => y.TipoTel == "R" && y.NumTel != null);
                     end.telefoneResidencia = fone == null ? null : (fone.DDD + fone.NumTel);
-                    end.tipoLogradouroNumeroDne = x.end == null ? null :
-                        Domain.TB_MS_TIPO_LOGRADOURO.FirstOrDefault(y => y.DS_TIPO_LOGRADOURO_ABREV == x.end.TipoEnd)?
-                        .CO_TIPO_LOGRADOURO;
+                    end.tipoLogradouroNumeroDne = x.end == null || x.end.CodTpLogra == null ? null : x.end.TB_MS_TIPO_LOGRADOURO.CO_TIPO_LOGRADOURO;
                     return dom;
                 }).ToArray();
 

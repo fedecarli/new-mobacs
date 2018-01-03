@@ -58,9 +58,7 @@ namespace Softpark.WS.Controllers
                 };
 
             if (request == null) request = new DataTableParameters(Request.QueryString);
-
-            request.Total = await Domain.SIGSM_MicroArea_CredenciadoVinc.CountAsync();
-
+            
             Expression<Func<ListagemMicroAreaCredenciadoViewModel, object>> sort;
 
             var col = tblColumns.Count > request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";

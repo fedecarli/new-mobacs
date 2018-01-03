@@ -54,9 +54,7 @@ namespace Softpark.WS.Controllers
             if (request == null) request = new DataTableParameters(Request.QueryString);
 
             var vincs = Domain.SIGSM_MicroAreas.AsQueryable().Select(x => new TableList { Codigo = x.Codigo, Descricao = x.Descricao });
-
-            request.Total = await Domain.SIGSM_MicroAreas.CountAsync();
-
+            
             Expression<Func<TableList, object>> sort;
             
             var col = tblColumns.Count > request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "Codigo";

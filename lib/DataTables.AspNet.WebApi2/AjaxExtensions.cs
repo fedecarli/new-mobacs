@@ -30,8 +30,8 @@ namespace DataTables.AspNet.WebApi2
             return $@"
     var draws = {Newtonsoft.Json.JsonConvert.SerializeObject(dataTableParams.Doms.ToArray())};
     {(!isAjax ? "window.addEventListener('DOMContentLoaded', function () {" : "$(function () {")}
-        window.oTable = $('#{tableName}').dataTable({{{(!string.IsNullOrEmpty(dataTableParams.Dom)?$@"
-            dom: '{dataTableParams.Dom}',":"")}{(dataTableParams.Doms.Any() ? $@"
+        window.oTable = $('#{tableName}').dataTable({{{(!string.IsNullOrEmpty(dataTableParams.Dom) ? $@"
+            dom: '{dataTableParams.Dom}'," : "")}{(dataTableParams.Doms.Any() ? $@"
             drawCallback: drawCallback," : "")}
             pageLength: {dataTableParams.PageLength},
             aoColumnDefs: {GenerateColumnDefsForOTable(dataTableParams.ColumnDefs)},
@@ -53,6 +53,7 @@ namespace DataTables.AspNet.WebApi2
             sPaginationType: {'"' + GetDescription(dataTableParams.PaginationType) + '"'},
             sAjaxSource: {('"' + ajaxOptions.Url + '"')},
             sServerMethod: {'"' + ajaxOptions.HttpMethod + '"'},
+            aaSorting: {GenerateColumnSortingForOTable(dataTableParams.ColumnDefs)},
             language: {{
                 sEmptyTable: '<center>Nenhum registro encontrado</center>',
                 sInfo: 'Exibindo de _START_ a _END_ de _TOTAL_ registro(s)',
@@ -90,6 +91,17 @@ namespace DataTables.AspNet.WebApi2
 
             return containerDiv;
 
+        }
+
+        private static MvcHtmlString GenerateColumnSortingForOTable(IEnumerable<ColumnDef> columnDefs)
+        {
+            if (!columnDefs.Where(x => x.Sorting != SortingDirections.Both).Any())
+                return MvcHtmlString.Create("[]");
+
+            return MvcHtmlString.Create("[" +
+            columnDefs.Where(x => x.Sorting != SortingDirections.Both)
+            .Aggregate("", (a, b) => a + (a.Length > 0 ? ", " : "") + $"[{b.Position}, \"{GetDescription(b.Sorting)}\"]")
+            + "]");
         }
 
         private static MvcHtmlString GenerateColumnDefsForOTable(IEnumerable<ColumnDef> columnDefs)
@@ -130,14 +142,12 @@ namespace DataTables.AspNet.WebApi2
         private static string ColumnDefToString(ColumnDef columnDef, int targets)
         {
             string result = "\t\t{\n";
-            if (columnDef.Sorting != SortingDirections.Both)
-                result += string.Format("\t\t\"aDataSort\": [ \"{0}\" ], \n", GetDescription(columnDef.Sorting));
             if (!columnDef.Sortable) //bSortable default is true
                 result += string.Format("\t\t\"bSortable\": {0}, \n", columnDef.Sortable.ToString().ToLower());
             if (!columnDef.UseRendered) //bUseRendered default is true
                 result += string.Format("\t\t\"bUseRendered\": {0}, \n", columnDef.UseRendered.ToString().ToLower());
             if (!columnDef.Visible) //bVisible default is true 
-                result += string.Format("\t\t\"bVisible\": : {0}, \n", columnDef.Visible);
+                result += string.Format("\t\t\"bVisible\": {0}, \n", columnDef.Visible.ToLowerString());
             if (!string.IsNullOrEmpty(columnDef.FnCreatedCell))
                 result += string.Format("\t\t\"fnCreatedCell\": {0}, \n", columnDef.FnCreatedCell);
             if (!string.IsNullOrEmpty(columnDef.FnRender))

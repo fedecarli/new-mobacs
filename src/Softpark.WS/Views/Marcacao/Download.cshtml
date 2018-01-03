@@ -1,0 +1,126 @@
+﻿@using DataTables.AspNet.WebApi2
+@model List<ColumnDef>
+@{
+    if (IsAjax)
+    {
+        Layout = null;
+        <script>routes.navigate('@Url.Action()')</script>
+    }
+
+    var idUsuario = ASPSessionVar.Read("idUsuario");
+}
+
+@Ajax.DataTable($"tbl_list_download_{idUsuario}", new AjaxOptions
+{
+    HttpMethod = "GET",
+    Url = Url.Action("ListDown")
+}, new DataTableAttributes
+{
+    ColumnDefs = Model,
+    AutoWidth = false,
+    DeferRender = false,
+    JQueryUI = true,
+    StateSave = true,
+    PaginationType = PaginationTypes.FullNumbers,
+    Paginate = true
+}, Url, IsAjax)
+
+@if (!IsAjax)
+{
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-header">Marcação</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li>
+                        @Ajax.ActionLink("Vínculos", "Associacao", new { }, new AjaxOptions
+                        {
+                            AllowCache = true,
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "page-content",
+                            OnBegin = "beginRequest"
+                        }, new { dataToggle = "tab" })
+                    </li>
+                    <li>
+                        @Ajax.ActionLink("Downloads", "Download", new { }, new AjaxOptions
+                        {
+                            AllowCache = true,
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "page-content",
+                            OnBegin = "beginRequest"
+                        }, new { dataToggle = "tab" })
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="page-content" class="tab-pane active">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2 style="margin: 0">Marcar Cadastros para Download</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover" id="tbl_list_download_@idUsuario"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Ajax.ActionLinkButton("Download", new AjaxOptions
+                                {
+                                    AllowCache = true,
+                                    HttpMethod = "POST",
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "page-content",
+                                    OnBegin = "beginRequest"
+                                }, new { @class = "btn btn-primary pull-right disabled", disabled = "disabled", id = "btn_update_download" },
+                                  "<i class=\"fa fa-floppy-o\"></i> Salvar Marcações")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="margin: 0">Marcar Cadastros para Download</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tbl_list_download_@idUsuario"></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @Ajax.ActionLinkButton("Download", new AjaxOptions
+            {
+                AllowCache = true,
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "page-content",
+                OnBegin = "beginRequest"
+            }, new { @class = "btn btn-primary pull-right disabled", disabled = "disabled", id = "btn_update_download" },
+           "<i class=\"fa fa-floppy-o\"></i> Salvar Marcações")
+        </div>
+    </div>
+}

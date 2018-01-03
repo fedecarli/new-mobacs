@@ -51,5 +51,15 @@ namespace DataTables.AspNet.WebApi2
             Expression<Func<T, bool>> search,
             Expression<Func<T, object>> select = null) =>
             new DataTableComposer<T>(this, queryable, sort, search, select) { Total = Total };
+
+        public DataTableComposer<T> Compose<T>(IQueryable<T> queryable,
+            Expression<Func<T, bool>> search,
+            Expression<Func<T, object>> select = null) =>
+            new DataTableComposer<T>(this, queryable, null, search, select) { Total = Total };
+
+        public DataTableComposer<T> ComposeQueryable<T>(IOrderedQueryable<T> queryable,
+            Expression<Func<T, bool>> search,
+            Expression<Func<T, object>> select = null) =>
+            new DataTableComposer<T>(this, queryable, null, search, select) { Total = Total };
     }
 }

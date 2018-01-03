@@ -69,5 +69,7 @@ namespace Softpark.Models
         public virtual ASSMED_Cadastro ASSMED_Cadastro { get; set; }
 
         public virtual SIGSM_MicroAreas SIGSM_MicroAreas { get; set; }
+
+        public virtual TB_MS_TIPO_LOGRADOURO TB_MS_TIPO_LOGRADOURO { get; set; }
     }
 }

@@ -31,14 +31,48 @@ class Routes
 window.renderHtmlCell = (d) -> d
 
 window.routes = new Routes
+        
+assocs = []
+assocsStorage = []
 
-window.beginRequest = (promise) ->
-    criaLoading "page-wrapper"
-    promise.complete ->
-        destroiLoading "page-wrapper"
+downs = []
+downsStorage = []
 
 updates = []
 codes = []
+
+window.beginRequest = (promise, options) ->
+    criaLoading "page-wrapper"
+    if options.url.toLowerCase().indexOf('marcacao/associacao') >= 0 && options.type.toLowerCase() is "post"
+        d = {
+            "X-Requested-With": "XMLHttpRequest",
+            "associacoes": assocs
+        }
+        options.data = jQuery.param(d)
+
+        promise
+            .done (d) ->
+                assocs = []
+                assocsStorage = []
+            .error () ->
+                console.error arguments, 1
+
+    if options.url.toLowerCase().indexOf('marcacao/download') >= 0 && options.type.toLowerCase() is "post"
+        d = {
+            "X-Requested-With": "XMLHttpRequest",
+            "downloads": downs
+        }
+        options.data = jQuery.param(d)
+
+        promise
+            .done (d) ->
+                downs = []
+                downsStorage = []
+            .error () ->
+                console.error arguments, 1
+            
+    promise.complete ->
+        destroiLoading "page-wrapper"
 
 window.drawCallback = () ->
     $('.btn-create').remove()
@@ -64,7 +98,6 @@ jQuery.ajaxPrefilter (options, originalOptions, xhr) ->
                 setTimeout(() ->
                     window.location.assign "#{appPath}../login.asp"
                 , 5000)
-
 $ ->
     selectedSetor = null
 
@@ -185,14 +218,14 @@ $(document).on 'click', '#updateZon', (e) ->
             codes = []
             oTable.fnDraw()
         else
-            console.log arguments, 0
+            console.error arguments, 0
 
         if updates.length > 0
             $('#updateZon').removeClass('disabled').removeAttr('disabled')
         else
             $('#updateZon').addClass('disabled').attr('disabled', true)
     .error () ->
-        console.log arguments, 1
+        console.error arguments, 1
 
 $(document).on 'change', '.microArea', (e) ->
     e.preventDefault()
@@ -232,3 +265,100 @@ window.renderMaSelection = (d, s, i) ->
     , 100
 
     tpl[0].outerHTML
+
+class Assoc
+    constructor: () ->
+        @Codigo = 0
+        @Relacionar = false
+        
+class Download
+    constructor: () ->
+        @Vinculo = 0
+        @Baixar = false
+        
+reduce = (x, z) ->
+    (typeof x.Relacionar is 'undefined' ? x : x.Relacionar) + z.Relacionar
+
+$(document).on 'change', '.chk_associar', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+
+    if assocs.length is 0 && assocsStorage.length > 0
+        assocsStorage = []
+
+    index = assocsStorage.indexOf $(this).data('codigo')
+    
+    if index < 0
+        index = assocs.length
+        assoc = new Assoc
+        assoc.Codigo = $(this).data('codigo')
+        assocs.push assoc
+        assocsStorage.push $(this).data('codigo')
+
+    assoc = assocs[index]
+    assoc.Relacionar = this.checked
+
+    $('#btn_update_assoc').attr('disabled', true).addClass('disabled')
+
+    if assocs.length > 0
+        $('#btn_update_assoc').removeAttr('disabled').removeClass('disabled')
+
+window.renderVincSelection = (d, s, i) ->
+    index = assocsStorage.indexOf $(this).data('codigo')
+    
+    if index >= 0
+        assoc = assocs[index]
+        
+        if assoc.Relacionar is false
+            d = d.replace('checked', '')
+        else if d.indexOf('checked') < 0
+            d = d.replace('input ', 'input checked ')
+
+    $('#btn_update_assoc').attr('disabled', true).addClass('disabled')
+    
+    if assocs.length > 0
+        $('#btn_update_assoc').removeAttr('disabled').removeClass('disabled')
+
+    d
+
+window.renderDownSelection = (d, s, i) ->
+    index = downsStorage.indexOf $(this).data('vinculo')
+    
+    if index >= 0
+        down = downs[index]
+        
+        if down.Baixar is false
+            d = d.replace('checked', '')
+        else if d.indexOf('checked') < 0
+            d = d.replace('input ', 'input checked ')
+
+    $('#btn_update_download').attr('disabled', true).addClass('disabled')
+    
+    if downs.length > 0
+        $('#btn_update_download').removeAttr('disabled').removeClass('disabled')
+
+    d
+
+$(document).on 'change', '.chk_download', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+
+    if downs.length is 0 && downsStorage.length > 0
+        downsStorage = []
+
+    index = downsStorage.indexOf $(this).data('vinculo')
+    
+    if index < 0
+        index = downs.length
+        down = new Download
+        down.Vinculo = $(this).data('vinculo')
+        downs.push down
+        downsStorage.push $(this).data('vinculo')
+
+    down = downs[index]
+    down.Baixar = this.checked
+
+    $('#btn_update_download').attr('disabled', true).addClass('disabled')
+
+    if downs.length > 0
+        $('#btn_update_download').removeAttr('disabled').removeClass('disabled')

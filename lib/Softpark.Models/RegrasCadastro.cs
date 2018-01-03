@@ -112,7 +112,7 @@ namespace Softpark.Models
             else
             {
                 var profissional = ficha == null ?
-                    domain.VW_Profissionais(header.cnes, header.profissionalCNS, 1000).ToArray() :
+                    domain.VW_Profissional.Where(x => x.CNES == header.cnes && x.CNS == header.profissionalCNS).ToArray() :
                     domain.VW_Profissionais(ficha, header.cnes, header.profissionalCNS, 1000).ToArray();
 
                 if (profissional.Length == 0)
@@ -125,7 +125,7 @@ namespace Softpark.Models
                     if (profissional.All(x => x.CNES == null || x.CNES.Trim() != header?.cnes?.Trim()))
                         errors.Add("A unidade do profissional não foi encontrada.");
 
-                    if (header.ine != null && profissional.All(x => x.Equipe == null || x.Equipe?.Split(' ')[0].Trim() != header?.ine?.Trim()))
+                    if (header.ine != null && profissional.All(x => x.INE.Trim() != header?.ine?.Trim() && (x.Equipe == null || x.Equipe?.Split(' ')[0].Trim() != header?.ine?.Trim())))
                         errors.Add("A equipe do profissional não foi encontrada.");
 
                     var validEpoch = Epoch.ValidateESUSDateTime(header.dataAtendimento);

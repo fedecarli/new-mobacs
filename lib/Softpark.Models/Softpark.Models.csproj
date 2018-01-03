@@ -193,6 +193,7 @@
     <Compile Include="VW_Profissional_.cs" />
     <Compile Include="VW_SystemLanguage.cs" />
     <Compile Include="VW_UsuariosACS_.cs" />
+    <Compile Include="VW_Vinculos.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

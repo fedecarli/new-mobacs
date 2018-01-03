@@ -237,48 +237,7 @@ namespace Softpark.Models
             return ficha == null ? VW_Profissionais(cnes, nomeOuCns, limit) :
             Database.SqlQuery<VW_Profissional>(query, parameters: parameters.ToArray());
         }
-
-        /// <summary>
-        /// Buscar Profissional válido
-        /// </summary>
-        /// <param name="cnes"></param>
-        /// <param name="ine"></param>
-        /// <param name="cbo"></param>
-        /// <param name="cns"></param>
-        /// <returns></returns>
-        public virtual VW_Profissional GetProfissionalMobile(string cnes, string ine, string cbo, string cns)
-        {
-            var parameters = new List<SqlParameter>();
-
-            if (!string.IsNullOrEmpty(ine?.Trim()))
-                parameters.Add(new SqlParameter("@ine", ine));
-
-            parameters.Add(new SqlParameter("@cnes", cnes));
-
-            parameters.Add(new SqlParameter("@cns", cnes));
-
-            parameters.Add(new SqlParameter("@cbo", cbo));
-
-            var query = "SELECT DISTINCT TOP 10" +
-                @" a.id, a.CNS, a.Nome, LTRIM(RTRIM(a.CBO)) AS CBO,
-                    a.Profissao, a.CNES, a.Unidade,
-                    COALESCE(CAST(c.CodINE AS VARCHAR(18)), '') AS INE,
-                    COALESCE((a.INE + ' - ' + a.Equipe), '') AS Equipe,
-                    a.CodUsu
-                FROM [api].[VW_Profissional] AS a
-                INNER JOIN dbo.SIGSM_FichaProfissao AS b ON LTRIM(RTRIM(a.CBO)) = LTRIM(RTRIM(b.CBO)) AND b.Ficha IN ('CadastroIndividual', 'CadastroDomiciliar', 'VisitaDomiciliar')
-                LEFT JOIN dbo.SetoresINEs AS c ON a.INE COLLATE Latin1_General_CI_AI = LTRIM(RTRIM(c.Numero COLLATE Latin1_General_CI_AI))
-                WHERE a.CNS IS NOT NULL" +
-                (string.IsNullOrEmpty(ine?.Trim()) ? "" : " AND a.INE = @ine") +
-                " AND a.CNES = @cnes" +
-                " AND a.CNS = @cns AND a.CBO = @cbo" +
-                " ORDER BY Nome, Profissao, Unidade, Equipe";
-
-            HttpContext.Current.Response.Write(query + $"[{ine},{cnes},{cns},{cbo}]");
-
-            return Database.SqlQuery<VW_Profissional>(query, parameters: parameters.ToArray()).FirstOrDefault();
-        }
-
+        
         /// <summary>
         /// Buscar Profissional válido
         /// </summary>
@@ -654,6 +613,7 @@ where cdp.CodTpDocP = 6 AND Ativo = 1 AND RTRIM(LTRIM(cv.CodProfTab)) like '5151
         public virtual DbSet<VW_ConsultaCadastrosDomiciliares> VW_ConsultaCadastrosDomiciliares { get; set; }
         public virtual DbSet<VW_ConsultaCadastrosIndividuais> VW_ConsultaCadastrosIndividuais { get; set; }
         public virtual DbSet<VW_MenuSistema> VW_MenuSistema { get; set; }
+        public virtual DbSet<VW_Vinculos> VW_Vinculos { get; set; }
         public virtual DbSet<VW_SystemLanguage> VW_SystemLanguage { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -1797,6 +1757,10 @@ where cdp.CodTpDocP = 6 AND Ativo = 1 AND RTRIM(LTRIM(cv.CodProfTab)) like '5151
                 .IsUnicode(false);
 
             modelBuilder.Entity<TB_MS_TIPO_LOGRADOURO>()
+                .Property(e => e.CO_TIPO_LOGRADOURO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TB_MS_TIPO_LOGRADOURO>()
                 .Property(e => e.DS_TIPO_LOGRADOURO)
                 .IsUnicode(false);
 
@@ -1804,6 +1768,12 @@ where cdp.CodTpDocP = 6 AND Ativo = 1 AND RTRIM(LTRIM(cv.CodProfTab)) like '5151
                 .Property(e => e.DS_TIPO_LOGRADOURO_ABREV)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<ASSMED_Endereco>()
+                .HasOptional(x => x.TB_MS_TIPO_LOGRADOURO)
+                .WithMany(e => e.ASSMED_Endereco)
+                .HasForeignKey(e => e.CodTpLogra)
+                .WillCascadeOnDelete(false);
+            
             modelBuilder.Entity<TP_Conduta>()
                 .Property(e => e.tp_sub_grupos)
                 .IsFixedLength()
@@ -1862,6 +1832,7 @@ where cdp.CodTpDocP = 6 AND Ativo = 1 AND RTRIM(LTRIM(cv.CodProfTab)) like '5151
             modelBuilder.Entity<VW_SystemLanguage>()
                 .Property(e => e.dateformat)
                 .IsFixedLength();
+
         }
     }
 }

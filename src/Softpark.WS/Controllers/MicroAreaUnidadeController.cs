@@ -37,7 +37,7 @@ namespace Softpark.WS.Controllers
 
         /// GET: MicroAreaUnidade
         public ActionResult Index() => View(tblColumns);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -48,8 +48,6 @@ namespace Softpark.WS.Controllers
         {
             if (request == null) request = new DataTableParameters(Request.QueryString);
 
-            request.Total = await Domain.SIGSM_MicroArea_Unidade.CountAsync();
-            
             var vincs = (from sp in Domain.AS_SetoresPar
                          join se in Domain.Setores
                          on sp.CodSetor equals se.CodSetor
@@ -57,14 +55,14 @@ namespace Softpark.WS.Controllers
                          on se.CodSetor equals mu.CodSetor
                          join ma in Domain.SIGSM_MicroAreas
                          on mu.MicroArea equals ma.Codigo
-                         where sp.CNES != null && sp.CNES.Trim().Length == 7 && sp.Setores.DesSetor != null
+                         where sp.CNES != null && se.DesSetor != null
                          select new TableList
                          {
                              id = mu.id,
                              MicroArea = ma.Codigo + " - " + ma.Descricao,
                              Setor = sp.CNES + " - " + se.DesSetor
                          }).Distinct();
-
+            
             Expression<Func<TableList, object>> sort;
 
             var col = tblColumns.Count > request.iSortCol_0 ? tblColumns[request.iSortCol_0].Name : "MicroArea";
@@ -89,14 +87,12 @@ namespace Softpark.WS.Controllers
         /// GET: MicroAreaUnidade/Create
         public ActionResult Create()
         {
-            ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
-                .Include(x => x.Setores)
-                .Where(x => x.CNES != null && x.CNES.Trim().Length == 7 && x.Setores.DesSetor != null)
-                .Select(x => new
-                {
-                    x.CodSetor,
-                    DesSetor = x.CNES.Trim() + " - " + x.Setores.DesSetor.Trim()
-                }), "CodSetor", "DesSetor");
+            ViewBag.CodSetor = new SelectList(
+                from x in Domain.AS_SetoresPar
+                join s in Domain.Setores
+                on x.CodSetor equals s.CodSetor
+                where x.CNES != null && x.CNES.Trim().Length == 7 && s.DesSetor != null
+                select new { s.CodSetor, DesSetor = x.CNES.Trim() + " - " + s.DesSetor.Trim() }, "CodSetor", "DesSetor");
 
             ViewBag.MicroArea = new SelectList(Domain.SIGSM_MicroAreas.Select(x => new
             {
@@ -126,14 +122,12 @@ namespace Softpark.WS.Controllers
                 ModelState.AddModelError("", "A Micro Área e a Unidade informadas já estão associadas.");
             }
 
-            ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
-                .Include(x => x.Setores)
-                .Where(x => x.CNES != null && x.CNES.Trim().Length == 7 && x.Setores.DesSetor != null)
-                .Select(x => new
-                {
-                    x.CodSetor,
-                    DesSetor = x.CNES.Trim() + " - " + x.Setores.DesSetor.Trim()
-                }), "CodSetor", "DesSetor", sIGSM_MicroArea_Unidade.CodSetor);
+            ViewBag.CodSetor = new SelectList(
+                from x in Domain.AS_SetoresPar
+                join s in Domain.Setores
+                on x.CodSetor equals s.CodSetor
+                where x.CNES != null && x.CNES.Trim().Length == 7 && s.DesSetor != null
+                select new { s.CodSetor, DesSetor = x.CNES.Trim() + " - " + s.DesSetor.Trim() }, "CodSetor", "DesSetor", sIGSM_MicroArea_Unidade.CodSetor);
             ViewBag.MicroArea = new SelectList(Domain.SIGSM_MicroAreas.Select(x => new
             {
                 x.Codigo,
@@ -154,14 +148,12 @@ namespace Softpark.WS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
-                .Include(x => x.Setores)
-                .Where(x => x.CNES != null && x.CNES.Trim().Length == 7 && x.Setores.DesSetor != null)
-                .Select(x => new
-                {
-                    x.CodSetor,
-                    DesSetor = x.CNES.Trim() + " - " + x.Setores.DesSetor.Trim()
-                }), "CodSetor", "DesSetor", sIGSM_MicroArea_Unidade.CodSetor);
+            ViewBag.CodSetor = new SelectList(
+                from x in Domain.AS_SetoresPar
+                join s in Domain.Setores
+                on x.CodSetor equals s.CodSetor
+                where x.CNES != null && x.CNES.Trim().Length == 7 && s.DesSetor != null
+                select new { s.CodSetor, DesSetor = x.CNES.Trim() + " - " + s.DesSetor.Trim() }, "CodSetor", "DesSetor", sIGSM_MicroArea_Unidade.CodSetor);
             ViewBag.MicroArea = new SelectList(Domain.SIGSM_MicroAreas.Select(x => new
             {
                 x.Codigo,
@@ -189,14 +181,12 @@ namespace Softpark.WS.Controllers
 
                 ModelState.AddModelError("MicroArea", "A Micro Área e a Unidade informadas já estão associadas.");
             }
-            ViewBag.CodSetor = new SelectList(Domain.AS_SetoresPar
-                .Include(x => x.Setores)
-                .Where(x => x.CNES != null && x.CNES.Trim().Length == 7 && x.Setores.DesSetor != null)
-                .Select(x => new
-                {
-                    x.CodSetor,
-                    DesSetor = x.CNES.Trim() + " - " + x.Setores.DesSetor.Trim()
-                }), "CodSetor", "DesSetor", sIGSM_MicroArea_Unidade.CodSetor);
+            ViewBag.CodSetor = new SelectList(
+                from x in Domain.AS_SetoresPar
+                join s in Domain.Setores
+                on x.CodSetor equals s.CodSetor
+                where x.CNES != null && x.CNES.Trim().Length == 7 && s.DesSetor != null
+                select new { s.CodSetor, DesSetor = x.CNES.Trim() + " - " + s.DesSetor.Trim() }, "CodSetor", "DesSetor", sIGSM_MicroArea_Unidade.CodSetor);
             ViewBag.MicroArea = new SelectList(Domain.SIGSM_MicroAreas.Select(x => new
             {
                 x.Codigo,

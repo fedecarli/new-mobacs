@@ -2,8 +2,8 @@ angular.module('mobacs')
     .controller('LoginController', function ($scope, $rootScope, $state, UsersService, $http, $cordovaNetwork, $ionicPlatform, WebApiService, $ionicLoading, SecurityService) {
         var condition = null;
 
-        var apiLoginDev = "http://192.168.2.131/sigsm/v2/ESUS/fichas/api/Login/ConsultarLogin/";
-        var apiLoginProd = "http://192.168.2.131/sigsm/v2/ESUS/fichas/api/Login/ConsultarLogin/";
+        var apiLoginDev = "http://192.168.2.183/sigsm/v2/ESUS/fichas/api/Login/ConsultarLogin/";
+        var apiLoginProd = "http://192.168.2.183/sigsm/v2/ESUS/fichas/api/Login/ConsultarLogin/";
 
         $scope.login = {
             userLogin: '',

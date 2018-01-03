@@ -13,8 +13,8 @@ angular.module('mobacs')
         // };
 
         var environment = {
-            api: 'http://192.168.2.131/sigsm/v2/ESUS/fichas',//($rootScope.environmentApp.environment == "dev") ? development : production,
-            log: 'http://192.168.2.131/sigsm/v2/ESUS/fichas/api/LogMobile',//($rootScope.environmentApp.environment == "dev") ? developmentLog : productionLog,
+            api: 'http://192.168.2.183/sigsm/v2/ESUS/fichas',//($rootScope.environmentApp.environment == "dev") ? development : production,
+            log: 'http://192.168.2.183/sigsm/v2/ESUS/fichas/api/LogMobile',//($rootScope.environmentApp.environment == "dev") ? developmentLog : productionLog,
             version: $rootScope.version
         };
 

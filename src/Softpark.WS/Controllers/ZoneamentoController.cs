@@ -75,10 +75,7 @@ namespace Softpark.WS.Controllers
                             CEP = dom == null ? "" : dom.CEP == null ? "" : dom.CEP.Replace(".", "").Replace("-", ""),
                             MicroArea = zon.MicroArea == null || !micros.Contains(zon.MicroArea) ? "" : zon.MicroArea
                         };
-
-
-            request.Total = await Domain.VW_Cadastros_Zoneamento.CountAsync();
-
+            
             Expression<Func<TableList, object>> sort;
             if (request.iSortCol_0 < 0 || request.iSortCol_0 > tblColumns.Max(x => x.Position))
                 request.iSortCol_0 = 0;

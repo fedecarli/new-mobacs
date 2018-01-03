@@ -404,6 +404,7 @@
     <Compile Include="ViewModels\AutenticacaoViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\LogMobileViewModel.cs" />
+    <Compile Include="ViewModels\MarcacaoViewModel.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroDomiciliar.cs" />
     <Compile Include="ViewModels\SIGSM\CadastroIndividual.cs" />
     <Compile Include="ViewModels\SIGSM\MicroAreaCredenciadoViewModel.cs" />
@@ -556,6 +557,8 @@
     <Content Include="Views\MicroAreaCredenciado\Form.cshtml" />
     <Content Include="Views\Zoneamento\Index.cshtml" />
     <Content Include="Views\Marcacao\Index.cshtml" />
+    <Content Include="Views\Marcacao\Associacao.cshtml" />
+    <Content Include="Views\Marcacao\Download.cshtml" />
     <None Include="Web.Santana.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

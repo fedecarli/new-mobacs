@@ -326,7 +326,7 @@ namespace Softpark.WS.Controllers.Api
         /// </summary>
         /// <param name="cadastros">ViewModel Collection com os dados de cabeçalhos, fichas de visitas, cadastros individuais e cadastros domiciliares</param>
         /// <returns>Verdadeiro se concluído com sucesso</returns>
-        [Route("api/processos/enviar/cadastro/atomico")]
+        [Route("enviar/cadastro/atomico")]
         [HttpPost, ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> CadastramentoAtomico([FromBody, Required] AtomicTransporViewModel[] cadastros)
         {
