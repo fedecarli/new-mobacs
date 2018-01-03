@@ -29,6 +29,38 @@
 
     <input id="lang" type="hidden" value="pt-BR" />
 
+    @{
+        var page = Request.ServerVariables["SCRIPT_NAME"];
+
+        var query = Request.ServerVariables["QUERY_STRING"];
+
+        if (query?.Any() == true)
+        {
+            page = $"{page}?{query}";
+        }
+
+        page = page.Replace(Url.Content("~/..") + "/", "");
+
+        var menu = 0;
+        int? mFirst = null;
+        int? mSecond = null;
+
+        var ms = DomainContainer.Current.VW_MenuSistema.FirstOrDefault(x => (x.link != null && x.link.Equals(page)) || (x.sublink != null && x.sublink.Equals(page)));
+
+        if (ms?.id_menu != null)
+        {
+            menu = ms.id_menu;
+
+            mFirst = ms.id_pai_indireto ?? ms.id_pai_direto;
+            mSecond = ms.id_pai_indireto == null ? null : ms.id_pai_direto;
+        }
+        else
+        {
+            Context.RedirectLocal("~/../");
+        }
+
+        //var idMenus = ASPSessionVar.Read("menu");
+    }
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             @{

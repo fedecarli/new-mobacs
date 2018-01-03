@@ -46,6 +46,8 @@ namespace Softpark.WS.Controllers
         {
             Domain = domain;
             DomainContainer.Current = domain;
+
+            ViewBag.VW_MenuSistema = Domain.VW_MenuSistema.ToList();
         }
 
         protected bool Autenticado()
