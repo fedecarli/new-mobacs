@@ -1,10 +1,20 @@
 angular.module('mobacs')
     .factory('WebApiService', function($http, $log, $q, $rootScope) {
 
-        var development = 'http://192.168.10.6:1003';
-        var developmentLog = 'http://192.168.10.6:1000/api/LogMobile';
-        var production = 'https://intranet.santanadeparnaiba.sp.gov.br/APIeSusMobile';
-        var productionLog = 'https://intranet.santanadeparnaiba.sp.gov.br/APIeSusLogin/api/LogMobile';
+        var development = 'http://187.8.184.46/saude_treinamento/v2/ESUS/fichas';
+        var developmentLog = 'http://187.8.184.46/saude_treinamento/v2/ESUS/fichas/api/LogMobile';
+
+        var production = 'http://187.8.184.46/saude_treinamento/v2/ESUS/fichas/APIeSusMobile';
+        var productionLog = 'http://187.8.184.46/saude_treinamento/v2/ESUS/fichas/api/LogMobile';
+
+// Alterado fernando b - OLD
+//        var development = 'http://192.168.10.6:1003';
+//      var developmentLog = 'http://192.168.10.6:1000/api/LogMobile';
+//        var production = 'https://intranet.itanhaem.sp.gov.br/APIeSusMobile';
+//        var productionLog = 'https://intranet.itanhaem.sp.gov.br/APIeSusLogin/api/LogMobile';
+
+
+
 
         // var environment = {
         //   api: ($rootScope.environmentApp.environment == "dev") ? development : production,
@@ -13,8 +23,8 @@ angular.module('mobacs')
         // };
 
         var environment = {
-            api: 'http://192.168.2.183/sigsm/v2/ESUS/fichas',//($rootScope.environmentApp.environment == "dev") ? development : production,
-            log: 'http://192.168.2.183/sigsm/v2/ESUS/fichas/api/LogMobile',//($rootScope.environmentApp.environment == "dev") ? developmentLog : productionLog,
+            api: 'http://187.8.184.46/saude_treinamento/v2/ESUS/fichas',//($rootScope.environmentApp.environment == "dev") ? development : production,
+            log: 'http://187.8.184.46/saude_treinamento/v2/ESUS/fichas/api/LogMobile',//($rootScope.environmentApp.environment == "dev") ? developmentLog : productionLog,
             version: $rootScope.version
         };
 
