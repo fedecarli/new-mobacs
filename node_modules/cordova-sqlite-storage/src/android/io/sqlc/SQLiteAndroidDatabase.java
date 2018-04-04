@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017: Christopher J. Brody (aka Chris Brody)
+ * Copyright (c) 2012-present Christopher J. Brody (aka Chris Brody)
  * Copyright (c) 2005-2010, Nitobi Software Inc.
  * Copyright (c) 2010, IBM Corporation
  */
@@ -23,6 +23,8 @@ import java.io.File;
 
 import java.lang.IllegalArgumentException;
 import java.lang.Number;
+
+import java.util.Locale;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,6 +58,8 @@ class SQLiteAndroidDatabase
 
     SQLiteDatabase mydb;
 
+    boolean isTransactionActive = false;
+
     /**
      * NOTE: Using default constructor, no explicit constructor.
      */
@@ -75,6 +79,10 @@ class SQLiteAndroidDatabase
      */
     void closeDatabaseNow() {
         if (mydb != null) {
+            if (isTransactionActive) {
+                mydb.endTransaction();
+                isTransactionActive = false;
+            }
             mydb.close();
             mydb = null;
         }
@@ -227,6 +235,7 @@ class SQLiteAndroidDatabase
                     needRawQuery = false;
                     try {
                         mydb.beginTransaction();
+                        isTransactionActive = true;
 
                         queryResult = new JSONObject();
                         queryResult.put("rowsAffected", 0);
@@ -242,6 +251,7 @@ class SQLiteAndroidDatabase
                     try {
                         mydb.setTransactionSuccessful();
                         mydb.endTransaction();
+                        isTransactionActive = false;
 
                         queryResult = new JSONObject();
                         queryResult.put("rowsAffected", 0);
@@ -256,6 +266,7 @@ class SQLiteAndroidDatabase
                     needRawQuery = false;
                     try {
                         mydb.endTransaction();
+                        isTransactionActive = false;
 
                         queryResult = new JSONObject();
                         queryResult.put("rowsAffected", 0);
@@ -540,7 +551,7 @@ class SQLiteAndroidDatabase
                 // (needed for SQLCipher version)
                 if (first.length() == 0) throw new RuntimeException("query not found");
 
-                return QueryType.valueOf(first.toLowerCase());
+                return QueryType.valueOf(first.toLowerCase(Locale.ENGLISH));
             } catch (IllegalArgumentException ignore) {
                 // unknown verb (NOT blank)
                 return QueryType.other;

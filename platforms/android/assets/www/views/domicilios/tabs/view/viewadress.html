@@ -1,0 +1,305 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewHomeRegistration()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">CADASTRO DOMICILIAR E TERRITORIAL</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item active">
+        <i class="icon ion-ios-person"></i>
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br><br><br><br><br>
+
+    <div class="card">
+      <div class="item item-divider">
+        ENDEREÇO/LOCAL DE PERMANÊNCIA
+      </div>
+      <div class="item item-text-wrap">
+        <span>CEP: {{dataHomeRegistration.cep}}</span></br>
+        <span>Município: {{dataHomeRegistration.codigoIbgeMunicipio}}</span></br>
+        <span>UF:
+          <span ng-show="dataHomeRegistration.numeroDneUf == 1">ACRE</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 2">ALAGOAS</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 3">AMAPÁ</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 4">AMAZONAS</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 5">BAHIA</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 6">CEARÁ</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 7">DISTRITO FEDERAL</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 8">ESPÍRITO SANTO</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 10">GOIÁS</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 11">MARANHÃO</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 12">MATO GROSSO</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 13">MATO GROSSO DO SUL</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 14">MINAS GERAIS</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 15">PARÁ</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 16">PARAÍBA</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 17">PARANÁ</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 18">PERNAMBUCO</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 19">PIAUÍ</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 20">RIO DE JANEIRO</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 21">RIO GRANDE DO NORTE</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 22">RIO GRANDE DO SUL</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 23">RONDÔNIA</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 9">RORAIMA</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 25">SANTA CATARINA</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 26">SÃO PAULO</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 27">SERGIPE</span>
+          <span ng-show="dataHomeRegistration.numeroDneUf == 24">TOCANTINS</span>
+        </span>
+        </br>
+        <span>Bairro: {{dataHomeRegistration.bairro}}</span></br>
+        <span>Tipo de Logradouro: {{dataHomeRegistration.tipoLogradouroNumeroDne}}</span></br>
+        <span>Nome do Logradouro: {{dataHomeRegistration.nomeLogradouro}}</span></br>
+        <span>Número: {{dataHomeRegistration.numero}}</span></br>
+        <span>Sem número?
+          <span ng-show="dataHomeRegistration.stSemNumero == 1">Sim</span>
+          <span ng-show="dataHomeRegistration.stSemNumero != 1">Não</span>
+        </span>
+        </br>
+        <span>Complemento: {{dataHomeRegistration.complemento}}</span></br>
+        <span>Pto. Referência: {{dataHomeRegistration.pontoReferencia}}</span></br>
+        <span>Microárea: {{dataHomeRegistration.microarea}}</span></br>
+        <span>Fora de àrea?
+          <span ng-show="dataHomeRegistration.stForaArea == 1">Sim</span>
+          <span ng-show="dataHomeRegistration.stForaArea != 1">Não</span>
+        </span>
+        <br>
+        <span>Observação: {{dataHomeRegistration.observacao}}</span></br>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        TIPO DE IMÓVEL
+      </div>
+      <div class="item item-text-wrap">
+        <span>Tipo de imóvel:
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==1">Domicílio</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==2">Comércio</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==3">Terreno baldio</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==4">Ponto Estratégico (cemitério, borracharia, ferro-velho, depósito de sucata ou materiais de construção, garagem de ônibus ou veículo de grande porte)</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==5">Escola</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==6">Creche</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==7">Abrigo</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==8">Instituição de longa permanência para idosos</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==9">Unidade prisional</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==10">Unidade de medida sócio educativa</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==11">Delegacia</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==12">Estabelecimento religioso</span>
+          <span ng-show="dataHomeRegistration.tipoDeImovel ==99">Outros</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        TELEFONES PARA CONTATO
+      </div>
+      <div class="item item-text-wrap">
+        <span>
+          <span>Telefone Residencial: {{dataHomeRegistration.telefoneResidencia}}</span></br>
+          <span>Telefone Contato: {{dataHomeRegistration.telefoneContato}}</span></br>
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        CONDIÇÕES DE MORADIA
+      </div>
+      <div class="item item-text-wrap">
+        <span>Situação de Moradia/Posse da Terra :
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==75">Próprio</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==76">Financiado</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==77">Alugado</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==78">Arrendado</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==79">Cedido</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==80">Ocupação</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==81">Situação de rua</span>
+          <span ng-show="dataHomeRegistration.situacaoMoradiaPosseTerra ==82">Outra</span>
+        </span>
+        <br>
+        <span>Localização :
+          <span ng-show="dataHomeRegistration.localizacao == 83">Urbana</span>
+          <span ng-show="dataHomeRegistration.localizacao == 84">Rural</span>
+        </span>
+        <br>
+        <span>Tipo de domicílio :
+          <span ng-show="dataHomeRegistration.tipoDomicilio == 85">Casa</span>
+          <span ng-show="dataHomeRegistration.tipoDomicilio == 86">Apartamento</span>
+          <span ng-show="dataHomeRegistration.tipoDomicilio == 87">Cômodo</span>
+          <span ng-show="dataHomeRegistration.tipoDomicilio == 88">Outro</span>
+        </span>
+        <br>
+        <span>Número de Moradores: {{dataHomeRegistration.nuMoradores}}</span></br>
+        <span>Número de Cômodos: {{dataHomeRegistration.nuComodos}}</span></br>
+        <span ng-show="dataHomeRegistration.localizacao == 84" >Condição de Posse e Uso da terra :
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 101">Proprietário</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 102">Parceiro(a) / Meeiro(a)</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 103">Assentado(a)</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 104">Posseiro</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 105">Arrendatário(a)</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 106">Comodatário(a)</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 107">Beneficiário(a) do banco da terra</span>
+          <span ng-show="dataHomeRegistration.areaProducaoRural == 108">Não se aplica</span>
+          <br>
+        </span>
+        <span>Tipo de acesso ao domicílio :
+          <span ng-show="dataHomeRegistration.tipoAcessoDomicilio == 89">Pavimento</span>
+          <span ng-show="dataHomeRegistration.tipoAcessoDomicilio == 90">Chão batido</span>
+          <span ng-show="dataHomeRegistration.tipoAcessoDomicilio == 91">Fluvial</span>
+          <span ng-show="dataHomeRegistration.tipoAcessoDomicilio == 92">Outro</span>
+        </span>
+        <br>
+        <span>Disponibilidade de energia elétrica? :
+          <span ng-show="dataHomeRegistration.stDisponibilidadeEnergiaEletrica == 1">Sim</span>
+          <span ng-show="dataHomeRegistration.stDisponibilidadeEnergiaEletrica != 1">Não</span>
+        </span>
+        <br>
+        <span> Material predominante nas paredes externas do domicílio:
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 109">Alvenaria com revestimento</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 110">Alvenaria sem revestimento</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 111">Taipa com revestimento</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 112">Taipa sem revestimento</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 113">Madeira emparelhada</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 114">Material aproveitado</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 115">Palha</span>
+          <span ng-show="dataHomeRegistration.materialPredominanteParedesExtDomicilio == 116">Outro material</span>
+        </span>
+        <br>
+        <span> Abastecimento de Água :
+          <span ng-show="dataHomeRegistration.abastecimentoAgua == 117">Rede encanada até o domicílio</span>
+          <span ng-show="dataHomeRegistration.abastecimentoAgua == 118">Poço / Nascente no domicílio</span>
+          <span ng-show="dataHomeRegistration.abastecimentoAgua == 119">Cisterna</span>
+          <span ng-show="dataHomeRegistration.abastecimentoAgua == 120">Carro pipa</span>
+          <span ng-show="dataHomeRegistration.abastecimentoAgua == 121">Outro</span>
+        </span>
+        <br>
+        <span> Forma de escoamento do banheiro :
+          <span ng-show="dataHomeRegistration.formaEscoamentoBanheiro == 122">Rede coletora de esgoto / pluvial</span>
+          <span ng-show="dataHomeRegistration.formaEscoamentoBanheiro == 123">Fossa séptica</span>
+          <span ng-show="dataHomeRegistration.formaEscoamentoBanheiro == 124">Fossa rudimentar</span>
+          <span ng-show="dataHomeRegistration.formaEscoamentoBanheiro == 125">Direto para um rio / lago / mar</span>
+          <span ng-show="dataHomeRegistration.formaEscoamentoBanheiro == 126">Céu aberto</span>
+          <span ng-show="dataHomeRegistration.formaEscoamentoBanheiro == 127 ">Outra forma</span>
+        </span>
+        <br>
+        <span> Àgua para consumo no domicílio :
+          <span ng-show="dataHomeRegistration.aguaConsumoDomicilio == 97">Filtrada</span>
+          <span ng-show="dataHomeRegistration.aguaConsumoDomicilio == 98">Fervida</span>
+          <span ng-show="dataHomeRegistration.aguaConsumoDomicilio == 99">Clorada</span>
+          <span ng-show="dataHomeRegistration.aguaConsumoDomicilio == 152">Mineral</span>
+          <span ng-show="dataHomeRegistration.aguaConsumoDomicilio == 100">Sem tratamento</span>
+        </span>
+        <br>
+        <span> Destino do lixo :
+          <span ng-show="dataHomeRegistration.destinoLixo == 93">Coletado</span>
+          <span ng-show="dataHomeRegistration.destinoLixo == 94">Queimado / Enterrado</span>
+          <span ng-show="dataHomeRegistration.destinoLixo == 95">Céu aberto</span>
+          <span ng-show="dataHomeRegistration.destinoLixo == 96">Outro</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        ANIMAIS NO DOMICÍLIO?
+      </div>
+      <div class="item item-text-wrap">
+        <span>Animais no domicílio? :
+          <span ng-show="dataHomeRegistration.stAnimaisNoDomicilio == 1">Sim</span>
+          <span ng-show="dataHomeRegistration.stAnimaisNoDomicilio != 1">Não</span>
+        </span>
+        <br>
+        <span ng-show="dataHomeRegistration.stAnimaisNoDomicilio == 1">Se sim, quais?
+          <span ng-show="dataHomeRegistration.Gato == 128"> Gato<br></span>
+          <span ng-show="dataHomeRegistration.Cachorro == 129"> Cachorro<br></span>
+          <span ng-show="dataHomeRegistration.Passaro == 130"> Pássaro<br></span>
+          <span ng-show="dataHomeRegistration.Outros_AnimalNoDomicilio == 132"> Outros<br></span>
+        </span>
+        <span ng-show="dataHomeRegistration.stAnimaisNoDomicilio == 1">
+          Quantos animais no domicílio?: {{dataHomeRegistration.quantosAnimaisNoDomicilio}}
+        </span>
+        </br>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        FAMÍLIAS
+      </div>
+      <div class="item item-text-wrap" ng-repeat="familias in familiaRow">
+        <span>CNS do Responsável: {{familias.numeroCnsResponsavel}}</span></br>
+        <span>Data de Nascimento do Responsável: {{familias.dataNascimentoResponsavel | date: 'dd/MM/yyyy'}}</span></br>
+        <span>Número de Membros da Família: {{familias.numeroMembrosFamilia}}</span></br>
+        <span>Número Prontuário: {{familias.numeroProntuario}}</span></br>
+        <span>Reside Desde: {{familias.resideDesde | date: "MM/yyyy"}}</span></br>
+        <span>Renda Familiar:
+          <span ng-show="familias.rendaFamiliar == 1">1/4 de salário mínimo</span>
+          <span ng-show="familias.rendaFamiliar == 2">Meio salário mínimo</span>
+          <span ng-show="familias.rendaFamiliar == 3">Um salário mínimo</span>
+          <span ng-show="familias.rendaFamiliar == 4">Dois salários mínimos</span>
+          <span ng-show="familias.rendaFamiliar == 7">Três salários mínimos</span>
+          <span ng-show="familias.rendaFamiliar == 5">Quatro salários mínimos</span>
+          <span ng-show="familias.rendaFamiliar == 6">Acima de quatro salários mínimos</span>
+        </span>
+        <br>
+        <span>Mudou se?
+          <span ng-show="familias.stMudanca == 1">Sim</span>
+          <span ng-show="familias.stMudanca != 1">Não</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        RECUSA DO CADASTRO DOMICILIAR DA ATENÇÃO BÁSICA
+      </div>
+      <div class="item item-text-wrap">
+        <span>Houve recusa do cadastro ?:
+          <span ng-show="dataHomeRegistration.statusTermoRecusa == 1">Sim</span>
+          <span ng-show="dataHomeRegistration.statusTermoRecusa != 1">Não</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        INSTITUIÇÃO DE PERMANÊNCIA
+      </div>
+      <div class="item item-text-wrap">
+        <span>Nome da Instituição de permanência: {{dataHomeRegistration.nomeInstituicaoPermanencia}}</span>
+        <br>
+        <span>Existem outros profissionais de saúde vinculados à instituição (não inclui profissionais da rede pública de saúde)?:
+          <span ng-show="dataHomeRegistration.stOutrosProfissionaisVinculados == 1">Sim</span>
+          <span ng-show="dataHomeRegistration.stOutrosProfissionaisVinculados != 1">Não</span>
+        </span>
+        <br>
+        <span>Nome do Responsável Técnico: {{dataHomeRegistration.nomeResponsavelTecnico}}</span>
+        <br>
+        <span>CNS do Responsável Técnico: {{dataHomeRegistration.cnsResponsavelTecnico}}</span>
+        <br>
+        <span>Cargo na instituição: {{dataHomeRegistration.cargoInstituicao}}</span>
+        <br>
+        <span>Tel. Contato: {{dataHomeRegistration.telefoneResponsavelTecnico}}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-100">
+        <button class="button button-block button-default-application" ng-click="viewToEditHome()">Editar Cadastro Domiciliar e Territorial</button>
+      </div>
+    </div>
+
+    <div class="row" ng-show="familiaRow != null">
+      <div class="col col-100">
+        <button class="button button-block button-default-application" ng-click="goToHomeVisit(familiaRow)">Criar Visita Domiciliar</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

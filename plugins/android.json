@@ -4,45 +4,10 @@
     "uninstalled": []
   },
   "config_munge": {
-    "files": {
-      "res/xml/config.xml": {
-        "parents": {
-          "/*": [
-            {
-              "xml": "<feature name=\"Geolocation\"><param name=\"android-package\" value=\"org.apache.cordova.geolocation.GeoBroker\" /></feature>",
-              "count": 1
-            }
-          ]
-        }
-      },
-      "AndroidManifest.xml": {
-        "parents": {
-          "/*": [
-            {
-              "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
-              "count": 1
-            },
-            {
-              "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
-              "count": 1
-            },
-            {
-              "xml": "<uses-permission android:name=\"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS\" />",
-              "count": 1
-            }
-          ]
-        }
-      }
-    }
+    "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
-    "cordova-plugin-statusbar": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
-    "ionic-plugin-keyboard": {
+    "cordova-plugin-console": {
       "PACKAGE_NAME": "br.com.softpark.mobacs"
     },
     "cordova-plugin-crosswalk-webview": {
@@ -53,28 +18,37 @@
       "XWALK_MULTIPLEAPK": "true",
       "PACKAGE_NAME": "br.com.softpark.mobacs"
     },
-    "cordova.plugins.diagnostic": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
-    "cordova-plugin-network-information": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
-    "cordova-sqlite-storage": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
     "cordova-plugin-device": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
-    "cordova-plugin-console": {
-      "PACKAGE_NAME": "br.com.softpark.mobacs"
-    },
-    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "br.com.softpark.mobacs"
     },
     "cordova-plugin-file": {
       "PACKAGE_NAME": "br.com.softpark.mobacs"
     },
     "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova.plugins.diagnostic": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "ionic-plugin-keyboard": {
+      "PACKAGE_NAME": "br.com.softpark.mobacs"
+    },
+    "cordova-plugin-camera": {
       "PACKAGE_NAME": "br.com.softpark.mobacs"
     }
   },

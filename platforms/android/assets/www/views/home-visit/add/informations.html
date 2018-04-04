@@ -1,0 +1,202 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewHomeVisit()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">INFORMAÇÕES</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item active">
+        <i class="icon ion-android-alert"></i>
+        INFORMAÇÕES
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-paper"></i>
+        MOTIVO
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-walk"></i>
+        ANTROPOMETRIA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-folder"></i>
+        DESFECHO
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form novalidate name="Informations" ng-submit="addInformations(dataHomeVisit)">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              TURNO*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="shift" ng-model="dataHomeVisit.turno" ng-required="requiredInput.turno">-->
+              <select name="shift" ng-model="dataHomeVisit.turno">
+                <option value="1">Manhã</option>
+                <option value="2">Tarde</option>
+                <option value="3">Noite</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              MICROÁREA*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="microarea" ng-model="dataHomeVisit.microarea" ng-minlength="2" ng-required="requiredInput.microarea" ng-disabled="disabledInput.microarea" ui-microarea>-->
+              <input type="tel" name="microarea" ng-model="dataHomeVisit.microarea" ng-minlength="2" ng-disabled="disabledInput.microarea" ui-microarea>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Informations.$invalid}" ng-show="Informations.microarea.$error.minlength">
+              * Insira no mínimo 2 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>FORA DE ÁREA?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataHomeVisit.stForaArea" ng-change="validateForm('stForaArea',dataHomeVisit.stForaArea)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              TIPO DE IMÓVEL*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select ng-model="dataHomeVisit.tipoDeImovel" ng-change="validateForm('tipoDeImovel',dataHomeVisit.tipoDeImovel)" ng-required="requiredInput.tipoDeImovel">-->
+              <select ng-model="dataHomeVisit.tipoDeImovel" ng-change="validateForm('tipoDeImovel',dataHomeVisit.tipoDeImovel)">
+                <option value="1">Domicílio</option>
+                <option value="2">Comércio</option>
+                <option value="3">Terreno baldio</option>
+                <option value="4">Ponto Estratégico (cemitério, borracharia, ferro-velho, depósito de sucata ou materiais de construção, garagem de ônibus ou veículo de grande porte)</option>
+                <option value="5">Escola</option>
+                <option value="6">Creche</option>
+                <option value="7">Abrigo</option>
+                <option value="8">Instituição de longa permanência para idosos</option>
+                <option value="9">Unidade prisional</option>
+                <option value="10">Unidade de medida sócio educativa</option>
+                <option value="11">Delegacia</option>
+                <option value="12">Estabelecimento religioso</option>
+                <option value="99">Outros</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              Nº DO PRONTUÁRIO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="prontuario" ng-model="dataHomeVisit.numProntuario" ng-disabled="disabledInput.numProntuario" ui-medical-records>
+              <!--<input type="text" name="prontuario" ng-model="dataHomeVisit.numProntuario" ng-disabled="disabledInput.numProntuario">-->
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CNS DO CIDADÃO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="cns" ng-model="dataHomeVisit.cnsCidadao" ng-minlength="15" ng-disabled="disabledInput.cnsCidadao" ui-cns-citizen>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Informations.$invalid}" ng-show="Informations.cns.$error.minlength">
+              * No mínimo 15 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DATA DE NASCIMENTO**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" ng-model="dataHomeVisit.dtNascimento" ng-disabled="disabledInput.dtNascimento" ng-required="requiredInput.dtNascimento" ui-date>-->
+              <input type="tel" ng-model="dataHomeVisit.dtNascimento" ng-disabled="disabledInput.dtNascimento" ui-date>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              SEXO*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select ng-model="dataHomeVisit.sexo" ng-disabled="disabledInput.sexo" ng-required="requiredInput.sexo">-->
+              <select ng-model="dataHomeVisit.sexo" ng-disabled="disabledInput.sexo">
+                <option value="0">Masculino</option>
+                <option value="1">Feminino</option>
+                <option value="4">Ignorado</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>VISITA COMPARTILHADA COM OUTRO PROFISSIONAL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataHomeVisit.statusVisitaCompartilhadaOutroProfissional" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              OBSERVAÇÃO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="observacao" ng-model="dataHomeVisit.observacao">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-offset-70 col-30">
+            <button type="button" class="button button-block button-assertive" ng-click="clearObservacao()" ng-if="dataHomeVisit.observacao != null">
+              Limpar Observação
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-offset-50 col-50">
+            <button type="submit" class="button button-full button-default-application" ng-disabled="Informations.$invalid">
+              PRÓXIMA ETAPA
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

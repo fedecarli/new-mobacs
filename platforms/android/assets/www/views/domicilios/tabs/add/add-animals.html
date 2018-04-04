@@ -1,0 +1,112 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="addAnimals(dataHomeRegistration, 'return')"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">ANIMAIS NO DOMICÍLIO?</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-map"></i>
+        ENDEREÇO/LOCAL DE PERMANÊNCIA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-home"></i>
+        CONDIÇÕES DE MORADIA
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-ios-paw"></i>
+        ANIMAIS NO DOMICÍLIO
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-key"></i>
+        FAMÍLIAS
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-medical"></i>
+        INSTITUIÇÃO DE PERMANÊNCIA
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form novalidate name="Animals" ng-submit="addAnimals(dataHomeRegistration, 'this')">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ANIMAIS NO DOMICÍLIO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="stAnimaisNoDomicilio" ng-model="dataHomeRegistration.stAnimaisNoDomicilio" ng-true-value="1" ng-false-value="null" ng-change="validationHomeRegistrationForm('stAnimaisNoDomicilio',dataHomeRegistration.stAnimaisNoDomicilio)" ng-disabled="disabledInput.stAnimaisNoDomicilio">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <p ng-if="dataHomeRegistration.stAnimaisNoDomicilio == 0 || dataHomeRegistration.stAnimaisNoDomicilio == null" style="padding-top: 330px; color: white">Sem animal </p>
+        <div ng-if="dataHomeRegistration.stAnimaisNoDomicilio == 1">
+          <div class="row">
+            <div class="col col-100">
+              <li class="item item-divider">
+                <span>QUAL(IS)?</span>
+              </li>
+              <li class="item item-checkbox">
+                <label class="checkbox">
+                  <input type="checkbox" ng-model="dataHomeRegistration.Gato" ng-true-value="128" ng-false-value="null" ng-disabled="disabledInput.Gato">
+                </label>
+                Gato
+              </li>
+              <li class="item item-checkbox">
+                <label class="checkbox">
+                  <input type="checkbox" ng-model="dataHomeRegistration.Cachorro" ng-true-value="129" ng-false-value="null" ng-disabled="disabledInput.Cachorro">
+                </label>
+                Cachorro
+              </li>
+              <li class="item item-checkbox">
+                <label class="checkbox">
+                  <input type="checkbox" ng-model="dataHomeRegistration.Passaro" ng-true-value="130" ng-false-value="null" ng-disabled="disabledInput.Passaro">
+                </label>
+                Pássaro
+              </li>
+              <li class="item item-checkbox">
+                <label class="checkbox">
+                  <input type="checkbox" ng-model="dataHomeRegistration.Outros_AnimalNoDomicilio" ng-true-value="132" ng-false-value="null" ng-disabled="disabledInput.Outros_AnimalNoDomicilio">
+                </label>
+                Outros
+              </li>
+            </div>
+          </div>
+          <div class="row">
+            <div class=" col col-100">
+              <div class="item item-divider">
+                QUANTOS
+              </div>
+              <label class="item item-input item-stacked-label">
+                <input type="tel" name="quantosAnimaisNoDomicilio" ng-model="dataHomeRegistration.quantosAnimaisNoDomicilio" ng-disabled="disabledInput.quantosAnimaisNoDomicilio" ng-required="requiredInput.quantosAnimaisNoDomicilio" ui-animals-number>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-50">
+            <button type="button" ng-click="addAnimals(dataHomeRegistration, 'return')" class="button button-full button-energized">
+              ETAPA ANTERIOR
+            </button>
+          </div>
+          <div class="col col-50">
+            <button type="submit" class="button button-full button-default-application">
+              PRÓXIMA ETAPA
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

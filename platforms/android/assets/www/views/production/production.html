@@ -1,0 +1,42 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goHome()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">PRODUÇÃO</h1>
+  </div>
+  <ion-content>
+    <br><br><br>
+
+    <div class="card">
+      <div class="item item-divider item-icon-left bg-default">
+        <i class="icon ion-ios-list"></i>
+        Visita Domiciliar e Territorial
+      </div>
+      <div class="item item">
+        Você atualizou {{status.homeVisit}} visitas.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider item-icon-left bg-default">
+        <i class="icon ion-android-contact"></i>
+        Cadastro Individual
+      </div>
+      <div class="item item">
+        Você atualizou {{status.people}} cadastros.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider item-icon-left bg-default">
+        <i class="icon ion-home"></i>
+        Cadastro Domiciliar e Territorial
+      </div>
+      <div class="item item">
+        Você atualizou {{status.homeRegistration}} cadastros.
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

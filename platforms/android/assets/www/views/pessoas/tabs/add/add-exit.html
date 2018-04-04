@@ -1,0 +1,114 @@
+<ion-view>
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="voltar()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">SAÍDA DO CIDADÃO DO CADASTRO</h1>
+  </div>
+
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-ios-person"></i>
+        IDENTIFICAÇÃO
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-alert"></i>
+        INFOS SOCIODEMOGRÁFICAS
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-medkit"></i>
+        CONDIÇÕES DE SAÚDE
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-globe"></i>
+        SITUAÇÃO DE RUA
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-android-warning"></i>
+        SAÍDA DO CIDADÃO DO CADASTRO
+      </a>
+    </div>
+  </div>
+
+  <ion-content>
+    <br><br><br><br><br>
+
+    <form name="Exit" ng-submit="updateExit(dataPeople)">
+
+      <div class="list">
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SAÍDA DO CIDADÃO DO CADASTRO</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select ng-model="dataPeople.motivoSaidaCidadao" ng-change="validationForm('motivoSaidaCidadao',dataPeople.motivoSaidaCidadao)">
+                <option value="135">Óbito</option>
+                <option value="136">Mudança de território</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SE ÓBITO, INDIQUE:</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DATA DE ÓBITO:**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" ng-model="dataPeople.dataObito" ng-change="validDate('dataObito',dataPeople.dataObito)" ng-required="requiredInput.dataObito" ng-disabled="disabledInput.dataObito" ui-date>-->
+              <input type="tel" id="dataObito" ng-change="valueInData('dataObito')" ng-model="dataPeople.dataObito" ng-change="validDate('dataObito',dataPeople.dataObito)" ng-disabled="disabledInput.dataObito" ui-date>
+            </label>
+            <span id="dataObitoError" class="error-formatting" ng-class="{'information-formatting': Exit.$invalid}">
+              * Insira a data no formato dd/MM/yyyy
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NÚMERO DA D.O:**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="numberDO" ng-model="dataPeople.numeroDO" ng-minlength="9"  ng-disabled="disabledInput.numeroDO" ui-numero-do>-->
+              <input type="tel" name="numberDO" ng-model="dataPeople.numeroDO" ng-minlength="9"  ng-disabled="disabledInput.numeroDO" ui-numero-do>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Exit.$invalid}" ng-show="Exit.numberDO.$error.minlength">
+              * Insira no mínimo 9 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-50">
+            <button type="button"  ng-click="voltar()" class="button button-full button-energized">
+              ETAPA ANTERIOR
+            </button>
+          </div>
+          <div class="col col-50">
+            <!--<button type="submit" class="button button-full button-default-application" ng-disabled="Exit.$invalid">-->
+            <button type="submit" class="button button-full button-default-application">
+              FINALIZAR
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>

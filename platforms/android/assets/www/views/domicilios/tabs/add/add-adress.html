@@ -1,0 +1,296 @@
+<ion-view>
+    <div class="bar bar-header bar-default-application">
+        <div class="buttons">
+            <button class="button button-clear" ng-click="goToViewHomeRegistration()"><i class="icon ion-chevron-left"></i></button>
+        </div>
+        <h1 class="title">CADASTRO DE IMÓVEL</h1>
+        <div class="buttons" ng-if="dataHomeRegistration.id == null">
+            <button class="button button-clear" ng-click="refuseHomeRegistration()"><i class="icon ion-ios-close-outline"> Recusa</i></button>
+        </div>
+    </div>
+    <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+        <div class="tabs">
+            <a class="tab-item active">
+                <i class="icon ion-map"></i> ENDEREÇO/LOCAL DE PERMANÊNCIA
+            </a>
+            <a class="tab-item">
+                <i class="icon ion-home"></i> CONDIÇÕES DE MORADIA
+            </a>
+            <a class="tab-item">
+                <i class="icon ion-ios-paw"></i> ANIMAIS NO DOMICÍLIO?
+            </a>
+            <a class="tab-item">
+                <i class="icon ion-key"></i> FAMÍLIAS
+            </a>
+            <a class="tab-item">
+                <i class="icon ion-ios-medical"></i> INSTITUIÇÃO DE PERMANÊNCIA
+            </a>
+        </div>
+    </div>
+    <ion-content>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <form novalidate name="Adress" ng-submit="addAdress(dataHomeRegistration)">
+            <div class="list">
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            CEP*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="cep" ng-model="dataHomeRegistration.cep" ng-keyup="searchAdressInformation(dataHomeRegistration.cep)" ng-minlength="9" ng-required="requiredInput.cep" ui-postal-code>-->
+              <input type="tel" name="cep" ng-model="dataHomeRegistration.cep" ng-keyup="searchAdressInformation(dataHomeRegistration.cep)" ng-minlength="9" ui-postal-code>
+            </label>
+                        <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.cep.$error.minlength">
+              * Insira um CEP válido
+            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            MUNICÍPIO*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="codigoIbgeMunicipio" ng-model="dataHomeRegistration.codigoIbgeMunicipio" ng-disabled="disabledInput.codigoIbgeMunicipio" ng-required="requiredInput.codigoIbgeMunicipio">
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            UF*
+                        </div>
+                        <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="uf" name="numeroDneUf" ng-model="dataHomeRegistration.numeroDneUf" ng-disabled="disabledInput.numeroDneUf" ng-required="requiredInput.numeroDneUf">
+                <option value="1">ACRE</option>
+                <option value="2">ALAGOAS</option>
+                <option value="3">AMAPÁ</option>
+                <option value="4">AMAZONAS</option>
+                <option value="5">BAHIA</option>
+                <option value="6">CEARÁ</option>
+                <option value="7">DISTRITO FEDERAL</option>
+                <option value="8">ESPÍRITO SANTO</option>
+                <option value="10">GOIÁS</option>
+                <option value="11">MARANHÃO</option>
+                <option value="12">MATO GROSSO</option>
+                <option value="13">MATO GROSSO DO SUL</option>
+                <option value="14">MINAS GERAIS</option>
+                <option value="15">PARÁ</option>
+                <option value="16">PARAÍBA</option>
+                <option value="17">PARANÁ</option>
+                <option value="18">PERNAMBUCO</option>
+                <option value="19">PIAUÍ</option>
+                <option value="20">RIO DE JANEIRO</option>
+                <option value="21">RIO GRANDE DO NORTE</option>
+                <option value="22">RIO GRANDE DO SUL</option>
+                <option value="23">RONDÔNIA</option>
+                <option value="9">RORAIMA</option>
+                <option value="25">SANTA CATARINA</option>
+                <option value="26">SÃO PAULO</option>
+                <option value="27">SERGIPE</option>
+                <option value="24">TOCANTINS</option>
+              </select>
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            BAIRRO*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="bairro" ng-model="dataHomeRegistration.bairro" ng-disabled="disabledInput.bairro" ng-required="requiredInput.bairro">
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            TIPO DE LOGRADOURO*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="tipoLogradouroNumeroDne" ng-change="completaLogradouro()" ng-model="dataHomeRegistration.tipoLogradouroNumeroDne" ng-disabled="disabledInput.tipoLogradouroNumeroDne" ng-required="requiredInput.tipoLogradouroNumeroDne">
+            </label>
+                    </div>
+                </div>
+
+                <div ng-if="pesquisaTipos" class="list">
+                    <li class="item" ng-click="select(listaTipoDeLog)" ng-repeat="listaTipoDeLog in data.tiposDeLogradouros">{{listaTipoDeLog.descricao}}</li>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            NOME DO LOGRADOURO*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="nomeLogradouro" ng-model="dataHomeRegistration.nomeLogradouro" ng-disabled="disabledInput.nomeLogradouro" ng-required="requiredInput.nomeLogradouro">
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            NÚMERO*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="numero" ng-model="dataHomeRegistration.numero" ng-minlength="1" ng-required="requiredInput.numero" ng-disabled="disabledInput.numero" ui-number-adress>-->
+              <input type="tel" name="numero" ng-model="dataHomeRegistration.numero" ng-minlength="1" ng-disabled="disabledInput.numero" ui-number-adress>
+            </label>
+                        <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.numero.$error.minlength">
+              * Insira no mínimo 1 número
+            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <li class="item item-toggle">
+                            <span>SEM NÚMERO?</span>
+                            <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataHomeRegistration.stSemNumero" ng-change="validationHomeRegistrationForm('stSemNumero',dataHomeRegistration.stSemNumero)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+                        </li>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            COMPLEMENTO
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="complemento" ng-model="dataHomeRegistration.complemento" ng-maxlength="30">
+            </label>
+                        <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.complemento.$error.maxlength">
+              * Máximo de 30 caracteres
+            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            PTO. REFERÊNCIA
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="pontoReferencia" ng-model="dataHomeRegistration.pontoReferencia">
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            MICROÁREA*
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="microarea" ng-model="dataHomeRegistration.microarea" ng-minlength="2" ng-disabled="disabledInput.microarea" ng-required="requiredInput.microarea" ui-microarea>-->
+              <input type="tel" name="microarea" ng-model="dataHomeRegistration.microarea" ng-minlength="2" ng-disabled="disabledInput.microarea" ui-microarea>
+            </label>
+                        <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.microarea.$error.minlength">
+              * Insira no mínimo 2 dígitos
+            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <li class="item item-toggle">
+                            <span>FORA DE ÁREA?</span>
+                            <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataHomeRegistration.stForaArea" ng-change="validationHomeRegistrationForm('stForaArea',dataHomeRegistration.stForaArea)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+                        </li>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            TIPO DE IMÓVEL*
+                        </div>
+                        <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="tipoDeImovel" ng-model="dataHomeRegistration.tipoDeImovel" ng-required="requiredInput.tipoDeImovel">-->
+              <select name="tipoDeImovel" ng-model="dataHomeRegistration.tipoDeImovel">
+                <option value="1">Domicílio</option>
+                <option value="2">Comércio</option>
+                <option value="3">Terreno baldio</option>
+                <option value="4">Ponto Estratégico (cemitério, borracharia, ferro-velho, depósito de sucata ou materiais de construção, garagem de ônibus ou veículo de grande porte)</option>
+                <option value="5">Escola</option>
+                <option value="6">Creche</option>
+                <option value="7">Abrigo</option>
+                <option value="8">Instituição de longa permanência para idosos</option>
+                <option value="9">Unidade prisional</option>
+                <option value="10">Unidade de medida sócio educativa</option>
+                <option value="11">Delegacia</option>
+                <option value="12">Estabelecimento religioso</option>
+                <option value="99">Outros</option>
+              </select>
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            TEL. RESIDÊNCIA:
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="tel" name="telefoneResidencia" ng-model="dataHomeRegistration.telefoneResidencia" ng-minlength="13" ui-phone-number-residencia>
+            </label>
+                        <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.telefoneResidencia.$error.minlength">
+              * Insira o DDD mais Telefone Fixo com 8 dígitos
+            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            TEL. CONTATO:
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="tel" name="telefoneContato" ng-model="dataHomeRegistration.telefoneContato" ng-minlength="13" ui-phone-number>
+            </label>
+                        <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.telefoneContato.$error.minlength">
+              * Insira o DDD mais Telefone Fixo ou Móvel com 8 ou 9 dígitos, respectivamente.
+            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-100">
+                        <div class="item item-divider">
+                            OBSERVAÇÃO
+                        </div>
+                        <label class="item item-input item-stacked-label">
+              <input type="text" name="observacao" ng-model="dataHomeRegistration.observacao">
+            </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-offset-70 col-30">
+                        <button type="button" class="button button-block button-assertive" ng-click="limparObservacao()" ng-if="dataHomeRegistration.observacao != null">
+              Limpar Observação
+            </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-offset-50 col-50">
+                        <button type="submit" class="button button-full button-default-application">
+              <!-- ng-disabled="Adress.$invalid"-->
+              PRÓXIMA ETAPA
+            </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

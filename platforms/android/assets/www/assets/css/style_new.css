@@ -1,0 +1,17 @@
+.bar {
+  height: 60px !important;
+}
+
+.platform-android .bar .title {
+  font-size: 24px;
+  line-height: 60px;
+}
+
+.scroll-content,
+.scroll-content {
+  top: 16px !important;
+}
+
+.scroll-content.ionic-scroll.overflow-scroll.has-header {
+  top: 60px !important;
+}

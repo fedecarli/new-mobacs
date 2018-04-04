@@ -1,0 +1,398 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="updateInformations(dataPeople, 'return')"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">INFORMAÇÕES SOCIODEMOGRÁFICAS</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-ios-person"></i>
+        IDENTIFICAÇÃO
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-android-alert"></i>
+        INFOS SOCIODEMOGRÁFICAS
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-medkit"></i>
+        CONDIÇÕES DE SAÚDE
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-globe"></i>
+        SITUAÇÃO DE RUA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-warning"></i>
+        SAÍDA DO CIDADÃO DO CADASTRO
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form name="Information" ng-submit="updateInformations(dataPeople, 'this')">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>RELAÇÃO DE PARENTESCO COM O RESPONSÁVEL FAMILIAR</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select ng-model="dataPeople.relacaoParentescoCidadao" ng-disabled="disabledInput.relacaoParentescoCidadao">
+                <option value="137">Cônjugue/Companheiro(a)</option>
+                <option value="138">Filho(a)</option>
+                <option value="139">Enteado(a)</option>
+                <option value="140">Neto(a)/Bisneto(a)</option>
+                <option value="141">Pai/Mãe</option>
+                <option value="142">Sogro(a)</option>
+                <option value="143">Irmão/Irmã</option>
+                <option value="144">Genro/Nora</option>
+                <option value="145">Outro parente</option>
+                <option value="146">Não parente</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              OCUPAÇÃO
+            </div>
+            <!--<div class="item item-input-inset">-->
+            <!--<label class="item-input-wrapper">-->
+            <!--<input type="text" placeholder="Ocupação" ng-model="dataPeople.ocupacaoCodigoCbo2002">-->
+            <!--</label>-->
+            <!--<button type="button" ng-click="searchOcupation(dataPeople.ocupacaoCodigoCbo2002)" class="button button-small button-dark">-->
+            <!--Pesquisar-->
+            <!--</button>-->
+            <!--</div>-->
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="ocupacaoCodigoCbo2002" ng-model="dataPeople.ocupacaoCodigoCbo2002" ng-keyup="autocompleteText('ocupacaoCodigoCbo2002', dataPeople.ocupacaoCodigoCbo2002)" ng-disabled="disabledInput.ocupacaoCodigoCbo2002">
+              <!--<input type="text" name="paisNascimento" ng-model="dataPeople.paisNascimento" ng-keyup="searchPaises(dataPeople.paisNascimento)" ng-disabled="disabledInput.paisNascimento" >-->
+            </label>
+            <div class="list">
+              <a class="item" ng-repeat="ocupacao in filterOcupation | limitTo : 5" ng-model="hideListOcupation" ng-hide="hideListOcupation" ng-click="fillTextbox('ocupacaoCodigoCbo2002',ocupacao)">
+                {{ocupacao.nome}}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>FREQUENTA ESCOLA OU CRECHE?*</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="statusFrequentaEscola" ng-model="dataPeople.statusFrequentaEscola" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>QUAL É O CURSO MAIS ELEVADO QUE FREQUENTA OU FREQUENTOU?</span>
+            </div>
+            <label class="item item-input item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="grauInstrucaoCidadao" ng-model="dataPeople.grauInstrucaoCidadao">
+                <option value="51">Creche</option>
+                <option value="53">Pré-escola (exceto CA)</option>
+                <option value="61">Ensino Fundamental 1 a 4 séries</option>
+                <option value="59">Ensino Fundamental 5 a 8 séries</option>
+                <option value="57">Ensino Fundamental Completo</option>
+                <option value="63">Ensino Fundamental Especial</option>
+                <option value="64">Ensino Fundamental EJA - séries iniciais (Supletivo 1 a 4)</option>
+                <option value="52">Ensino Fundamental EJA - séries finais (Supletivo 5 a 8)</option>
+                <option value="54">Ensino Médio, Médio 2 Ciclo (Científico, Técnico etc.)</option>
+                <option value="55">Classe de Alfabetização - CA</option>
+                <option value="56">Ensino Médio Especial</option>
+                <option value="58">Ensino Médio EJA (Supletivo)</option>
+                <option value="60">Superior, Aperfeiçoamento, Especialização, Mestrado, Doutorado</option>
+                <option value="62">Alfabetização para Adultos (Mobral etc.)</option>
+                <option value="65">Nenhum</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SITUAÇÃO NO MERCADO DE TRABALHO</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="situacaoMercadoTrabalhoCidadao" ng-model="dataPeople.situacaoMercadoTrabalhoCidadao">
+                <option value="66">Empregador</option>
+                <option value="67">Assalariado com carteira de trabalho</option>
+                <option value="68">Assalariado sem carteira de trabalho</option>
+                <option value="69">Autônomo com previdência social</option>
+                <option value="70">Autônomo sem previdência social</option>
+                <option value="71">Aponsentado/Pensionalista</option>
+                <option value="72">Servidor público/militar</option>
+                <option value="73">Desempregado</option>
+                <option value="147">Não trabalha</option>
+                <option value="74">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-divider">
+              <span>CRIANÇAS DE 0 A 9 ANOS, COM QUEM FICA?</span>
+            </li>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.AdultoResponsavelresponsavelPorCrianca" ng-disabled="disabledInput.AdultoResponsavelresponsavelPorCrianca" ng-true-value="1" ng-false-value="null">
+                  </label>
+                  Adulto responsável
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.OutrasCriancasresponsavelPorCrianca" ng-disabled="disabledInput.OutrasCriancasresponsavelPorCrianca" ng-true-value="2" ng-false-value="null">
+                  </label>
+                  Outra(s) criança(s)
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.AdolescenteresponsavelPorCrianca" ng-disabled="disabledInput.AdolescenteresponsavelPorCrianca" ng-true-value="133" ng-false-value="null">
+                  </label>
+                  Adolescente
+                </li>
+              </div>
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.SozinharesponsavelPorCrianca" ng-disabled="disabledInput.SozinharesponsavelPorCrianca" ng-true-value="3" ng-false-value="null">
+                  </label>
+                  Sozinha
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.CrecheresponsavelPorCrianca" ng-disabled="disabledInput.CrecheresponsavelPorCrianca" ng-true-value="134" ng-false-value="null">
+                  </label>
+                  Creche
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.OutroresponsavelPorCrianca" ng-disabled="disabledInput.OutroresponsavelPorCrianca" ng-true-value="4" ng-false-value="null">
+                  </label>
+                  Outro
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>FREQUENTA CUIDADOR TRADICIONAL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusFrequentaBenzedeira" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>PARTICIPA DE ALGUM GRUPO COMUNITÁRIO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusParticipaGrupoComunitario" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>POSSUI PLANO DE SAÚDE PRIVADO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusPossuiPlanoSaudePrivado" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>É MEMBRO DE POVO OU COMUNIDADE TRADICIONAL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="statusMembroPovoComunidadeTradicional" ng-model="dataPeople.statusMembroPovoComunidadeTradicional" ng-change="validationForm('statusMembroPovoComunidadeTradicional',dataPeople.statusMembroPovoComunidadeTradicional)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SE SIM, QUAL?</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" ng-model="dataPeople.povoComunidadeTradicional" ng-disabled="disabledInput.povoComunidadeTradicional">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>DESEJA INFORMAR ORIENTAÇÃO SEXUAL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusDesejaInformarOrientacaoSexual" ng-change="validationForm('statusDesejaInformarOrientacaoSexual',dataPeople.statusDesejaInformarOrientacaoSexual)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SE SIM, QUAL?</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="orientacaoSexualCidadao" ng-model="dataPeople.orientacaoSexualCidadao" ng-disabled="disabledInput.orientacaoSexualCidadao">
+                <option value="148">Heterossexual</option>
+                <option value="153">Homossexual (gay / lésbica)</option>
+                <option value="154">Bissexual</option>
+                <option value="155">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>DESEJA INFORMAR IDENTIDADE DE GÊNERO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusDesejaInformarIdentidadeGenero" ng-change="validationForm('statusDesejaInformarIdentidadeGenero',dataPeople.statusDesejaInformarIdentidadeGenero)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SE SIM, QUAL?</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select ng-model="dataPeople.identidadeGeneroCidadao" ng-disabled="disabledInput.identidadeGeneroCidadao">
+                <option value="149">Homem transsexual</option>
+                <option value="150">Mulher transsexual</option>
+                <option value="156">Travesti</option>
+                <option value="151">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM ALGUMA DEFICIÊNCIA?*</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemAlgumaDeficiencia" ng-true-value="1" ng-false-value="null" ng-change="validationForm('statusTemAlgumaDeficiencia',dataPeople.statusTemAlgumaDeficiencia)">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-divider">
+              <span>SE SIM, QUAIS?</span>
+            </li>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.AuditivaDeficiencias" ng-disabled="disabledInput.AuditivaDeficiencias" ng-true-value="12" ng-false-value="null">
+                  </label>
+                  Auditiva
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.VisualDeficiencias" ng-disabled="disabledInput.VisualDeficiencias" ng-true-value="13" ng-false-value="null">
+                  </label>
+                  Visual
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Intelectual_CognitivaDeficiencias" ng-disabled="disabledInput.Intelectual_CognitivaDeficiencias" ng-true-value="14" ng-false-value="null">
+                  </label>
+                  Intelectual
+                </li>
+              </div>
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.FisicaDeficiencias" ng-disabled="disabledInput.FisicaDeficiencias" ng-true-value="15" ng-false-value="null">
+                  </label>
+                  Física
+                </li>
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.OutraDeficiencias" ng-disabled="disabledInput.OutraDeficiencias" ng-true-value="16" ng-false-value="null">
+                  </label>
+                  Outra
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-50">
+            <button type="button" ng-click="updateInformations(dataPeople, 'return')" class="button button-full button-energized">
+              ETAPA ANTERIOR
+            </button>
+          </div>
+          <div class="col col-50">
+            <button class="button button-full button-default-application" ng-disabled="Information.$invalid">
+              PRÓXIMA ETAPA
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

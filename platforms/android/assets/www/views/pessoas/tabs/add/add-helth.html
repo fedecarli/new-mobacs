@@ -1,0 +1,563 @@
+<ion-view ng-controller="PessoasController">
+	<div class="bar bar-header bar-default-application">
+		<div class="buttons">
+			<button class="button button-clear" ng-click="updateHealth(dataPeople, 'return')"><i class="icon ion-chevron-left"></i></button>
+		</div>
+		<h1 class="title">CONDIÇÕES DE SAÚDE</h1>
+	</div>
+
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-ios-person"></i>
+        IDENTIFICAÇÃO
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-alert"></i>
+        INFOS SOCIODEMOGRÁFICAS
+      </a>
+      <a class="tab-item active" >
+        <i class="icon ion-ios-medkit"></i>
+        CONDIÇÕES DE SAÚDE
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-globe"></i>
+        SITUAÇÃO DE RUA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-warning"></i>
+        SAÍDA DO CIDADÃO DO CADASTRO
+      </a>
+    </div>
+  </div>
+
+	<ion-content>
+		<br><br><br><br><br>
+    <form name="Helth" ng-submit="updateHealth(dataPeople, 'this')">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ESTÁ GESTANTE?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="statusEhGestante" ng-model="dataPeople.statusEhGestante" ng-change="validationForm('statusEhGestante',dataPeople.statusEhGestante)" ng-true-value="1" ng-false-value="null" ng-disabled="disabledInput.statusEhGestante">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SE SIM, QUAL É A MATERNIDADE DE REFERÊNCIA?</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="maternidadeDeReferencia" ng-model="dataPeople.maternidadeDeReferencia" ng-maxlength="100" ng-disabled="disabledInput.maternidadeDeReferencia">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Helth.$invalid}" ng-show="Helth.referenceMaternity.$error.maxlength">
+              * Digite no máximo 100 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>SOBRE O SEU PESO, VOCÊ SE CONSIDERA?</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select ng-model="dataPeople.situacaoPeso">
+                <option value="21">Abaixo do peso</option>
+                <option value="22">Peso adequado</option>
+                <option value="23">Acima do peso</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ESTÁ FUMANTE?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusEhFumante" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>FAZ USO DE ÁLCOOL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusEhDependenteAlcool" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>FAZ USO DE OUTRAS DROGAS?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusEhDependenteOutrasDrogas" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM HIPERTENSÃO ARTERIAL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemHipertensaoArterial" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM DIABETES?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemDiabetes" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEVE AVC/DERRAME?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTeveAvcDerrame" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEVE INFARTO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTeveInfarto" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM DOENÇA CARDÍACA/DO CORAÇÃO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTeveDoencaCardiaca" ng-true-value="1" ng-false-value="null" ng-change="validationForm('statusTeveDoencaCardiaca',dataPeople.statusTeveDoencaCardiaca)">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-divider">
+              <span>SE SIM, QUAIS?</span>
+            </li>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Insuficiencia_cardiaca" ng-true-value="24" ng-false-value="null" ng-disabled="disabledInput.Insuficiencia_cardiaca">
+                  </label>
+                  Insuficiência Cardíaca
+                </li>
+              </div>
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Outro_Doenca_Cardiaca" ng-true-value="25" ng-false-value="null" ng-disabled="disabledInput.Outro_Doenca_Cardiaca">
+                  </label>
+                  Outra
+                </li>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Nao_Sabe_Doenca_Cardiaca" ng-true-value="26" ng-false-value="null" ng-disabled="disabledInput.Nao_Sabe_Doenca_Cardiaca">
+                  </label>
+                  Não sabe
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM OU TEVE PROBLEMAS NOS RINS?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemTeveDoencasRins" ng-true-value="1" ng-false-value="null" ng-change="validationForm('statusTemTeveDoencasRins',dataPeople.statusTemTeveDoencasRins)">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-divider">
+              <span>SE SIM, QUAIS?</span>
+            </li>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Insuficiencia_renal" ng-true-value="27" ng-false-value="null" ng-disabled="disabledInput.Insuficiencia_renal">
+                  </label>
+                  Insuficiência Renal
+                </li>
+              </div>
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Outro_Doenca_Rins" ng-true-value="28" ng-false-value="null" ng-disabled="disabledInput.Outro_Doenca_Rins">
+                  </label>
+                  Outra
+                </li>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Nao_Sabe_Doenca_Rins" ng-true-value="29" ng-false-value="null" ng-disabled="disabledInput.Nao_Sabe_Doenca_Rins">
+                  </label>
+                  Não sabe
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM DOENÇA RESPIRATÓRIA/NO PULMÃO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemDoencaRespiratoria" ng-true-value="1" ng-false-value="null" ng-change="validationForm('statusTemDoencaRespiratoria',dataPeople.statusTemDoencaRespiratoria)">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-divider">
+              <span>SE SIM, QUAIS?</span>
+            </li>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Asma" ng-true-value="30" ng-false-value="null" ng-disabled="disabledInput.Asma">
+                  </label>
+                  Asma
+                </li>
+              </div>
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.DPOC_Enfisema" ng-true-value="31" ng-false-value="null" ng-disabled="disabledInput.DPOC_Enfisema">
+                  </label>
+                  DPOC/Enfisema
+                </li>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Outro_Doenca_Respiratoria" ng-true-value="32" ng-false-value="null" ng-disabled="disabledInput.Outro_Doenca_Respiratoria">
+                  </label>
+                  Outra
+                </li>
+              </div>
+              <div class="col col-50">
+                <li class="item item-checkbox">
+                  <label class="checkbox">
+                    <input type="checkbox" ng-model="dataPeople.Nao_Sabe_Doenca_Respiratoria" ng-true-value="33" ng-false-value="null" ng-disabled="disabledInput.Nao_Sabe_Doenca_Respiratoria">
+                  </label>
+                  Não sabe
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ESTÁ COM HANSENÍASE?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemHanseniase" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ESTÁ COM TUBERCULOSE?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemTuberculose" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEM OU TEVE CÂNCER?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTemTeveCancer" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>TEVE ALGUMA INTERNAÇÃO NOS ÚLTIMOS 12 MESES?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusTeveInternadoem12Meses" ng-change="validationForm('statusTeveInternadoem12Meses',dataPeople.statusTeveInternadoem12Meses)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              SE SIM, POR QUAL CAUSA?
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="text" name="descricaoCausaInternacaoEm12Meses" ng-model="dataPeople.descricaoCausaInternacaoEm12Meses" ng-maxlength="100"  ng-required="requiredInput.descricaoCausaInternacaoEm12Meses" ng-disabled="disabledInput.descricaoCausaInternacaoEm12Meses">-->
+              <input type="text" name="descricaoCausaInternacaoEm12Meses" ng-model="dataPeople.descricaoCausaInternacaoEm12Meses" ng-maxlength="100" ng-disabled="disabledInput.descricaoCausaInternacaoEm12Meses">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Helth.$invalid}" ng-show="Helth.causeHospitalization.$error.maxlength">
+              * Digite no máximo 100 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>TEVE DIAGNÓSTICO DE ALGUM PROBLEMA DE SAÚDE MENTAL POR </span></br>
+              <span>PROFISSIONAL DE SAÚDE?</span>
+            </div>
+            <li class="item item-toggle">
+              <span>PROBLEMA DE SAÚDE MENTAL?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusDiagnosticoMental" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ESTÁ ACAMADO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusEstaAcamado" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>ESTÁ DOMICILIADO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusEstaDomiciliado" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>USA PLANTAS MEDICINAIS?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusUsaPlantasMedicinais" ng-change="validationForm('statusUsaPlantasMedicinais',dataPeople.statusUsaPlantasMedicinais)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              SE SIM, INDIQUE QUAL(IS).
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="descricaoPlantasMedicinaisUsadas" ng-model="dataPeople.descricaoPlantasMedicinaisUsadas" ng-maxlength="100"  ng-disabled="disabledInput.descricaoPlantasMedicinaisUsadas">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Helth.$invalid}" ng-show="Helth.medicinalPlants.$error.maxlength">
+              * Digite no máximo 100 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>USA OUTRAS PRÁTICAS INTEGRATIVAS E COMPLEMENTARES?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusUsaOutrasPraticasIntegrativasOuComplementares" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              OUTRAS CONDIÇÕES DE SAÚDE
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>1 - QUAL?</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="otherConditionOne" ng-model="dataPeople.descricaoOutraCondicao1" ng-maxlength="100">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Helth.$invalid}" ng-show="Helth.otherConditionOne.$error.maxlength">
+              * Digite no máximo 100 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>2 - QUAL?</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="otherConditionTwo" ng-model="dataPeople.descricaoOutraCondicao2" ng-maxlength="100">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Helth.$invalid}" ng-show="Helth.otherConditionTwo.$error.maxlength">
+              * Digite no máximo 100 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>3 - QUAL?</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="otherConditionThree" ng-model="dataPeople.descricaoOutraCondicao3" ng-maxlength="100">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Helth.$invalid}" ng-show="Helth.otherConditionThree.$error.maxlength">
+              * Digite no máximo 100 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-50">
+            <button type="button" ng-click="updateHealth(dataPeople, 'return')" class="button button-full button-energized">
+              ETAPA ANTERIOR
+            </button>
+          </div>
+          <div class="col col-50">
+            <button type="submit" class="button button-full button-default-application" ng-disabled="Helth.$invalid">
+              PRÓXIMA ETAPA
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+	</ion-content>
+
+</ion-view>
