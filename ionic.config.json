@@ -10,5 +10,6 @@
   "integrations": {
     "cordova": {}
   },
-  "hooks": {}
+  "hooks": {},
+  "app_id": ""
 }

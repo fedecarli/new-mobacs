@@ -1,5 +1,5 @@
 angular.module('mobacs')
-    .controller('LoginController', function ($scope, $rootScope, $state, UsersService, $http, $cordovaNetwork, $ionicPlatform, WebApiService, $ionicLoading, SecurityService) {
+    .controller('LoginController', function($scope, $rootScope, $state, UsersService, $http, $cordovaNetwork, $ionicPlatform, WebApiService, $ionicLoading, SecurityService) {
         var condition = null;
 
         var apiLoginDev = "http://187.8.184.46/saude_treinamento/v2/ESUS/fichas/api/Login/ConsultarLogin/";
@@ -38,8 +38,8 @@ angular.module('mobacs')
 
         $scope.loginApplication = function() {
             $ionicLoading.show();
-            
-            if(typeof $scope.typeNetwork === 'undefined' && typeof $scope.isNetworknOnline === 'undefined') {
+
+            if (typeof $scope.typeNetwork === 'undefined' && typeof $scope.isNetworknOnline === 'undefined') {
                 $scope.typeNetwork = $cordovaNetwork.getNetwork();
                 $scope.isNetworknOnline = $cordovaNetwork.isOnline();
                 $scope.isNetworkOffline = $cordovaNetwork.isOffline();
