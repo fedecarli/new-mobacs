@@ -549,7 +549,7 @@ angular.module('mobacs')
 
         // INSERT
         $scope.addInformations = function(dataHomeVisit) {
-
+            console.log("entrou no metodo addInformation");
             var dataInformation;
 
             if (typeof dataHomeVisit != 'undefined') {
