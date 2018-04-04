@@ -1,0 +1,91 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goHomeVisitHistory()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">DESFECHO</h1>
+  </div>
+
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-android-alert"></i>
+        INFORMAÇÕES
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-paper"></i>
+        MOTIVO
+      </a>
+      <a class="tab-item ">
+        <i class="icon ion-android-walk"></i>
+        ANTROPOMETRIA
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-android-folder"></i>
+        DESFECHO
+      </a>
+    </div>
+  </div>
+
+  <ion-content class="page-cad">
+    <br><br><br><br><br>
+    <form name="addOutcome" ng-submit="updateOutcome(dataHomeVisit)">
+      <div class="list">
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DESFECHO*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="outcome" ng-model="dataHomeVisit.desfecho" ng-required="true" ng-change="validateForm('desfecho',dataHomeVisit.desfecho)">
+                <option value="1">Visita realizada</option>
+                <option value="2" >Visita recusada</option>
+                <option value="3">Ausente</option>
+              </select>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': addOutcome.$invalid}" ng-show="addOutcome.$submitted && addOutcome.outcome.$error.required">
+              * Desfecho Obrigatório
+            </span>
+          </div>
+        </div>
+
+        <div class="row" ng-if="dataHomeVisit.desfecho == 2 || dataHomeVisit.desfecho == 3">
+          <div class="col col-100">
+            <div class="item item-divider">
+              JUSTIFICATIVA**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="Justificativa" ng-model="dataHomeVisit.Justificativa">
+            </label>
+          </div>
+        </div>
+
+        <div class="row" ng-if="dataHomeVisit.desfecho != 1">
+          <div class="col col-offset-70 col-30">
+            <button type="button" class="button button-block button-assertive" ng-click="clearJustify()" ng-if="dataHomeVisit.Justificativa != null">
+              Limpar Justificativa
+            </button>
+          </div>
+        </div>
+
+          <div class="row">
+            <div class="col col-50">
+              <button type="button" class="button button-full button-energized" ng-click="goHomeVisitHistory()">
+                ETAPA ANTERIOR
+              </button>
+            </div>
+            <div class="col col-50">
+                <button type="submit" class="button button-full button-default-application" ng-disabled="addOutcome.$invalid">
+                  SALVAR
+                </button>
+            </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+
+</ion-view>

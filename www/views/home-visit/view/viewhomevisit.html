@@ -1,0 +1,146 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewHomeVisit()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">VISITA DOMICILIAR E TERRITORIAL</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item active">
+        <i class="icon ion-ios-person"></i>
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br><br><br><br><br>
+
+    <div class="card">
+      <div class="item item-divider">
+        INFORMAÇÕES
+      </div>
+      <div class="item item-text-wrap">
+        <span>Turno :
+          <span ng-show="dataHomeVisit.turno == 1">Manhã</span>
+          <span ng-show="dataHomeVisit.turno == 2">Tarde</span>
+          <span ng-show="dataHomeVisit.turno == 3">Noite</span>
+        </span>
+        </br>
+        <span>Microárea: {{dataHomeVisit.microarea}}</span></br>
+        <span>Fora de àrea?
+          <span ng-show="dataHomeVisit.stForaArea == 1">Sim</span>
+          <span ng-show="dataHomeVisit.stForaArea != 1">Não</span>
+        </span>
+        </br>
+        <span>Tipo de imóvel :
+          <span ng-show="dataHomeVisit.tipoDeImovel == 1">Domicílio</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 2">Comércio</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 3">Terreno baldio</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 4">Ponto Estratégico (cemitério, borracharia, ferro-velho, depósito de sucata ou materiais de construção, garagem de ônibus ou veículo de grande porte)</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 5">Escola</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 6">Creche</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 7">Abrigo</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 8">Instituição de longa permanência para idosos</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 9">Unidade prisional</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 10">Unidade de medida sócio educativa</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 11">Delegacia</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 12">Estabelecimento religioso</span>
+          <span ng-show="dataHomeVisit.tipoDeImovel == 99">Outros</span>
+        </span>
+        </br>
+        <span>Nro. Prontuário: {{dataHomeVisit.numProntuario}}</span></br>
+        <span>CNS do Cidadão: {{dataHomeVisit.cnsCidadao}}</span></br>
+        <span>Data de Nascimento: {{dataHomeVisit.dtNascimento | date: 'dd/MM/yyyy'}}</span></br>
+        <span>Sexo :
+          <span ng-show="dataHomeVisit.sexo == 0">Masculino</span>
+          <span ng-show="dataHomeVisit.sexo == 1">Feminino</span>
+          <span ng-show="dataHomeVisit.sexo == 4">Ignorado</span>
+        </span>
+        </br>
+        <span>Visita compartilhada com outro profissional?
+          <span ng-show="dataHomeVisit.statusVisitaCompartilhadaOutroProfissional == 1">Sim</span>
+          <span ng-show="dataHomeVisit.statusVisitaCompartilhadaOutroProfissional != 1">Não</span>
+        </span>
+        <br>
+        <span>Observação: {{dataHomeVisit.observacao}}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        MOTIVOS DA VISITA
+      </div>
+      <div class="item item-text-wrap">
+        <span ng-show="dataHomeVisit.Cadastramento_Atualizacao == 1">Cadastramento/Atualização<br></span>
+        <span ng-show="dataHomeVisit.Visita_periodica == 29">Visita periódica<br></span>
+        <span ng-show="dataHomeVisit.Consulta == 2">Consulta<br></span>
+        <span ng-show="dataHomeVisit.Exame == 3">Exame<br></span>
+        <span ng-show="dataHomeVisit.Vacina == 4">Vacina<br></span>
+        <span ng-show="dataHomeVisit.Condicionalidadesdobolsafamilia == 30">Condicionalidades do Bolsa Família<br></span>
+        <span ng-show="dataHomeVisit.Gestante == 5">Gestante<br></span>
+        <span ng-show="dataHomeVisit.Puerpera == 6">Puérpera<br></span>
+        <span ng-show="dataHomeVisit.Recem_nascido == 7">Recém-nascido<br></span>
+        <span ng-show="dataHomeVisit.Crianca == 8">Criança<br></span>
+        <span ng-show="dataHomeVisit.PessoaDesnutricao == 9">Pessoa com desnutrição<br></span>
+        <span ng-show="dataHomeVisit.PessoaReabilitacaoDeficiencia == 10">Pessoa em reabilitação ou com deficiência<br></span>
+        <span ng-show="dataHomeVisit.Hipertensao == 11">Pessoa com hipertensão<br></span>
+        <span ng-show="dataHomeVisit.Diabetes == 12">Pessoa com diabetes<br></span>
+        <span ng-show="dataHomeVisit.Asma == 13">Asma<br></span>
+        <span ng-show="dataHomeVisit.DPOC_enfisema == 14">Pessoa com DPOC/enfisema<br></span>
+        <span ng-show="dataHomeVisit.Cancer == 15">Pessoa com câncer<br></span>
+        <span ng-show="dataHomeVisit.Outras_doencas_cronicas == 16">Pessoa com outras doenças crônicas<br></span>
+        <span ng-show="dataHomeVisit.Hanseniase == 17">Pessoa com hanseníase<br></span>
+        <span ng-show="dataHomeVisit.Cancer == 15">Pessoa com câncer<br></span>
+        <span ng-show="dataHomeVisit.Tuberculose == 18">Pessoa com tuberculose<br></span>
+        <span ng-show="dataHomeVisit.Sintomaticos_Respiratorios == 32">Sintomáticos respiratórios<br></span>
+        <span ng-show="dataHomeVisit.Tabagista == 33">Tabagista<br></span>
+        <span ng-show="dataHomeVisit.Domiciliados_Acamados == 19">Domiciliados/Acamados<br></span>
+        <span ng-show="dataHomeVisit.Condicoes_vulnerabilidade_social == 20">Condições de vulnerabilidade social<br></span>
+        <span ng-show="dataHomeVisit.Condicionalidades_bolsa_familia == 21">Condicionalidades do Bolsa Família<br></span>
+        <span ng-show="dataHomeVisit.Saude_mental == 22">Saúde mental<br></span>
+        <span ng-show="dataHomeVisit.Usuario_alcool == 23">Usuário de álcool<br></span>
+        <span ng-show="dataHomeVisit.Usuario_outras_drogas == 24">Usuário de outras drogas<br></span>
+        <span ng-show="dataHomeVisit.Acao_educativa == 34">Ação educativa<br></span>
+        <span ng-show="dataHomeVisit.Imovel_com_foco == 35">Imóvel com foco<br></span>
+        <span ng-show="dataHomeVisit.Acao_mecanica == 36">Ação mecânica<br></span>
+        <span ng-show="dataHomeVisit.Tratamento_focal == 37">Tratamento focal<br></span>
+        <span ng-show="dataHomeVisit.Egresso_de_internacao == 25">Egresso de Internação<br></span>
+        <span ng-show="dataHomeVisit.Convite_atividades_coletivas_campanha_saude == 27">Convite atividades coletivas/campanha de saúde<br></span>
+        <span ng-show="dataHomeVisit.Orientacao_Prevencao == 31">Orientação/prevenção<br></span>
+        <span ng-show="dataHomeVisit.Outros == 28">Outros<br></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        ANTROPOMETRIA
+      </div>
+      <div class="item item-text-wrap">
+        <span>Peso(Kg): {{dataHomeVisit.pesoAcompanhamentoNutricional}}</span>
+        <br>
+        <span>Altura(cm): {{dataHomeVisit.alturaAcompanhamentoNutricional}}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        DESFECHO
+      </div>
+      <div class="item item-text-wrap">
+        <span>Desfecho :
+          <span ng-show="dataHomeVisit.desfecho == 1">Visita realizada</span>
+          <span ng-show="dataHomeVisit.desfecho == 2">Visita recusada</span>
+          <span ng-show="dataHomeVisit.desfecho == 3">Ausente</span>
+        </span>
+        <br>
+        <span>Justificativa: {{dataHomeVisit.Justificativa}}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-100">
+        <button class="button button-block button-default-application" ng-click="viewToEditHomeVisit()">Editar Visita Domiciliar e Territorial</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

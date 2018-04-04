@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html ng-app="mobacs">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline' http://172.16.100.83:8100; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://172.16.100.83:8100 http://172.16.100.83:35729" />
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline' http://172.16.100.83:8100; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://172.16.100.83:8100 http://172.16.100.83:35729" /> -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval' http://172.16.100.83:8100" /> -->
+    <title></title>
+    <link rel="manifest" href="manifest.json">
+    <!-- un-comment this code to enable service worker
+      <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('service-worker.js')
+            .then(() => console.log('service worker installed'))
+            .catch(err => console.log('Error', err));
+        }
+      </script>-->
+    <link href="assets/lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <!-- <link href="assets/css/style_new.css" rel="stylesheet"> -->
+    <link href="assets/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+      <link href="css/ionic.app.css" rel="stylesheet">
+      -->
+    <!-- ionic/angularjs js -->
+    <script src="assets/lib/ionic/js/ionic.bundle.js"></script>
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <script src="cordova.js"></script>
+    <script src="lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js"></script>
+    <!-- YOUR APP'S JS -->
+    <script src="lib/crypto-js/build/crypto-js.js"></script>
+    <script src="assets/js/app.js"></script>
+    <!-- YOUR ROUTES -->
+    <script src="assets/js/routes.js"></script>
+    <!-- YOUR SERVICES -->
+    <script src="services/SecurityService.js"></script>
+    <script src="services/SQLiteService.js"></script>
+    <script src="services/UsersService.js"></script>
+    <script src="services/HomeVisitService.js"></script>
+    <script src="services/PeopleService.js"></script>
+    <script src="services/GlobalService.js"></script>
+    <script src="services/SystemService.js"></script>
+    <script src="services/WebApiService.js"></script>
+    <script src="services/HomeRegistrationService.js"></script>
+    <script src="services/FamilyService.js"></script>
+    <script src="services/SyncronizationService.js"></script>
+    <script src="services/ProductionService.js"></script>
+    <script src="services/HelpService.js"></script>
+    <!-- YOUR CONTROLLERS -->
+    <script src="controllers/LoginController.js"></script>
+    <script src="controllers/DashboardController.js"></script>
+    <script src="controllers/HomeVisitController.js"></script>
+    <script src="controllers/PessoasController.js"></script>
+    <script src="controllers/ListPeopleController.js"></script>
+    <script src="controllers/ListAdressController.js"></script>
+    <script src="controllers/ListHomeVisitController.js"></script>
+    <script src="controllers/HomeRegistrationController.js"></script>
+    <script src="controllers/FamilyController.js"></script>
+    <script src="controllers/SynchronizationController.js"></script>
+    <script src="controllers/ProductionController.js"></script>
+    <script src="controllers/UsersByHouseholdsController.js"></script>
+    <!-- YOUR DIRECTIVES -->
+    <script src="directives/uiDateDirective.js"></script>
+    <script src="directives/uiMicroareaDirective.js"></script>
+    <script src="directives/uiMedicalRecordsDirective.js"></script>
+    <script src="directives/uiCnsCitizenDirective.js"></script>
+    <script src="directives/uiDigitoDirective.js"></script>
+    <script src="directives/uiCpfDirective.js"></script>
+    <script src="directives/uiWeightDirective.js"></script>
+    <script src="directives/uiHeightDirective.js"></script>
+    <script src="directives/uiNameDirective.js"></script>
+    <script src="directives/uiNisPisPasepDirective.js"></script>
+    <script src="directives/uiPortariaNaturalizacao.js"></script>
+    <script src="directives/uiNumberDoDirective.js"></script>
+    <script src="directives/uiPhoneNumberCelularDirective.js"></script>
+    <script src="directives/uiPhoneNumberDirective.js"></script>
+    <script src="directives/uiPhoneNumberResidenciaDirective.js"></script>
+    <script src="directives/uiEmailDirective.js"></script>
+    <script src="directives/uiPostalCodeDirective.js"></script>
+    <script src="directives/uiNumberAdress.js"></script>
+    <script src="directives/uiNumberResidents.js"></script>
+    <script src="directives/uiNumberRooms.js"></script>
+    <script src="directives/uiAnimalsNumber.js"></script>
+    <script src="directives/uiDateMonthYear.js"></script>
+    <script src="directives/uiComplementoEndDirective.js"></script>
+    <script src="directives/limitTo.js"></script>
+</head>
+
+<body>
+  <ion-pane>
+    <ion-nav-view>
+      <!--<ion-nav-bar></ion-nav-bar>-->
+    </ion-nav-view>
+  </ion-pane>
+</body>
+
+</html>

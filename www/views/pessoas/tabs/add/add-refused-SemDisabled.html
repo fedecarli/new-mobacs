@@ -1,0 +1,239 @@
+<ion-view cache-view="false" animation="slide-right-left">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="directPeople()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">RECUSA DO CADASTRO</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item active">
+        <i class="icon ion-ios-person"></i>
+        IDENTIFICAÇÃO
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-alert"></i>
+        INFOS SOCIODEMOGRÁFICAS
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-medkit"></i>
+        CONDIÇÕES DE SAÚDE
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-globe"></i>
+        SITUAÇÃO DE RUA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-warning"></i>
+        SAÍDA DO CIDADÃO DO CADASTRO
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col col-100">
+        Será gerado um número identificador sobre a recusa deste cadastro!
+      </div>
+    </div>
+    <form novalidate name="RefusedRegistration" ng-submit="addRefusedRegistration(dataPeople)">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CNS DO CIDADÃO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="cnsCidadao" ng-model="dataPeople.cnsCidadao" ng-blur="alterInputCns(dataPeople.cnsCidadao)" ui-cns-citizen>
+            </label>
+            <!-- <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.cnsCidadao.$error.minlength">
+              * No mínimo 15 dígitos
+            </span> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NOME COMPLETO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="nomeCidadao" ng-model="dataPeople.nomeCidadao" ng-blur="formatName('nomeCidadao',dataPeople.nomeCidadao)" ng-maxlength="70">
+            </label>
+            <!-- <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.nomeCidadao.$error.maxlength">
+              * No máximo 70 caracteres
+            </span> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DATA DE NASCIMENTO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="dataNascimentoCidadao" ng-model="dataPeople.dataNascimentoCidadao" ng-required="requiredInput.dataNascimentoCidadao" ui-date>-->
+              <input type="tel" id="dataNascimentoCidadao" ng-change="valueInData('dataNascimentoCidadao')" name="dataNascimentoCidadao" ng-model="dataPeople.dataNascimentoCidadao" ui-date>
+            </label>
+            <span id="dataNascimentoCidadaoError" class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}">
+              * Insira a data no formato dd/MM/yyyy
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CEP*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="cep" id="cep" ng-model="dataPeople.cep" ng-keyup="searchAdressInformation(dataPeople.cep)" ng-minlength="9" ng-required="true" ui-postal-code>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.cep.$error.minlength">
+              * Insira um CEP válido
+            </span>
+          </div>
+        </div>
+        <div ng-if="dataPeople.codigoIbgeMunicipio == 'SANTANA DE PARNAÍBA'">
+          <div class="row">
+            <div class="col col-100">
+              <div class="item item-divider">
+                MUNICÍPIO*
+              </div>
+              <label class="item item-input item-stacked-label">
+                <input type="text" name="codigoIbgeMunicipio" ng-model="dataPeople.codigoIbgeMunicipio" ng-disabled="disabledInput.codigoIbgeMunicipio" ng-required="requiredInput.codigoIbgeMunicipio">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-100">
+              <div class="item item-divider">
+                UF*
+              </div>
+              <label class="item item-select">
+                <div class="input-label">
+                  Selecione
+                </div>
+                <select name="uf" name="numeroDneUf" ng-model="dataPeople.numeroDneUf" ng-disabled="disabledInput.numeroDneUf" ng-required="requiredInput.numeroDneUf">
+                  <option value="1">ACRE</option>
+                  <option value="2">ALAGOAS</option>
+                  <option value="3">AMAPÁ</option>
+                  <option value="4">AMAZONAS</option>
+                  <option value="5">BAHIA</option>
+                  <option value="6">CEARÁ</option>
+                  <option value="7">DISTRITO FEDERAL</option>
+                  <option value="8">ESPÍRITO SANTO</option>
+                  <option value="10">GOIÁS</option>
+                  <option value="11">MARANHÃO</option>
+                  <option value="12">MATO GROSSO</option>
+                  <option value="13">MATO GROSSO DO SUL</option>
+                  <option value="14">MINAS GERAIS</option>
+                  <option value="15">PARÁ</option>
+                  <option value="16">PARAÍBA</option>
+                  <option value="17">PARANÁ</option>
+                  <option value="18">PERNAMBUCO</option>
+                  <option value="19">PIAUÍ</option>
+                  <option value="20">RIO DE JANEIRO</option>
+                  <option value="21">RIO GRANDE DO NORTE</option>
+                  <option value="22">RIO GRANDE DO SUL</option>
+                  <option value="23">RONDÔNIA</option>
+                  <option value="9">RORAIMA</option>
+                  <option value="25">SANTA CATARINA</option>
+                  <option value="26">SÃO PAULO</option>
+                  <option value="27">SERGIPE</option>
+                  <option value="24">TOCANTINS</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-100">
+              <div class="item item-divider">
+                BAIRRO*
+              </div>
+              <label class="item item-input item-stacked-label">
+                <input type="text" name="bairro" ng-model="dataPeople.bairro" ng-disabled="disabledInput.bairro" ng-required="requiredInput.bairro">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-100">
+              <div class="item item-divider">
+                TIPO DE LOGRADOURO*
+              </div>
+              <label class="item item-input item-stacked-label">
+                <input type="text" name="tipoLogradouroNumeroDne" ng-model="dataPeople.tipoLogradouroNumeroDne" ng-disabled="disabledInput.tipoLogradouroNumeroDne" ng-required="requiredInput.tipoLogradouroNumeroDne">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-100">
+              <div class="item item-divider">
+                NOME DO LOGRADOURO*
+              </div>
+              <label class="item item-input item-stacked-label">
+                <input type="text" name="nomeLogradouro" ng-model="dataPeople.nomeLogradouro" ng-disabled="disabledInput.nomeLogradouro" ng-required="requiredInput.nomeLogradouro">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-100">
+              <div class="item item-divider">
+                NÚMERO*
+              </div>
+              <label class="item item-input item-stacked-label">
+                <!--<input type="tel" name="numero" ng-model="dataPeople.numero" ng-minlength="1" ng-required="requiredInput.numero" ng-disabled="disabledInput.numero" ui-number-adress>-->
+                <input type="tel" name="numero" ng-model="dataPeople.numero" ng-minlength="1" ng-disabled="disabledInput.numero" ui-number-adress>
+              </label>
+              <span class="error-formatting" ng-class="{'information-formatting': Adress.$invalid}" ng-show="Adress.numero.$error.minlength">
+              * Insira no mínimo 1 número
+            </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-100">
+              <li class="item item-toggle">
+                <span>SEM NÚMERO?</span>
+                <label class="toggle toggle-balanced">
+                  <input type="checkbox" ng-model="dataPeople.stSemNumero" ng-change="validationHomeRegistrationForm('stSemNumero',dataPeople.stSemNumero)" ng-true-value="1" ng-false-value="null">
+                  <div class="track">
+                    <div class="handle"></div>
+                  </div>
+                </label>
+              </li>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              JUSTIFICATIVA*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="Justificativa" id="Justificativa" ng-model="dataPeople.Justificativa" ng-required="true">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': RefusedRegistration.$invalid}" ng-show="RefusedRegistration.cnsCidadao.$error.required">
+              * Este campo é obrigatório
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-50">
+            <button type="button" ng-click="directPeople()" class="button button-full button-energized">
+              VOLTAR
+            </button>
+          </div>
+          <div class="col col-50">
+            <button type="submit" class="button button-full button-default-application" ng-disabled="RefusedRegistration.$invalid">
+              CONFIRMAR
+            </button>
+          </div>
+        </div>
+      </div>
+      <!--Fim da lista-->
+    </form>
+    <!--Fim do formulário-->
+  </ion-content>
+  <!--Fim do conteúdo-->
+</ion-view>

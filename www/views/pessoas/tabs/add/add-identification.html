@@ -1,0 +1,494 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewPeople()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">IDENTIFICAÇÃO</h1>
+    <div class="buttons" ng-if="dataPeople.id == null">
+      <button class="button button-clear" ng-click="refusePeopleRegistration()"><i class="icon ion-ios-close-outline"> Recusa</i></button>
+    </div>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item active">
+                <i class="icon ion-ios-person"></i>
+                IDENTIFICAÇÃO
+      </a>
+      <a class="tab-item">
+                <i class="icon ion-android-alert"></i>
+                INFOS SOCIODEMOGRÁFICAS
+      </a>
+      <a class="tab-item">
+                <i class="icon ion-ios-medkit"></i>
+                CONDIÇÕES DE SAÚDE
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-globe"></i>
+        SITUAÇÃO DE RUA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-android-warning"></i>
+        SAÍDA DO CIDADÃO DO CADASTRO
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form novalidate name="Identification" ng-submit="addIdentification(dataPeople)">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CNS DO CIDADÃO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="cnsCidadao" ng-model="dataPeople.cnsCidadao" ng-blur="alterInputCns(dataPeople.cnsCidadao)" ng-minlength="15" ui-cns-citizen>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.cnsCidadao.$error.minlength">
+              * No mínimo 15 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              RESPONSÁVEL FAMILIAR
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" ng-model="dataPeople.statusEhResponsavel" ng-change="validationForm('statusEhResponsavel', dataPeople.statusEhResponsavel)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row" ng-hide="dataPeople.statusEhResponsavel == 1">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CNS DO RESPONSÁVEL FAMILIAR
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="cnsResponsavelFamiliar" ng-model="dataPeople.cnsResponsavelFamiliar" ng-keyup="checkCNSOfTheResponsible(dataPeople.cnsResponsavelFamiliar)" ng-disabled="disabledInput.cnsResponsavelFamiliar" ng-required="requiredInput.cnsResponsavelFamiliar" ng-minlength="15" ui-cns-citizen>-->
+              <input type="tel" name="cnsResponsavelFamiliar" ng-model="dataPeople.cnsResponsavelFamiliar" ng-keyup="checkCNSOfTheResponsible(dataPeople.cnsResponsavelFamiliar)" ng-disabled="disabledInput.cnsResponsavelFamiliar" ng-minlength="15" ui-cns-citizen>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.cnsResponsavelFamiliar.$error.minlength">
+              * No mínimo 15 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CPF
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="CPF" ng-model="dataPeople.CPF" ng-minlength="11" ui-cpf>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.CPF.$error.minlength">
+              * No mínimo 11 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-75">
+            <div class="item item-divider">
+              RG
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="RG" ng-model="dataPeople.RG" ui-cns-citizen>
+            </label>
+          </div>
+          <div class="col col-25">
+            <div class="item item-divider">
+              DÍGITO
+              <!-- Complemento RG -->
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="ComplementoRG" ng-model="dataPeople.ComplementoRG" ng-maxlength="1" ui-digito>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.ComplementoRG.$error.minlength">
+              * Só é permitido 1 dígito
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              MICROÁREA*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="microarea" ng-model="dataPeople.microarea" ng-disabled="disabledInput.microarea" ng-required="requiredInput.microarea" ng-minlength="2" ui-microarea>-->
+              <input type="tel" name="microarea" ng-model="dataPeople.microarea" ng-disabled="disabledInput.microarea" ng-minlength="2" ui-microarea>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.microarea.$error.minlength">
+              * Insira no mínimo 2 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              FORA DE ÁREA?
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="checado.stForaArea" ng-model="dataPeople.stForaArea" ng-change="validationForm('stForaArea', dataPeople.stForaArea)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NOME COMPLETO*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="nomeCidadao" ng-model="dataPeople.nomeCidadao" ng-blur="formatName('nomeCidadao',dataPeople.nomeCidadao)" ng-maxlength="70">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.nomeCidadao.$error.maxlength">
+              * No máximo 70 caracteres
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NOME SOCIAL
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="nomeSocial" ng-model="dataPeople.nomeSocial" ng-blur="formatName('nomeSocial',dataPeople.nomeSocial)" ng-maxlength="70">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.nomeSocial.$error.maxlength">
+              * No máximo 70 caracteres
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DATA DE NASCIMENTO*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="dataNascimentoCidadao" ng-model="dataPeople.dataNascimentoCidadao" ng-required="requiredInput.dataNascimentoCidadao" ui-date>-->
+              <input type="tel" id="dataNascimentoCidadao" ng-change="valueInData('dataNascimentoCidadao')" name="dataNascimentoCidadao" ng-model="dataPeople.dataNascimentoCidadao" ui-date>
+            </label>
+            <span id="dataNascimentoCidadaoError" class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}">
+              * Insira a data no formato dd/MM/yyyy
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              SEXO*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="sexoCidadao" ng-model="dataPeople.sexoCidadao" ng-required="requiredInput.sexoCidadao">-->
+              <select name="sexoCidadao" ng-model="dataPeople.sexoCidadao">
+                <option value="0">Masculino</option>
+                <option value="1">Feminino</option>
+                <option value="4">Ignorado</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              ESTADO CIVIL
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="sexoCidadao" ng-model="dataPeople.sexoCidadao" ng-required="requiredInput.sexoCidadao">-->
+              <select name="EstadoCivil" ng-model="dataPeople.EstadoCivil">
+                <option value="C">Casado(a)</option>
+                <option value="D">Divorciado(a)</option>
+                <option value="P">Separado(a)</option>
+                <option value="S">Solteiro(a)</option>
+                <option value="U">União Estável</option>
+                <option value="V">Viúvo(a)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>RAÇA/COR*</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="color" ng-model="dataPeople.racaCorCidadao" ng-change="validationForm('racaCorCidadao',dataPeople.racaCorCidadao)" ng-required="requiredInput.racaCorCidadao">-->
+              <select name="color" ng-model="dataPeople.racaCorCidadao" ng-change="validationForm('racaCorCidadao',dataPeople.racaCorCidadao)">
+                <option value="1">Branca</option>
+                <option value="2">Preta</option>
+                <option value="3">Amarela</option>
+                <option value="4">Parda</option>
+                <option value="5">Indígena</option>
+                <option value="6">Sem informação</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              ETNIA
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="etnia" ng-model="dataPeople.etnia" ng-keyup="autocompleteText('etnia', dataPeople.etnia)" ng-disabled="disabledInput.etnia">
+              <!--<input type="text" name="etnia" ng-model="dataPeople.etnia" ng-keyup="searchEtnia(dataPeople.etnia)" ng-disabled="disabledInput.etnia">-->
+            </label>
+            <div class="list">
+              <a class="item" ng-repeat="etnia in filterEtnia | limitTo : 5" ng-model="hideListEtnia" ng-hide="hideListEtnia" ng-click="fillTextbox('etnia',etnia)">
+                {{etnia.descricao}}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              BENEFICIÁRIO DO BOLSA FAMÍLIA
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="checado.beneficiarioBolsaFamilia" ng-model="dataPeople.beneficiarioBolsaFamilia" ng-change="validationForm('beneficiarioBolsaFamilia',dataPeople.beneficiarioBolsaFamilia)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NÚMERO NIS(PIS/PASEP)
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="pis" ng-model="dataPeople.numeroNisPisPasep" ng-minlength="11" ui-nis-pis-pasep>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.pis.$error.minlength">
+              * Insira no mínimo 11 caracteres
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NOME COMPLETO DA MÃE*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="text" name="nomeMaeCidadao" ng-model="dataPeople.nomeMaeCidadao" ng-keyup="formatName('nomeMaeCidadao',dataPeople.nomeMaeCidadao)" ng-maxlength="70" ng-required="requiredInput.nomeMaeCidadao" ng-disabled="disabledInput.nomeMaeCidadao" >-->
+              <input type="text" name="nomeMaeCidadao" ng-model="dataPeople.nomeMaeCidadao" ng-blur="formatName('nomeMaeCidadao',dataPeople.nomeMaeCidadao)" ng-maxlength="70" ng-disabled="disabledInput.nomeMaeCidadao">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.nomeMaeCidadao.$error.maxlength">
+              * No máximo 70 caracteres
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>MÃE DESCONHECIDA?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="checado.desconheceNomeMae" ng-model="dataPeople.desconheceNomeMae" ng-change="validationForm('desconheceNomeMae', dataPeople.desconheceNomeMae)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              NOME COMPLETO DO PAI*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="text" name="nomePaiCidadao" ng-model="dataPeople.nomePaiCidadao" ng-keyup="formatName('nomePaiCidadao',dataPeople.nomePaiCidadao)" ng-maxlength="70" ng-required="requiredInput.nomePaiCidadao" ng-disabled="disabledInput.nomePaiCidadao">-->
+              <input type="text" name="nomePaiCidadao" ng-model="dataPeople.nomePaiCidadao" ng-blur="formatName('nomePaiCidadao',dataPeople.nomePaiCidadao)" ng-maxlength="70" ng-disabled="disabledInput.nomePaiCidadao">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.nomePaiCidadao.$error.maxlength">
+              * No máximo 70 caracteres
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>PAI DESCONHECIDO?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="checado.desconheceNomePai" ng-model="dataPeople.desconheceNomePai" ng-change="validationForm('desconheceNomePai',dataPeople.desconheceNomePai)" ng-true-value="1" ng-false-value="null">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>NACIONALIDADE*</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="nacionalidadeCidadao" ng-model="dataPeople.nacionalidadeCidadao" ng-change="validationForm('nacionalidadeCidadao',dataPeople.nacionalidadeCidadao)" ng-required="requiredInput.nacionalidadeCidadao">-->
+              <select id="nacionalidadeCidadao" name="nacionalidadeCidadao" ng-model="dataPeople.nacionalidadeCidadao" ng-change="validationForm('nacionalidadeCidadao',dataPeople.nacionalidadeCidadao)">
+                <option value="1">Brasileira</option>
+                <option value="2">Naturalizado</option>
+                <option value="3">Estrangeiro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              PAÍS DE NASCIMENTO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" id="paisNascimento" name="paisNascimento" ng-model="dataPeople.paisNascimento" ng-keyup="autocompleteText('paisNascimento', dataPeople.paisNascimento)" ng-disabled="disabledInput.paisNascimento">
+              <!--<input type="text" name="paisNascimento" ng-model="dataPeople.paisNascimento" ng-keyup="searchPaises(dataPeople.paisNascimento)" ng-disabled="disabledInput.paisNascimento" >-->
+            </label>
+            <div class="list">
+              <a class="item" ng-repeat="pais in filterPaisNascimento | limitTo : 5" ng-model="hideListPaisNascimento" ng-hide="hideListPaisNascimento" ng-click="fillTextbox('paisNascimento',pais)">
+                {{pais.nome}}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DATA DE NATURALIZAÇÃO**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="dtNaturalizacao" ng-model="dataPeople.dtNaturalizacao"  ng-change="validDate('dtNaturalizacao',dataPeople.dtNaturalizacao)" ng-disabled="disabledInput.dtNaturalizacao" ng-required="requiredInput.dtNaturalizacao" ui-date>-->
+              <input type="tel" id="dtNaturalizacao" name="dtNaturalizacao" ng-change="valueInData('dtNaturalizacao')" ng-model="dataPeople.dtNaturalizacao" ng-change="validDate('dtNaturalizacao',dataPeople.dtNaturalizacao)" ng-disabled="disabledInput.dtNaturalizacao" ui-date>
+            </label>
+            <span id="dtNaturalizacaoError" class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}">
+              * Insira a data no formato dd/MM/yyyy
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              PORTARIA DE NATURALIZAÇÃO**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="text" name="portariaNaturalizacao" ng-model="dataPeople.portariaNaturalizacao" ui-portaria-naturalizacao ng-disabled="disabledInput.portariaNaturalizacao" ng-required="requiredInput.portariaNaturalizacao">-->
+              <input type="tel" name="portariaNaturalizacao" ng-model="dataPeople.portariaNaturalizacao" ui-portaria-naturalizacao ng-disabled="disabledInput.portariaNaturalizacao">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              MUNICÍPIO E UF DE NASCIMENTO**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="codigoIbgeMunicipioNascimento" id="codigoIbgeMunicipioNascimento" ng-model="dataPeople.codigoIbgeMunicipioNascimento" ng-keyup="autocompleteText('codigoIbgeMunicipioNascimento', dataPeople.codigoIbgeMunicipioNascimento)">
+              <!-- ng-disabled="disabledInput.codigoIbgeMunicipioNascimento" /-->
+              <!--<input type="text" name="codigoIbgeMunicipioNascimento" id="codigoIbgeMunicipioNascimento" ng-model="dataPeople.codigoIbgeMunicipioNascimento" ng-keyup="searchMunicipio(dataPeople.codigoIbgeMunicipioNascimento)" ng-disabled="disabledInput.codigoIbgeMunicipioNascimento"/>-->
+            </label>
+            <div class="list">
+              <a class="item" ng-repeat="countie in filterCountie | limitTo : 5" ng-model="hideListCountie" ng-hide="hideListCountie" ng-click="fillTextbox('codigoIbgeMunicipioNascimento',countie)">
+                {{countie.nome}} - {{countie.siglaUF}}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              DATA DE ENTRADA NO BRASIL**
+            </div>
+            <label class="item item-input item-stacked-label">
+              <!--<input type="tel" name="dtEntradaBrasil" ng-model="dataPeople.dtEntradaBrasil" ng-change="validDate('dtEntradaBrasil',dataPeople.dtEntradaBrasil)" ng-disabled="disabledInput.dtEntradaBrasil" ng-required="requiredInput.dtEntradaBrasil" ui-date>-->
+              <input type="tel" id="dtEntradaBrasil" name="dtEntradaBrasil" ng-change="valueInData('dtEntradaBrasil')" ng-model="dataPeople.dtEntradaBrasil" ng-change="validDate('dtEntradaBrasil',dataPeople.dtEntradaBrasil)" ng-disabled="disabledInput.dtEntradaBrasil" ui-date>
+            </label>
+            <span id="dtEntradaBrasilError" class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}">
+              * Insira a data no formato dd/MM/yyyy
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CELULAR
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="telefoneCelular" ng-model="dataPeople.telefoneCelular" ng-minlength="14" ui-phone-number-celular>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.telefoneCelular.$error.minlength">
+              * DDD + Número do Celular com 9 dígitos
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              E-MAIL
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="email" name="emailCidadao" ng-model="dataPeople.emailCidadao" ng-minlength="6" ng-maxlength="100">
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.emailCidadao.$error.minlength">
+              * No mínimo 6 caracteres
+            </span>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.emailCidadao.$error.maxlength">
+              * No máximo 100 caracteres
+            </span>
+            <span class="error-formatting" ng-class="{'information-formatting': Identification.$invalid}" ng-show="Identification.emailCidadao.$error.email">
+              * Insira um endereço de e-mail válido
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              OBSERVAÇÃO
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="observacao" ng-model="dataPeople.observacao">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-offset-70 col-30">
+            <button type="button" class="button button-block button-assertive" ng-click="clearObservation()" ng-if="dataPeople.observacao != null">
+              Limpar Observação
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-offset-50 col-50">
+            <!--<button type="submit" class="button button-full button-default-application" ng-disabled="Identification.$invalid">-->
+            <button type="submit" class="button button-full button-default-application">
+              PRÓXIMA ETAPA
+            </button>
+          </div>
+        </div>
+      </div>
+      <!--Fim da lista-->
+    </form>
+    <!--Fim do formulário-->
+  </ion-content>
+  <!--Fim do conteúdo-->
+</ion-view>

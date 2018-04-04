@@ -1,0 +1,45 @@
+<script src="../../service-worker.js"></script>
+<ion-side-menus>
+
+	<ion-side-menu-content>
+		<ion-nav-bar align-title="center" class="bar bar-default-application">
+			<ion-nav-buttons side="left">
+				<button class="button button-icon button-clear ion-navicon" menu-toggle="center"></button>
+			</ion-nav-buttons>
+			<ion-nav-title>MobACS</ion-nav-title>
+		</ion-nav-bar>
+		<ion-nav-view name="menuContent"></ion-nav-view>
+	</ion-side-menu-content>
+
+	<ion-side-menu side="left">
+		<ion-header-bar class="bar bar-default-application">
+			<h1 class="title">Dados Pessoais</h1>
+		</ion-header-bar>
+		<ion-content>
+
+      <div class="list card">
+        <div class="item item-avatar">
+          <img src="assets/img/logo.png" />
+          <h2> {{userLogged.nome}} </h2>
+          <h3> Login: {{userLogged.userLogin}} </h3>
+          <h3> CNS: {{userLogged.profissionalCNS}} </h3>
+          <h3> CBO: {{userLogged.cboCodigo_2002}} </h3>
+          <h3> CNES: {{userLogged.cnes}} </h3>
+          <h3> INE: {{userLogged.ine}} </h3>
+        </div>
+
+        <div class="item item-body">
+          <a menu-close class="item bg-default" href="#app/dashboard/index"><font>Principal</font></a>
+          <a menu-close class="item bg-default" href="#home-visit/index"><font>Pesquisar Visita</font></a>
+          <a menu-close class="item bg-default" href="#pessoas/index"><font>Pesquisar cidadão</font></a>
+          <a menu-close class="item bg-default" href="#domicilios/index"><font>Pesquisar Domicilio</font></a>
+          <a menu-close class="item bg-default" href="#synchronization" ><font>Sincronizar fichas</font></a>
+          <a menu-close class="item bg-default" ng-controller="ProductionController" ng-click="goProduction()" ><font>Produção</font></a>
+          <a menu-close class="item bg-default" ng-controller="DashboardController" ng-click="aboutInformation()" ><font>Sobre</font></a>
+          <a menu-close class="item bg-default" href ng-controller="DashboardController" ng-click="exitApp()"><font>Sair</font></a>
+        </div>
+      </div>
+		</ion-content>
+	</ion-side-menu>
+
+</ion-side-menus>

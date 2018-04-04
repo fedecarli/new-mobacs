@@ -1,0 +1,144 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goHomeRegistarationHistory()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">INSTITUIÇÃO DE PERMANÊNCIA/RECUSA</h1>
+  </div>
+
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-map"></i>
+        ENDEREÇO/LOCAL DE PERMANÊNCIA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-home"></i>
+        CONDIÇÕES DE MORADIA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-paw"></i>
+        ANIMAIS NO DOMICÍLIO
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-key"></i>
+        FAMÍLIAS
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-ios-medical"></i>
+        INSTITUIÇÃO DE PERMANÊNCIA
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br><br><br><br><br>
+
+    <form novalidate name="Institution" ng-submit="addInstitution(dataHomeRegistration)">
+
+      <div class="list">
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>NOME DA INSTITUIÇÃO DE PERMANÊNCIA</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="nomeInstituicaoPermanencia" ng-model="dataHomeRegistration.nomeInstituicaoPermanencia" ng-disabled="disabledInput.nomeInstituicaoPermanencia">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>EXISTEM OUTROS PROFISSIONAIS DE SAÚDE<br> VINCULADOS A INSTITUIÇÃO?<br></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>(NÃO INCLUI PROFISSIONAIS DA REDE PÚBLICA DE SAÚDE)</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="stOutrosProfissionaisVinculados" ng-model="dataHomeRegistration.stOutrosProfissionaisVinculados" ng-true-value="1" ng-false-value="null" ng-disabled="disabledInput.stOutrosProfissionaisVinculados">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-divider">
+              <span>IDENTIFICAÇÃO DO RESPONSÁVEL TÉCNICO DA INSTITUIÇÃO<br> DE PERMANÊNCIA</span>
+            </li>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>NOME RESPONSÁVEL TÉCNICO</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="nomeResponsavelTecnico" ng-model="dataHomeRegistration.nomeResponsavelTecnico" ng-blur="formatProfessionalName('nomeResponsavelTecnico', dataHomeRegistration.nomeResponsavelTecnico)" ng-disabled="disabledInput.nomeResponsavelTecnico">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>CNS DO RESPONSÁVEL</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="cnsResponsavelTecnico" ng-model="dataHomeRegistration.cnsResponsavelTecnico" ng-minlength="15" ng-disabled="disabledInput.cnsResponsavelTecnico" ui-cns-citizen>
+            </label>
+            <span class="error-formatting" ng-class="{'information-formatting': Informations.$invalid}" ng-show="Informations.cnsResponsavelTecnico.$error.minlength">
+              * No mínimo 15 dígitos
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>CARGO NA INSTITUIÇÃO</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="text" name="cargoInstituicao" ng-model="dataHomeRegistration.cargoInstituicao" ng-disabled="disabledInput.cargoInstituicao">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" col col-100">
+            <div class="item item-divider">
+              <span>TELEFONE</span>
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="telefoneResponsavelTecnico" ng-model="dataHomeRegistration.telefoneResponsavelTecnico"  ng-disabled="disabledInput.telefoneResponsavelTecnico" ui-phone-number>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-50">
+            <button type="button"  ng-click="goHomeRegistarationHistory()" class="button button-full button-energized">
+              ETAPA ANTERIOR
+            </button>
+          </div>
+          <div class="col col-50">
+            <button type="submit" class="button button-full button-default-application">
+              FINALIZAR
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </ion-content>
+</ion-view>

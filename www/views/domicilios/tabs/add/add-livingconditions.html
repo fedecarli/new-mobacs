@@ -1,0 +1,291 @@
+<ion-view cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="addLivingConditions(dataHomeRegistration, 'return')"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">CONDIÇÕES DE MORADIA</h1>
+  </div>
+  <div class="tabs-striped tabs-top tabs-default-application tabs-color-light">
+    <div class="tabs">
+      <a class="tab-item">
+        <i class="icon ion-map"></i>
+        ENDEREÇO/LOCAL DE PERMANÊNCIA
+      </a>
+      <a class="tab-item active">
+        <i class="icon ion-home"></i>
+        CONDIÇÕES DE MORADIA
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-paw"></i>
+        ANIMAIS NO DOMICÍLIO?
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-key"></i>
+        FAMÍLIAS
+      </a>
+      <a class="tab-item">
+        <i class="icon ion-ios-medical"></i>
+        INSTITUIÇÃO DE PERMANÊNCIA
+      </a>
+    </div>
+  </div>
+  <ion-content>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form novalidate name="LivingConditions" ng-submit="addLivingConditions(dataHomeRegistration, 'this')">
+      <div class="list">
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              SITUAÇÃO DE MORADIA/POSSE DA TERRA*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="situacaoMoradiaPosseTerra" ng-model="dataHomeRegistration.situacaoMoradiaPosseTerra" ng-disabled="disabledInput.situacaoMoradiaPosseTerra" ng-required="requiredInput.situacaoMoradiaPosseTerra">-->
+              <select name="situacaoMoradiaPosseTerra" ng-model="dataHomeRegistration.situacaoMoradiaPosseTerra" ng-disabled="disabledInput.situacaoMoradiaPosseTerra">
+                <option value="75">Próprio</option>
+                <option value="76">Financiado</option>
+                <option value="77">Alugado</option>
+                <option value="78">Arrendado</option>
+                <option value="79">Cedido</option>
+                <option value="80">Ocupação</option>
+                <option value="81">Situação de rua</option>
+                <option value="82">Outra</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              LOCALIZAÇÃO*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="localizacao" ng-model="dataHomeRegistration.localizacao" ng-change="validationHomeRegistrationForm('localizacao',dataHomeRegistration.localizacao)"  ng-disabled="disabledInput.localizacao" ng-required="requiredInput.localizacao">-->
+              <select name="localizacao" ng-model="dataHomeRegistration.localizacao" ng-change="validationHomeRegistrationForm('localizacao',dataHomeRegistration.localizacao)" ng-disabled="disabledInput.localizacao">
+                <option value="83">Urbana</option>
+                <option value="84">Rural</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              TIPO DE DOMICÍLIO*
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="tipoDomicilio" ng-model="dataHomeRegistration.tipoDomicilio" ng-disabled="disabledInput.tipoDomicilio" ng-required="requiredInput.tipoDomicilio">-->
+              <select name="tipoDomicilio" ng-model="dataHomeRegistration.tipoDomicilio" ng-disabled="disabledInput.tipoDomicilio">
+                <option value="85">Casa</option>
+                <option value="86">Apartamento</option>
+                <option value="87">Cômodo</option>
+                <option value="88">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class=" col col-50">
+            <div class="item item-divider">
+              Nº DE MORADORES*
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="nuMoradores" ng-model="dataHomeRegistration.nuMoradores" ng-disabled="disabledInput.nuMoradores" ui-number-residents>
+            </label>
+          </div>
+          <div class=" col col-50">
+            <div class="item item-divider">
+              Nº DE CÔMODOS
+            </div>
+            <label class="item item-input item-stacked-label">
+              <input type="tel" name="nuComodos" ng-model="dataHomeRegistration.nuComodos" ng-disabled="disabledInput.nuComodos">
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              EM CASO DE ÁREA DE PRODUÇÃO RURAL
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              CONDIÇÃO DE POSSE E USO DA TERRA
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <!--<select name="areaProducaoRural" ng-model="dataHomeRegistration.areaProducaoRural" ng-disabled="disabledInput.areaProducaoRural" ng-required="requiredInput.areaProducaoRural">-->
+              <select name="areaProducaoRural" ng-model="dataHomeRegistration.areaProducaoRural" ng-disabled="disabledInput.areaProducaoRural">
+                <option value="101">Proprietário</option>
+                <option value="102">Parceiro(a) / Meeiro(a)</option>
+                <option value="103">Assentado(a)</option>
+                <option value="104">Posseiro</option>
+                <option value="105">Arrendatário(a)</option>
+                <option value="106">Comodatário(a)</option>
+                <option value="107">Beneficiário(a) do banco da terra</option>
+                <option value="108">Não se aplica</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              TIPO DE ACESSO AO DOMICÍLIO
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="tipoAcessoDomicilio" ng-model="dataHomeRegistration.tipoAcessoDomicilio" ng-disabled="disabledInput.tipoAcessoDomicilio">
+                <option value="89">Pavimento</option>
+                <option value="90">Chão batido</option>
+                <option value="91">Fluvial</option>
+                <option value="92">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <li class="item item-toggle">
+              <span>DISPONIBILIDADE DE ENERGIA ELÉTRICA?</span>
+              <label class="toggle toggle-balanced">
+                <input type="checkbox" name="stDisponibilidadeEnergiaEletrica" ng-model="dataHomeRegistration.stDisponibilidadeEnergiaEletrica" ng-true-value="1" ng-false-value="null" ng-disabled="disabledInput.stDisponibilidadeEnergiaEletrica">
+                <div class="track">
+                  <div class="handle"></div>
+                </div>
+              </label>
+            </li>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>MATERIAL PREDOMINANTE NA CONSTRUÇÃO DAS PAREDES</span></br><span>EXTERNAS DE SEU DOMICÍLIO</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="materialPredominanteParedesExtDomicilio" ng-model="dataHomeRegistration.materialPredominanteParedesExtDomicilio" ng-disabled="disabledInput.materialPredominanteParedesExtDomicilio">
+                <option value="109">Alvenaria com revestimento</option>
+                <option value="110">Alvenaria sem revestimento</option>
+                <option value="111">Taipa com revestimento</option>
+                <option value="112">Taipa sem revestimento</option>
+                <option value="113">Madeira emparelhada</option>
+                <option value="114">Material aproveitado</option>
+                <option value="115">Palha</option>
+                <option value="116">Outro material</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>ABASTECIMENTO DE ÁGUA</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="abastecimentoAgua" ng-model="dataHomeRegistration.abastecimentoAgua" ng-disabled="disabledInput.abastecimentoAgua">
+                <option value="117">Rede encanada até o domicílio</option>
+                <option value="118">Poço / Nascente no domicílio</option>
+                <option value="119">Cisterna</option>
+                <option value="120">Carro pipa</option>
+                <option value="121">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>FORMA DE ESCOAMENTO DO BANHEIRO OU SANITÁRIO</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="formaEscoamentoBanheiro" ng-model="dataHomeRegistration.formaEscoamentoBanheiro" ng-disabled="disabledInput.formaEscoamentoBanheiro">
+                <option value="122">Rede coletora de esgoto / pluvial</option>
+                <option value="123">Fossa séptica</option>
+                <option value="124">Fossa rudimentar</option>
+                <option value="125">Direto para um rio / lago / mar</option>
+                <option value="126">Céu aberto</option>
+                <option value="127 ">Outra forma</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>ÁGUA PARA CONSUMO NO DOMICÍLIO</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="aguaConsumoDomicilio" ng-model="dataHomeRegistration.aguaConsumoDomicilio" ng-disabled="disabledInput.aguaConsumoDomicilio">
+                <option value="97">Filtrada</option>
+                <option value="98">Fervida</option>
+                <option value="99">Clorada</option>
+                <option value="152">Mineral</option>
+                <option value="100">Sem tratamento</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-100">
+            <div class="item item-divider">
+              <span>DESTINO DO LIXO</span>
+            </div>
+            <label class="item item-select">
+              <div class="input-label">
+                Selecione
+              </div>
+              <select name="destinoLixo" ng-model="dataHomeRegistration.destinoLixo" ng-disabled="disabledInput.destinoLixo">
+                <option value="93">Coletado</option>
+                <option value="94">Queimado / Enterrado</option>
+                <option value="95">Céu aberto</option>
+                <option value="96">Outro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-50">
+            <button type="button" ng-click="addLivingConditions(dataHomeRegistration, 'return')" class="button button-full button-energized">
+              ETAPA ANTERIOR
+            </button>
+          </div>
+          <div class="col col-50">
+            <button type="submit" class="button button-full button-default-application" ng-disabled="LivingConditions.$invalid">
+              PRÓXIMA ETAPA
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

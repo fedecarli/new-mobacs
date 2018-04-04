@@ -1,0 +1,29 @@
+<ion-view ng-controller="HomeVisitController" cache-view="false">
+  <div class="bar bar-header bar-default-application">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="goToViewHomeVisit()"><i class="icon ion-chevron-left"></i></button>
+    </div>
+    <h1 class="title">VISITA DOMICILIAR</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="direcionaHomeVisit()"><i class="icon ion-plus-circled"></i></button>
+    </div>
+  </div>
+  <ion-content>
+    <br><br>
+
+    <div class="list">
+      <label class="item item-input box-search">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input ng-model="searchHomeVisit" type="text" placeholder="Pesquisar">
+      </label>
+      <a ng-repeat="item in listHomeVisit | filter: { id: searchHomeVisit }" class="item item-avatar item-icon-left item-icon-right" href="#/home-visit/view/{{item.id}}">
+        <i class="icon ion-clipboard icon-color-default"></i>
+        <h2 ng-show="item.nomeCidadao != null">{{item.nomeCidadao}}</h2>
+        <p ng-show="item.cnsCidadao != null">CNS {{item.cnsCidadao}}</p>
+        <p>Realizada em {{item.dataAtendimento | date : 'dd/MM/yyyy'}}</p>
+        <p>Status da visita {{item.status}}</p>
+        <i class="icon ion-ios-arrow-right color-default"></i>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>
